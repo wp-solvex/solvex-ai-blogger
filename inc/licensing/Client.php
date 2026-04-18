@@ -221,7 +221,7 @@ class Client {
 		}
 
 		// filterable endpoint.
-		return trailingslashit( apply_filters( 'autoaib_licensing_endpoint', 'https://api.surecart.com' ) ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		return trailingslashit( apply_filters( 'solvex_aib_licensing_endpoint', 'https://api.surecart.com' ) ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 	}
 
 	/**
@@ -284,7 +284,7 @@ class Client {
 	public function is_local_server() {
 		$remote_addr = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 		$is_local    = in_array( $remote_addr, [ '127.0.0.1', '::1' ], true );
-		return apply_filters( 'autoaib_licensing_is_local', $is_local ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		return apply_filters( 'solvex_aib_licensing_is_local', $is_local ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 	}
 
 	/**
@@ -303,7 +303,7 @@ class Client {
 	 */
 	protected function set_basename_and_slug(): void {
 		// it's a plugin.
-		$this->basename = AUTOAIB_BASE_PATH;
+		$this->basename = SOLVEX_AIB_BASE_PATH;
 
 		[ $this->slug ] = explode( '/', $this->basename );
 

@@ -122,7 +122,7 @@ const makeApiRequest = async ( title, options, signal ) => {
 		hate: options.hate !== undefined ? options.hate : 2,
 		sexually_explicit: options.sexually_explicit !== undefined ? options.sexually_explicit : 2,
 		dangerous_content: options.dangerous_content !== undefined ? options.dangerous_content : 2,
-		license: options.license || ( typeof autoaib_localized_data !== 'undefined' && autoaib_localized_data?.license_key ) || '',
+		license: options.license || ( typeof solvex_aib_localized_data !== 'undefined' && solvex_aib_localized_data?.license_key ) || '',
 	};
 
 	// Validate license

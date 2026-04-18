@@ -2,7 +2,7 @@
 /**
  * Frontend.
  *
- * @package auto-ai-blogger
+ * @package solvex-ai-blogger
  * @since 0.0.2
  */
 
@@ -40,7 +40,7 @@ class Frontend {
 		if ( is_singular() ) {
 			global $post;
 			if ( $post ) {
-				autoaib_track_post_view( $post->ID );
+				solvex_aib_track_post_view( $post->ID );
 			}
 		}
 	}

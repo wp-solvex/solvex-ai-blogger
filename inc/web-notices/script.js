@@ -75,8 +75,8 @@
 				url: ajaxurl,
 				type: 'POST',
 				data: {
-					action: 'autoaib-notice-dismiss',
-					nonce: autoaib_web_notices._notice_nonce,
+					action: 'solvex-aib-notice-dismiss',
+					nonce: solvex_aib_web_notices._notice_nonce,
 					notice_id,
 					repeat_notice_after: parseInt( repeat_notice_after ),
 				},

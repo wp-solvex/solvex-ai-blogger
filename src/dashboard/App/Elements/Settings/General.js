@@ -23,7 +23,7 @@ const General = memo( () => {
 
 			{ /* Screen reader navigation summary */ }
 			<div className="sr-only" aria-live="polite">
-				{ __( 'General settings page loaded with persona configuration options', 'auto-ai-blogger' ) }
+				{ __( 'General settings page loaded with persona configuration options', 'solvex-ai-blogger' ) }
 			</div>
 		</main>
 	);

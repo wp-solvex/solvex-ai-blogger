@@ -31,7 +31,7 @@ const FormField = memo( ( {
 			>
 				{ Icon && <Icon className="w-3.5 h-3.5 text-gray-600 mr-1.5" aria-hidden="true" /> }
 				{ label }
-				{ required && <span className="text-red-500 ml-[2px]" aria-label={ __( 'Required', 'auto-ai-blogger' ) }>*</span> }
+				{ required && <span className="text-red-500 ml-[2px]" aria-label={ __( 'Required', 'solvex-ai-blogger' ) }>*</span> }
 			</label>
 
 			<div className="relative">
@@ -133,7 +133,7 @@ const SubmitButton = memo( ( { onClick, disabled, loading, children } ) => {
 				transform transition-all duration-200 hover:scale-105 hover:shadow-xl
 				disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
 			"
-			aria-label={ __( 'Save preferences and continue to final step', 'auto-ai-blogger' ) }
+			aria-label={ __( 'Save preferences and continue to final step', 'solvex-ai-blogger' ) }
 		>
 			{ loading ? (
 				<Loader2 className="w-4.5 h-4.5 animate-spin" aria-hidden="true" />
@@ -158,7 +158,7 @@ const OptinStep = memo( () => {
 	// Redux state
 	const userName = useSelector( ( state ) => state.userName );
 	const userEmail = useSelector( ( state ) => state.userEmail );
-	const homeSlug = useSelector( ( state ) => state.homeSlug ) || 'auto-ai-blogger';
+	const homeSlug = useSelector( ( state ) => state.homeSlug ) || 'solvex-ai-blogger';
 
 	// Component state
 	const [ name, setName ] = useState( userName || '' );
@@ -184,15 +184,15 @@ const OptinStep = memo( () => {
 		const newErrors = {};
 
 		if ( ! name.trim() ) {
-			newErrors.name = __( 'First name is required.', 'auto-ai-blogger' );
+			newErrors.name = __( 'First name is required.', 'solvex-ai-blogger' );
 		} else if ( name.trim().length < 2 ) {
-			newErrors.name = __( 'First name must be at least 2 characters.', 'auto-ai-blogger' );
+			newErrors.name = __( 'First name must be at least 2 characters.', 'solvex-ai-blogger' );
 		}
 
 		if ( ! email.trim() ) {
-			newErrors.email = __( 'Email address is required.', 'auto-ai-blogger' );
+			newErrors.email = __( 'Email address is required.', 'solvex-ai-blogger' );
 		} else if ( ! /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test( email.trim() ) ) {
-			newErrors.email = __( 'Please enter a valid email address.', 'auto-ai-blogger' );
+			newErrors.email = __( 'Please enter a valid email address.', 'solvex-ai-blogger' );
 		}
 
 		setErrors( newErrors );
@@ -267,7 +267,7 @@ const OptinStep = memo( () => {
 		} catch ( error ) {
 			console.error( 'Failed to save user data:', error );
 			setErrors( {
-				general: __( 'Failed to save your information. Please try again.', 'auto-ai-blogger' ),
+				general: __( 'Failed to save your information. Please try again.', 'solvex-ai-blogger' ),
 			} );
 		} finally {
 			setSavingOptin( false );
@@ -277,19 +277,19 @@ const OptinStep = memo( () => {
 	const benefits = [
 		{
 			icon: TrendingUp,
-			title: __( 'Weekly AI Writing Tips', 'auto-ai-blogger' ),
-			description: __( 'Master AI-powered content creation with expert tips and techniques delivered every week.', 'auto-ai-blogger' ),
+			title: __( 'Weekly AI Writing Tips', 'solvex-ai-blogger' ),
+			description: __( 'Master AI-powered content creation with expert tips and techniques delivered every week.', 'solvex-ai-blogger' ),
 			highlight: true,
 		},
 		{
 			icon: Star,
-			title: __( 'Marketing Strategies', 'auto-ai-blogger' ),
-			description: __( 'Receive proven marketing strategies and growth tips from successful bloggers.', 'auto-ai-blogger' ),
+			title: __( 'Marketing Strategies', 'solvex-ai-blogger' ),
+			description: __( 'Receive proven marketing strategies and growth tips from successful bloggers.', 'solvex-ai-blogger' ),
 		},
 		{
 			icon: Heart,
-			title: __( 'Blog Growth Tips', 'auto-ai-blogger' ),
-			description: __( 'Access exclusive content optimization and audience engagement techniques.', 'auto-ai-blogger' ),
+			title: __( 'Blog Growth Tips', 'solvex-ai-blogger' ),
+			description: __( 'Access exclusive content optimization and audience engagement techniques.', 'solvex-ai-blogger' ),
 		},
 	];
 
@@ -306,14 +306,14 @@ const OptinStep = memo( () => {
 						<div className="mb-2.5">
 							<span className="inline-flex items-center px-3.5 py-1.5 bg-white bg-opacity-20 text-white text-[13px] font-medium rounded-full tracking-wide uppercase">
 								<Star className="w-3.5 h-3.5 mr-1.5" aria-hidden="true" />
-								{ __( 'Step 4 of 5', 'auto-ai-blogger' ) }
+								{ __( 'Step 4 of 5', 'solvex-ai-blogger' ) }
 							</span>
 						</div>
 						<h1 id="optin-heading" className="text-[27px] font-bold text-white mb-3.5">
-							{ __( 'Almost There!', 'auto-ai-blogger' ) }
+							{ __( 'Almost There!', 'solvex-ai-blogger' ) }
 						</h1>
 						<h2 className="text-[17px] font-semibold text-indigo-100 mb-3.5">
-							{ __( 'Get personalized growth insights', 'auto-ai-blogger' ) }
+							{ __( 'Get personalized growth insights', 'solvex-ai-blogger' ) }
 						</h2>
 					</div>
 
@@ -322,29 +322,29 @@ const OptinStep = memo( () => {
 							{ /* Form Section */ }
 							<div>
 								<h3 className="text-[17px] font-semibold text-gray-900 mb-5">
-									{ __( 'Your Information', 'auto-ai-blogger' ) }
+									{ __( 'Your Information', 'solvex-ai-blogger' ) }
 								</h3>
 
 								<form className="space-y-5" onSubmit={ submitOptinForm }>
 									<FormField
-										id="autoaib-user-name"
-										label={ __( 'First Name', 'auto-ai-blogger' ) }
+										id="solvex-aib-user-name"
+										label={ __( 'First Name', 'solvex-ai-blogger' ) }
 										type="text"
 										value={ name }
 										onChange={ updateName }
-										placeholder={ __( 'Enter your first name', 'auto-ai-blogger' ) }
+										placeholder={ __( 'Enter your first name', 'solvex-ai-blogger' ) }
 										error={ errors.name }
 										disabled={ savingOptin }
 										icon={ User }
 									/>
 
 									<FormField
-										id="autoaib-user-email"
-										label={ __( 'Email Address', 'auto-ai-blogger' ) }
+										id="solvex-aib-user-email"
+										label={ __( 'Email Address', 'solvex-ai-blogger' ) }
 										type="email"
 										value={ email }
 										onChange={ updateEmail }
-										placeholder={ __( 'Enter your email address', 'auto-ai-blogger' ) }
+										placeholder={ __( 'Enter your email address', 'solvex-ai-blogger' ) }
 										error={ errors.email }
 										disabled={ savingOptin }
 										icon={ Mail }
@@ -368,8 +368,8 @@ const OptinStep = memo( () => {
 											loading={ savingOptin }
 										>
 											{ savingOptin
-												? __( 'Saving…', 'auto-ai-blogger' )
-												: __( 'Save & Continue', 'auto-ai-blogger' )
+												? __( 'Saving…', 'solvex-ai-blogger' )
+												: __( 'Save & Continue', 'solvex-ai-blogger' )
 											}
 										</SubmitButton>
 									</div>
@@ -379,11 +379,11 @@ const OptinStep = memo( () => {
 										<div className="flex items-start gap-1.5">
 											<CheckCircle2 className="w-4.5 h-4.5 text-green-600" aria-hidden="true" />
 											<h3 className="text-[13px] font-semibold text-green-800 mb-0.5 mt-[3px]">
-												{ __( 'Privacy Guaranteed', 'auto-ai-blogger' ) }
+												{ __( 'Privacy Guaranteed', 'solvex-ai-blogger' ) }
 											</h3>
 										</div>
 										<p className="text-[11px] text-green-700">
-											{ __( 'We respect your privacy. No spam, unsubscribe anytime. Your data is secure and never shared.', 'auto-ai-blogger' ) }
+											{ __( 'We respect your privacy. No spam, unsubscribe anytime. Your data is secure and never shared.', 'solvex-ai-blogger' ) }
 										</p>
 									</div>
 								</form>
@@ -392,7 +392,7 @@ const OptinStep = memo( () => {
 							{ /* Benefits Section */ }
 							<div>
 								<h3 className="text-[17px] font-semibold text-gray-900 mb-5">
-									{ __( 'What You\'ll Receive', 'auto-ai-blogger' ) }
+									{ __( 'What You\'ll Receive', 'solvex-ai-blogger' ) }
 								</h3>
 
 								<div className="space-y-3.5">
@@ -414,7 +414,7 @@ const OptinStep = memo( () => {
 
 			{ /* Screen reader announcements */ }
 			<div className="sr-only" aria-live="polite" aria-atomic="true">
-				{ savingOptin && __( 'Saving your information…', 'auto-ai-blogger' ) }
+				{ savingOptin && __( 'Saving your information…', 'solvex-ai-blogger' ) }
 				{ errors.general && `Error: ${ errors.general }` }
 			</div>
 		</main>

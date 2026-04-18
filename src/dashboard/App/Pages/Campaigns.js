@@ -10,9 +10,9 @@ import CampaignFilters from '@Components/CampaignFilters';
 import apiFetch from '@wordpress/api-fetch';
 
 export default function Campaigns() {
-	const initialCampaigns = autoaib_localized_data.all_campaigns;
-	const defaultMetaDefaults = autoaib_localized_data.postmeta_defaults;
-	const isTestingMode = autoaib_localized_data.campaign_testing_mode || false;
+	const initialCampaigns = solvex_aib_localized_data.all_campaigns;
+	const defaultMetaDefaults = solvex_aib_localized_data.postmeta_defaults;
+	const isTestingMode = solvex_aib_localized_data.campaign_testing_mode || false;
 
 	const [ campaigns, setCampaigns ] = useState( initialCampaigns ); // Make campaigns stateful
 	const [ configureData, setConfigureData ] = useState( defaultMetaDefaults );
@@ -179,12 +179,12 @@ export default function Campaigns() {
 	const fetchCampaignMetaData = async ( campaignId ) => {
 		const formData = new window.FormData();
 
-		formData.append( 'action', 'autoaib_get_campaign_metadata' );
-		formData.append( 'security', autoaib_localized_data.admin_nonce );
+		formData.append( 'action', 'solvex_aib_get_campaign_metadata' );
+		formData.append( 'security', solvex_aib_localized_data.admin_nonce );
 		formData.append( 'campaign_id', campaignId );
 
 		const response = await apiFetch( {
-			url: autoaib_localized_data.ajax_url,
+			url: solvex_aib_localized_data.ajax_url,
 			method: 'POST',
 			body: formData,
 		} )
@@ -268,14 +268,14 @@ export default function Campaigns() {
 		const postType = campaignData?.postType || 'post'; // Default to 'post' if not found
 
 		// Redirect to All Posts page with campaign filter
-		const adminUrl = autoaib_localized_data.admin_url || '/wp-admin/';
+		const adminUrl = solvex_aib_localized_data.admin_url || '/wp-admin/';
 		let filterUrl;
 
 		// For 'post' type, we don't need to specify post_type parameter
 		if ( postType === 'post' ) {
-			filterUrl = `${ adminUrl }edit.php?autoaib_campaign_id=${ campaignId }`;
+			filterUrl = `${ adminUrl }edit.php?solvex_aib_campaign_id=${ campaignId }`;
 		} else {
-			filterUrl = `${ adminUrl }edit.php?post_type=${ postType }&autoaib_campaign_id=${ campaignId }`;
+			filterUrl = `${ adminUrl }edit.php?post_type=${ postType }&solvex_aib_campaign_id=${ campaignId }`;
 		}
 
 		window.open( filterUrl, '_blank' );
@@ -316,15 +316,15 @@ export default function Campaigns() {
 			const isPaused = campaignData.isPaused || false;
 
 			// Determine action: pause or resume.
-			const action = isPaused ? 'autoaib_resume_campaign' : 'autoaib_pause_campaign';
+			const action = isPaused ? 'solvex_aib_resume_campaign' : 'solvex_aib_pause_campaign';
 
 			const formData = new window.FormData();
 			formData.append( 'action', action );
-			formData.append( 'security', autoaib_localized_data.admin_nonce );
+			formData.append( 'security', solvex_aib_localized_data.admin_nonce );
 			formData.append( 'campaign_id', campaignId );
 
 			const response = await apiFetch( {
-				url: autoaib_localized_data.ajax_url,
+				url: solvex_aib_localized_data.ajax_url,
 				method: 'POST',
 				body: formData,
 			} );
@@ -353,10 +353,10 @@ export default function Campaigns() {
 				<div className="flex flex-col items-center justify-center gap-y-3 border border-dashed border-gray-300 p-6 max-w-lg mx-auto mt-20 bg-white rounded-lg shadow-md">
 					<FolderPlus className="w-8 h-8 text-gray-400" />
 					<h3 className="text-base font-semibold text-gray-900 m-0 p-0">
-						{ __( 'No Campaigns.', 'auto-ai-blogger' ) }
+						{ __( 'No Campaigns.', 'solvex-ai-blogger' ) }
 					</h3>
 					<p className="text-sm text-gray-500">
-						{ __( 'Get Started by Creating a New Campaign.', 'auto-ai-blogger' ) }
+						{ __( 'Get Started by Creating a New Campaign.', 'solvex-ai-blogger' ) }
 					</p>
 					<button
 						type="button"
@@ -367,7 +367,7 @@ export default function Campaigns() {
 							setOpenDrawer( true );
 						} }
 					>
-						{ __( 'Add New', 'auto-ai-blogger' ) }
+						{ __( 'Add New', 'solvex-ai-blogger' ) }
 					</button>
 				</div>
 
@@ -408,9 +408,9 @@ export default function Campaigns() {
 					<div className="flex items-center gap-2">
 						<Info className="w-5 h-5" />
 						<div>
-							<h4 className="font-semibold text-sm m-0">{ __( '🧪 Campaign Testing Mode Active', 'auto-ai-blogger' ) }</h4>
+							<h4 className="font-semibold text-sm m-0">{ __( '🧪 Campaign Testing Mode Active', 'solvex-ai-blogger' ) }</h4>
 							<p className="text-xs mt-1 mb-0">
-								{ __( 'Intervals are accelerated for testing: Daily = 1min, Weekly = 2min, Weekday Selection = 2min per day gap (Mon→Thu = 6min). Remember to disable testing mode in production!', 'auto-ai-blogger' ) }
+								{ __( 'Intervals are accelerated for testing: Daily = 1min, Weekly = 2min, Weekday Selection = 2min per day gap (Mon→Thu = 6min). Remember to disable testing mode in production!', 'solvex-ai-blogger' ) }
 							</p>
 						</div>
 					</div>
@@ -421,7 +421,7 @@ export default function Campaigns() {
 				<div className="sm:flex sm:items-center">
 					<div className="sm:flex-auto">
 						<h2 id="free-vs-pro-heading" className="text-xl font-bold text-gray-900 p-0 m-0">
-							{ __( 'Manage Campaigns', 'auto-ai-blogger' ) }
+							{ __( 'Manage Campaigns', 'solvex-ai-blogger' ) }
 						</h2>
 					</div>
 
@@ -446,7 +446,7 @@ export default function Campaigns() {
 								setOpenDrawer( true );
 							} }
 						>
-							{ __( 'Add New', 'auto-ai-blogger' ) }
+							{ __( 'Add New', 'solvex-ai-blogger' ) }
 						</button>
 					</div>
 				</div>
@@ -459,22 +459,22 @@ export default function Campaigns() {
 									<thead className="bg-gradient-to-r from-brand-50 to-indigo-50 header-nav">
 										<tr>
 											<th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6" style={ { width: '200px' } }>
-												{ __( 'Name', 'auto-ai-blogger' ) }
+												{ __( 'Name', 'solvex-ai-blogger' ) }
 											</th>
 											<th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" style={ { width: '100px' } }>
-												{ __( 'Status', 'auto-ai-blogger' ) }
+												{ __( 'Status', 'solvex-ai-blogger' ) }
 											</th>
 											<th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" style={ { width: '280px' } }>
-												{ __( 'Results', 'auto-ai-blogger' ) }
+												{ __( 'Results', 'solvex-ai-blogger' ) }
 											</th>
 											<th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" style={ { width: '180px' } }>
-												{ __( 'Latest Post', 'auto-ai-blogger' ) }
+												{ __( 'Latest Post', 'solvex-ai-blogger' ) }
 											</th>
 											<th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" style={ { width: '120px' } }>
-												{ __( 'Frequency', 'auto-ai-blogger' ) }
+												{ __( 'Frequency', 'solvex-ai-blogger' ) }
 											</th>
 											<th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" style={ { width: '280px' } }>
-												{ __( 'Actions', 'auto-ai-blogger' ) }
+												{ __( 'Actions', 'solvex-ai-blogger' ) }
 											</th>
 										</tr>
 									</thead>
@@ -499,7 +499,7 @@ export default function Campaigns() {
 																	<span className="truncate block">{ campaign.name }</span>
 																</Tooltip>
 															) : (
-																<span className="text-gray-500">{ __( 'Untitled Campaign', 'auto-ai-blogger' ) }</span>
+																<span className="text-gray-500">{ __( 'Untitled Campaign', 'solvex-ai-blogger' ) }</span>
 															) }
 														</div>
 													</td>
@@ -525,11 +525,11 @@ export default function Campaigns() {
 															// Determine tooltip text
 															let tooltipText = '';
 															if ( shouldDisableSwitch ) {
-																tooltipText = __( 'Completed', 'auto-ai-blogger' );
+																tooltipText = __( 'Completed', 'solvex-ai-blogger' );
 															} else if ( isPaused ) {
-																tooltipText = __( 'Paused', 'auto-ai-blogger' );
+																tooltipText = __( 'Paused', 'solvex-ai-blogger' );
 															} else {
-																tooltipText = __( 'Active', 'auto-ai-blogger' );
+																tooltipText = __( 'Active', 'solvex-ai-blogger' );
 															}
 
 															return (
@@ -543,7 +543,7 @@ export default function Campaigns() {
 																			type="button"
 																			onClick={ shouldDisableSwitch ? undefined : () => toggleCampaignStatus( campaign.id ) }
 																			disabled={ isUpdating || shouldDisableSwitch }
-																			aria-label={ `${ __( 'Toggle campaign status for', 'auto-ai-blogger' ) } ${ campaign.name }` }
+																			aria-label={ `${ __( 'Toggle campaign status for', 'solvex-ai-blogger' ) } ${ campaign.name }` }
 																			className={ `relative inline-flex h-6 w-11 flex-shrink-0 rounded-full transition-colors duration-200 ease-in-out border-none p-0 ${
 																				isUpdating || shouldDisableSwitch
 																					? 'opacity-50 cursor-default bg-gray-300 focus:outline-none'
@@ -608,7 +608,7 @@ export default function Campaigns() {
 																	<span className="truncate block">{ campaign.last_post_title }</span>
 																</Tooltip>
 															) : (
-																<span className="text-gray-500">{ __( 'Scheduled - No posts yet', 'auto-ai-blogger' ) }</span>
+																<span className="text-gray-500">{ __( 'Scheduled - No posts yet', 'solvex-ai-blogger' ) }</span>
 															) }
 														</div>
 													</td>
@@ -626,10 +626,10 @@ export default function Campaigns() {
 																	? 'text-gray-500 hover:text-brand-900'
 																	: 'text-amber-500 hover:text-amber-600'
 															}` }>
-																<Tooltip text={ `${ __( 'Start Date', 'auto-ai-blogger' ) }: ${
+																<Tooltip text={ `${ __( 'Start Date', 'solvex-ai-blogger' ) }: ${
 																	campaign.startDate && campaign.startDate.trim() !== ''
 																		? new Date( campaign.startDate ).toLocaleString()
-																		: __( 'Not configured - Click Configure to set start date. Currently using creation date', 'auto-ai-blogger' ) + ': ' + new Date( campaign.created_at ).toLocaleString()
+																		: __( 'Not configured - Click Configure to set start date. Currently using creation date', 'solvex-ai-blogger' ) + ': ' + new Date( campaign.created_at ).toLocaleString()
 																}` }
 																delay={ 100 }
 																className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
@@ -645,9 +645,9 @@ export default function Campaigns() {
 
 																	// Show appropriate message based on posts created
 																	if ( postsCreated === 0 ) {
-																		return __( 'Scheduled - No posts yet', 'auto-ai-blogger' );
+																		return __( 'Scheduled - No posts yet', 'solvex-ai-blogger' );
 																	}
-																	return `${ __( 'Last Post Run', 'auto-ai-blogger' ) }: ${ campaign.lastRun }`;
+																	return `${ __( 'Last Post Run', 'solvex-ai-blogger' ) }: ${ campaign.lastRun }`;
 																} )() }
 																delay={ 100 }
 																className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
@@ -659,7 +659,7 @@ export default function Campaigns() {
 															<button type="button" className="text-gray-500 hover:text-brand-900 focus:outline-none focus:ring-0 border-none bg-transparent p-0 m-0 cursor-pointer flex-shrink-0" data-campaign_id={ campaign.id } onClick={ ( e ) => {
 																viewCampaignPosts( e, campaign.id );
 															} }>
-																<Tooltip text={ __( 'Posts List', 'auto-ai-blogger' ) }
+																<Tooltip text={ __( 'Posts List', 'solvex-ai-blogger' ) }
 																	delay={ 100 }
 																	className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
 																>
@@ -668,7 +668,7 @@ export default function Campaigns() {
 															</button>
 
 															<button type="button" data-campaign_id={ campaign.id } className="text-gray-500 hover:text-brand-900 focus:outline-none focus:ring-0 border-none bg-transparent p-0 m-0 cursor-pointer flex-shrink-0" onClick={ configureCampaign }>
-																<Tooltip text={ __( 'Configure', 'auto-ai-blogger' ) }
+																<Tooltip text={ __( 'Configure', 'solvex-ai-blogger' ) }
 																	delay={ 100 }
 																	className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
 																>
@@ -685,7 +685,7 @@ export default function Campaigns() {
 															<button type="button" className="text-gray-500 hover:text-brand-900 focus:outline-none focus:ring-0 border-none bg-transparent p-0 m-0 cursor-pointer flex-shrink-0" data-campaign_id={ campaign.id } onClick={ ( e ) => {
 																openCampaignAnalytics( e, campaign.id );
 															} }>
-																<Tooltip text={ __( 'Analytics', 'auto-ai-blogger' ) }
+																<Tooltip text={ __( 'Analytics', 'solvex-ai-blogger' ) }
 																	delay={ 100 }
 																	className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
 																>
@@ -704,7 +704,7 @@ export default function Campaigns() {
 																		openCampaignLogs( e, campaign.id );
 																	} }
 																>
-																	<Tooltip text={ __( 'View logs', 'auto-ai-blogger' ) }
+																	<Tooltip text={ __( 'View logs', 'solvex-ai-blogger' ) }
 																		delay={ 100 }
 																		className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
 																	>
@@ -716,7 +716,7 @@ export default function Campaigns() {
 															<button type="button" className="text-gray-500 hover:text-brand-900 focus:outline-none focus:ring-0 border-none bg-transparent p-0 m-0 cursor-pointer flex-shrink-0" data-campaign_id={ campaign.id } onClick={ ( e ) => {
 																openDeleteModal( e, campaign.id );
 															} }>
-																<Tooltip text={ __( 'Delete', 'auto-ai-blogger' ) }
+																<Tooltip text={ __( 'Delete', 'solvex-ai-blogger' ) }
 																	delay={ 100 }
 																	className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
 																>
@@ -734,14 +734,14 @@ export default function Campaigns() {
 														<Search className="w-8 h-8 text-gray-400" />
 														<h3 className="text-sm font-medium text-gray-900 m-0 p-0">
 															{ searchTerm
-																? __( 'No campaigns found', 'auto-ai-blogger' )
-																: __( 'No campaigns match your search', 'auto-ai-blogger' )
+																? __( 'No campaigns found', 'solvex-ai-blogger' )
+																: __( 'No campaigns match your search', 'solvex-ai-blogger' )
 															}
 														</h3>
 														<p className="text-sm text-gray-500 max-w-sm">
 															{ searchTerm
-																? sprintf( /* translators: %s: search term */ __( 'No campaigns match "%s".', 'auto-ai-blogger' ), searchTerm )
-																: __( 'Try different search terms or clear your search to see all campaigns.', 'auto-ai-blogger' )
+																? sprintf( /* translators: %s: search term */ __( 'No campaigns match "%s".', 'solvex-ai-blogger' ), searchTerm )
+																: __( 'Try different search terms or clear your search to see all campaigns.', 'solvex-ai-blogger' )
 															}
 														</p>
 														{ searchTerm && (
@@ -750,7 +750,7 @@ export default function Campaigns() {
 																onClick={ () => setSearchTerm( '' ) }
 																className="mt-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:ring-2 focus:ring-inset focus:ring-brand-600 border-none cursor-pointer outline-none transition-all duration-200"
 															>
-																{ __( 'Clear search', 'auto-ai-blogger' ) }
+																{ __( 'Clear search', 'solvex-ai-blogger' ) }
 															</button>
 														) }
 													</div>

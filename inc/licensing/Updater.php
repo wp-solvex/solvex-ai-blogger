@@ -31,7 +31,7 @@ class Updater {
 	 */
 	public function __construct( Client $client ) {
 		$this->client    = $client;
-		$this->cache_key = 'autoaib_' . md5( $this->client->slug ) . '_version_info';
+		$this->cache_key = 'solvex_aib_' . md5( $this->client->slug ) . '_version_info';
 	}
 
 	/**

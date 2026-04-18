@@ -252,7 +252,7 @@ const DateTimeField = forwardRef( ( {
 				{ /* Date Input */ }
 				<div>
 					<label htmlFor={ `${ inputId }-date` } className="block text-sm font-normal text-gray-600 mb-1 whitespace-nowrap">
-						{ __( 'Date', 'auto-ai-blogger' ) }
+						{ __( 'Date', 'solvex-ai-blogger' ) }
 					</label>
 					<input
 						id={ `${ inputId }-date` }
@@ -274,7 +274,7 @@ const DateTimeField = forwardRef( ( {
 				{ /* Time Select */ }
 				<div>
 					<label htmlFor={ `${ inputId }-time` } className="block text-sm font-normal text-gray-600 mb-1 whitespace-nowrap">
-						{ __( 'Time', 'auto-ai-blogger' ) }
+						{ __( 'Time', 'solvex-ai-blogger' ) }
 					</label>
 					<select
 						id={ `${ inputId }-time` }
@@ -288,7 +288,7 @@ const DateTimeField = forwardRef( ( {
 						aria-describedby={ describedBy }
 						aria-invalid={ Boolean( error ) }
 					>
-						<option value="">{ __( 'Select time', 'auto-ai-blogger' ) }</option>
+						<option value="">{ __( 'Select time', 'solvex-ai-blogger' ) }</option>
 						{ timeOptions.map( ( option ) => (
 							<option key={ option.value } value={ option.value }>
 								{ option.label }

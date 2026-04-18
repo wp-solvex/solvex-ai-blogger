@@ -227,8 +227,8 @@ const createPostDraft = async ( title, response, options = {} ) => {
 	}
 
 	const formData = new FormData();
-	formData.append( 'action', 'autoaib_create_post' );
-	formData.append( 'security', options.nonce || autoaib_localized_data?.admin_nonce || '' );
+	formData.append( 'action', 'solvex_aib_create_post' );
+	formData.append( 'security', options.nonce || solvex_aib_localized_data?.admin_nonce || '' );
 	formData.append( 'title', title );
 	formData.append( 'content', response.post_content );
 
@@ -239,7 +239,7 @@ const createPostDraft = async ( title, response, options = {} ) => {
 
 	try {
 		const result = await apiFetch( {
-			url: options.ajaxUrl || autoaib_localized_data?.ajax_url || '',
+			url: options.ajaxUrl || solvex_aib_localized_data?.ajax_url || '',
 			method: 'POST',
 			body: formData,
 		} );

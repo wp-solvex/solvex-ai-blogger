@@ -80,7 +80,7 @@ const NavigationItem = memo( ( {
 						<span
 							id={ `${ item.slug }-warning` }
 							className="flex"
-							aria-label={ __( 'License is Required', 'auto-ai-blogger' ) }
+							aria-label={ __( 'License is Required', 'solvex-ai-blogger' ) }
 						>
 							<TriangleAlert className="w-4 h-4 text-orange-400" aria-hidden="true" />
 						</span>
@@ -89,7 +89,7 @@ const NavigationItem = memo( ( {
 						<span
 							id={ `${ item.slug }-warning` }
 							className="flex"
-							aria-label={ __( 'All site details are required', 'auto-ai-blogger' ) }
+							aria-label={ __( 'All site details are required', 'solvex-ai-blogger' ) }
 						>
 							<TriangleAlert className="w-4 h-4 text-orange-400" aria-hidden="true" />
 						</span>
@@ -140,25 +140,25 @@ function Settings() {
 
 	const navigationConfig = useMemo( () => [
 		{
-			name: __( 'General', 'auto-ai-blogger' ),
+			name: __( 'General', 'solvex-ai-blogger' ),
 			slug: TAB_IDS.GENERAL,
 			icon: Settings2,
 			component: General,
-			description: __( 'Basic site settings and configuration', 'auto-ai-blogger' ),
+			description: __( 'Basic site settings and configuration', 'solvex-ai-blogger' ),
 		},
 		{
-			name: __( 'Notifications', 'auto-ai-blogger' ),
+			name: __( 'Notifications', 'solvex-ai-blogger' ),
 			slug: TAB_IDS.NOTIFICATIONS,
 			icon: Bell,
 			component: Notifications,
-			description: __( 'Manage email and push notifications', 'auto-ai-blogger' ),
+			description: __( 'Manage email and push notifications', 'solvex-ai-blogger' ),
 		},
 		{
-			name: __( 'License', 'auto-ai-blogger' ),
+			name: __( 'License', 'solvex-ai-blogger' ),
 			slug: TAB_IDS.LICENSE,
 			icon: Key,
 			component: License,
-			description: __( 'License activation and management', 'auto-ai-blogger' ),
+			description: __( 'License activation and management', 'solvex-ai-blogger' ),
 		},
 	], [] );
 
@@ -206,7 +206,7 @@ function Settings() {
 			navigate( newUrl, { replace: true } );
 		} catch ( error ) {
 			console.error( 'Error changing tab:', error );
-			setLoadError( __( 'Failed to load settings page', 'auto-ai-blogger' ) );
+			setLoadError( __( 'Failed to load settings page', 'solvex-ai-blogger' ) );
 		} finally {
 			setIsLoading( false );
 		}
@@ -260,7 +260,7 @@ function Settings() {
 			>
 				<TriangleAlert className="w-12 h-12 text-red-500 mb-4" aria-hidden="true" />
 				<h2 className="text-lg font-semibold text-red-800 mb-2">
-					{ __( 'Settings Error', 'auto-ai-blogger' ) }
+					{ __( 'Settings Error', 'solvex-ai-blogger' ) }
 				</h2>
 				<p id="error-description" className="text-red-600 mb-4">
 					{ loadError }
@@ -272,7 +272,7 @@ function Settings() {
 					} }
 					className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
 				>
-					{ __( 'Retry', 'auto-ai-blogger' ) }
+					{ __( 'Retry', 'solvex-ai-blogger' ) }
 				</button>
 			</div>
 		);
@@ -283,12 +283,12 @@ function Settings() {
 			{ /* Enhanced sidebar navigation */ }
 			<aside
 				className="flex overflow-x-auto lg:block lg:w-72 py-8 px-4 lg:flex-none settings-nav bg-white h-screen"
-				aria-label={ __( 'Settings navigation', 'auto-ai-blogger' ) }
+				aria-label={ __( 'Settings navigation', 'solvex-ai-blogger' ) }
 			>
 				<nav
 					className="flex-none px-4 sm:px-6 lg:px-0"
 					role="navigation"
-					aria-label={ __( 'Settings sections', 'auto-ai-blogger' ) }
+					aria-label={ __( 'Settings sections', 'solvex-ai-blogger' ) }
 				>
 					<ul
 						className="flex gap-x-3 gap-y-1 whitespace-nowrap lg:flex-col"
@@ -315,7 +315,7 @@ function Settings() {
 			<main
 				className="px-4 sm:px-6 lg:flex-auto py-8 bg-gray-50"
 				role="main"
-				aria-label={ __( 'Settings content', 'auto-ai-blogger' ) }
+				aria-label={ __( 'Settings content', 'solvex-ai-blogger' ) }
 			>
 				<div className="mx-auto max-w-3xl">
 					{ /* Enhanced content header with current tab info */ }
@@ -344,11 +344,11 @@ function Settings() {
 								{ isLoading && currentTab === item.slug ? (
 									<div
 										className="flex items-center justify-center py-12"
-										aria-label={ __( 'Loading settings…', 'auto-ai-blogger' ) }
+										aria-label={ __( 'Loading settings…', 'solvex-ai-blogger' ) }
 									>
 										<Loader2 className="w-8 h-8 animate-spin text-brand" aria-hidden="true" />
 										<span className="ml-2 text-gray-600">
-											{ __( 'Loading…', 'auto-ai-blogger' ) }
+											{ __( 'Loading…', 'solvex-ai-blogger' ) }
 										</span>
 									</div>
 								) : (

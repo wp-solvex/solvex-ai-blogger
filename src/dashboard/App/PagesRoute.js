@@ -13,22 +13,22 @@ import { __ } from '@wordpress/i18n';
  */
 const RouteError = ( { type = 'not-found', message } ) => {
 	const errorMessages = {
-		'not-found': __( 'Page not found. Please check the URL and try again.', 'auto-ai-blogger' ),
-		'access-denied': __( 'Access denied. This feature requires a valid license.', 'auto-ai-blogger' ),
-		'invalid-page': __( 'Invalid page parameter. Please navigate from the main menu.', 'auto-ai-blogger' ),
-		generic: message || __( 'Something went wrong. Please try again.', 'auto-ai-blogger' ),
+		'not-found': __( 'Page not found. Please check the URL and try again.', 'solvex-ai-blogger' ),
+		'access-denied': __( 'Access denied. This feature requires a valid license.', 'solvex-ai-blogger' ),
+		'invalid-page': __( 'Invalid page parameter. Please navigate from the main menu.', 'solvex-ai-blogger' ),
+		generic: message || __( 'Something went wrong. Please try again.', 'solvex-ai-blogger' ),
 	};
 
 	const getErrorTitle = () => {
 		switch ( type ) {
 			case 'not-found':
-				return __( '404 - Page Not Found', 'auto-ai-blogger' );
+				return __( '404 - Page Not Found', 'solvex-ai-blogger' );
 			case 'access-denied':
-				return __( 'Access Denied', 'auto-ai-blogger' );
+				return __( 'Access Denied', 'solvex-ai-blogger' );
 			case 'invalid-page':
-				return __( 'Invalid Page', 'auto-ai-blogger' );
+				return __( 'Invalid Page', 'solvex-ai-blogger' );
 			default:
-				return __( 'Error', 'auto-ai-blogger' );
+				return __( 'Error', 'solvex-ai-blogger' );
 		}
 	};
 
@@ -63,12 +63,12 @@ const RouteError = ( { type = 'not-found', message } ) => {
 				</p>
 				<button
 					onClick={ () => {
-						window.location.href = '?page=auto-ai-blogger';
+						window.location.href = '?page=solvex-ai-blogger';
 					} }
 					className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-colors duration-200"
 					type="button"
 				>
-					{ __( 'Go to Welcome Page', 'auto-ai-blogger' ) }
+					{ __( 'Go to Welcome Page', 'solvex-ai-blogger' ) }
 				</button>
 			</div>
 		</div>
@@ -87,27 +87,27 @@ import Campaigns from '@DashboardApp/Pages/Campaigns';
 const ROUTE_MAP = {
 	'getting-started': {
 		component: Welcome,
-		title: __( 'Getting Started', 'auto-ai-blogger' ),
+		title: __( 'Getting Started', 'solvex-ai-blogger' ),
 		requiresLicense: false,
 	},
 	'': {
 		component: Welcome,
-		title: __( 'Welcome', 'auto-ai-blogger' ),
+		title: __( 'Welcome', 'solvex-ai-blogger' ),
 		requiresLicense: false,
 	},
 	settings: {
 		component: Settings,
-		title: __( 'Settings', 'auto-ai-blogger' ),
+		title: __( 'Settings', 'solvex-ai-blogger' ),
 		requiresLicense: false,
 	},
 	'free-vs-pro': {
 		component: FreeVsPro,
-		title: __( 'Free vs Pro', 'auto-ai-blogger' ),
+		title: __( 'Free vs Pro', 'solvex-ai-blogger' ),
 		requiresLicense: false,
 	},
 	campaigns: {
 		component: Campaigns,
-		title: __( 'Campaigns', 'auto-ai-blogger' ),
+		title: __( 'Campaigns', 'solvex-ai-blogger' ),
 		requiresLicense: true,
 	},
 };
@@ -119,7 +119,7 @@ const PagesRoute = () => {
 	const { search } = useLocation();
 
 	// Redux selectors
-	const homeSlug = useSelector( ( state ) => state.homeSlug ) || 'auto-ai-blogger';
+	const homeSlug = useSelector( ( state ) => state.homeSlug ) || 'solvex-ai-blogger';
 	const licenseStatus = useSelector( ( state ) => state.license_status ) || 'unlicensed';
 
 	// Memoize URL parsing with safe data access.
@@ -192,7 +192,7 @@ const PagesRoute = () => {
 	// Render with error handling
 	try {
 		return (
-			<div className="auto-ai-blogger-page" data-page={ path || 'welcome' }>
+			<div className="solvex-ai-blogger-page" data-page={ path || 'welcome' }>
 				<Component />
 			</div>
 		);

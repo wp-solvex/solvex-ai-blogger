@@ -19,7 +19,7 @@ module.exports = {
 		'jsdoc/check-tag-names': [ 'error', { definedTags: [ 'jsx' ] } ],
 		'@wordpress/i18n-text-domain': [
 			'error',
-			{ allowedTextDomain: 'auto-ai-blogger' },
+			{ allowedTextDomain: 'solvex-ai-blogger' },
 		],
 	},
 	parserOptions: {
@@ -41,7 +41,7 @@ module.exports = {
 		navigator: true,
 		docsMenuChange: true,
 		hub_admin_nav_menu_data: true,
-		autoaib_localized_data: true,
+		solvex_aib_localized_data: true,
 		WebNotices: true,
 	},
 };

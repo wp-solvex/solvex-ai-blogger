@@ -105,7 +105,7 @@ jobs:
             ### Checklist:
               - [ ] Verify changelog in changelog.txt
               - [ ] Verify changelog `date` and `content` as per plugin intended format.
-              - [ ] Verify version in `auto-ai-blogger.php` in plugin description and constant `AUTOAIB_VERSION` in auto-ai-blogger.php
+              - [ ] Verify version in `solvex-ai-blogger.php` in plugin description and constant `SOLVEX_AIB_VERSION` in solvex-ai-blogger.php
               - [ ] Verify `Stable tag` is `<version-number>` in readme.txt
               - [ ] Verify `Tested up-to` is set to latest tested version of WordPress.
               - [ ] Verify the changes by `git diff` and Commit the changes

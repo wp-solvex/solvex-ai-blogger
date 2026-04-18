@@ -50,12 +50,12 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 
 		try {
 			const formData = new FormData();
-			formData.append( 'action', 'autoaib_get_campaign_logs' );
-			formData.append( 'security', autoaib_localized_data.admin_nonce );
+			formData.append( 'action', 'solvex_aib_get_campaign_logs' );
+			formData.append( 'security', solvex_aib_localized_data.admin_nonce );
 			formData.append( 'campaign_id', campaignId );
 
 			const response = await apiFetch( {
-				url: autoaib_localized_data.ajax_url,
+				url: solvex_aib_localized_data.ajax_url,
 				method: 'POST',
 				body: formData,
 			} );
@@ -63,11 +63,11 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 			if ( response?.success ) {
 				setLogsData( response.data );
 			} else {
-				setError( response?.data?.message || __( 'Failed to fetch logs data', 'auto-ai-blogger' ) );
+				setError( response?.data?.message || __( 'Failed to fetch logs data', 'solvex-ai-blogger' ) );
 			}
 		} catch ( err ) {
 			console.error( 'Error fetching logs:', err );
-			setError( __( 'An error occurred while fetching logs data', 'auto-ai-blogger' ) );
+			setError( __( 'An error occurred while fetching logs data', 'solvex-ai-blogger' ) );
 		} finally {
 			setLoading( false );
 		}
@@ -97,7 +97,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 				return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
 			}
 			// For today's events, show time with "today" indicator
-			return __( 'Today', 'auto-ai-blogger' ) + ' ' + date.toLocaleTimeString();
+			return __( 'Today', 'solvex-ai-blogger' ) + ' ' + date.toLocaleTimeString();
 		} catch ( e ) {
 			return timestamp;
 		}
@@ -166,10 +166,10 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 								</div>
 								<div>
 									<h3 className="text-lg font-semibold text-gray-900 m-0">
-										{ __( 'Campaign Logs', 'auto-ai-blogger' ) }
+										{ __( 'Campaign Logs', 'solvex-ai-blogger' ) }
 									</h3>
 									<p className="text-sm text-gray-600 m-0">
-										{ campaignData?.name && `${ campaignData.name } - ` }{ __( 'Post creation history and scheduling logs', 'auto-ai-blogger' ) }
+										{ campaignData?.name && `${ campaignData.name } - ` }{ __( 'Post creation history and scheduling logs', 'solvex-ai-blogger' ) }
 									</p>
 								</div>
 							</div>
@@ -187,7 +187,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 							{ loading ? (
 								<div className="flex items-center justify-center py-8">
 									<Activity className="w-6 h-6 text-gray-400 animate-spin mr-2" />
-									<span className="text-gray-600">{ __( 'Loading logs…', 'auto-ai-blogger' ) }</span>
+									<span className="text-gray-600">{ __( 'Loading logs…', 'solvex-ai-blogger' ) }</span>
 								</div>
 							) : error ? (
 								<div className="text-center py-8">
@@ -197,7 +197,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 										onClick={ fetchLogsData }
 										className="mt-2 text-brand-600 hover:text-brand-800 text-sm"
 									>
-										{ __( 'Try Again', 'auto-ai-blogger' ) }
+										{ __( 'Try Again', 'solvex-ai-blogger' ) }
 									</button>
 								</div>
 							) : (
@@ -207,7 +207,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 										<div className="bg-brand-50 border border-brand-200 rounded-lg p-4">
 											<div className="flex items-center justify-between">
 												<div className="flex flex-col gap-2">
-													<p className="text-sm text-brand-600 m-0">{ __( 'Scheduled', 'auto-ai-blogger' ) }</p>
+													<p className="text-sm text-brand-600 m-0">{ __( 'Scheduled', 'solvex-ai-blogger' ) }</p>
 													<p className="text-lg font-semibold text-brand-900 m-0">
 														{ parseInt( campaignData?.postsScheduled ) || 0 }
 													</p>
@@ -218,7 +218,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 										<div className="bg-green-50 border border-green-200 rounded-lg p-4">
 											<div className="flex items-center justify-between">
 												<div className="flex flex-col gap-2">
-													<p className="text-sm text-green-600 m-0">{ __( 'Successful', 'auto-ai-blogger' ) }</p>
+													<p className="text-sm text-green-600 m-0">{ __( 'Successful', 'solvex-ai-blogger' ) }</p>
 													<p className="text-lg font-semibold text-green-900 m-0">
 														{ parseInt( campaignData?.postsCreated ) || 0 }
 													</p>
@@ -229,7 +229,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 										<div className="bg-red-50 border border-red-200 rounded-lg p-4">
 											<div className="flex items-center justify-between">
 												<div className="flex flex-col gap-2">
-													<p className="text-sm text-red-600 m-0">{ __( 'Failed Attempts', 'auto-ai-blogger' ) }</p>
+													<p className="text-sm text-red-600 m-0">{ __( 'Failed Attempts', 'solvex-ai-blogger' ) }</p>
 													<p className="text-lg font-semibold text-red-900 m-0">
 														{ ( () => {
 															// Calculate actual failed attempts from error logs
@@ -250,7 +250,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 										<div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
 											<div className="flex items-center justify-between">
 												<div className="flex flex-col gap-2">
-													<p className="text-sm text-gray-600 m-0">{ __( 'Target', 'auto-ai-blogger' ) }</p>
+													<p className="text-sm text-gray-600 m-0">{ __( 'Target', 'solvex-ai-blogger' ) }</p>
 													<p className="text-lg font-semibold text-gray-900 m-0">
 														{ parseInt( campaignData?.postsTarget ) || 0 }
 													</p>
@@ -267,7 +267,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 											<div className="flex items-center justify-between">
 												<div className="flex-1">
 													<p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-														{ __( 'Start Date', 'auto-ai-blogger' ) }
+														{ __( 'Start Date', 'solvex-ai-blogger' ) }
 													</p>
 													<p className="text-sm font-medium text-gray-900">
 														{ ( () => {
@@ -299,7 +299,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 																} ).toLowerCase();
 																return `${ formattedDate } ${ formattedTime }`;
 															}
-															return __( 'Not set', 'auto-ai-blogger' );
+															return __( 'Not set', 'solvex-ai-blogger' );
 														} )() }
 													</p>
 												</div>
@@ -311,7 +311,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 											<div className="flex items-center justify-between">
 												<div className="flex-1">
 													<p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-														{ __( 'End Date', 'auto-ai-blogger' ) }
+														{ __( 'End Date', 'solvex-ai-blogger' ) }
 													</p>
 													<p className="text-sm font-medium text-gray-900">
 														{ ( () => {
@@ -327,11 +327,11 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 																if ( campaignData?.lastRun && campaignData.lastRun !== 'Not Started Yet.' ) {
 																	return campaignData.lastRun;
 																}
-																return __( 'Recently completed', 'auto-ai-blogger' );
+																return __( 'Recently completed', 'solvex-ai-blogger' );
 															} else if ( campaignData?.status === 'publish' ) {
-																return __( 'In progress', 'auto-ai-blogger' );
+																return __( 'In progress', 'solvex-ai-blogger' );
 															}
-															return __( 'Not started', 'auto-ai-blogger' );
+															return __( 'Not started', 'solvex-ai-blogger' );
 														} )() }
 													</p>
 												</div>
@@ -343,7 +343,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 											<div className="flex items-center justify-between">
 												<div className="flex-1">
 													<p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-														{ __( 'Frequency', 'auto-ai-blogger' ) }
+														{ __( 'Frequency', 'solvex-ai-blogger' ) }
 													</p>
 													<p className="text-sm font-medium text-gray-900 truncate">
 														{ ( () => {
@@ -358,15 +358,15 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 																// For completed campaigns, show "Daily once" or similar
 																const freq = campaignData?.frequency || '';
 																if ( freq.toLowerCase().includes( 'daily' ) || freq.includes( '1' ) || freq.includes( 'day' ) ) {
-																	return __( 'Daily once', 'auto-ai-blogger' );
+																	return __( 'Daily once', 'solvex-ai-blogger' );
 																} else if ( freq.toLowerCase().includes( 'weekly' ) || freq.includes( 'week' ) ) {
-																	return __( 'Weekly once', 'auto-ai-blogger' );
+																	return __( 'Weekly once', 'solvex-ai-blogger' );
 																} else if ( freq.toLowerCase().includes( 'hourly' ) || freq.includes( 'hour' ) ) {
-																	return __( 'Hourly once', 'auto-ai-blogger' );
+																	return __( 'Hourly once', 'solvex-ai-blogger' );
 																}
-																return freq || __( 'Daily once', 'auto-ai-blogger' );
+																return freq || __( 'Daily once', 'solvex-ai-blogger' );
 															}
-															return campaignData?.frequency || __( 'Not set', 'auto-ai-blogger' );
+															return campaignData?.frequency || __( 'Not set', 'solvex-ai-blogger' );
 														} )() }
 													</p>
 												</div>
@@ -378,14 +378,14 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 									<div className="bg-white border border-gray-200 rounded-lg">
 										<div className="px-4 py-3 border-b border-gray-200">
 											<div className="flex items-center justify-between">
-												<h4 className="text-base font-medium text-gray-900 m-0">{ __( 'Activity Timeline', 'auto-ai-blogger' ) }</h4>
+												<h4 className="text-base font-medium text-gray-900 m-0">{ __( 'Activity Timeline', 'solvex-ai-blogger' ) }</h4>
 												<button
 													onClick={ fetchLogsData }
 													className="text-xs text-brand-600 hover:text-brand-800 flex items-center gap-1 p-1 rounded-md"
 													disabled={ loading }
 												>
 													<Activity className={ `w-3 h-3 ${ loading ? 'animate-spin' : '' }` } />
-													{ __( 'Refresh', 'auto-ai-blogger' ) }
+													{ __( 'Refresh', 'solvex-ai-blogger' ) }
 												</button>
 											</div>
 										</div>
@@ -408,7 +408,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 																		<div className="flex-1">
 																			<div className="flex items-center space-x-2">
 																				<h4 className="text-sm font-medium text-gray-900 m-0">
-																					{ log.title || log.action || __( 'Campaign Activity', 'auto-ai-blogger' ) }
+																					{ log.title || log.action || __( 'Campaign Activity', 'solvex-ai-blogger' ) }
 																				</h4>
 																				<span className={ getStatusBadge( log.status ) }>
 																					{ log.status?.charAt( 0 ).toUpperCase() + log.status?.slice( 1 ) || 'Unknown' }
@@ -433,7 +433,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 																				<button
 																					onClick={ () => toggleLogExpansion( logId ) }
 																					className="p-1 text-gray-400 hover:text-gray-600 focus:outline-none"
-																					aria-label={ isExpanded ? __( 'Hide details', 'auto-ai-blogger' ) : __( 'Show details', 'auto-ai-blogger' ) }
+																					aria-label={ isExpanded ? __( 'Hide details', 'solvex-ai-blogger' ) : __( 'Show details', 'solvex-ai-blogger' ) }
 																				>
 																					{ isExpanded ? (
 																						<ChevronDown className="w-4 h-4" />
@@ -451,7 +451,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 																			{ log.post_id && (
 																				<span className="inline-flex items-center px-2 py-1 bg-brand-50 text-brand-700 rounded-full">
 																					<span className="w-2 h-2 bg-brand-500 rounded-full mr-1"></span>
-																					{ __( 'ID:', 'auto-ai-blogger' ) } { log.post_id }
+																					{ __( 'ID:', 'solvex-ai-blogger' ) } { log.post_id }
 																				</span>
 																			) }
 																			{ log.post_title && (
@@ -459,11 +459,11 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 																					<ScrollText className="w-3 h-3 mr-1" />
 																					{ log.post_id && log.status === 'success' ? (
 																						<a
-																							href={ `${ autoaib_localized_data.admin_url || '/wp-admin/' }post.php?post=${ log.post_id }&action=edit` }
+																							href={ `${ solvex_aib_localized_data.admin_url || '/wp-admin/' }post.php?post=${ log.post_id }&action=edit` }
 																							target="_blank"
 																							rel="noopener noreferrer"
 																							className="text-green-700 no-underline hover:cursor-pointer"
-																							title={ __( 'Edit Post', 'auto-ai-blogger' ) }
+																							title={ __( 'Edit Post', 'solvex-ai-blogger' ) }
 																						>
 																							{ log.post_title.length > 40 ? log.post_title.substring( 0, 40 ) + '...' : log.post_title }
 																						</a>
@@ -480,7 +480,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 																	{ /* Error details - always visible if present */ }
 																	{ log.error_details && (
 																		<div className="bg-red-50 border border-red-200 rounded-md p-2 mt-2">
-																			<p className="text-xs text-red-800 m-0 font-medium">{ __( 'Error Details:', 'auto-ai-blogger' ) }</p>
+																			<p className="text-xs text-red-800 m-0 font-medium">{ __( 'Error Details:', 'solvex-ai-blogger' ) }</p>
 																			<p className="text-xs text-red-700 mt-1 m-0">{ log.error_details }</p>
 																		</div>
 																	) }
@@ -488,7 +488,7 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 																	{ /* Collapsible Steps/Process details */ }
 																	{ hasSteps && isExpanded && (
 																		<div className="mt-3 border border-gray-200 rounded-md p-3 bg-gray-50">
-																			<p className="text-xs font-medium text-gray-700 m-0">{ __( 'Process Steps:', 'auto-ai-blogger' ) }</p>
+																			<p className="text-xs font-medium text-gray-700 m-0">{ __( 'Process Steps:', 'solvex-ai-blogger' ) }</p>
 																			<div className="space-y-2 mt-2">
 																				{ log.steps.map( ( step, stepIndex ) => (
 																					<div key={ stepIndex } className="flex items-center justify-between">
@@ -515,13 +515,13 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 												<div className="px-4 py-12 text-center">
 													<div className="flex flex-col items-center">
 														<ScrollText className="w-12 h-12 text-gray-300 mb-4" />
-														<h5 className="text-sm font-medium text-gray-900 mb-1">{ __( 'No Activity Yet', 'auto-ai-blogger' ) }</h5>
+														<h5 className="text-sm font-medium text-gray-900 mb-1">{ __( 'No Activity Yet', 'solvex-ai-blogger' ) }</h5>
 														<p className="text-xs text-gray-500 max-w-sm">
-															{ __( 'Post creation logs will appear here once your campaign starts generating content. Make sure your campaign is active and properly configured.', 'auto-ai-blogger' ) }
+															{ __( 'Post creation logs will appear here once your campaign starts generating content. Make sure your campaign is active and properly configured.', 'solvex-ai-blogger' ) }
 														</p>
 														{ campaignData?.status !== 'publish' && (
 															<div className="mt-3 text-xs text-amber-600 bg-amber-50 px-3 py-2 rounded-md">
-																{ __( 'Campaign is currently inactive. Activate it to start generating logs.', 'auto-ai-blogger' ) }
+																{ __( 'Campaign is currently inactive. Activate it to start generating logs.', 'solvex-ai-blogger' ) }
 															</div>
 														) }
 													</div>
@@ -537,14 +537,14 @@ const CampaignLogsModal = ( { isOpen, onClose, campaignId, campaignData } ) => {
 						<div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
 							<div className="flex items-center justify-between">
 								<p className="text-xs text-gray-500 m-0">
-									{ __( 'Logs are automatically generated during post creation and scheduling.', 'auto-ai-blogger' ) }
+									{ __( 'Logs are automatically generated during post creation and scheduling.', 'solvex-ai-blogger' ) }
 								</p>
 								<button
 									type="button"
 									onClick={ closeModal }
 									className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
 								>
-									{ __( 'Close', 'auto-ai-blogger' ) }
+									{ __( 'Close', 'solvex-ai-blogger' ) }
 								</button>
 							</div>
 						</div>

@@ -62,18 +62,18 @@ class ErrorBoundary extends React.Component {
 						</div>
 
 						<h1 className="text-3xl font-bold text-slate-900 mb-4">
-							{ __( 'Something went wrong', 'auto-ai-blogger' ) }
+							{ __( 'Something went wrong', 'solvex-ai-blogger' ) }
 						</h1>
 
 						<p className="text-slate-600 mb-6 text-base">
-							{ __( 'The application encountered an unexpected error. Please try refreshing the page or contact support if the problem persists.', 'auto-ai-blogger' ) }
+							{ __( 'The application encountered an unexpected error. Please try refreshing the page or contact support if the problem persists.', 'solvex-ai-blogger' ) }
 						</p>
 
 						{ /* Error details in development mode */ }
 						{ process.env.NODE_ENV === 'development' && this.state.error && (
 							<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-left">
 								<h3 className="text-sm font-medium text-red-800 mb-2">
-									{ __( 'Error Details (Development Mode)', 'auto-ai-blogger' ) }
+									{ __( 'Error Details (Development Mode)', 'solvex-ai-blogger' ) }
 								</h3>
 								<pre className="text-xs text-red-700 whitespace-pre-wrap">
 									{ this.state.error.toString() }
@@ -88,14 +88,14 @@ class ErrorBoundary extends React.Component {
 								className="w-full inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-colors duration-200"
 								type="button"
 							>
-								{ __( 'Try Again', 'auto-ai-blogger' ) }
+								{ __( 'Try Again', 'solvex-ai-blogger' ) }
 							</button>
 							<button
 								onClick={ () => window.location.reload() }
 								className="w-full inline-flex justify-center items-center px-6 py-3 border border-slate-300 text-base font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-colors duration-200"
 								type="button"
 							>
-								{ __( 'Reload Page', 'auto-ai-blogger' ) }
+								{ __( 'Reload Page', 'solvex-ai-blogger' ) }
 							</button>
 						</div>
 					</div>

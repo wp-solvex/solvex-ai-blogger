@@ -43,8 +43,8 @@ export default function TokenNotification() {
 						isError ? 'text-red-600' : 'text-amber-600'
 					}` }>
 						{ isError
-							? __( 'You don\'t have enough tokens to use AI features.', 'auto-ai-blogger' )
-							: `${ __( 'Low on tokens:', 'auto-ai-blogger' ) } ${ tokenRemaining } ${ __( 'left. Time to get more.', 'auto-ai-blogger' ) }`
+							? __( 'You don\'t have enough tokens to use AI features.', 'solvex-ai-blogger' )
+							: `${ __( 'Low on tokens:', 'solvex-ai-blogger' ) } ${ tokenRemaining } ${ __( 'left. Time to get more.', 'solvex-ai-blogger' ) }`
 						}
 					</span>
 				</div>
@@ -55,7 +55,7 @@ export default function TokenNotification() {
 					className="cursor-pointer inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 gap-1"
 					style={ { color: 'white' } }
 				>
-					{ __( 'Upgrade Now', 'auto-ai-blogger' ) }
+					{ __( 'Upgrade Now', 'solvex-ai-blogger' ) }
 					<MoveRight className="h-5 w-5" />
 				</a>
 			</div>

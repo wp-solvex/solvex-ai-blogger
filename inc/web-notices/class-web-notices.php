@@ -46,7 +46,7 @@ if ( ! class_exists( 'Autoaib_Notices' ) ) {
 		public function __construct() {
 			add_action( 'admin_notices', [ $this, 'show_notices' ], 30 );
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-			add_action( 'wp_ajax_autoaib-notice-dismiss', [ $this, 'dismiss_notice' ] );
+			add_action( 'wp_ajax_solvex-aib-notice-dismiss', [ $this, 'dismiss_notice' ] );
 			add_filter( 'wp_kses_allowed_html', [ $this, 'add_data_attributes' ], 10, 2 );
 		}
 
@@ -83,8 +83,8 @@ if ( ! class_exists( 'Autoaib_Notices' ) ) {
 		 */
 		public function dismiss_notice(): void {
 			// Verify nonce first before processing any input.
-			if ( ! isset( $_POST['nonce'] ) || false === wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'autoaib-notices' ) ) {
-				wp_send_json_error( esc_html__( 'WordPress Nonce not validated.', 'auto-ai-blogger' ) );
+			if ( ! isset( $_POST['nonce'] ) || false === wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'solvex-aib-notices' ) ) {
+				wp_send_json_error( esc_html__( 'WordPress Nonce not validated.', 'solvex-ai-blogger' ) );
 			}
 
 			$notice_id           = isset( $_POST['notice_id'] ) ? sanitize_key( $_POST['notice_id'] ) : '';
@@ -92,7 +92,7 @@ if ( ! class_exists( 'Autoaib_Notices' ) ) {
 			$notice              = $this->get_notice_by_id( $notice_id );
 			$capability          = $notice['capability'] ?? 'manage_options';
 
-			if ( ! apply_filters( 'autoaib_notices_user_cap_check', current_user_can( $capability ) ) ) { //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- wordpress hook
+			if ( ! apply_filters( 'solvex_aib_notices_user_cap_check', current_user_can( $capability ) ) ) { //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- wordpress hook
 				return;
 			}
 
@@ -118,16 +118,16 @@ if ( ! class_exists( 'Autoaib_Notices' ) ) {
 		 * @return void
 		 */
 		public function enqueue_scripts(): void {
-			wp_register_script( 'autoaib-notices', self::get_url() . 'script.js', [ 'jquery' ], self::$version, true );
+			wp_register_script( 'solvex-aib-notices', self::get_url() . 'script.js', [ 'jquery' ], self::$version, true );
 			wp_localize_script(
-				'autoaib-notices',
-				'autoaib_web_notices',
+				'solvex-aib-notices',
+				'solvex_aib_web_notices',
 				[
-					'_notice_nonce' => wp_create_nonce( 'autoaib-notices' ),
+					'_notice_nonce' => wp_create_nonce( 'solvex-aib-notices' ),
 				]
 			);
 
-			wp_enqueue_style( 'autoaib-notices', self::get_url() . 'style.css', [], self::$version );
+			wp_enqueue_style( 'solvex-aib-notices', self::get_url() . 'style.css', [], self::$version );
 		}
 
 		/**
@@ -211,24 +211,24 @@ if ( ! class_exists( 'Autoaib_Notices' ) ) {
 		 * @return void
 		 */
 		public static function markup( $notice = [] ): void {
-			wp_enqueue_script( 'autoaib-notices' );
+			wp_enqueue_script( 'solvex-aib-notices' );
 
-			do_action( 'autoaib_notice_before_markup' ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- wordpress hook
+			do_action( 'solvex_aib_notice_before_markup' ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- wordpress hook
 
-			do_action( "autoaib_notice_before_markup_{$notice['id']}" ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- wordpress hook
+			do_action( "solvex_aib_notice_before_markup_{$notice['id']}" ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- wordpress hook
 
 			?>
 			<div id="<?php echo esc_attr( $notice['id'] ); ?>" class="<?php echo esc_attr( $notice['classes'] ); ?>" data-repeat-notice-after="<?php echo esc_attr( $notice['repeat-notice-after'] ); ?>">
 				<div class="notice-container">
-					<?php do_action( "autoaib_notice_inside_markup_{$notice['id']}" ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- wordpress hook ?>
+					<?php do_action( "solvex_aib_notice_inside_markup_{$notice['id']}" ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- wordpress hook ?>
 					<?php echo wp_kses_post( $notice['message'] ); ?>
 				</div>
 			</div>
 			<?php
 
-			do_action( "autoaib_notice_after_markup_{$notice['id']}" ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- wordpress hook
+			do_action( "solvex_aib_notice_after_markup_{$notice['id']}" ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- wordpress hook
 
-			do_action( 'autoaib_notice_after_markup' ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- wordpress hook
+			do_action( 'solvex_aib_notice_after_markup' ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- wordpress hook
 		}
 
 		/**

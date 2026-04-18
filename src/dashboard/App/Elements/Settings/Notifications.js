@@ -31,11 +31,11 @@ const NotificationCard = memo( ( {
 		if ( enabled && ( ! value || ! value.trim() ) ) {
 			setIsValid( false );
 			if ( inputType === 'email' ) {
-				setValidationMessage( __( 'Email address is required when notifications are enabled', 'auto-ai-blogger' ) );
+				setValidationMessage( __( 'Email address is required when notifications are enabled', 'solvex-ai-blogger' ) );
 			} else if ( inputType === 'tel' ) {
-				setValidationMessage( __( 'Phone number is required when notifications are enabled', 'auto-ai-blogger' ) );
+				setValidationMessage( __( 'Phone number is required when notifications are enabled', 'solvex-ai-blogger' ) );
 			} else {
-				setValidationMessage( __( 'This field is required when notifications are enabled', 'auto-ai-blogger' ) );
+				setValidationMessage( __( 'This field is required when notifications are enabled', 'solvex-ai-blogger' ) );
 			}
 			return false;
 		}
@@ -53,11 +53,11 @@ const NotificationCard = memo( ( {
 
 			if ( ! isValidPattern ) {
 				if ( inputType === 'email' ) {
-					setValidationMessage( __( 'Please enter valid email address(es)', 'auto-ai-blogger' ) );
+					setValidationMessage( __( 'Please enter valid email address(es)', 'solvex-ai-blogger' ) );
 				} else if ( inputType === 'tel' ) {
-					setValidationMessage( __( 'Please enter a valid phone number', 'auto-ai-blogger' ) );
+					setValidationMessage( __( 'Please enter a valid phone number', 'solvex-ai-blogger' ) );
 				} else {
-					setValidationMessage( __( 'Invalid format', 'auto-ai-blogger' ) );
+					setValidationMessage( __( 'Invalid format', 'solvex-ai-blogger' ) );
 				}
 			} else {
 				setValidationMessage( '' );
@@ -113,7 +113,7 @@ const NotificationCard = memo( ( {
 					checked={ enabled }
 					onChange={ onToggle }
 					disabled={ disabled }
-					aria-label={ __( 'Toggle', 'auto-ai-blogger' ) + ` ${ title }` }
+					aria-label={ __( 'Toggle', 'solvex-ai-blogger' ) + ` ${ title }` }
 				/>
 			</div>
 
@@ -182,7 +182,7 @@ const Notifications = memo( () => {
 	// Get notification settings from Redux store or set defaults
 	const emailNotificationEnabled = useSelector( ( state ) => state.emailNotificationEnabled ) ?? false;
 	const emailNotificationValue = useSelector( ( state ) => state.emailNotificationValue ) ??
-		( ( typeof autoaib_localized_data !== 'undefined' && autoaib_localized_data?.admin_email ) || '' );
+		( ( typeof solvex_aib_localized_data !== 'undefined' && solvex_aib_localized_data?.admin_email ) || '' );
 
 	// Get Redux config for API calls
 	const adminNonce = useSelector( ( state ) => state.adminNonce );
@@ -258,30 +258,30 @@ const Notifications = memo( () => {
 						{ /* Email notifications */ }
 						<NotificationCard
 							icon={ <Mail /> }
-							title={ __( 'Email Notifications', 'auto-ai-blogger' ) }
-							description={ __( 'Receive notifications via email.', 'auto-ai-blogger' ) }
+							title={ __( 'Email Notifications', 'solvex-ai-blogger' ) }
+							description={ __( 'Receive notifications via email.', 'solvex-ai-blogger' ) }
 							enabled={ notifications.email.enabled }
 							onToggle={ toggleEmail }
 							inputValue={ notifications.email.value }
 							onInputChange={ updateEmail }
-							inputPlaceholder={ __( 'admin@example.com, editor@example.com', 'auto-ai-blogger' ) }
+							inputPlaceholder={ __( 'admin@example.com, editor@example.com', 'solvex-ai-blogger' ) }
 							inputType="email"
-							helpText={ __( 'Enter multiple email addresses separated by commas for team notifications.', 'auto-ai-blogger' ) }
+							helpText={ __( 'Enter multiple email addresses separated by commas for team notifications.', 'solvex-ai-blogger' ) }
 							validationPattern={ emailPattern }
 						/>
 
 						{ /* Information box */ }
 						<InfoCard
 							icon={ Bell }
-							title={ __( 'Notification Types', 'auto-ai-blogger' ) }
+							title={ __( 'Notification Types', 'solvex-ai-blogger' ) }
 							items={ [
-								__( 'Campaign started', 'auto-ai-blogger' ),
-								__( 'New post created', 'auto-ai-blogger' ),
-								__( 'Campaign completed', 'auto-ai-blogger' ),
+								__( 'Campaign started', 'solvex-ai-blogger' ),
+								__( 'New post created', 'solvex-ai-blogger' ),
+								__( 'Campaign completed', 'solvex-ai-blogger' ),
 							] }
 							colorScheme="blue"
 							className="mt-6"
-							ariaLabel={ __( 'Types of notifications you can receive', 'auto-ai-blogger' ) }
+							ariaLabel={ __( 'Types of notifications you can receive', 'solvex-ai-blogger' ) }
 						/>
 					</div>
 				}

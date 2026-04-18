@@ -27,14 +27,14 @@ const CampaignFilters = ( {
 
 	// Default sort options
 	const defaultSortOptions = [
-		{ value: 'latest', label: __( 'Default', 'auto-ai-blogger' ) },
-		{ value: 'active', label: __( 'Active First', 'auto-ai-blogger' ) },
-		{ value: 'inactive', label: __( 'Inactive First', 'auto-ai-blogger' ) },
+		{ value: 'latest', label: __( 'Default', 'solvex-ai-blogger' ) },
+		{ value: 'active', label: __( 'Active First', 'solvex-ai-blogger' ) },
+		{ value: 'inactive', label: __( 'Inactive First', 'solvex-ai-blogger' ) },
 		{
 			value: 'name-asc',
 			label: (
 				<span className="flex items-center gap-2">
-					{ __( 'Name', 'auto-ai-blogger' ) }
+					{ __( 'Name', 'solvex-ai-blogger' ) }
 					<ArrowUp className="w-3 h-3" />
 				</span>
 			),
@@ -43,7 +43,7 @@ const CampaignFilters = ( {
 			value: 'name-desc',
 			label: (
 				<span className="flex items-center gap-2">
-					{ __( 'Name', 'auto-ai-blogger' ) }
+					{ __( 'Name', 'solvex-ai-blogger' ) }
 					<ArrowDown className="w-3 h-3" />
 				</span>
 			),
@@ -52,7 +52,7 @@ const CampaignFilters = ( {
 			value: 'start-date-asc',
 			label: (
 				<span className="flex items-center gap-2">
-					{ __( 'Start Date', 'auto-ai-blogger' ) }
+					{ __( 'Start Date', 'solvex-ai-blogger' ) }
 					<ArrowUp className="w-3 h-3" />
 				</span>
 			),
@@ -61,7 +61,7 @@ const CampaignFilters = ( {
 			value: 'start-date-desc',
 			label: (
 				<span className="flex items-center gap-2">
-					{ __( 'Start Date', 'auto-ai-blogger' ) }
+					{ __( 'Start Date', 'solvex-ai-blogger' ) }
 					<ArrowDown className="w-3 h-3" />
 				</span>
 			),
@@ -70,7 +70,7 @@ const CampaignFilters = ( {
 			value: 'end-date-asc',
 			label: (
 				<span className="flex items-center gap-2">
-					{ __( 'Last Run', 'auto-ai-blogger' ) }
+					{ __( 'Last Run', 'solvex-ai-blogger' ) }
 					<ArrowUp className="w-3 h-3" />
 				</span>
 			),
@@ -79,7 +79,7 @@ const CampaignFilters = ( {
 			value: 'end-date-desc',
 			label: (
 				<span className="flex items-center gap-2">
-					{ __( 'Last Run', 'auto-ai-blogger' ) }
+					{ __( 'Last Run', 'solvex-ai-blogger' ) }
 					<ArrowDown className="w-3 h-3" />
 				</span>
 			),
@@ -119,7 +119,7 @@ const CampaignFilters = ( {
 					className="flex items-center gap-2 rounded-md bg-white px-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:ring-2 focus:ring-inset focus:ring-brand-600 border-none cursor-pointer outline-none transition-all duration-200"
 					style={ { height: '38px' } }
 				>
-					{ sortOptions.find( ( option ) => option.value === sortBy )?.label || __( 'Sort', 'auto-ai-blogger' ) }
+					{ sortOptions.find( ( option ) => option.value === sortBy )?.label || __( 'Sort', 'solvex-ai-blogger' ) }
 					<ChevronDown className={ `w-4 h-4 transition-transform duration-200 ${ showSortDropdown ? 'rotate-180' : '' }` } />
 				</button>
 
@@ -153,7 +153,7 @@ const CampaignFilters = ( {
 					type="text"
 					value={ searchTerm }
 					onChange={ ( e ) => onSearchChange( e.target.value ) }
-					placeholder={ __( 'Search campaigns…', 'auto-ai-blogger' ) }
+					placeholder={ __( 'Search campaigns…', 'solvex-ai-blogger' ) }
 					className="block w-full text-sm rounded-md bg-white placeholder-gray-400 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:ring-2 focus:ring-inset focus:ring-brand-600 outline-none transition-all duration-200"
 					style={ {
 						height: '38px',

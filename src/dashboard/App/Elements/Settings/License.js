@@ -32,8 +32,8 @@ const LicenseForm = memo( ( {
 		<div className="space-y-4">
 			<SettingLabel
 				forId="license-key"
-				title={ __( 'License Key', 'auto-ai-blogger' ) }
-				description={ ! activated ? __( 'Enter your license key to unlock premium features', 'auto-ai-blogger' ) : undefined }
+				title={ __( 'License Key', 'solvex-ai-blogger' ) }
+				description={ ! activated ? __( 'Enter your license key to unlock premium features', 'solvex-ai-blogger' ) : undefined }
 			/>
 
 			<div className="flex gap-3">
@@ -52,8 +52,8 @@ const LicenseForm = memo( ( {
 						onKeyPress={ handleKeyPress }
 						placeholder={
 							activated
-								? __( 'License is active', 'auto-ai-blogger' )
-								: __( 'Enter your license key…', 'auto-ai-blogger' )
+								? __( 'License is active', 'solvex-ai-blogger' )
+								: __( 'Enter your license key…', 'solvex-ai-blogger' )
 						}
 						className={ `
 							block w-full !pl-12 !pr-12 py-2.5 text-sm
@@ -93,7 +93,7 @@ const LicenseForm = memo( ( {
 							border: '2px solid #ef4444',
 							borderColor: '#ef4444 !important',
 						} }
-						aria-label={ __( 'Deactivate license', 'auto-ai-blogger' ) }
+						aria-label={ __( 'Deactivate license', 'solvex-ai-blogger' ) }
 					>
 						{ processing && <Loader2 className="w-4 h-4 animate-spin" /> }
 						{ deactivationText }
@@ -111,7 +111,7 @@ const LicenseForm = memo( ( {
 							${ ( ! licenseKey.trim() || processing || tokenLoading ) ? 'opacity-70 cursor-not-allowed hover:scale-100' : 'cursor-pointer shadow-sm' }
 							${ tokenLoading ? 'bg-green-600 hover:bg-green-700' : '' }
 						` }
-						aria-label={ __( 'Activate license', 'auto-ai-blogger' ) }
+						aria-label={ __( 'Activate license', 'solvex-ai-blogger' ) }
 					>
 						{ ( processing || tokenLoading ) && <Loader2 className="w-4 h-4 animate-spin" style={ { outline: 'none' } } tabIndex="-1" /> }
 						{ ! processing && ! tokenLoading && <Shield className="w-4 h-4" style={ { outline: 'none' } } tabIndex="-1" /> }
@@ -122,13 +122,13 @@ const LicenseForm = memo( ( {
 
 			{ ! activated &&
 				<DynamicCard
-					heading={ __( 'No License Key?', 'auto-ai-blogger' ) }
-					subHeading={ __( 'Get started with free credits today.', 'auto-ai-blogger' ) }
-					linkText={ __( 'Get Free Credits', 'auto-ai-blogger' ) }
+					heading={ __( 'No License Key?', 'solvex-ai-blogger' ) }
+					subHeading={ __( 'Get started with free credits today.', 'solvex-ai-blogger' ) }
+					linkText={ __( 'Get Free Credits', 'solvex-ai-blogger' ) }
 					linkUrl={ noLicenseKeyUrl }
 					colorScheme="brand"
 					size="medium"
-					ariaLabel={ __( 'Get free credits - opens in new tab', 'auto-ai-blogger' ) }
+					ariaLabel={ __( 'Get free credits - opens in new tab', 'solvex-ai-blogger' ) }
 				/>
 			}
 
@@ -138,10 +138,10 @@ const LicenseForm = memo( ( {
 					<Loader2 className="w-5 h-5 animate-spin text-green-600" />
 					<div className="flex flex-col gap-1">
 						<p className="text-sm font-medium text-green-800">
-							{ __( 'Fetching your token data…', 'auto-ai-blogger' ) }
+							{ __( 'Fetching your token data…', 'solvex-ai-blogger' ) }
 						</p>
 						<p className="text-xs text-green-600">
-							{ __( 'This may take a few seconds', 'auto-ai-blogger' ) }
+							{ __( 'This may take a few seconds', 'solvex-ai-blogger' ) }
 						</p>
 					</div>
 				</div>
@@ -167,8 +167,8 @@ const License = memo( () => {
 	const [ processing, setProcessing ] = useState( false );
 	const [ tokenLoading, setTokenLoading ] = useState( false );
 	const [ licenseKey, setLicenseKey ] = useState( '' );
-	const [ activationText, setActivationText ] = useState( __( 'Activate', 'auto-ai-blogger' ) );
-	const [ deactivationText, setDeactivationText ] = useState( __( 'Deactivate', 'auto-ai-blogger' ) );
+	const [ activationText, setActivationText ] = useState( __( 'Activate', 'solvex-ai-blogger' ) );
+	const [ deactivationText, setDeactivationText ] = useState( __( 'Deactivate', 'solvex-ai-blogger' ) );
 
 	// Computed values
 	const activated = useMemo( () => licenseStatus === 'licensed', [ licenseStatus ] );
@@ -191,7 +191,7 @@ const License = memo( () => {
 			return;
 		}
 
-		setActivationText( __( 'Activating…', 'auto-ai-blogger' ) );
+		setActivationText( __( 'Activating…', 'solvex-ai-blogger' ) );
 		setProcessing( true );
 
 		// Create abort controller for this request
@@ -200,9 +200,9 @@ const License = memo( () => {
 
 		try {
 			const formData = new FormData();
-			formData.append( 'action', 'autoaib_activate_license' );
+			formData.append( 'action', 'solvex_aib_activate_license' );
 			formData.append( 'license_key', licenseKey );
-			formData.append( 'autoaib_licensing_nonce', licensingNonce );
+			formData.append( 'solvex_aib_licensing_nonce', licensingNonce );
 
 			const response = await apiFetch( {
 				url: ajaxUrl,
@@ -212,7 +212,7 @@ const License = memo( () => {
 			} );
 
 			if ( ! response.success ) {
-				throw new Error( response?.data?.message || __( 'License activation failed', 'auto-ai-blogger' ) );
+				throw new Error( response?.data?.message || __( 'License activation failed', 'solvex-ai-blogger' ) );
 			}
 
 			// Update license status
@@ -261,16 +261,16 @@ const License = memo( () => {
 						await updateApiData( 'tokenRemaining', tokenData.data.remaining, dispatch, abortControllerRef );
 
 						console.log( 'Token data fetched and updated:', tokenData.data );
-						setActivationText( __( 'License Activated & Tokens Updated!', 'auto-ai-blogger' ) );
+						setActivationText( __( 'License Activated & Tokens Updated!', 'solvex-ai-blogger' ) );
 					}
 				} else {
 					console.warn( 'Failed to fetch token data after license activation' );
-					setActivationText( __( 'License Activated (Token fetch failed)', 'auto-ai-blogger' ) );
+					setActivationText( __( 'License Activated (Token fetch failed)', 'solvex-ai-blogger' ) );
 				}
 			} catch ( tokenError ) {
 				// Don't fail the license activation if token fetch fails
 				console.warn( 'Token data fetch error after license activation:', tokenError );
-				setActivationText( __( 'License Activated (Token fetch failed)', 'auto-ai-blogger' ) );
+				setActivationText( __( 'License Activated (Token fetch failed)', 'solvex-ai-blogger' ) );
 			} finally {
 				setTokenLoading( false );
 			}
@@ -278,7 +278,7 @@ const License = memo( () => {
 			setLicenseKey( '' );
 
 			const notificationPayload = {
-				message: __( 'License activated successfully!', 'auto-ai-blogger' ),
+				message: __( 'License activated successfully!', 'solvex-ai-blogger' ),
 				type: 'success',
 				duration: 4000,
 			};
@@ -295,7 +295,7 @@ const License = memo( () => {
 
 			console.error( 'License activation error:', error );
 
-			setActivationText( __( 'Activate', 'auto-ai-blogger' ) );
+			setActivationText( __( 'Activate', 'solvex-ai-blogger' ) );
 			dispatch( {
 				type: 'UPDATE_LICENSE_STATUS',
 				payload: 'unlicensed',
@@ -303,7 +303,7 @@ const License = memo( () => {
 			dispatch( {
 				type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
 				payload: {
-					message: error.message || __( 'Failed to activate license', 'auto-ai-blogger' ),
+					message: error.message || __( 'Failed to activate license', 'solvex-ai-blogger' ),
 					type: 'error',
 					duration: 5000,
 				},
@@ -320,7 +320,7 @@ const License = memo( () => {
 			return;
 		}
 
-		setDeactivationText( __( 'Deactivating…', 'auto-ai-blogger' ) );
+		setDeactivationText( __( 'Deactivating…', 'solvex-ai-blogger' ) );
 		setProcessing( true );
 
 		// Create abort controller for this request
@@ -329,8 +329,8 @@ const License = memo( () => {
 
 		try {
 			const formData = new FormData();
-			formData.append( 'action', 'autoaib_deactivate_license' );
-			formData.append( 'autoaib_licensing_nonce', licensingNonce );
+			formData.append( 'action', 'solvex_aib_deactivate_license' );
+			formData.append( 'solvex_aib_licensing_nonce', licensingNonce );
 
 			const response = await apiFetch( {
 				url: ajaxUrl,
@@ -350,14 +350,14 @@ const License = memo( () => {
 					payload: '',
 				} );
 
-				setDeactivationText( __( 'Deactivated', 'auto-ai-blogger' ) );
-				setActivationText( __( 'Activate', 'auto-ai-blogger' ) );
+				setDeactivationText( __( 'Deactivated', 'solvex-ai-blogger' ) );
+				setActivationText( __( 'Activate', 'solvex-ai-blogger' ) );
 			}
 
 			dispatch( {
 				type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
 				payload: {
-					message: response?.data?.message || __( 'License deactivated', 'auto-ai-blogger' ),
+					message: response?.data?.message || __( 'License deactivated', 'solvex-ai-blogger' ),
 					type: 'success',
 					duration: 3000,
 				},
@@ -368,7 +368,7 @@ const License = memo( () => {
 			}
 
 			console.error( 'Deactivation error:', error );
-			setDeactivationText( __( 'Deactivate', 'auto-ai-blogger' ) );
+			setDeactivationText( __( 'Deactivate', 'solvex-ai-blogger' ) );
 		} finally {
 			setProcessing( false );
 			delete abortControllerRef.current.deactivation;
@@ -379,12 +379,12 @@ const License = memo( () => {
 	useEffect( () => {
 		if ( activated && ! processing && ! tokenLoading ) {
 			// Only show "Activated" and "Deactivate" when completely done
-			setActivationText( __( 'Activated', 'auto-ai-blogger' ) );
-			setDeactivationText( __( 'Deactivate', 'auto-ai-blogger' ) );
+			setActivationText( __( 'Activated', 'solvex-ai-blogger' ) );
+			setDeactivationText( __( 'Deactivate', 'solvex-ai-blogger' ) );
 		} else if ( ! activated && ! processing ) {
 			// Reset to initial state when not activated and not processing
-			setActivationText( __( 'Activate', 'auto-ai-blogger' ) );
-			setDeactivationText( __( 'Deactivated', 'auto-ai-blogger' ) );
+			setActivationText( __( 'Activate', 'solvex-ai-blogger' ) );
+			setDeactivationText( __( 'Deactivated', 'solvex-ai-blogger' ) );
 		}
 		// Don't change text during processing or token loading
 	}, [ activated, processing, tokenLoading ] );
@@ -413,8 +413,8 @@ const License = memo( () => {
 			{ /* Screen reader status */ }
 			<div className="sr-only" aria-live="polite">
 				{ activated
-					? __( 'License is active', 'auto-ai-blogger' )
-					: __( 'No active license', 'auto-ai-blogger' )
+					? __( 'License is active', 'solvex-ai-blogger' )
+					: __( 'No active license', 'solvex-ai-blogger' )
 				}
 			</div>
 		</div>

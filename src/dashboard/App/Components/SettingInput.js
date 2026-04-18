@@ -171,7 +171,7 @@ const SettingInput = forwardRef( ( {
 							clipRule="evenodd"
 						/>
 					</svg>
-					{ __( 'Valid input', 'auto-ai-blogger' ) }
+					{ __( 'Valid input', 'solvex-ai-blogger' ) }
 				</p>
 			) }
 		</div>

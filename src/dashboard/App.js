@@ -16,7 +16,7 @@ if ( ! currentState.initialStateSetFlag ) {
 	} );
 }
 
-const container = document.getElementById( 'auto-ai-blogger-main-page--wrapper' );
+const container = document.getElementById( 'solvex-ai-blogger-main-page--wrapper' );
 
 if ( container ) {
 	const root = createRoot( container );

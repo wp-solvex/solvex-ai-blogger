@@ -88,7 +88,7 @@ const SwitchControl = forwardRef( ( {
 				>
 					{ label }
 					{ required && (
-						<span className="text-red-500 ml-1" aria-label={ __( 'Required', 'auto-ai-blogger' ) }>
+						<span className="text-red-500 ml-1" aria-label={ __( 'Required', 'solvex-ai-blogger' ) }>
 							*
 						</span>
 					) }

@@ -7,44 +7,44 @@
 
 :root {
 	/* Primary Brand Colors */
-	--autoaib-brand-primary: #9138c8;
-	--autoaib-brand-primary-hover: #7c2fb0;
-	--autoaib-brand-primary-light: #b565db;
-	--autoaib-brand-primary-dark: #7c2fb0;
+	--solvex-aib-brand-primary: #9138c8;
+	--solvex-aib-brand-primary-hover: #7c2fb0;
+	--solvex-aib-brand-primary-light: #b565db;
+	--solvex-aib-brand-primary-dark: #7c2fb0;
 
 	/* Brand Color Tints (for backgrounds, borders, etc.) */
-	--autoaib-brand-50: #f9f5fc;
-	--autoaib-brand-100: #f3eaf8;
-	--autoaib-brand-200: #e7d4f1;
-	--autoaib-brand-300: #d0abe3;
-	--autoaib-brand-400: #b565db;
-	--autoaib-brand-500: #9f48d0;
-	--autoaib-brand-600: #9138c8;
-	--autoaib-brand-700: #7c2fb0;
-	--autoaib-brand-800: #672898;
-	--autoaib-brand-900: #3d1954;
+	--solvex-aib-brand-50: #f9f5fc;
+	--solvex-aib-brand-100: #f3eaf8;
+	--solvex-aib-brand-200: #e7d4f1;
+	--solvex-aib-brand-300: #d0abe3;
+	--solvex-aib-brand-400: #b565db;
+	--solvex-aib-brand-500: #9f48d0;
+	--solvex-aib-brand-600: #9138c8;
+	--solvex-aib-brand-700: #7c2fb0;
+	--solvex-aib-brand-800: #672898;
+	--solvex-aib-brand-900: #3d1954;
 
 	/* RGB values for opacity usage */
-	--autoaib-brand-rgb: 145, 56, 200;
+	--solvex-aib-brand-rgb: 145, 56, 200;
 }
 
 /* Utility classes for brand colors */
-.autoaib-bg-brand {
-	background-color: var( --autoaib-brand-primary );
+.solvex-aib-bg-brand {
+	background-color: var( --solvex-aib-brand-primary );
 }
 
-.autoaib-bg-brand-hover:hover {
-	background-color: var( --autoaib-brand-primary-hover );
+.solvex-aib-bg-brand-hover:hover {
+	background-color: var( --solvex-aib-brand-primary-hover );
 }
 
-.autoaib-text-brand {
-	color: var( --autoaib-brand-primary );
+.solvex-aib-text-brand {
+	color: var( --solvex-aib-brand-primary );
 }
 
-.autoaib-border-brand {
-	border-color: var( --autoaib-brand-primary );
+.solvex-aib-border-brand {
+	border-color: var( --solvex-aib-brand-primary );
 }
 
-.autoaib-gradient-brand {
-	background: linear-gradient( 135deg, var( --autoaib-brand-500 ) 0%, var( --autoaib-brand-700 ) 100% );
+.solvex-aib-gradient-brand {
+	background: linear-gradient( 135deg, var( --solvex-aib-brand-500 ) 0%, var( --solvex-aib-brand-700 ) 100% );
 }

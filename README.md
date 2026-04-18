@@ -75,7 +75,7 @@ This plugin bundles the following JavaScript libraries for its admin dashboard i
 
 ## Installation ##
 
-1. Upload the plugin files to the `/wp-content/plugins/auto-ai-blogger` directory, or install the plugin through the WordPress plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins/solvex-ai-blogger` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
 
 ## Source Code ##
@@ -83,7 +83,7 @@ This plugin bundles the following JavaScript libraries for its admin dashboard i
 The uncompiled source code for the plugin's JavaScript and CSS is located in the `src/` directory. The compiled output is in `assets/build/`.
 
 The full source code is publicly available on GitHub:
-https://github.com/wp-solvex/auto-ai-blogger
+https://github.com/wp-solvex/solvex-ai-blogger
 
 To build the plugin assets from source:
 1. Run `npm install` to install dependencies.

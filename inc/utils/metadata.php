@@ -2,7 +2,7 @@
 /**
  * Metadata.
  *
- * @package auto-ai-blogger
+ * @package solvex-ai-blogger
  * @since 1.0.0
  */
 
@@ -33,7 +33,7 @@ class Metadata {
 	 */
 	public static function get_settings_dataset() {
 		return apply_filters(
-			'autoaib_postmeta_dataset',
+			'solvex_aib_postmeta_dataset',
 			[
 				'type'                    => [
 					'default' => 'new',
@@ -225,7 +225,7 @@ class Metadata {
 
 		// Verify post exists and is a campaign.
 		$post = get_post( $campaign_id );
-		if ( ! $post || $post->post_type !== AUTOAIB_CPT_CAMPAIGN ) {
+		if ( ! $post || $post->post_type !== SOLVEX_AIB_CPT_CAMPAIGN ) {
 			return self::get_default_option( $key );
 		}
 
@@ -280,7 +280,7 @@ class Metadata {
 
 		// Verify post exists and is a campaign.
 		$post = get_post( $campaign_id );
-		if ( ! $post || $post->post_type !== AUTOAIB_CPT_CAMPAIGN ) {
+		if ( ! $post || $post->post_type !== SOLVEX_AIB_CPT_CAMPAIGN ) {
 			return false;
 		}
 
@@ -363,7 +363,7 @@ class Metadata {
 				return sanitize_email( $value );
 
 			case 'array':
-				return is_array( $value ) ? autoaib_clean_data( $value ) : [];
+				return is_array( $value ) ? solvex_aib_clean_data( $value ) : [];
 
 			case 'html':
 				return wp_kses_post( $value );
@@ -404,7 +404,7 @@ class Metadata {
 				break;
 
 			case 'array':
-				$output = ! empty( $value ) ? autoaib_clean_data( $value ) : '';
+				$output = ! empty( $value ) ? solvex_aib_clean_data( $value ) : '';
 				break;
 
 			case 'html':
@@ -494,7 +494,7 @@ class Metadata {
 				'post_status'            => 'any',
 				'meta_query'             => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Using meta query for campaign posts.
 					[
-						'key'     => 'autoaib_campaign_id',
+						'key'     => 'solvex_aib_campaign_id',
 						'value'   => $campaign_id,
 						'compare' => '=',
 					],
@@ -534,7 +534,7 @@ class Metadata {
 			return false;
 		}
 
-		if ( ! $campaign->post_type || $campaign->post_type !== AUTOAIB_CPT_CAMPAIGN ) {
+		if ( ! $campaign->post_type || $campaign->post_type !== SOLVEX_AIB_CPT_CAMPAIGN ) {
 			return false;
 		}
 
@@ -557,18 +557,18 @@ class Metadata {
 
 		// Format frequency for display.
 		if ( ! $plain_metadata ) {
-			$meta_frequency = __( 'Every', 'auto-ai-blogger' ) . ' ' . $meta_frequency . ' ' . $repeat_unit;
+			$meta_frequency = __( 'Every', 'solvex-ai-blogger' ) . ' ' . $meta_frequency . ' ' . $repeat_unit;
 
 			// Add weekday selection info if it's a weekly campaign with specific days.
 			if ( $repeat_unit === 'week' && ! empty( $metadata['repeatWeeklyOn'] ) && is_array( $metadata['repeatWeeklyOn'] ) ) {
 				$day_names = [
-					'mon' => __( 'Mon', 'auto-ai-blogger' ),
-					'tue' => __( 'Tue', 'auto-ai-blogger' ),
-					'wed' => __( 'Wed', 'auto-ai-blogger' ),
-					'thu' => __( 'Thu', 'auto-ai-blogger' ),
-					'fri' => __( 'Fri', 'auto-ai-blogger' ),
-					'sat' => __( 'Sat', 'auto-ai-blogger' ),
-					'sun' => __( 'Sun', 'auto-ai-blogger' ),
+					'mon' => __( 'Mon', 'solvex-ai-blogger' ),
+					'tue' => __( 'Tue', 'solvex-ai-blogger' ),
+					'wed' => __( 'Wed', 'solvex-ai-blogger' ),
+					'thu' => __( 'Thu', 'solvex-ai-blogger' ),
+					'fri' => __( 'Fri', 'solvex-ai-blogger' ),
+					'sat' => __( 'Sat', 'solvex-ai-blogger' ),
+					'sun' => __( 'Sun', 'solvex-ai-blogger' ),
 				];
 
 				$selected_day_names = [];
@@ -590,7 +590,7 @@ class Metadata {
 		if ( ! empty( $metadata['lastRun'] ) ) {
 			$metadata['lastRun'] = date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $metadata['lastRun'] ) );
 		} else {
-			$metadata['lastRun'] = __( 'Not Started Yet.', 'auto-ai-blogger' );
+			$metadata['lastRun'] = __( 'Not Started Yet.', 'solvex-ai-blogger' );
 		}
 
 		return array_merge(

@@ -96,12 +96,12 @@ const ContentHeader = ( {
 
 			// Validate settings before saving
 			if ( Object.keys( settingsToSave ).length === 0 ) {
-				throw new Error( __( 'No settings to save', 'auto-ai-blogger' ) );
+				throw new Error( __( 'No settings to save', 'solvex-ai-blogger' ) );
 			}
 
 			// Validate notification settings
 			if ( emailNotificationEnabled && ( ! emailNotificationValue || ! emailNotificationValue.trim() ) ) {
-				throw new Error( __( 'Email address cannot be empty.', 'auto-ai-blogger' ) );
+				throw new Error( __( 'Email address cannot be empty.', 'solvex-ai-blogger' ) );
 			}
 
 			// Save settings sequentially to avoid race conditions and database conflicts
@@ -116,7 +116,7 @@ const ContentHeader = ( {
 				dispatch( {
 					type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
 					payload: {
-						message: __( 'Saving setting', 'auto-ai-blogger' ) + ` ${ currentIndex } ` + __( 'of', 'auto-ai-blogger' ) + ` ${ totalSettings }...`,
+						message: __( 'Saving setting', 'solvex-ai-blogger' ) + ` ${ currentIndex } ` + __( 'of', 'solvex-ai-blogger' ) + ` ${ totalSettings }...`,
 						type: 'info',
 						duration: 0, // Don't auto-hide while saving
 					},
@@ -140,7 +140,7 @@ const ContentHeader = ( {
 			}
 
 			// Success feedback.
-			const successMessage = __( 'Settings saved successfully', 'auto-ai-blogger' );
+			const successMessage = __( 'Settings saved successfully', 'solvex-ai-blogger' );
 
 			dispatch( {
 				type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
@@ -156,7 +156,7 @@ const ContentHeader = ( {
 		} catch ( error ) {
 			console.error( 'Failed to save settings:', error );
 
-			const errorMessage = error?.message || __( 'Failed to save settings. Please try again.', 'auto-ai-blogger' );
+			const errorMessage = error?.message || __( 'Failed to save settings. Please try again.', 'solvex-ai-blogger' );
 
 			dispatch( {
 				type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
@@ -176,13 +176,13 @@ const ContentHeader = ( {
 	// Memoize header title
 	const headerTitle = useMemo( () => { // eslint-disable-line
 		if ( ! title ) {
-			return __( 'Settings', 'auto-ai-blogger' );
+			return __( 'Settings', 'solvex-ai-blogger' );
 		}
-		return `${ title } ${ __( 'Settings', 'auto-ai-blogger' ) }`;
+		return `${ title } ${ __( 'Settings', 'solvex-ai-blogger' ) }`;
 	}, [ title ] );
 
 	return (
-		<div className={ `flex items-center w-full justify-between mb-8 autoaib-content-header bg-gradient-to-r from-brand-50 to-indigo-50 border rounded-xl border-b border-gray-200 p-6` }>
+		<div className={ `flex items-center w-full justify-between mb-8 solvex-aib-content-header bg-gradient-to-r from-brand-50 to-indigo-50 border rounded-xl border-b border-gray-200 p-6` }>
 			<div className={ `flex items-center w-full gap-4` }>
 				{ Icon && (
 					<div className={ `p-3 bg-brand-100 rounded-lg flex` }>
@@ -204,7 +204,7 @@ const ContentHeader = ( {
 								disabled={ processing || Object.keys( settingsToSave ).length === 0 }
 								onClick={ saveSettings }
 								className="cursor-pointer inline-flex items-center justify-center rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-								aria-label={ processing ? __( 'Saving settings…', 'auto-ai-blogger' ) : __( 'Save settings', 'auto-ai-blogger' ) }
+								aria-label={ processing ? __( 'Saving settings…', 'solvex-ai-blogger' ) : __( 'Save settings', 'solvex-ai-blogger' ) }
 								aria-describedby={ lastSaveTime ? 'last-save-time' : undefined }
 							>
 								{ processing ? (
@@ -230,12 +230,12 @@ const ContentHeader = ( {
 												d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 											/>
 										</svg>
-										<span>{ __( 'Saving…', 'auto-ai-blogger' ) }</span>
+										<span>{ __( 'Saving…', 'solvex-ai-blogger' ) }</span>
 									</>
 								) : (
 									<>
 										<Save className="w-4 h-4 mr-2" aria-hidden="true" />
-										<span>{ __( 'Save', 'auto-ai-blogger' ) }</span>
+										<span>{ __( 'Save', 'solvex-ai-blogger' ) }</span>
 									</>
 								) }
 							</button>

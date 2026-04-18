@@ -157,11 +157,11 @@ const FooterNavigationBar = memo( ( props ) => {
 		const stepsToSkip = [ 'ready', 'optin' ];
 
 		if ( nextStep && ! stepsToSkip.includes( currentActiveStep ) ) {
-			return __( 'Next', 'auto-ai-blogger' );
+			return __( 'Next', 'solvex-ai-blogger' );
 		} else if ( nextStep || currentActiveStep === 'optin' ) {
-			return __( 'Skip', 'auto-ai-blogger' );
+			return __( 'Skip', 'solvex-ai-blogger' );
 		}
-		return __( 'Finish Setup', 'auto-ai-blogger' );
+		return __( 'Finish Setup', 'solvex-ai-blogger' );
 	}, [ nextStep, currentActiveStep ] );
 
 	// Determine if previous button should be disabled
@@ -183,9 +183,9 @@ const FooterNavigationBar = memo( ( props ) => {
 
 	return (
 		<footer
-			className="autoaib-setup-footer bg-white shadow-lg border-t border-gray-200 fixed right-0 left-[160px] bottom-0 h-[80px] z-20"
+			className="solvex-aib-setup-footer bg-white shadow-lg border-t border-gray-200 fixed right-0 left-[160px] bottom-0 h-[80px] z-20"
 			role="contentinfo"
-			aria-label={ __( 'Setup wizard navigation', 'auto-ai-blogger' ) }
+			aria-label={ __( 'Setup wizard navigation', 'solvex-ai-blogger' ) }
 		>
 			<div className="flex items-center justify-between max-w-4xl mx-auto px-8 h-full">
 				{ /* Previous button section */ }
@@ -196,9 +196,9 @@ const FooterNavigationBar = memo( ( props ) => {
 						disabled={ isPreviousDisabled }
 						loading={ isNavigating && previousStep !== 'dashboard' }
 						icon={ ChevronLeft }
-						ariaLabel={ __( 'Go to previous step', 'auto-ai-blogger' ) }
+						ariaLabel={ __( 'Go to previous step', 'solvex-ai-blogger' ) }
 					>
-						{ __( 'Back', 'auto-ai-blogger' ) }
+						{ __( 'Back', 'solvex-ai-blogger' ) }
 					</NavigationButton>
 				</div>
 
@@ -214,7 +214,7 @@ const FooterNavigationBar = memo( ( props ) => {
 					{ /* Mobile progress text */ }
 					<div className="md:hidden">
 						<span className="text-sm text-gray-600 font-medium">
-							{ __( 'Step', 'auto-ai-blogger' ) + ` ${ currentStep + 1 } ` + __( 'of', 'auto-ai-blogger' ) + ` ${ maxSteps }` }
+							{ __( 'Step', 'solvex-ai-blogger' ) + ` ${ currentStep + 1 } ` + __( 'of', 'solvex-ai-blogger' ) + ` ${ maxSteps }` }
 						</span>
 					</div>
 				</div>
@@ -227,17 +227,17 @@ const FooterNavigationBar = memo( ( props ) => {
 						loading={ isNavigating || isCompleting }
 						icon={ ! nextStep && currentActiveStep === 'ready' ? Check : ChevronRight }
 						iconPlacement="right"
-						ariaLabel={ __( 'Continue to next step', 'auto-ai-blogger' ) }
+						ariaLabel={ __( 'Continue to next step', 'solvex-ai-blogger' ) }
 					>
-						{ isCompleting ? __( 'Completing…', 'auto-ai-blogger' ) : getNextButtonText() }
+						{ isCompleting ? __( 'Completing…', 'solvex-ai-blogger' ) : getNextButtonText() }
 					</NavigationButton>
 				</div>
 			</div>
 
 			{ /* Screen reader announcements */ }
 			<div className="sr-only" aria-live="polite" aria-atomic="true">
-				{ isNavigating && __( 'Navigating to next step…', 'auto-ai-blogger' ) }
-				{ isCompleting && __( 'Completing setup process…', 'auto-ai-blogger' ) }
+				{ isNavigating && __( 'Navigating to next step…', 'solvex-ai-blogger' ) }
+				{ isCompleting && __( 'Completing setup process…', 'solvex-ai-blogger' ) }
 			</div>
 		</footer>
 	);

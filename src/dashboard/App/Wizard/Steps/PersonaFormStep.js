@@ -46,7 +46,7 @@ const FormField = memo( ( {
 			>
 				{ Icon && <Icon className="w-3.5 h-3.5 text-gray-600 mr-2" aria-hidden="true" /> }
 				{ label }
-				{ required && <span className="text-red-500 ml-[2px]" aria-label={ __( 'Required', 'auto-ai-blogger' ) }>*</span> }
+				{ required && <span className="text-red-500 ml-[2px]" aria-label={ __( 'Required', 'solvex-ai-blogger' ) }>*</span> }
 			</label>
 
 			<div className="relative">
@@ -133,7 +133,7 @@ const SubmitButton = ( { onClick, loading, disabled, children } ) => {
 				transform transition-all duration-200 hover:scale-105 hover:shadow-xl
 				disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
 			"
-			aria-label={ __( 'Continue to next step', 'auto-ai-blogger' ) }
+			aria-label={ __( 'Continue to next step', 'solvex-ai-blogger' ) }
 		>
 			{ loading ? (
 				<Loader2 className="w-4.5 h-4.5 animate-spin" aria-hidden="true" />
@@ -198,31 +198,31 @@ const PersonaFormStep = memo( () => {
 		// Validate siteTitle
 		const trimmedTitle = formData.siteTitle?.trim() || '';
 		if ( ! trimmedTitle ) {
-			newErrors.siteTitle = __( 'Site title is required', 'auto-ai-blogger' );
+			newErrors.siteTitle = __( 'Site title is required', 'solvex-ai-blogger' );
 		} else if ( trimmedTitle.length < 3 ) {
-			newErrors.siteTitle = __( 'Site title must be at least 3 characters', 'auto-ai-blogger' );
+			newErrors.siteTitle = __( 'Site title must be at least 3 characters', 'solvex-ai-blogger' );
 		} else if ( trimmedTitle.length > 100 ) {
-			newErrors.siteTitle = __( 'Site title must be less than 100 characters', 'auto-ai-blogger' );
+			newErrors.siteTitle = __( 'Site title must be less than 100 characters', 'solvex-ai-blogger' );
 		}
 
 		// Validate siteFor
 		const trimmedFor = formData.siteFor?.trim() || '';
 		if ( ! trimmedFor ) {
-			newErrors.siteFor = __( 'Site purpose is required', 'auto-ai-blogger' );
+			newErrors.siteFor = __( 'Site purpose is required', 'solvex-ai-blogger' );
 		} else if ( trimmedFor.length < 10 ) {
-			newErrors.siteFor = __( 'Please provide a more detailed description (at least 10 characters)', 'auto-ai-blogger' );
+			newErrors.siteFor = __( 'Please provide a more detailed description (at least 10 characters)', 'solvex-ai-blogger' );
 		} else if ( trimmedFor.length > 200 ) {
-			newErrors.siteFor = __( 'Site purpose must be less than 200 characters', 'auto-ai-blogger' );
+			newErrors.siteFor = __( 'Site purpose must be less than 200 characters', 'solvex-ai-blogger' );
 		}
 
 		// Validate siteDescription
 		const trimmedDescription = formData.siteDescription?.trim() || '';
 		if ( ! trimmedDescription ) {
-			newErrors.siteDescription = __( 'Site description is required', 'auto-ai-blogger' );
+			newErrors.siteDescription = __( 'Site description is required', 'solvex-ai-blogger' );
 		} else if ( trimmedDescription.length < 20 ) {
-			newErrors.siteDescription = __( 'Please provide a more detailed description (at least 20 characters)', 'auto-ai-blogger' );
+			newErrors.siteDescription = __( 'Please provide a more detailed description (at least 20 characters)', 'solvex-ai-blogger' );
 		} else if ( trimmedDescription.length > 1000 ) {
-			newErrors.siteDescription = __( 'Site description must be less than 1000 characters', 'auto-ai-blogger' );
+			newErrors.siteDescription = __( 'Site description must be less than 1000 characters', 'solvex-ai-blogger' );
 		}
 
 		setErrors( newErrors );
@@ -322,7 +322,7 @@ const PersonaFormStep = memo( () => {
 			navigate( `?step=license` );
 		} catch ( error ) {
 			console.error( 'Form submission error:', error );
-			setErrors( { submit: __( 'Failed to save your information. Please try again.', 'auto-ai-blogger' ) } );
+			setErrors( { submit: __( 'Failed to save your information. Please try again.', 'solvex-ai-blogger' ) } );
 		} finally {
 			setIsSubmitting( false );
 		}
@@ -361,11 +361,11 @@ const PersonaFormStep = memo( () => {
 						<div className="mb-2.5">
 							<span className="inline-flex items-center px-3.5 py-1.5 bg-white bg-opacity-20 text-white text-[13px] font-medium rounded-full tracking-wide uppercase">
 								<User className="w-3.5 h-3.5 mr-1.5" aria-hidden="true" />
-								{ __( 'Step 2 of 5', 'auto-ai-blogger' ) }
+								{ __( 'Step 2 of 5', 'solvex-ai-blogger' ) }
 							</span>
 						</div>
 						<h1 id="persona-heading" className="text-2xl md:text-[27px] font-bold text-white mb-3.5">
-							{ __( 'Tell Us About Your Site', 'auto-ai-blogger' ) }
+							{ __( 'Tell Us About Your Site', 'solvex-ai-blogger' ) }
 						</h1>
 
 						{ /* Progress bar */ }
@@ -382,7 +382,7 @@ const PersonaFormStep = memo( () => {
 								/>
 							</div>
 							<p className="text-indigo-100 text-sm mt-1">
-								{ `${ completionPercentage }% ` + __( 'complete', 'auto-ai-blogger' ) }
+								{ `${ completionPercentage }% ` + __( 'complete', 'solvex-ai-blogger' ) }
 							</p>
 						</div>
 					</div>
@@ -391,44 +391,44 @@ const PersonaFormStep = memo( () => {
 					<form className="p-5 md:p-7" onSubmit={ handleSubmit } noValidate>
 						<div className="space-y-5">
 							<FormField
-								id="autoaib-site-title"
-								label={ __( 'Site Title', 'auto-ai-blogger' ) }
+								id="solvex-aib-site-title"
+								label={ __( 'Site Title', 'solvex-ai-blogger' ) }
 								value={ formData.siteTitle }
 								onChange={ handleFieldChange( 'siteTitle' ) }
 								error={ errors.siteTitle }
-								placeholder={ __( 'e.g., Tech Insights Blog, Travel Adventures', 'auto-ai-blogger' ) }
+								placeholder={ __( 'e.g., Tech Insights Blog, Travel Adventures', 'solvex-ai-blogger' ) }
 								maxLength={ 100 }
 								icon={ Globe }
 								required
-								description={ __( 'The main title of your website or blog.', 'auto-ai-blogger' ) }
+								description={ __( 'The main title of your website or blog.', 'solvex-ai-blogger' ) }
 							/>
 
 							<FormField
-								id="autoaib-site-for"
-								label={ __( 'Site Purpose', 'auto-ai-blogger' ) }
+								id="solvex-aib-site-for"
+								label={ __( 'Site Purpose', 'solvex-ai-blogger' ) }
 								value={ formData.siteFor }
 								onChange={ handleFieldChange( 'siteFor' ) }
 								error={ errors.siteFor }
-								placeholder={ __( 'e.g., technology enthusiasts, travel lovers', 'auto-ai-blogger' ) }
+								placeholder={ __( 'e.g., technology enthusiasts, travel lovers', 'solvex-ai-blogger' ) }
 								maxLength={ 200 }
 								icon={ User }
 								required
-								description={ __( 'Who is your target audience?', 'auto-ai-blogger' ) }
+								description={ __( 'Who is your target audience?', 'solvex-ai-blogger' ) }
 							/>
 
 							<FormField
-								id="autoaib-site-description"
-								label={ __( 'Detailed Description', 'auto-ai-blogger' ) }
+								id="solvex-aib-site-description"
+								label={ __( 'Detailed Description', 'solvex-ai-blogger' ) }
 								type="textarea"
 								value={ formData.siteDescription }
 								onChange={ handleFieldChange( 'siteDescription' ) }
 								error={ errors.siteDescription }
-								placeholder={ __( 'Describe your site: topics, style, audience, goals…', 'auto-ai-blogger' ) }
+								placeholder={ __( 'Describe your site: topics, style, audience, goals…', 'solvex-ai-blogger' ) }
 								maxLength={ 1000 }
 								rows={ 6 }
 								icon={ FileText }
 								required
-								description={ __( 'Help AI understand your content need.', 'auto-ai-blogger' ) }
+								description={ __( 'Help AI understand your content need.', 'solvex-ai-blogger' ) }
 							/>
 						</div>
 
@@ -449,7 +449,7 @@ const PersonaFormStep = memo( () => {
 								loading={ isSubmitting }
 								disabled={ ! isFormValid }
 							>
-								{ isSubmitting ? __( 'Saving…', 'auto-ai-blogger' ) : __( 'Continue', 'auto-ai-blogger' ) }
+								{ isSubmitting ? __( 'Saving…', 'solvex-ai-blogger' ) : __( 'Continue', 'solvex-ai-blogger' ) }
 							</SubmitButton>
 						</div>
 					</form>
@@ -458,15 +458,15 @@ const PersonaFormStep = memo( () => {
 				{ /* Help text */ }
 				<div className="text-center mt-3.5">
 					<p className="text-[13px] text-gray-600">
-						{ __( 'This information will be used to configure your AI content generator for optimal results.', 'auto-ai-blogger' ) }
+						{ __( 'This information will be used to configure your AI content generator for optimal results.', 'solvex-ai-blogger' ) }
 					</p>
 				</div>
 			</div>
 
 			{ /* Screen reader announcements */ }
 			<div className="sr-only" aria-live="polite" aria-atomic="true">
-				{ isSubmitting && __( 'Saving your site information…', 'auto-ai-blogger' ) }
-				{ Object.keys( errors ).length > 0 && __( 'Please fix the form errors before continuing.', 'auto-ai-blogger' ) }
+				{ isSubmitting && __( 'Saving your site information…', 'solvex-ai-blogger' ) }
+				{ Object.keys( errors ).length > 0 && __( 'Please fix the form errors before continuing.', 'solvex-ai-blogger' ) }
 			</div>
 		</main>
 	);

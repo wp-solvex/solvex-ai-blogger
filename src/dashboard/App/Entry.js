@@ -14,7 +14,7 @@ const RouteLoader = () => (
 	<div
 		className="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-50 to-indigo-100"
 		aria-live="polite"
-		aria-label={ __( 'Loading application', 'auto-ai-blogger' ) }
+		aria-label={ __( 'Loading application', 'solvex-ai-blogger' ) }
 	>
 		<div className="flex flex-col items-center space-y-6">
 			{ /* Animated AI Brain Icon */ }
@@ -40,11 +40,11 @@ const RouteLoader = () => (
 			{ /* Loading text with typing effect */ }
 			<div className="text-center">
 				<h3 className="text-xl font-semibold text-slate-800 mb-2">
-					{ __( 'AI Blogger', 'auto-ai-blogger' ) }
+					{ __( 'AI Blogger', 'solvex-ai-blogger' ) }
 				</h3>
 				<div className="flex items-center justify-center space-x-1">
 					<span className="text-slate-600 font-medium">
-						{ __( 'Initializing AI Engine', 'auto-ai-blogger' ) }
+						{ __( 'Initializing AI Engine', 'solvex-ai-blogger' ) }
 					</span>
 				</div>
 			</div>
@@ -139,10 +139,10 @@ const Entry = () => {
 							</svg>
 						</div>
 						<h1 className="text-2xl font-bold text-slate-900 mb-3">
-							{ __( 'Application Error', 'auto-ai-blogger' ) }
+							{ __( 'Application Error', 'solvex-ai-blogger' ) }
 						</h1>
 						<p className="text-slate-600 mb-6">
-							{ appState.error || __( 'An unexpected error occurred while loading the application.', 'auto-ai-blogger' ) }
+							{ appState.error || __( 'An unexpected error occurred while loading the application.', 'solvex-ai-blogger' ) }
 						</p>
 						<div className="space-y-3">
 							<button
@@ -150,14 +150,14 @@ const Entry = () => {
 								className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-colors duration-200"
 								type="button"
 							>
-								{ __( 'Try Again', 'auto-ai-blogger' ) }
+								{ __( 'Try Again', 'solvex-ai-blogger' ) }
 							</button>
 							<button
 								onClick={ () => window.location.reload() }
 								className="w-full inline-flex justify-center items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
 								type="button"
 							>
-								{ __( 'Reload Page', 'auto-ai-blogger' ) }
+								{ __( 'Reload Page', 'solvex-ai-blogger' ) }
 							</button>
 						</div>
 					</div>

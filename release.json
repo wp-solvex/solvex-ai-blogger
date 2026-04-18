@@ -1,14 +1,14 @@
 {
   "name": "Solvex AI Blogger",
-  "slug": "auto-ai-blogger",
+  "slug": "solvex-ai-blogger",
   "author": "<a href='https://wpsolvex.com/'>WP Solvex</a>",
   "author_profile": "https://wpaiblogger.com/",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "requires": "6.0",
   "tested": "6.9",
   "requires_php": "7.4",
   "sections": {
     "description": "Auto blogging with AI.",
-    "changelog": "<h4>Version 0.0.3</h4><ul><li>WordPress plugin review team improvements.</li></ul><h4>Version 0.0.2</h4><ul><li>Improvement: Feedback as per WordPress plugin review team has been implemented.</li></ul><h4>Version 0.0.1</h4><ul><li>Initial Release.</li></ul>"
+    "changelog": "<h4>Version 0.0.5</h4><ul><li>Renamed main plugin file to solvex-ai-blogger.php and text domain to solvex-ai-blogger per WordPress Plugin Review Team feedback.</li><li>Renamed internal constants from AUTOAIB_ to SOLVEX_AIB_ and option key from autoaib_settings to solvex_aib_settings.</li><li>Expanded External Services disclosure to cover token-usage endpoint, image downloads, and Unsplash/Pixabay CDNs.</li><li>Simplified REST settings-update permission check to require manage_options only.</li></ul><h4>Version 0.0.4</h4><ul><li>Renamed plugin from Auto AI Blogger to Solvex AI Blogger.</li></ul><h4>Version 0.0.3</h4><ul><li>WordPress plugin review team improvements.</li></ul><h4>Version 0.0.2</h4><ul><li>Improvement: Feedback as per WordPress plugin review team has been implemented.</li></ul><h4>Version 0.0.1</h4><ul><li>Initial Release.</li></ul>"
   }
 }

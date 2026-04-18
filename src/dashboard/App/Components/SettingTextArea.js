@@ -197,7 +197,7 @@ const SettingTextArea = forwardRef( ( {
 									{ charCount.current }/{ charCount.max }
 									{ charCount.isOverLimit && (
 										<span className="ml-1">
-											({ charCount.remaining } { __( 'over limit', 'auto-ai-blogger' ) })
+											({ charCount.remaining } { __( 'over limit', 'solvex-ai-blogger' ) })
 										</span>
 									) }
 								</>
@@ -223,7 +223,7 @@ const SettingTextArea = forwardRef( ( {
 							clipRule="evenodd"
 						/>
 					</svg>
-					{ __( 'Valid input', 'auto-ai-blogger' ) }
+					{ __( 'Valid input', 'solvex-ai-blogger' ) }
 				</p>
 			) }
 		</div>

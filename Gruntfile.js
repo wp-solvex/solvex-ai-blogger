@@ -53,24 +53,24 @@ module.exports = function (grunt) {
 					'!copilot_readme/**',
 					'!debug_tokens.js'
 				],
-				dest: 'auto-ai-blogger/',
+				dest: 'solvex-ai-blogger/',
 			},
 		},
 		compress: {
 			main: {
 				options: {
-					archive: 'auto-ai-blogger-<%= pkg.version %>.zip',
+					archive: 'solvex-ai-blogger-<%= pkg.version %>.zip',
 					mode: 'zip',
 				},
 				files: [
 					{
-						src: ['./auto-ai-blogger/**'],
+						src: ['./solvex-ai-blogger/**'],
 					},
 				],
 			},
 		},
 		clean: {
-			main: ['auto-ai-blogger'],
+			main: ['solvex-ai-blogger'],
 			zip: ['*.zip'],
 			concat: ['assets/js/unminified/main.js', 'assets/css/unminified/main.css'],
 		},
@@ -84,7 +84,7 @@ module.exports = function (grunt) {
 		},
 		replace: {
 			plugin_main: {
-				src: ['auto-ai-blogger.php'],
+				src: ['solvex-ai-blogger.php'],
 				overwrite: true,
 				replacements: [
 					{
@@ -104,12 +104,12 @@ module.exports = function (grunt) {
 				]
 			},
 			plugin_const: {
-				src: ['auto-ai-blogger.php'],
+				src: ['solvex-ai-blogger.php'],
 				overwrite: true,
 				replacements: [
 					{
-						from: /AUTOAIB_VERSION', '.*?'/g,
-						to: 'AUTOAIB_VERSION\', \'<%= pkg.version %>\''
+						from: /SOLVEX_AIB_VERSION', '.*?'/g,
+						to: 'SOLVEX_AIB_VERSION\', \'<%= pkg.version %>\''
 					}
 				]
 			},

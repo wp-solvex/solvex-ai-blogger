@@ -1,5 +1,27 @@
 *** Solvex AI Blogger Changelog ***
 
+0.0.5
+* Improvement: Renamed plugin main file to solvex-ai-blogger.php and corrected the Text Domain to match the plugin slug per WordPress Plugin Review Team feedback.
+* Improvement: Renamed all internal PHP constants and JavaScript identifiers from AUTOAIB_/autoaib_ to SOLVEX_AIB_/solvex_aib_ for consistency with the plugin name.
+* Improvement: Changed the plugin settings option key from autoaib_settings to solvex_aib_settings; previous settings on test installs must be reconfigured.
+* Improvement: Changed the REST API namespace from /autoaib/v1/ to /solvex-ai-blogger/v1/.
+* Improvement: Expanded the External Services disclosure in readme.txt to cover the token-usage endpoint, image downloads, and the Unsplash and Pixabay CDNs image URLs resolve to.
+* Security: Simplified the REST settings-update permission check to require manage_options only (removed the redundant edit_posts check).
+* Fix: Resolved all WordPress.WP.I18n.TextDomainMismatch sniff errors by replacing the old auto-ai-blogger text domain with solvex-ai-blogger.
+
+0.0.4
+* Improvement: Renamed plugin from "Auto AI Blogger" to "Solvex AI Blogger" per WordPress Plugin Review Team feedback.
+
+0.0.3
+* Improvement: Documented SureCart licensing service and third-party libraries in readme.
+* Improvement: Added source code repository link and build instructions in readme.
+* Security: Improved nonce verification flow in license activation with early returns.
+* Security: Enhanced input sanitization for AJAX settings and campaign handlers.
+* Security: Added json_last_error() checks for all JSON decode operations.
+* Security: Improved CSS output escaping in licensing settings.
+* Fix: Removed hardcoded AJAX URL fallbacks in JavaScript source files.
+* Fix: Renamed generic JavaScript object name to use plugin prefix.
+
 0.0.2
 * Improvement: Feedback as per WordPress plugin review team has been implemented.
 

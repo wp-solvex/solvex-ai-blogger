@@ -2,7 +2,7 @@ import apiFetch from '@wordpress/api-fetch';
 
 const setInitialState = ( store ) => {
 	apiFetch( {
-		path: '/auto-ai-blogger/v1/admin/settings/',
+		path: '/solvex-ai-blogger/v1/admin/settings/',
 	} )
 		.then( ( wpAiBloggerSettings ) => {
 			// Get current state to preserve certain values that are correctly initialized from PHP

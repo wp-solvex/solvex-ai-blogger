@@ -2,7 +2,7 @@
 /**
  * Loader.
  *
- * @package auto-ai-blogger
+ * @package solvex-ai-blogger
  * @since 1.0.0
  */
 
@@ -48,17 +48,17 @@ class Loader {
 		spl_autoload_register( [ $this, 'autoload' ] );
 
 		// Activation hook.
-		register_activation_hook( AUTOAIB_FILE, [ $this, 'activation_actions' ] );
+		register_activation_hook( SOLVEX_AIB_FILE, [ $this, 'activation_actions' ] );
 
 		// Deactivation hook.
-		register_deactivation_hook( AUTOAIB_FILE, [ $this, 'deactivation_actions' ] );
+		register_deactivation_hook( SOLVEX_AIB_FILE, [ $this, 'deactivation_actions' ] );
 
 		add_action( 'plugins_loaded', [ $this, 'setup' ], 1 );
 
 		// Remove this after the translation error is fixed.
 		add_filter( 'doing_it_wrong_trigger_error', [ $this, 'suppress_translation_error' ], 10, 4 );
 
-		add_filter( 'plugin_action_links_' . AUTOAIB_BASE_PATH, [ $this, 'plugin_action_links' ] );
+		add_filter( 'plugin_action_links_' . SOLVEX_AIB_BASE_PATH, [ $this, 'plugin_action_links' ] );
 	}
 
 	/**
@@ -91,9 +91,9 @@ class Loader {
 		add_filter( 'cron_schedules', [ $this, 'register_custom_cron_schedules' ] );
 
 		/* Enforce free user limits for max content words if Pro is not available */
-		if ( ! defined( 'AUTOAIB_PRO_VERSION' ) ) {
-			add_filter( 'autoaib_max_content_words', [ $this, 'enforce_free_max_words_limit' ], 10, 2 );
-			add_filter( 'autoaib_campaign_image_count', [ $this, 'enforce_free_image_limit' ], 10, 2 );
+		if ( ! defined( 'SOLVEX_AIB_PRO_VERSION' ) ) {
+			add_filter( 'solvex_aib_max_content_words', [ $this, 'enforce_free_max_words_limit' ], 10, 2 );
+			add_filter( 'solvex_aib_campaign_image_count', [ $this, 'enforce_free_image_limit' ], 10, 2 );
 		}
 
 		if ( is_admin() ) {
@@ -121,9 +121,9 @@ class Loader {
 	 * @return void
 	 */
 	public function define_store_constants(): void {
-		define( 'AUTOAIB_PRODUCT_ID', defined( 'AUTOAIB_PRO_PRODUCT_ID' ) ? AUTOAIB_PRO_PRODUCT_ID : '2effb53f-1066-40d3-9667-ef9f09f91db1' );
-		define( 'AUTOAIB_PRODUCT_NAME', defined( 'AUTOAIB_PRO_PRODUCT_NAME' ) ? AUTOAIB_PRO_PRODUCT_NAME : 'Solvex AI Blogger' );
-		define( 'AUTOAIB_PRODUCT_FILE', defined( 'AUTOAIB_PRO_FILE' ) ? AUTOAIB_PRO_FILE : AUTOAIB_FILE );
+		define( 'SOLVEX_AIB_PRODUCT_ID', defined( 'SOLVEX_AIB_PRO_PRODUCT_ID' ) ? SOLVEX_AIB_PRO_PRODUCT_ID : '2effb53f-1066-40d3-9667-ef9f09f91db1' );
+		define( 'SOLVEX_AIB_PRODUCT_NAME', defined( 'SOLVEX_AIB_PRO_PRODUCT_NAME' ) ? SOLVEX_AIB_PRO_PRODUCT_NAME : 'Solvex AI Blogger' );
+		define( 'SOLVEX_AIB_PRODUCT_FILE', defined( 'SOLVEX_AIB_PRO_FILE' ) ? SOLVEX_AIB_PRO_FILE : SOLVEX_AIB_FILE );
 	}
 
 	/**
@@ -137,7 +137,7 @@ class Loader {
 	 * @return bool
 	 */
 	public function suppress_translation_error( $status, $function_name, $message, $version ) {
-		if ( $function_name === '_load_textdomain_just_in_time' && strpos( $message, 'auto-ai-blogger' ) !== false ) {
+		if ( $function_name === '_load_textdomain_just_in_time' && strpos( $message, 'solvex-ai-blogger' ) !== false ) {
 			return false;
 		}
 		return $status;
@@ -151,7 +151,7 @@ class Loader {
 	 * @since 1.0.0
 	 */
 	public function register_custom_cron_schedules( $schedules ) {
-		$custom_schedules = get_option( 'autoaib_custom_cron_schedules', [] );
+		$custom_schedules = get_option( 'solvex_aib_custom_cron_schedules', [] );
 
 		if ( ! empty( $custom_schedules ) && is_array( $custom_schedules ) ) {
 			foreach ( $custom_schedules as $name => $schedule ) {
@@ -184,7 +184,7 @@ class Loader {
 	 * @return void
 	 */
 	public function autoload( $class ): void {
-		$namespace = __NAMESPACE__;
+		$namespace        = __NAMESPACE__;
 		$namespace_prefix = $namespace . '\\';
 		if ( stripos( $class, $namespace_prefix ) !== 0 ) {
 			return;
@@ -201,7 +201,7 @@ class Loader {
 		if ( is_string( $filename ) ) {
 			$filename = strtolower( str_replace( '\\', DIRECTORY_SEPARATOR, $filename ) );
 
-			$file = AUTOAIB_DIR . $filename . '.php';
+			$file = SOLVEX_AIB_DIR . $filename . '.php';
 
 			// if the file readable, include it.
 			if ( is_readable( $file ) ) {
@@ -277,7 +277,7 @@ class Loader {
 	public function plugin_action_links( $links ) {
 		return array_merge(
 			[
-				'<a href="' . esc_url( admin_url( 'edit.php?page=auto-ai-blogger' ) ) . '">' . __( 'Automate Blogging', 'auto-ai-blogger' ) . '</a>',
+				'<a href="' . esc_url( admin_url( 'edit.php?page=solvex-ai-blogger' ) ) . '">' . __( 'Automate Blogging', 'solvex-ai-blogger' ) . '</a>',
 			],
 			$links
 		);
