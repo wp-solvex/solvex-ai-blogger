@@ -1,0 +1,47 @@
+/* Enhanced notification animations */
+@keyframes shrinkWidth {
+	from {
+		transform: scaleX( 1 );
+	}
+	to {
+		transform: scaleX( 0 );
+	}
+}
+
+@keyframes notificationSlideIn {
+	from {
+		transform: translateX( 100% ) scale( 0.95 );
+		opacity: 0;
+	}
+	to {
+		transform: translateX( 0 ) scale( 1 );
+		opacity: 1;
+	}
+}
+
+@keyframes notificationSlideOut {
+	from {
+		transform: translateX( 0 ) scale( 1 );
+		opacity: 1;
+	}
+	to {
+		transform: translateX( 100% ) scale( 0.95 );
+		opacity: 0;
+	}
+}
+
+/* Notification progress bar animation */
+.notification-progress {
+	animation: shrinkWidth var( --duration ) linear forwards;
+}
+
+/* Enhanced notification container */
+.notification-container {
+	backdrop-filter: blur( 12px );
+}
+
+/* Floating effect on hover */
+.notification-card:hover {
+	transform: scale( 1.05 ) translateY( -2px );
+	box-shadow: 0 20px 25px -5px rgba( 0, 0, 0, 0.1 ), 0 10px 10px -5px rgba( 0, 0, 0, 0.04 );
+}

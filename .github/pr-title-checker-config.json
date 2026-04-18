@@ -1,0 +1,10 @@
+{
+    "LABEL": {
+        "name": "Title Needs Formatting",
+        "color": "EEEEEE"
+    },
+    "CHECKS": {
+      "regexp": "WPABAI-[0-9]+ - ",
+      "ignoreLabels" : ["meta", "dependencies", "skip-title-validation"]
+    }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Solvex AI Blogger",
+  "slug": "auto-ai-blogger",
+  "author": "<a href='https://wpsolvex.com/'>WP Solvex</a>",
+  "author_profile": "https://wpaiblogger.com/",
+  "version": "0.0.4",
+  "requires": "6.0",
+  "tested": "6.9",
+  "requires_php": "7.4",
+  "sections": {
+    "description": "Auto blogging with AI.",
+    "changelog": "<h4>Version 0.0.3</h4><ul><li>WordPress plugin review team improvements.</li></ul><h4>Version 0.0.2</h4><ul><li>Improvement: Feedback as per WordPress plugin review team has been implemented.</li></ul><h4>Version 0.0.1</h4><ul><li>Initial Release.</li></ul>"
+  }
+}

@@ -1,0 +1,119 @@
+name: Prepare a Release PR
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Enter version number'
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-version:
+    name: 'Update version'
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+          node: ['18.15.0']
+          php: ['8.2']
+    if: |
+      github.event_name == 'workflow_dispatch' &&
+      github.ref == 'refs/heads/release-candidate'
+    outputs:
+      old_version: ${{ steps.get_version.outputs.old_version }}
+      new_version: ${{ steps.get_version.outputs.new_version }}
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@master
+        with:
+          ref: release-candidate
+
+      - name: Initialize mandatory git config
+        run: |
+          git config user.name "WebEmpire"
+          git config user.email "webempire143@gmail.com"
+
+      - name: Compute old and new version
+        id: get_version
+        run: |
+          OLD_VERSION=$(jq --raw-output '.version' package.json)
+          echo "::set-output name=old_version::$(echo $OLD_VERSION)"
+          NEW_VERSION=${{ github.event.inputs.version }}
+          echo "::set-output name=new_version::$(echo $NEW_VERSION)"
+
+      - name: Update plugin version
+        env:
+          VERSION: ${{ steps.get_version.outputs.new_version }}
+        run: |
+          cat <<< $(jq --tab --arg version "${VERSION}" '.version = $version' package.json) > package.json
+          cat <<< $(jq --tab --arg version "${VERSION}" '.version = $version' package-lock.json) > package-lock.json
+
+      - name: Use desired version of NodeJS
+        uses: actions/setup-node@v2
+        with:
+            node-version: ${{ matrix.node }}
+
+      - name: Cache NPM packages
+        uses: actions/cache@v4
+        with:
+            # npm cache files are stored in `~/.npm` on Linux/macOS
+            path: ~/.npm
+            key: ${{ runner.os }}-node-${{ matrix.node }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+            php-version: ${{ matrix.php }}
+            coverage: none
+            tools: composer, cs2pr, phpcs
+
+      - name: Install wp-cli
+        run: |
+          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          php wp-cli.phar --info
+          chmod +x wp-cli.phar
+          sudo mv wp-cli.phar /usr/local/bin/wp
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-suggest --no-progress && npm install --legacy-peer-deps
+
+      - name: Install dependencies and build
+        run: npm install && npm run fixer
+
+      - name: Bump version
+        run: grunt version-bump --ver=${{ steps.get_version.outputs.new_version }}
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: Release process built version for version ${{ steps.get_version.outputs.new_version }}
+          base: release-candidate
+          branch: ${{ steps.get_version.outputs.new_version }}-build
+          delete-branch: true
+          title: Release Checklist v${{ steps.get_version.outputs.new_version }}
+          body: |
+            Hi!
+            This PR was created in response to release-pr workflow.
+
+            ---
+
+            Following steps needs manual attention:
+
+            ### Checklist:
+              - [ ] Verify changelog in changelog.txt
+              - [ ] Verify changelog `date` and `content` as per plugin intended format.
+              - [ ] Verify version in `auto-ai-blogger.php` in plugin description and constant `AUTOAIB_VERSION` in auto-ai-blogger.php
+              - [ ] Verify `Stable tag` is `<version-number>` in readme.txt
+              - [ ] Verify `Tested up-to` is set to latest tested version of WordPress.
+              - [ ] Verify the changes by `git diff` and Commit the changes
+              - [ ] Generate POT file & translations -- Run the command mentioned in package.json under `php-makepot` script on the root directory of the plugin via site terminal.
+              - [ ] Review this PR and merge it to the base branch.
+              ---
+
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
