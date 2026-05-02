@@ -1,0 +1,85 @@
+:root {
+	--web-button-padding-y: 0.4375rem;
+	--web-button-padding-x: 0.75rem;
+	--web-button-font-size: 0.8125rem;
+	--web-button-font-weight: 500;
+	--web-button-line-height: 0.9375rem;
+	--web-button-border-radius: 3px;
+	--web-button-context-color: #0073aa;
+	--web-button-context-color-dark: #005177;
+	--web-button-context-tint: #0073aa0a;
+}
+.web-review-button--cta {
+	--web-button-context-color: #5e3bc4;
+	--web-button-context-color-dark: #4b2f9d;
+	--web-button-context-tint: rgb( 75 47 157/4% );
+}
+.web-review-button--error {
+	--web-button-context-color: #d72b3f;
+	--web-button-context-color-dark: #ae2131;
+	--web-button-context-tint: #d72b3f0a;
+}
+#dpj-rating-notice {
+	border-left-color: #6939c6;
+}
+.web-review-notice h3 {
+	margin: 0;
+	font-size: 1.0625rem;
+	line-height: 1.2;
+}
+.web-review-notice h3 + p {
+	margin-top: 8px;
+}
+.web-review-notice__actions {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+}
+p + .web-review-notice__actions {
+	margin-top: 1rem;
+}
+.web-review-button:not( :disabled ):not( .disabled ) {
+	cursor: pointer;
+}
+.web-review-button {
+	display: inline-block;
+	padding: var( --web-button-padding-y ) var( --web-button-padding-x );
+	border: 0;
+	border-radius: var( --web-button-border-radius );
+	background: var( --web-button-context-color );
+	color: #fff;
+	vertical-align: middle;
+	text-align: center;
+	text-decoration: none;
+	white-space: nowrap;
+	font-weight: var( --web-button-font-weight );
+	font-size: var( --web-button-font-size );
+	line-height: var( --web-button-line-height );
+	-webkit-transition: background-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+	-webkit-transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.web-review-button.web-review-button--outline {
+	border: 1px solid;
+	background: 0 0;
+	color: var( --web-button-context-color );
+}
+.web-review-notice__actions > * + * {
+	margin-inline-start: 8px;
+	-webkit-margin-start: 8px;
+	-moz-margin-start: 8px;
+}
+.web-review-button:hover {
+	background: var( --web-button-context-color-dark );
+	color: #fff;
+	text-decoration: none;
+}
+.web-review-button.web-review-button--outline:hover {
+	background: var( --web-button-context-tint );
+	color: var( --web-button-context-color-dark );
+}

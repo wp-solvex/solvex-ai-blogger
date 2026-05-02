@@ -1,0 +1,7 @@
+exclude:
+  - master
+  - dev
+  - release-candidate
+  - milestone
+  - next-release
+delete_closed_pr: true
