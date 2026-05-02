@@ -6,7 +6,7 @@
  * Implements security measures including rate limiting, input validation,
  * and proper authentication.
  *
- * @package auto-ai-blogger
+ * @package solvex-ai-blogger
  * @subpackage Admin
  * @since 1.0.0
  */
@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * Implements security measures including rate limiting, input validation,
  * and proper authentication.
  *
- * @package auto-ai-blogger
+ * @package solvex-ai-blogger
  * @subpackage Admin
  * @since 1.0.0
  */
@@ -42,7 +42,7 @@ class API extends \WP_REST_Controller {
 	 *
 	 * @var string
 	 */
-	protected $namespace = AUTOAIB_SLUG . '/v1';
+	protected $namespace = WPSOLVEX_AUTOAIBLOGGER_SLUG . '/v1';
 
 	/**
 	 * Route base.
@@ -72,7 +72,7 @@ class API extends \WP_REST_Controller {
 	 * @var string $option_name DB option name.
 	 * @since 1.0.0
 	 */
-	private static $option_name = AUTOAIB_DB_OPTION;
+	private static $option_name = WPSOLVEX_AUTOAIBLOGGER_DB_OPTION;
 
 	/**
 	 * Admin settings dataset
@@ -223,7 +223,7 @@ class API extends \WP_REST_Controller {
 		if ( ! is_array( $settings ) ) {
 			return new \WP_Error(
 				'settings_error',
-				__( 'Failed to retrieve settings.', 'auto-ai-blogger' ),
+				__( 'Failed to retrieve settings.', 'solvex-ai-blogger' ),
 				[ 'status' => 500 ]
 			);
 		}
@@ -258,7 +258,7 @@ class API extends \WP_REST_Controller {
 		if ( empty( $settings_data ) || ! is_array( $settings_data ) ) {
 			return new \WP_Error(
 				'invalid_data',
-				__( 'Invalid settings data provided.', 'auto-ai-blogger' ),
+				__( 'Invalid settings data provided.', 'solvex-ai-blogger' ),
 				[ 'status' => 400 ]
 			);
 		}
@@ -272,12 +272,12 @@ class API extends \WP_REST_Controller {
 		// Update settings using update_option directly for settings array.
 		$current_settings = Settings::get_ai_blogger_settings();
 		$merged_settings  = array_merge( $current_settings, $sanitized_settings );
-		$updated          = update_option( AUTOAIB_DB_OPTION, $merged_settings );
+		$updated          = update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $merged_settings );
 
 		if ( ! $updated ) {
 			return new \WP_Error(
 				'update_failed',
-				__( 'Failed to update settings.', 'auto-ai-blogger' ),
+				__( 'Failed to update settings.', 'solvex-ai-blogger' ),
 				[ 'status' => 500 ]
 			);
 		}
@@ -289,7 +289,7 @@ class API extends \WP_REST_Controller {
 		return rest_ensure_response(
 			[
 				'success' => true,
-				'message' => __( 'Settings updated successfully.', 'auto-ai-blogger' ),
+				'message' => __( 'Settings updated successfully.', 'solvex-ai-blogger' ),
 				'data'    => $safe_settings,
 			]
 		);
@@ -304,10 +304,10 @@ class API extends \WP_REST_Controller {
 	 */
 	public function get_permissions_check( \WP_REST_Request $request ): \WP_Error|bool {
 		// Basic capability check.
-		if ( ! current_user_can( AUTOAIB_CAPABILITY ) ) {
+		if ( ! current_user_can( WPSOLVEX_AUTOAIBLOGGER_CAPABILITY ) ) {
 			return new \WP_Error(
-				'autoaib_rest_cannot_view',
-				__( 'Sorry, you cannot access this resource.', 'auto-ai-blogger' ),
+				'wpsolvex_autoaiblogger_rest_cannot_view',
+				__( 'Sorry, you cannot access this resource.', 'solvex-ai-blogger' ),
 				[ 'status' => rest_authorization_required_code() ]
 			);
 		}
@@ -329,11 +329,11 @@ class API extends \WP_REST_Controller {
 	 * @since 1.0.0
 	 */
 	public function update_permissions_check( \WP_REST_Request $request ): \WP_Error|bool {
-		// capability check for updates.
-		if ( ! current_user_can( AUTOAIB_CAPABILITY ) || ! current_user_can( 'edit_posts' ) ) {
+		// Only site administrators may update plugin settings.
+		if ( ! current_user_can( WPSOLVEX_AUTOAIBLOGGER_CAPABILITY ) ) {
 			return new \WP_Error(
-				'autoaib_rest_cannot_update',
-				__( 'Sorry, you cannot update this resource.', 'auto-ai-blogger' ),
+				'wpsolvex_autoaiblogger_rest_cannot_update',
+				__( 'Sorry, you cannot update this resource.', 'solvex-ai-blogger' ),
 				[ 'status' => rest_authorization_required_code() ]
 			);
 		}
@@ -343,7 +343,7 @@ class API extends \WP_REST_Controller {
 		if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
 			return new \WP_Error(
 				'invalid_nonce',
-				__( 'Invalid security token.', 'auto-ai-blogger' ),
+				__( 'Invalid security token.', 'solvex-ai-blogger' ),
 				[ 'status' => 403 ]
 			);
 		}
@@ -368,8 +368,8 @@ class API extends \WP_REST_Controller {
 		// Admin-only capability for license management.
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return new \WP_Error(
-				'autoaib_rest_cannot_manage_license',
-				__( 'Sorry, you cannot manage licenses.', 'auto-ai-blogger' ),
+				'wpsolvex_autoaiblogger_rest_cannot_manage_license',
+				__( 'Sorry, you cannot manage licenses.', 'solvex-ai-blogger' ),
 				[ 'status' => rest_authorization_required_code() ]
 			);
 		}
@@ -393,7 +393,7 @@ class API extends \WP_REST_Controller {
 		// Implementation will be added when integrating with licensing system.
 		return new \WP_Error(
 			'not_implemented',
-			__( 'License verification not yet implemented.', 'auto-ai-blogger' ),
+			__( 'License verification not yet implemented.', 'solvex-ai-blogger' ),
 			[ 'status' => 501 ]
 		);
 	}
@@ -408,7 +408,7 @@ class API extends \WP_REST_Controller {
 		// Implementation will be added when integrating with licensing system.
 		return new \WP_Error(
 			'not_implemented',
-			__( 'License activation not yet implemented.', 'auto-ai-blogger' ),
+			__( 'License activation not yet implemented.', 'solvex-ai-blogger' ),
 			[ 'status' => 501 ]
 		);
 	}
@@ -423,7 +423,7 @@ class API extends \WP_REST_Controller {
 		// Implementation will be added when integrating with licensing system.
 		return new \WP_Error(
 			'not_implemented',
-			__( 'License deactivation not yet implemented.', 'auto-ai-blogger' ),
+			__( 'License deactivation not yet implemented.', 'solvex-ai-blogger' ),
 			[ 'status' => 501 ]
 		);
 	}
@@ -440,7 +440,7 @@ class API extends \WP_REST_Controller {
 		if ( $this->is_suspicious_user_agent( $user_agent ) ) {
 			return new \WP_Error(
 				'suspicious_request',
-				__( 'Request blocked for security reasons.', 'auto-ai-blogger' ),
+				__( 'Request blocked for security reasons.', 'solvex-ai-blogger' ),
 				[ 'status' => 403 ]
 			);
 		}
@@ -450,7 +450,7 @@ class API extends \WP_REST_Controller {
 		if ( ! empty( $referer ) && ! $this->is_valid_referer( $referer ) ) {
 			return new \WP_Error(
 				'invalid_origin',
-				__( 'Invalid request origin.', 'auto-ai-blogger' ),
+				__( 'Invalid request origin.', 'solvex-ai-blogger' ),
 				[ 'status' => 403 ]
 			);
 		}
@@ -461,7 +461,7 @@ class API extends \WP_REST_Controller {
 			if ( empty( $content_type ) || strpos( $content_type, 'application/json' ) === false ) {
 				return new \WP_Error(
 					'invalid_content_type',
-					__( 'Invalid content type. Expected application/json.', 'auto-ai-blogger' ),
+					__( 'Invalid content type. Expected application/json.', 'solvex-ai-blogger' ),
 					[ 'status' => 400 ]
 				);
 			}
@@ -500,7 +500,7 @@ class API extends \WP_REST_Controller {
 		foreach ( $suspicious_patterns as $pattern ) {
 			if ( strpos( $user_agent_lower, $pattern ) !== false ) {
 				// Allow legitimate WordPress and known API clients.
-				if ( strpos( $user_agent_lower, 'wordpress' ) !== false || strpos( $user_agent_lower, 'auto-ai-blogger' ) !== false ) {
+				if ( strpos( $user_agent_lower, 'wordpress' ) !== false || strpos( $user_agent_lower, 'solvex-ai-blogger' ) !== false ) {
 					return false;
 				}
 				return true;
@@ -535,7 +535,7 @@ class API extends \WP_REST_Controller {
 		if ( ! empty( $content_length ) && (int) $content_length > self::MAX_REQUEST_SIZE ) {
 			return new \WP_Error(
 				'request_too_large',
-				__( 'Request size exceeds maximum allowed limit.', 'auto-ai-blogger' ),
+				__( 'Request size exceeds maximum allowed limit.', 'solvex-ai-blogger' ),
 				[ 'status' => 413 ]
 			);
 		}
@@ -666,7 +666,7 @@ class API extends \WP_REST_Controller {
 	private function get_settings_args(): array {
 		return [
 			'context' => [
-				'description' => __( 'Scope under which the request is made.', 'auto-ai-blogger' ),
+				'description' => __( 'Scope under which the request is made.', 'solvex-ai-blogger' ),
 				'type'        => 'string',
 				'enum'        => [ 'view', 'edit' ],
 				'default'     => 'view',
@@ -682,7 +682,7 @@ class API extends \WP_REST_Controller {
 	private function get_update_args(): array {
 		return [
 			'site_title'       => [
-				'description'       => __( 'Site title for persona context.', 'auto-ai-blogger' ),
+				'description'       => __( 'Site title for persona context.', 'solvex-ai-blogger' ),
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => static function( $param ) {
@@ -690,7 +690,7 @@ class API extends \WP_REST_Controller {
 				},
 			],
 			'site_purpose'     => [
-				'description'       => __( 'Site purpose for persona context.', 'auto-ai-blogger' ),
+				'description'       => __( 'Site purpose for persona context.', 'solvex-ai-blogger' ),
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => static function( $param ) {
@@ -698,7 +698,7 @@ class API extends \WP_REST_Controller {
 				},
 			],
 			'site_description' => [
-				'description'       => __( 'Site description for persona context.', 'auto-ai-blogger' ),
+				'description'       => __( 'Site description for persona context.', 'solvex-ai-blogger' ),
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_textarea_field',
 				'validate_callback' => static function( $param ) {
@@ -706,7 +706,7 @@ class API extends \WP_REST_Controller {
 				},
 			],
 			'temperature'      => [
-				'description'       => __( 'AI temperature setting (0-2).', 'auto-ai-blogger' ),
+				'description'       => __( 'AI temperature setting (0-2).', 'solvex-ai-blogger' ),
 				'type'              => 'number',
 				'validate_callback' => static function( $param ) {
 					return is_numeric( $param ) && $param >= 0 && $param <= 2;
@@ -723,7 +723,7 @@ class API extends \WP_REST_Controller {
 	private function get_license_args(): array {
 		return [
 			'license_key' => [
-				'description'       => __( 'License key for activation.', 'auto-ai-blogger' ),
+				'description'       => __( 'License key for activation.', 'solvex-ai-blogger' ),
 				'type'              => 'string',
 				'required'          => true,
 				'sanitize_callback' => 'sanitize_text_field',

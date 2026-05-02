@@ -5,7 +5,7 @@
  * This class will holds the Campaigns related to the admin area modification
  * along with the plugin functionalities.
  *
- * @package auto-ai-blogger
+ * @package solvex-ai-blogger
  * @since 1.0.0
  */
 
@@ -53,28 +53,28 @@ class CPT {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->post_type = AUTOAIB_CPT_CAMPAIGN;
+		$this->post_type = WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN;
 
 		$this->post_type_labels = apply_filters(
-			'autoaib_cpt_labels',
+			'wpsolvex_autoaiblogger_cpt_labels',
 			[
-				'name'               => esc_html_x( 'Campaigns', 'campaigns general name', 'auto-ai-blogger' ),
-				'singular_name'      => esc_html_x( 'Campaign', 'campaign singular name', 'auto-ai-blogger' ),
-				'search_items'       => esc_html__( 'Search Campaign', 'auto-ai-blogger' ),
-				'all_items'          => esc_html__( 'Campaigns', 'auto-ai-blogger' ),
-				'edit_item'          => esc_html__( 'Edit Campaign', 'auto-ai-blogger' ),
-				'view_item'          => esc_html__( 'View Campaign', 'auto-ai-blogger' ),
-				'add_new'            => esc_html__( 'Add New', 'auto-ai-blogger' ),
-				'update_item'        => esc_html__( 'Update Campaign', 'auto-ai-blogger' ),
-				'add_new_item'       => esc_html__( 'Add New', 'auto-ai-blogger' ),
-				'new_item_name'      => esc_html__( 'New Campaign Name', 'auto-ai-blogger' ),
-				'not_found'          => esc_html__( 'No space found', 'auto-ai-blogger' ),
-				'not_found_in_trash' => esc_html__( 'No space found', 'auto-ai-blogger' ),
+				'name'               => esc_html_x( 'Campaigns', 'campaigns general name', 'solvex-ai-blogger' ),
+				'singular_name'      => esc_html_x( 'Campaign', 'campaign singular name', 'solvex-ai-blogger' ),
+				'search_items'       => esc_html__( 'Search Campaign', 'solvex-ai-blogger' ),
+				'all_items'          => esc_html__( 'Campaigns', 'solvex-ai-blogger' ),
+				'edit_item'          => esc_html__( 'Edit Campaign', 'solvex-ai-blogger' ),
+				'view_item'          => esc_html__( 'View Campaign', 'solvex-ai-blogger' ),
+				'add_new'            => esc_html__( 'Add New', 'solvex-ai-blogger' ),
+				'update_item'        => esc_html__( 'Update Campaign', 'solvex-ai-blogger' ),
+				'add_new_item'       => esc_html__( 'Add New', 'solvex-ai-blogger' ),
+				'new_item_name'      => esc_html__( 'New Campaign Name', 'solvex-ai-blogger' ),
+				'not_found'          => esc_html__( 'No space found', 'solvex-ai-blogger' ),
+				'not_found_in_trash' => esc_html__( 'No space found', 'solvex-ai-blogger' ),
 			]
 		);
 
 		$this->post_type_args = apply_filters(
-			'autoaib_cpt_args',
+			'wpsolvex_autoaiblogger_cpt_args',
 			[
 				'labels'              => $this->post_type_labels,
 				'public'              => true,
@@ -114,12 +114,12 @@ class CPT {
 	 * @return void
 	 */
 	public function register_post_type(): void {
-		do_action( 'autoaib_before_register_' . $this->post_type . '_post_type' );
+		do_action( 'wpsolvex_autoaiblogger_before_register_' . $this->post_type . '_post_type' );
 
 		$args = $this->post_type_args;
 
 		register_post_type( $this->post_type, $args ); // @phpstan-ignore-line
 
-		do_action( 'autoaib_after_register_' . $this->post_type . '_post_type' );
+		do_action( 'wpsolvex_autoaiblogger_after_register_' . $this->post_type . '_post_type' );
 	}
 }

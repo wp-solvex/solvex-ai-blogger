@@ -26,7 +26,7 @@ const AppLoader = ( {
 		? 'min-h-screen flex items-center justify-center bg-slate-50'
 		: 'flex items-center justify-center p-6';
 
-	const loaderMessage = message || __( 'Loading…', 'auto-ai-blogger' );
+	const loaderMessage = message || __( 'Loading…', 'solvex-ai-blogger' );
 
 	return (
 		<div

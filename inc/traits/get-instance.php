@@ -2,7 +2,7 @@
 /**
  * Trait.
  *
- * @package auto-ai-blogger
+ * @package solvex-ai-blogger
  * @since 1.0.0
  */
 

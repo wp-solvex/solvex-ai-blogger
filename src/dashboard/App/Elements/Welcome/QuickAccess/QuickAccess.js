@@ -15,17 +15,17 @@ export default function QuickAccess() {
 	const quickAccessLinks = [
 		{
 			icon: <Ticket className="w-5 h-5" />,
-			title: __( 'Open Support Ticket', 'auto-ai-blogger' ),
+			title: __( 'Open Support Ticket', 'solvex-ai-blogger' ),
 			url: 'https://wpaiblogger.com/comtact/',
 		},
 		{
 			icon: <FileText className="w-5 h-5" />,
-			title: __( 'Help Center', 'auto-ai-blogger' ),
+			title: __( 'Help Center', 'solvex-ai-blogger' ),
 			url: 'https://wpaiblogger.com/docs/',
 		},
 		{
 			icon: <User className="w-5 h-5" />,
-			title: __( 'Access Dashboard', 'auto-ai-blogger' ),
+			title: __( 'Access Dashboard', 'solvex-ai-blogger' ),
 			url: 'https://wpaiblogger.com/customer-dashboard/',
 		},
 	];
@@ -35,10 +35,10 @@ export default function QuickAccess() {
 			<div className="sm:flex sm:items-center sm:justify-between">
 				<div className="flex flex-col gap-2">
 					<h2 className="text-xl font-semibold text-gray-900 flex items-center gap-4 p-0 m-0">
-						{ __( 'Quick Access', 'auto-ai-blogger' ) }
+						{ __( 'Quick Access', 'solvex-ai-blogger' ) }
 					</h2>
 					<p className="mt-4 text-sm text-gray-700">
-						{ __( 'Get help and connect with the community.', 'auto-ai-blogger' ) }
+						{ __( 'Get help and connect with the community.', 'solvex-ai-blogger' ) }
 					</p>
 				</div>
 			</div>

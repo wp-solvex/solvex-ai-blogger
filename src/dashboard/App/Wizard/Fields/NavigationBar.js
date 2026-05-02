@@ -74,7 +74,7 @@ StepIndicator.displayName = 'WizardStepIndicator';
 const ExitButton = memo( ( { onClick } ) => {
 	const handleClick = useCallback( ( e ) => {
 		e.preventDefault();
-		if ( window.confirm( __( 'Are you sure you want to exit the setup wizard?', 'auto-ai-blogger' ) ) ) {
+		if ( window.confirm( __( 'Are you sure you want to exit the setup wizard?', 'solvex-ai-blogger' ) ) ) {
 			onClick();
 		}
 	}, [ onClick ] );
@@ -92,14 +92,14 @@ const ExitButton = memo( ( { onClick } ) => {
 			className="flex group relative p-2 rounded-full bg-gray-100 text-gray-500 hover:bg-red-100 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105"
 			onClick={ handleClick }
 			onKeyDown={ handleKeyDown }
-			aria-label={ __( 'Exit setup wizard', 'auto-ai-blogger' ) }
-			title={ __( 'Exit setup wizard', 'auto-ai-blogger' ) }
+			aria-label={ __( 'Exit setup wizard', 'solvex-ai-blogger' ) }
+			title={ __( 'Exit setup wizard', 'solvex-ai-blogger' ) }
 		>
 			<X className="w-5 h-5" aria-hidden="true" />
 
 			{ /* Tooltip */ }
 			<span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-				{ __( 'Exit Setup', 'auto-ai-blogger' ) }
+				{ __( 'Exit Setup', 'solvex-ai-blogger' ) }
 			</span>
 		</button>
 	);
@@ -122,23 +122,23 @@ const NavigationBar = memo( () => {
 	// Enhanced menu configuration with completion tracking
 	const menus = useMemo( () => [
 		{
-			name: __( 'Welcome', 'auto-ai-blogger' ),
+			name: __( 'Welcome', 'solvex-ai-blogger' ),
 			id: 'welcome',
 		},
 		{
-			name: __( 'Site Info', 'auto-ai-blogger' ),
+			name: __( 'Site Info', 'solvex-ai-blogger' ),
 			id: 'persona-form',
 		},
 		{
-			name: __( 'License', 'auto-ai-blogger' ),
+			name: __( 'License', 'solvex-ai-blogger' ),
 			id: 'license',
 		},
 		{
-			name: __( 'Subscribe', 'auto-ai-blogger' ),
+			name: __( 'Subscribe', 'solvex-ai-blogger' ),
 			id: 'optin',
 		},
 		{
-			name: __( 'Done', 'auto-ai-blogger' ),
+			name: __( 'Done', 'solvex-ai-blogger' ),
 			id: 'ready',
 		},
 	], [] );
@@ -158,7 +158,7 @@ const NavigationBar = memo( () => {
 			await updateApiData( 'userOnboarded', true, dispatch, abortControllerRef );
 
 			// Navigate to dashboard or show success message
-			window.location.href = autoaib_localized_data.admin_app_url;
+			window.location.href = wpsolvex_autoaiblogger_localized_data.admin_app_url;
 		} catch ( error ) {
 			console.error( 'Failed to exit wizard:', error );
 		}
@@ -173,9 +173,9 @@ const NavigationBar = memo( () => {
 
 	return (
 		<header
-			className="autoaib-setup-header bg-white border-b border-gray-200 shadow-sm"
+			className="wpsolvex-autoaiblogger-setup-header bg-white border-b border-gray-200 shadow-sm"
 			role="banner"
-			aria-label={ __( 'Setup wizard navigation', 'auto-ai-blogger' ) }
+			aria-label={ __( 'Setup wizard navigation', 'solvex-ai-blogger' ) }
 		>
 			<div className="px-4 sm:px-6 lg:px-8">
 				<div className="flex h-16 justify-between items-center">
@@ -190,7 +190,7 @@ const NavigationBar = memo( () => {
 						</div>
 						<div className="hidden sm:block">
 							<h1 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-								{ __( 'Setup Wizard', 'auto-ai-blogger' ) }
+								{ __( 'Setup Wizard', 'solvex-ai-blogger' ) }
 							</h1>
 						</div>
 					</div>
@@ -198,7 +198,7 @@ const NavigationBar = memo( () => {
 					{ /* Navigation steps */ }
 					<nav
 						className="hidden md:flex items-center space-x-2"
-						aria-label={ __( 'Setup wizard steps', 'auto-ai-blogger' ) }
+						aria-label={ __( 'Setup wizard steps', 'solvex-ai-blogger' ) }
 						role="navigation"
 					>
 						{ menus.map( ( menu ) => (
@@ -215,7 +215,7 @@ const NavigationBar = memo( () => {
 					{ /* Mobile step indicator */ }
 					<div className="md:hidden flex items-center">
 						<span className="text-sm text-gray-600 font-medium">
-							{ menus.find( ( menu ) => menu.id === currentStep )?.name || __( 'Setup', 'auto-ai-blogger' ) }
+							{ menus.find( ( menu ) => menu.id === currentStep )?.name || __( 'Setup', 'solvex-ai-blogger' ) }
 						</span>
 					</div>
 

@@ -22,7 +22,7 @@ namespace WPSolvex\AutoAIBlogger {
          * @since 1.0.0
          * @return void
          */
-        public function setup() : void
+        public function setup(): void
         {
         }
         /**
@@ -31,7 +31,7 @@ namespace WPSolvex\AutoAIBlogger {
          * @since 1.0.0
          * @return void
          */
-        public function define_store_constants() : void
+        public function define_store_constants(): void
         {
         }
         /**
@@ -72,7 +72,7 @@ namespace WPSolvex\AutoAIBlogger {
          * @param string $class class name.
          * @return void
          */
-        public function autoload($class) : void
+        public function autoload($class): void
         {
         }
         /**
@@ -80,7 +80,7 @@ namespace WPSolvex\AutoAIBlogger {
          *
          * @since 1.0.0
          */
-        public function activation_actions() : void
+        public function activation_actions(): void
         {
         }
         /**
@@ -88,7 +88,7 @@ namespace WPSolvex\AutoAIBlogger {
          *
          * @since 1.0.0
          */
-        public function deactivation_actions() : void
+        public function deactivation_actions(): void
         {
         }
         /**
@@ -102,7 +102,7 @@ namespace WPSolvex\AutoAIBlogger {
          * @return int The enforced maximum words value.
          * @since 0.0.2
          */
-        public function enforce_free_max_words_limit($max_words, $campaign_id) : int
+        public function enforce_free_max_words_limit($max_words, $campaign_id): int
         {
         }
         /**
@@ -113,7 +113,7 @@ namespace WPSolvex\AutoAIBlogger {
          * @return int The enforced image count (always 1 for free users).
          * @since 0.0.2
          */
-        public function enforce_free_image_limit($image_count, $campaign_id) : int
+        public function enforce_free_image_limit($image_count, $campaign_id): int
         {
         }
         /**
@@ -157,7 +157,7 @@ namespace WPSolvex\AutoAIBlogger\Inc {
     /**
      * Cron Handler class for Solvex AI Blogger.
      *
-     * @package auto-ai-blogger
+     * @package solvex-ai-blogger
      * @subpackage Inc\Cron
      * @since 1.0.0
      */
@@ -176,7 +176,7 @@ namespace WPSolvex\AutoAIBlogger\Inc {
          * @param int $campaign_id The ID of the campaign.
          * @since 0.0.2
          */
-        public function create_single_post_from_campaign($campaign_id) : void
+        public function create_single_post_from_campaign($campaign_id): void
         {
         }
         /**
@@ -188,18 +188,18 @@ namespace WPSolvex\AutoAIBlogger\Inc {
          * @return array An array containing the success status and message.
          * @since 0.0.2
          */
-        public function generate_post_from_campaign($campaign_id, $target_post_number = 0, $current_attempt = 0) : array
+        public function generate_post_from_campaign($campaign_id, $target_post_number = 0, $current_attempt = 0): array
         {
         }
     }
 }
-namespace {
+namespace WPSolvex\AutoAIBlogger\Inc\Web_Notices {
     /**
-     * Autoaib_Notices
+     * Notices
      *
      * @since 1.0.0
      */
-    class Autoaib_Notices
+    class Notices
     {
         /**
          * Constructor
@@ -227,7 +227,7 @@ namespace {
          * @param array $args Notice arguments.
          * @return void
          */
-        public static function add_notice($args = []) : void
+        public static function add_notice($args = []): void
         {
         }
         /**
@@ -236,7 +236,7 @@ namespace {
          * @since 1.0.0
          * @return void
          */
-        public function dismiss_notice() : void
+        public function dismiss_notice(): void
         {
         }
         /**
@@ -245,7 +245,7 @@ namespace {
          * @since 1.0.0
          * @return void
          */
-        public function enqueue_scripts() : void
+        public function enqueue_scripts(): void
         {
         }
         /**
@@ -266,7 +266,7 @@ namespace {
          * @since 1.0.0
          * @return void
          */
-        public function show_notices() : void
+        public function show_notices(): void
         {
         }
         /**
@@ -276,7 +276,7 @@ namespace {
          * @param  array $notice Notice markup.
          * @return void
          */
-        public static function markup($notice = []) : void
+        public static function markup($notice = []): void
         {
         }
         /**
@@ -528,7 +528,7 @@ namespace WPSolvex\AutoAIBlogger\Inc\Utils {
          * @since 1.0.0
          * @return array Sanitized post statuses
          */
-        public static function get_sanitized_post_statuses() : array
+        public static function get_sanitized_post_statuses(): array
         {
         }
         /**
@@ -537,7 +537,7 @@ namespace WPSolvex\AutoAIBlogger\Inc\Utils {
          * @since 1.0.0
          * @return array Sanitized categories
          */
-        public static function get_sanitized_categories() : array
+        public static function get_sanitized_categories(): array
         {
         }
         /**
@@ -546,7 +546,7 @@ namespace WPSolvex\AutoAIBlogger\Inc\Utils {
          * @since 1.0.0
          * @return array Sanitized tags
          */
-        public static function get_sanitized_tags() : array
+        public static function get_sanitized_tags(): array
         {
         }
         /**
@@ -555,7 +555,7 @@ namespace WPSolvex\AutoAIBlogger\Inc\Utils {
          * @since 1.0.0
          * @return array Sanitized authors
          */
-        public static function get_sanitized_authors() : array
+        public static function get_sanitized_authors(): array
         {
         }
         /**
@@ -564,7 +564,7 @@ namespace WPSolvex\AutoAIBlogger\Inc\Utils {
          * @since 1.0.0
          * @return array Sanitized post types
          */
-        public static function get_sanitized_post_types() : array
+        public static function get_sanitized_post_types(): array
         {
         }
     }
@@ -574,7 +574,7 @@ namespace WPSolvex\AutoAIBlogger\Inc\Utils {
      * This class provides utility functions for managing plugin settings
      * with validation, sanitization, and access control.
      *
-     * @package auto-ai-blogger
+     * @package solvex-ai-blogger
      * @subpackage Utils
      * @since 1.0.0
      */
@@ -612,7 +612,7 @@ namespace WPSolvex\AutoAIBlogger\Inc\Utils {
          *
          * @since 1.0.0
          */
-        public static function delete_option($key) : bool
+        public static function delete_option($key): bool
         {
         }
         /**
@@ -622,12 +622,12 @@ namespace WPSolvex\AutoAIBlogger\Inc\Utils {
          * @param array $options Array of key-value pairs to update.
          * @return bool True on success, false on failure.
          */
-        public static function bulk_update_options(array $options) : bool
+        public static function bulk_update_options(array $options): bool
         {
         }
     }
 }
-namespace SureCart\Licensing {
+namespace WPSolvex\AutoAIBlogger\Licensing {
     /**
      * Activation model
      */
@@ -640,7 +640,7 @@ namespace SureCart\Licensing {
          */
         protected $endpoint = 'v1/public/activations';
         /**
-         * SureCart\Licensing\Client
+         * WPSolvex\AutoAIBlogger\Licensing\Client
          *
          * @var object
          */
@@ -654,9 +654,9 @@ namespace SureCart\Licensing {
         /**
          * Initialize the class.
          *
-         * @param SureCart\Licensing\Client $client The client.
+         * @param WPSolvex\AutoAIBlogger\Licensing\Client $client The client.
          */
-        public function __construct(\SureCart\Licensing\Client $client)
+        public function __construct(\WPSolvex\AutoAIBlogger\Licensing\Client $client)
         {
         }
         /**
@@ -706,7 +706,7 @@ namespace SureCart\Licensing {
     class Settings
     {
         /**
-         * SureCart\Licensing\Client
+         * WPSolvex\AutoAIBlogger\Licensing\Client
          *
          * @var object
          */
@@ -714,9 +714,9 @@ namespace SureCart\Licensing {
         /**
          * Create the pages.
          *
-         * @param SureCart\Licensing\Client $client The client.
+         * @param WPSolvex\AutoAIBlogger\Licensing\Client $client The client.
          */
-        public function __construct(\SureCart\Licensing\Client $client)
+        public function __construct(\WPSolvex\AutoAIBlogger\Licensing\Client $client)
         {
         }
         /**
@@ -747,7 +747,7 @@ namespace SureCart\Licensing {
          *
          * @return void
          */
-        public function add_page($args) : void
+        public function add_page($args): void
         {
         }
         /**
@@ -765,7 +765,7 @@ namespace SureCart\Licensing {
          *
          * @return void
          */
-        public function admin_menu() : void
+        public function admin_menu(): void
         {
         }
         /**
@@ -810,7 +810,7 @@ namespace SureCart\Licensing {
          *
          * @return void
          */
-        public function settings_output() : void
+        public function settings_output(): void
         {
         }
         /**
@@ -818,7 +818,7 @@ namespace SureCart\Licensing {
          *
          * @return void
          */
-        public function print_css() : void
+        public function print_css(): void
         {
         }
         /**
@@ -852,7 +852,7 @@ namespace SureCart\Licensing {
          *
          * @return void
          */
-        public function add_notice($code, $message, $type = 'info') : void
+        public function add_notice($code, $message, $type = 'info'): void
         {
         }
         /**
@@ -863,7 +863,7 @@ namespace SureCart\Licensing {
          *
          * @return void
          */
-        public function add_error($code, $message) : void
+        public function add_error($code, $message): void
         {
         }
         /**
@@ -874,7 +874,7 @@ namespace SureCart\Licensing {
          *
          * @return void
          */
-        public function add_success($code, $message) : void
+        public function add_success($code, $message): void
         {
         }
     }
@@ -890,7 +890,7 @@ namespace SureCart\Licensing {
          */
         protected $endpoint = 'v1/public/licenses';
         /**
-         * SureCart\Licensing\Client
+         * WPSolvex\AutoAIBlogger\Licensing\Client
          *
          * @var object
          */
@@ -898,9 +898,9 @@ namespace SureCart\Licensing {
         /**
          * Initialize the class.
          *
-         * @param SureCart\Licensing\Client $client The client.
+         * @param WPSolvex\AutoAIBlogger\Licensing\Client $client The client.
          */
-        public function __construct(\SureCart\Licensing\Client $client)
+        public function __construct(\WPSolvex\AutoAIBlogger\Licensing\Client $client)
         {
         }
         /**
@@ -999,7 +999,7 @@ namespace SureCart\Licensing {
     class Updater
     {
         /**
-         * SureCart\Licensing\Client.
+         * WPSolvex\AutoAIBlogger\Licensing\Client.
          *
          * @var object
          */
@@ -1008,25 +1008,9 @@ namespace SureCart\Licensing {
         /**
          * Initialize the class.
          *
-         * @param SureCart\Licensing\Client $client The client.
+         * @param WPSolvex\AutoAIBlogger\Licensing\Client $client The client.
          */
-        public function __construct(\SureCart\Licensing\Client $client)
-        {
-        }
-        /**
-         * Set up WordPress filter to hooks to get update.
-         *
-         * @return void
-         */
-        public function run_plugin_hooks() : void
-        {
-        }
-        /**
-         * Set up WordPress filter to hooks to get update.
-         *
-         * @return void
-         */
-        public function run_theme_hooks() : void
+        public function __construct(\WPSolvex\AutoAIBlogger\Licensing\Client $client)
         {
         }
     }
@@ -1128,7 +1112,7 @@ namespace SureCart\Licensing {
         /**
          * Initialize license model
          *
-         * @return SureCart\Licensing
+         * @return WPSolvex\AutoAIBlogger\Licensing
          */
         public function license()
         {
@@ -1136,7 +1120,7 @@ namespace SureCart\Licensing {
         /**
          * Initialize activation model
          *
-         * @return SureCart\Licensing
+         * @return WPSolvex\AutoAIBlogger\Licensing
          */
         public function activation()
         {
@@ -1144,7 +1128,7 @@ namespace SureCart\Licensing {
         /**
          * Initialize settings page
          *
-         * @return SureCart\Licensing
+         * @return WPSolvex\AutoAIBlogger\Licensing
          */
         public function settings()
         {
@@ -1183,7 +1167,7 @@ namespace SureCart\Licensing {
          *
          * @param string $textdomain The textdomain for translations.
          */
-        public function set_textdomain($textdomain) : void
+        public function set_textdomain($textdomain): void
         {
         }
         /**
@@ -1191,7 +1175,7 @@ namespace SureCart\Licensing {
          *
          * @return void
          */
-        protected function set_basename_and_slug() : void
+        protected function set_basename_and_slug(): void
         {
         }
     }
@@ -1200,7 +1184,7 @@ namespace WPSolvex\AutoAIBlogger\Inc\Notifications {
     /**
      * Email Templates class.
      *
-     * @package auto-ai-blogger
+     * @package solvex-ai-blogger
      * @subpackage Inc\Notifications
      * @since 1.0.0
      */
@@ -1215,14 +1199,14 @@ namespace WPSolvex\AutoAIBlogger\Inc\Notifications {
          * @return array|null Template data with 'subject' and 'body' keys.
          * @since 1.0.0
          */
-        public function get_template($notification_type, $data) : ?array
+        public function get_template($notification_type, $data): ?array
         {
         }
     }
     /**
      * Notification Helper class.
      *
-     * @package auto-ai-blogger
+     * @package solvex-ai-blogger
      * @subpackage Inc\Notifications
      * @since 1.0.0
      */
@@ -1242,7 +1226,7 @@ namespace WPSolvex\AutoAIBlogger\Inc\Notifications {
          * @param array $campaign_data Campaign data.
          * @since 1.0.0
          */
-        public function handle_campaign_started($campaign_id, $campaign_data) : void
+        public function handle_campaign_started($campaign_id, $campaign_data): void
         {
         }
         /**
@@ -1253,7 +1237,7 @@ namespace WPSolvex\AutoAIBlogger\Inc\Notifications {
          * @param array $post_data Post data.
          * @since 1.0.0
          */
-        public function handle_post_created($campaign_id, $post_id, $post_data) : void
+        public function handle_post_created($campaign_id, $post_id, $post_data): void
         {
         }
         /**
@@ -1264,7 +1248,7 @@ namespace WPSolvex\AutoAIBlogger\Inc\Notifications {
          * @param array  $campaign_data Campaign data.
          * @since 1.0.0
          */
-        public function handle_campaign_completed($campaign_id, $reason, $campaign_data) : void
+        public function handle_campaign_completed($campaign_id, $reason, $campaign_data): void
         {
         }
         /**
@@ -1275,7 +1259,7 @@ namespace WPSolvex\AutoAIBlogger\Inc\Notifications {
          * @param array  $campaign_data Campaign data.
          * @since 1.0.0
          */
-        public function handle_campaign_failed($campaign_id, $reason, $campaign_data) : void
+        public function handle_campaign_failed($campaign_id, $reason, $campaign_data): void
         {
         }
     }
@@ -1284,7 +1268,7 @@ namespace WPSolvex\AutoAIBlogger\Core {
     /**
      * Update Compatibility
      *
-     * @package auto-ai-blogger
+     * @package solvex-ai-blogger
      */
     /**
      * Update initial setup
@@ -1306,7 +1290,7 @@ namespace WPSolvex\AutoAIBlogger\Core {
          * @since 1.0.0
          * @return void
          */
-        public static function init() : void
+        public static function init(): void
         {
         }
     }
@@ -1353,7 +1337,7 @@ namespace WPSolvex\AutoAIBlogger\Core {
          * @since 1.0.0
          * @return void
          */
-        public function create_cpt() : void
+        public function create_cpt(): void
         {
         }
         /**
@@ -1362,7 +1346,7 @@ namespace WPSolvex\AutoAIBlogger\Core {
          * @since 1.0.0
          * @return void
          */
-        public function register_post_type() : void
+        public function register_post_type(): void
         {
         }
     }
@@ -1406,7 +1390,7 @@ namespace WPSolvex\AutoAIBlogger\Core {
          * @return void
          * @since 0.0.2
          */
-        public function track_post_views() : void
+        public function track_post_views(): void
         {
         }
     }
@@ -1434,7 +1418,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 0.0.2
          * @return void
          */
-        public function add_campaign_filter() : void
+        public function add_campaign_filter(): void
         {
         }
         /**
@@ -1465,14 +1449,14 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 0.0.2
          * @return void
          */
-        public function show_campaign_column_content($column, $post_id) : void
+        public function show_campaign_column_content($column, $post_id): void
         {
         }
     }
     /**
      * Admin AJAX class for Solvex AI Blogger.
      *
-     * @package auto-ai-blogger
+     * @package solvex-ai-blogger
      * @subpackage Admin
      * @since 1.0.0
      */
@@ -1487,7 +1471,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          *
          * @var array<string>
          */
-        public $ajax_events = ['autoaib_update_admin_setting', 'autoaib_create_campaign', 'autoaib_update_campaign', 'autoaib_get_campaign_metadata', 'autoaib_create_post', 'autoaib_run_campaign', 'autoaib_get_campaign_analytics', 'autoaib_delete_campaign', 'autoaib_get_campaign_logs', 'autoaib_pause_campaign', 'autoaib_resume_campaign', 'autoaib_reschedule_campaign'];
+        public $ajax_events = ['wpsolvex_autoaiblogger_update_admin_setting', 'wpsolvex_autoaiblogger_create_campaign', 'wpsolvex_autoaiblogger_update_campaign', 'wpsolvex_autoaiblogger_get_campaign_metadata', 'wpsolvex_autoaiblogger_create_post', 'wpsolvex_autoaiblogger_run_campaign', 'wpsolvex_autoaiblogger_get_campaign_analytics', 'wpsolvex_autoaiblogger_delete_campaign', 'wpsolvex_autoaiblogger_get_campaign_logs', 'wpsolvex_autoaiblogger_pause_campaign', 'wpsolvex_autoaiblogger_resume_campaign', 'wpsolvex_autoaiblogger_reschedule_campaign'];
         /**
          * Holds all nonce for AJAX events.
          *
@@ -1521,7 +1505,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          *
          * @since 0.0.2
          */
-        public function add_security_headers() : void
+        public function add_security_headers(): void
         {
         }
         /**
@@ -1530,7 +1514,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 1.0.0
          * @return void
          */
-        public function autoaib_update_admin_setting() : void
+        public function wpsolvex_autoaiblogger_update_admin_setting(): void
         {
         }
         /**
@@ -1539,7 +1523,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 1.0.0
          * @return void
          */
-        public function autoaib_create_campaign() : void
+        public function wpsolvex_autoaiblogger_create_campaign(): void
         {
         }
         /**
@@ -1548,7 +1532,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 1.0.0
          * @return void
          */
-        public function autoaib_update_campaign() : void
+        public function wpsolvex_autoaiblogger_update_campaign(): void
         {
         }
         /**
@@ -1557,7 +1541,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 1.0.0
          * @return void
          */
-        public function autoaib_get_campaign_metadata() : void
+        public function wpsolvex_autoaiblogger_get_campaign_metadata(): void
         {
         }
         /**
@@ -1566,7 +1550,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 1.0.0
          * @return void
          */
-        public function autoaib_create_post() : void
+        public function wpsolvex_autoaiblogger_create_post(): void
         {
         }
         /**
@@ -1575,7 +1559,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 1.0.0
          * @return void
          */
-        public function autoaib_run_campaign() : void
+        public function wpsolvex_autoaiblogger_run_campaign(): void
         {
         }
         /**
@@ -1584,7 +1568,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 0.0.2
          * @return void
          */
-        public function autoaib_get_campaign_analytics() : void
+        public function wpsolvex_autoaiblogger_get_campaign_analytics(): void
         {
         }
         /**
@@ -1593,7 +1577,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 1.0.0
          * @return void
          */
-        public function autoaib_delete_campaign() : void
+        public function wpsolvex_autoaiblogger_delete_campaign(): void
         {
         }
         /**
@@ -1602,7 +1586,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 0.0.2
          * @return void
          */
-        public function autoaib_get_campaign_logs() : void
+        public function wpsolvex_autoaiblogger_get_campaign_logs(): void
         {
         }
         /**
@@ -1611,7 +1595,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 0.0.2
          * @return void
          */
-        public function autoaib_pause_campaign() : void
+        public function wpsolvex_autoaiblogger_pause_campaign(): void
         {
         }
         /**
@@ -1620,7 +1604,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 0.0.2
          * @return void
          */
-        public function autoaib_resume_campaign() : void
+        public function wpsolvex_autoaiblogger_resume_campaign(): void
         {
         }
         /**
@@ -1629,7 +1613,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 0.0.2
          * @return void
          */
-        public function autoaib_reschedule_campaign() : void
+        public function wpsolvex_autoaiblogger_reschedule_campaign(): void
         {
         }
     }
@@ -1640,7 +1624,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
      * Implements comprehensive security measures including input validation,
      * data sanitization, and secure script loading.
      *
-     * @package auto-ai-blogger
+     * @package solvex-ai-blogger
      * @subpackage Admin
      * @since 1.0.0
      */
@@ -1650,7 +1634,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
         /**
          * Settings page ID for Plugin settings.
          */
-        public const PAGE_ID = AUTOAIB_SLUG;
+        public const PAGE_ID = WPSOLVEX_AUTOAIBLOGGER_SLUG;
         /**
          * Constructor with security setup.
          *
@@ -1665,7 +1649,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          *
          * @since 0.0.2
          */
-        public function add_admin_security_headers() : void
+        public function add_admin_security_headers(): void
         {
         }
         /**
@@ -1673,7 +1657,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          *
          * @since 1.0.0
          */
-        public function settings_admin_scripts() : void
+        public function settings_admin_scripts(): void
         {
         }
         /**
@@ -1681,7 +1665,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          *
          * @since 1.0.0
          */
-        public function render_settings_page() : void
+        public function render_settings_page(): void
         {
         }
         /**
@@ -1689,7 +1673,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          *
          * @since 1.0.0
          */
-        public function app_build_scripts() : void
+        public function app_build_scripts(): void
         {
         }
         /**
@@ -1697,7 +1681,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          *
          * @since 1.0.0
          */
-        public function initialize_hooks() : void
+        public function initialize_hooks(): void
         {
         }
         /**
@@ -1705,7 +1689,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          *
          * @since 1.0.0
          */
-        public function register_plugin_menus() : void
+        public function register_plugin_menus(): void
         {
         }
     }
@@ -1716,7 +1700,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
      * Implements security measures including rate limiting, input validation,
      * and proper authentication.
      *
-     * @package auto-ai-blogger
+     * @package solvex-ai-blogger
      * @subpackage Admin
      * @since 1.0.0
      */
@@ -1728,7 +1712,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          *
          * @var string
          */
-        protected $namespace = AUTOAIB_SLUG . '/v1';
+        protected $namespace = WPSOLVEX_AUTOAIBLOGGER_SLUG . '/v1';
         /**
          * Route base.
          *
@@ -1760,7 +1744,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          *
          * @since 1.0.0
          */
-        public function add_security_headers() : void
+        public function add_security_headers(): void
         {
         }
         /**
@@ -1772,7 +1756,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @param \WP_REST_Server             $server  Server instance.
          * @return bool
          */
-        public function set_security_headers($served, $result, $request, $server) : bool
+        public function set_security_headers($served, $result, $request, $server): bool
         {
         }
         /**
@@ -1780,7 +1764,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          *
          * @since 1.0.0
          */
-        public function register_routes() : void
+        public function register_routes(): void
         {
         }
         /**
@@ -1791,7 +1775,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          *
          * @since 1.0.0
          */
-        public function get_admin_settings(\WP_REST_Request $request) : \WP_REST_Response|\WP_Error
+        public function get_admin_settings(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
         {
         }
         /**
@@ -1802,7 +1786,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          *
          * @since 1.0.0
          */
-        public function update_admin_settings(\WP_REST_Request $request) : \WP_REST_Response|\WP_Error
+        public function update_admin_settings(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
         {
         }
         /**
@@ -1812,7 +1796,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @return \WP_Error|bool
          * @since 1.0.0
          */
-        public function get_permissions_check(\WP_REST_Request $request) : \WP_Error|bool
+        public function get_permissions_check(\WP_REST_Request $request): \WP_Error|bool
         {
         }
         /**
@@ -1822,7 +1806,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @return \WP_Error|bool
          * @since 1.0.0
          */
-        public function update_permissions_check(\WP_REST_Request $request) : \WP_Error|bool
+        public function update_permissions_check(\WP_REST_Request $request): \WP_Error|bool
         {
         }
         /**
@@ -1832,7 +1816,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @return \WP_Error|bool
          * @since 1.0.0
          */
-        public function license_permissions_check(\WP_REST_Request $request) : \WP_Error|bool
+        public function license_permissions_check(\WP_REST_Request $request): \WP_Error|bool
         {
         }
         /**
@@ -1841,7 +1825,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @param \WP_REST_Request $request The request object.
          * @return \WP_REST_Response|\WP_Error Response or error.
          */
-        public function verify_license(\WP_REST_Request $request) : \WP_REST_Response|\WP_Error
+        public function verify_license(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
         {
         }
         /**
@@ -1850,7 +1834,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @param \WP_REST_Request $request The request object.
          * @return \WP_REST_Response|\WP_Error Response or error.
          */
-        public function activate_license(\WP_REST_Request $request) : \WP_REST_Response|\WP_Error
+        public function activate_license(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
         {
         }
         /**
@@ -1859,7 +1843,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @param \WP_REST_Request $request The request object.
          * @return \WP_REST_Response|\WP_Error Response or error.
          */
-        public function deactivate_license(\WP_REST_Request $request) : \WP_REST_Response|\WP_Error
+        public function deactivate_license(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
         {
         }
     }
@@ -1869,7 +1853,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
      * This class provides license management including activation, deactivation,
      * validation, and status checking with security measures.
      *
-     * @package auto-ai-blogger
+     * @package solvex-ai-blogger
      * @subpackage Admin
      * @since 1.0.0
      */
@@ -1903,7 +1887,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 1.0.0
          * @return void
          */
-        public function initialize_licensing() : void
+        public function initialize_licensing(): void
         {
         }
         /**
@@ -1913,7 +1897,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * and validation of required constants.
          *
          * @since 1.0.0
-         * @return \SureCart\Licensing\Client|null Client instance or null on failure.
+         * @return \WPSolvex\AutoAIBlogger\Licensing\Client|null Client instance or null on failure.
          */
         public static function licensing_setup()
         {
@@ -1924,27 +1908,27 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 1.0.0
          * @return void
          */
-        public static function init_licensing() : void
+        public static function init_licensing(): void
         {
         }
         /**
          * Activate license with security validation.
          *
-         * @hooked wp_ajax_autoaib_activate_license
+         * @hooked wp_ajax_wpsolvex_autoaiblogger_activate_license
          * @since 1.0.0
          * @return void
          */
-        public function activate_license() : void
+        public function activate_license(): void
         {
         }
         /**
          * Deactivate license with security validation.
          *
-         * @hooked wp_ajax_autoaib_deactivate_license
+         * @hooked wp_ajax_wpsolvex_autoaiblogger_deactivate_license
          * @since 1.0.0
          * @return void
          */
-        public function deactivate_license() : void
+        public function deactivate_license(): void
         {
         }
         /**
@@ -1953,7 +1937,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 1.0.0
          * @return bool
          */
-        public static function is_license_active() : bool
+        public static function is_license_active(): bool
         {
         }
         /**
@@ -1961,7 +1945,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          *
          * @since 1.0.0
          */
-        public function license_activation_notice() : void
+        public function license_activation_notice(): void
         {
         }
         /**
@@ -1970,7 +1954,7 @@ namespace WPSolvex\AutoAIBlogger\Admin {
          * @since 0.0.2
          * @return void
          */
-        public function validate_license_periodically() : void
+        public function validate_license_periodically(): void
         {
         }
     }
@@ -1983,7 +1967,7 @@ namespace {
      * @return string User detail or empty string on failure.
      * @since 1.0.0
      */
-    function autoaib_get_user_detail($detail)
+    function wpsolvex_autoaiblogger_get_user_detail($detail)
     {
     }
     /**
@@ -1993,7 +1977,7 @@ namespace {
      * @return mixed Cleaned data.
      * @since 1.0.0
      */
-    function autoaib_clean_data($data)
+    function wpsolvex_autoaiblogger_clean_data($data)
     {
     }
     /**
@@ -2002,7 +1986,7 @@ namespace {
      * @since 1.0.0
      * @return array Sanitized campaigns data.
      */
-    function autoaib_get_all_campaigns()
+    function wpsolvex_autoaiblogger_get_all_campaigns()
     {
     }
     /**
@@ -2011,7 +1995,7 @@ namespace {
      * @since 1.0.0
      * @return array Sanitized generated posts data.
      */
-    function autoaib_get_generated_posts()
+    function wpsolvex_autoaiblogger_get_generated_posts()
     {
     }
     /**
@@ -2021,7 +2005,7 @@ namespace {
      * @param array $array Array to check depth.
      * @return int Array depth.
      */
-    function autoaib_get_array_depth(array $array) : int
+    function wpsolvex_autoaiblogger_get_array_depth(array $array): int
     {
     }
     /**
@@ -2030,7 +2014,7 @@ namespace {
      * @since 1.0.0
      * @return array Sanitized post statuses.
      */
-    function autoaib_get_post_statuses()
+    function wpsolvex_autoaiblogger_get_post_statuses()
     {
     }
     /**
@@ -2039,7 +2023,7 @@ namespace {
      * @since 1.0.0
      * @return array Sanitized post types.
      */
-    function autoaib_get_post_types()
+    function wpsolvex_autoaiblogger_get_post_types()
     {
     }
     /**
@@ -2048,7 +2032,7 @@ namespace {
      * @since 1.0.0
      * @return array Sanitized categories.
      */
-    function autoaib_get_categories()
+    function wpsolvex_autoaiblogger_get_categories()
     {
     }
     /**
@@ -2057,7 +2041,7 @@ namespace {
      * @since 1.0.0
      * @return array Sanitized tags.
      */
-    function autoaib_get_tags()
+    function wpsolvex_autoaiblogger_get_tags()
     {
     }
     /**
@@ -2066,7 +2050,7 @@ namespace {
      * @since 1.0.0
      * @return array Sanitized authors list.
      */
-    function autoaib_get_authors()
+    function wpsolvex_autoaiblogger_get_authors()
     {
     }
     /**
@@ -2076,7 +2060,7 @@ namespace {
      * @return bool Target achievement status.
      * @since 1.0.0
      */
-    function autoaib_is_campaign_posts_target_achieved($campaign_id)
+    function wpsolvex_autoaiblogger_is_campaign_posts_target_achieved($campaign_id)
     {
     }
     /**
@@ -2087,7 +2071,7 @@ namespace {
      * @since 1.0.0
      * @return array Array of previous posts with id, title, url.
      */
-    function autoaib_get_previous_campaign_posts($campaign_id, $limit = 5)
+    function wpsolvex_autoaiblogger_get_previous_campaign_posts($campaign_id, $limit = 5)
     {
     }
     /**
@@ -2102,7 +2086,7 @@ namespace {
      * @since 1.0.0
      * @return array|WP_Error Sanitized API response or error.
      */
-    function autoaib_get_post_creation_api_response($keywords, $max_content_words, $site_persona_details, $campaign_id = 0, $campaign_name = '', $image_count = 1)
+    function wpsolvex_autoaiblogger_get_post_creation_api_response($keywords, $max_content_words, $site_persona_details, $campaign_id = 0, $campaign_name = '', $image_count = 1)
     {
     }
     /**
@@ -2111,7 +2095,7 @@ namespace {
      * @param array $data API response data.
      * @return array Sanitized data.
      */
-    function autoaib_sanitize_api_response($data)
+    function wpsolvex_autoaiblogger_sanitize_api_response($data)
     {
     }
     /**
@@ -2121,7 +2105,7 @@ namespace {
      * @return array Sanitized site persona details.
      * @since 1.0.0
      */
-    function autoaib_get_site_persona_details($campaign_id = 0)
+    function wpsolvex_autoaiblogger_get_site_persona_details($campaign_id = 0)
     {
     }
     /**
@@ -2138,7 +2122,7 @@ namespace {
      * @return void
      * @since 0.0.2
      */
-    function autoaib_track_post_view($post_id) : void
+    function wpsolvex_autoaiblogger_track_post_view($post_id): void
     {
     }
     /**
@@ -2151,7 +2135,7 @@ namespace {
      * @return void
      * @since 0.0.2
      */
-    function autoaib_log_campaign_error($campaign_id, $error_type, $error_message, $context = []) : void
+    function wpsolvex_autoaiblogger_log_campaign_error($campaign_id, $error_type, $error_message, $context = []): void
     {
     }
     /**
@@ -2163,7 +2147,7 @@ namespace {
      * @return void
      * @since 0.0.2
      */
-    function autoaib_log_campaign_success($campaign_id, $post_id, $context = []) : void
+    function wpsolvex_autoaiblogger_log_campaign_success($campaign_id, $post_id, $context = []): void
     {
     }
     /**
@@ -2174,7 +2158,7 @@ namespace {
      * @return array Formatted success logs.
      * @since 0.0.2
      */
-    function autoaib_get_campaign_success_logs($campaign_id, $limit = 20) : array
+    function wpsolvex_autoaiblogger_get_campaign_success_logs($campaign_id, $limit = 20): array
     {
     }
     /**
@@ -2185,7 +2169,7 @@ namespace {
      * @return array Formatted error logs.
      * @since 0.0.2
      */
-    function autoaib_get_campaign_error_logs($campaign_id, $limit = 20) : array
+    function wpsolvex_autoaiblogger_get_campaign_error_logs($campaign_id, $limit = 20): array
     {
     }
     /**
@@ -2196,7 +2180,7 @@ namespace {
      * @return string User-friendly error message.
      * @since 0.0.2
      */
-    function autoaib_get_user_friendly_error_message($error_type, $original_message) : string
+    function wpsolvex_autoaiblogger_get_user_friendly_error_message($error_type, $original_message): string
     {
     }
     /**
@@ -2206,7 +2190,7 @@ namespace {
      * @return string Solution suggestion.
      * @since 0.0.2
      */
-    function autoaib_get_error_solution_suggestion($error_type) : string
+    function wpsolvex_autoaiblogger_get_error_solution_suggestion($error_type): string
     {
     }
     /**
@@ -2215,7 +2199,7 @@ namespace {
      * @return array Array containing various timestamp formats.
      * @since 0.0.2
      */
-    function autoaib_create_timestamp_data() : array
+    function wpsolvex_autoaiblogger_create_timestamp_data(): array
     {
     }
     /**
@@ -2229,7 +2213,7 @@ namespace {
      * @return bool True if update was successful, false otherwise.
      * @since 0.0.2
      */
-    function autoaib_update_token_data($token_data) : bool
+    function wpsolvex_autoaiblogger_update_token_data($token_data): bool
     {
     }
     /**
@@ -2243,27 +2227,28 @@ namespace {
      * @return string Content with placeholders replaced.
      * @since 1.0.0
      */
-    function autoaib_replace_internal_link_placeholders($content, $previous_posts = [])
+    function wpsolvex_autoaiblogger_replace_internal_link_placeholders($content, $previous_posts = [])
     {
     }
     // Define Constants.
-    \define('AUTOAIB_FILE', __FILE__);
-    \define('AUTOAIB_VERSION', '0.0.2');
-    \define('AUTOAIB_DIR', \plugin_dir_path(\AUTOAIB_FILE));
-    \define('AUTOAIB_BASE_PATH', \plugin_basename(\AUTOAIB_FILE));
-    \define('AUTOAIB_BASE_URL', \plugins_url('/', \AUTOAIB_FILE));
+    \define('WPSOLVEX_AUTOAIBLOGGER_FILE', __FILE__);
+    \define('WPSOLVEX_AUTOAIBLOGGER_VERSION', '0.0.6');
+    \define('WPSOLVEX_AUTOAIBLOGGER_DIR', \plugin_dir_path(\WPSOLVEX_AUTOAIBLOGGER_FILE));
+    \define('WPSOLVEX_AUTOAIBLOGGER_BASE_PATH', \plugin_basename(\WPSOLVEX_AUTOAIBLOGGER_FILE));
+    \define('WPSOLVEX_AUTOAIBLOGGER_BASE_URL', \plugins_url('/', \WPSOLVEX_AUTOAIBLOGGER_FILE));
     // Define Plugin Option.
-    \define('AUTOAIB_SLUG', 'auto-ai-blogger');
-    \define('AUTOAIB_DB_OPTION', 'autoaib_settings');
-    \define('AUTOAIB_CAPABILITY', 'manage_options');
+    \define('WPSOLVEX_AUTOAIBLOGGER_SLUG', 'solvex-ai-blogger');
+    \define('WPSOLVEX_AUTOAIBLOGGER_DB_OPTION', 'wpsolvex_autoaiblogger_settings');
+    \define('WPSOLVEX_AUTOAIBLOGGER_CAPABILITY', 'manage_options');
     // Store Linking.
-    \define('AUTOAIB_PUBLIC_TOKEN', 'pt_YA4aSFMwU9stG91RYGGfV7aq');
-    \define('AUTOAIB_POST_CREATION_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-post');
-    \define('AUTOAIB_CAMPAIGN_POST_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-campaign-post');
-    \define('AUTOAIB_CONTENT_FROM_TITLE_POST_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-content-from-title');
-    \define('AUTOAIB_TOKEN_USAGE_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/get-token-data');
+    \define('WPSOLVEX_AUTOAIBLOGGER_PUBLIC_TOKEN', 'pt_YA4aSFMwU9stG91RYGGfV7aq');
+    \define('WPSOLVEX_AUTOAIBLOGGER_CAMPAIGN_POST_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-campaign-post');
+    \define('WPSOLVEX_AUTOAIBLOGGER_CONTENT_FROM_TITLE_POST_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-content-from-title');
+    \define('WPSOLVEX_AUTOAIBLOGGER_TOKEN_USAGE_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/get-token-data');
     // CPT Constants.
-    \define('AUTOAIB_CPT_CAMPAIGN', 'campaign');
+    \define('WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN', 'campaign');
     // Define Upgrade Link.
-    \define('AUTOAIB_UPGRADE_LINK', 'https://wpaiblogger.com/');
+    \define('WPSOLVEX_AUTOAIBLOGGER_UPGRADE_LINK', 'https://wpaiblogger.com/#pricing');
+    // Define Registration Link.
+    \define('WPSOLVEX_AUTOAIBLOGGER_REGISTRATION_URL', 'https://wpaiblogger.com/register/');
 }

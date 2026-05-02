@@ -2,7 +2,7 @@
 /**
  * Admin Filters.
  *
- * @package auto-ai-blogger
+ * @package solvex-ai-blogger
  * @since 0.0.2
  */
 
@@ -60,12 +60,12 @@ class Filters {
 			return;
 		}
 
-		$campaigns         = autoaib_get_all_campaigns();
-		$selected_campaign = isset( $_GET['autoaib_campaign_id'] ) ? absint( $_GET['autoaib_campaign_id'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Not required as handled by absint().
+		$campaigns         = wpsolvex_autoaiblogger_get_all_campaigns();
+		$selected_campaign = isset( $_GET['wpsolvex_autoaiblogger_campaign_id'] ) ? absint( $_GET['wpsolvex_autoaiblogger_campaign_id'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Not required as handled by absint().
 
 		if ( ! empty( $campaigns ) ) {
-			echo '<select name="autoaib_campaign_id">';
-			echo '<option value="">' . esc_html__( 'All Campaigns', 'auto-ai-blogger' ) . '</option>';
+			echo '<select name="wpsolvex_autoaiblogger_campaign_id">';
+			echo '<option value="">' . esc_html__( 'All Campaigns', 'solvex-ai-blogger' ) . '</option>';
 
 			foreach ( $campaigns as $campaign_id => $campaign_data ) {
 				$selected = selected( $selected_campaign, $campaign_id, false );
@@ -105,11 +105,11 @@ class Filters {
 			return $query;
 		}
 
-		if ( ! isset( $_GET['autoaib_campaign_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Not required as handled by absint().
+		if ( ! isset( $_GET['wpsolvex_autoaiblogger_campaign_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Not required as handled by absint().
 			return $query;
 		}
 
-		$campaign_id = absint( $_GET['autoaib_campaign_id'] ?? 0 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Not required as handled by absint().
+		$campaign_id = absint( $_GET['wpsolvex_autoaiblogger_campaign_id'] ?? 0 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Not required as handled by absint().
 
 		if ( $campaign_id ) {
 			$meta_query = $query->get( 'meta_query' );
@@ -118,7 +118,7 @@ class Filters {
 			}
 
 			$meta_query[] = [
-				'key'     => 'autoaib_campaign_id',
+				'key'     => 'wpsolvex_autoaiblogger_campaign_id',
 				'value'   => $campaign_id,
 				'compare' => '=',
 			];
@@ -139,7 +139,7 @@ class Filters {
 	public function add_campaign_column( $columns ) {
 		// Since we're already filtering by post type in the hook registration,.
 		// we can directly add the column.
-		$columns['autoaib_campaign'] = __( 'Campaign', 'auto-ai-blogger' );
+		$columns['wpsolvex_autoaiblogger_campaign'] = __( 'Campaign', 'solvex-ai-blogger' );
 		return $columns;
 	}
 
@@ -152,8 +152,8 @@ class Filters {
 	 * @return void
 	 */
 	public function show_campaign_column_content( $column, $post_id ): void {
-		if ( $column === 'autoaib_campaign' ) {
-			$campaign_id = absint( get_post_meta( $post_id, 'autoaib_campaign_id', true ) ?? 0 );
+		if ( $column === 'wpsolvex_autoaiblogger_campaign' ) {
+			$campaign_id = absint( get_post_meta( $post_id, 'wpsolvex_autoaiblogger_campaign_id', true ) ?? 0 );
 
 			if ( $campaign_id ) {
 				$campaign_title = get_the_title( $campaign_id );
@@ -168,7 +168,7 @@ class Filters {
 					}
 
 					// Add the campaign filter.
-					$filter_url = add_query_arg( 'autoaib_campaign_id', $campaign_id, $filter_url );
+					$filter_url = add_query_arg( 'wpsolvex_autoaiblogger_campaign_id', $campaign_id, $filter_url );
 
 					echo '<a href="' . esc_url( $filter_url ) . '">' . esc_html( $campaign_title ) . '</a>';
 				} else {

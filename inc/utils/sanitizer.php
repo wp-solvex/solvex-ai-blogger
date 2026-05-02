@@ -2,7 +2,7 @@
 /**
  * Sanitizer.
  *
- * @package auto-ai-blogger
+ * @package solvex-ai-blogger
  * @since 1.0.0
  */
 
@@ -23,7 +23,7 @@ class Sanitizer {
 	 * @return array Sanitized post statuses
 	 */
 	public static function get_sanitized_post_statuses(): array {
-		$statuses = autoaib_get_post_statuses();
+		$statuses = wpsolvex_autoaiblogger_get_post_statuses();
 		if ( ! is_array( $statuses ) ) {
 			return [];
 		}
@@ -43,7 +43,7 @@ class Sanitizer {
 	 * @return array Sanitized categories
 	 */
 	public static function get_sanitized_categories(): array {
-		$categories = autoaib_get_categories();
+		$categories = wpsolvex_autoaiblogger_get_categories();
 		if ( ! is_array( $categories ) ) {
 			return [];
 		}
@@ -68,7 +68,7 @@ class Sanitizer {
 	 * @return array Sanitized tags
 	 */
 	public static function get_sanitized_tags(): array {
-		$tags = autoaib_get_tags();
+		$tags = wpsolvex_autoaiblogger_get_tags();
 		if ( ! is_array( $tags ) ) {
 			return [];
 		}
@@ -93,7 +93,7 @@ class Sanitizer {
 	 * @return array Sanitized authors
 	 */
 	public static function get_sanitized_authors(): array {
-		$authors = autoaib_get_authors();
+		$authors = wpsolvex_autoaiblogger_get_authors();
 		if ( ! is_array( $authors ) ) {
 			return [];
 		}
@@ -118,7 +118,7 @@ class Sanitizer {
 	 * @return array Sanitized post types
 	 */
 	public static function get_sanitized_post_types(): array {
-		$post_types = autoaib_get_post_types();
+		$post_types = wpsolvex_autoaiblogger_get_post_types();
 		if ( ! is_array( $post_types ) ) {
 			return [];
 		}

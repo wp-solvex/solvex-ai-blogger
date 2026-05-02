@@ -6,7 +6,7 @@ const SkeletonRow = memo( ( { index } ) => (
 	<tr
 		className="animate-pulse even:bg-gray-50 hover:bg-blue-50/30 transition-colors duration-150"
 		role="row"
-		aria-label={ __( 'Loading row', 'auto-ai-blogger' ) + ' ' + ( index + 1 ) }
+		aria-label={ __( 'Loading row', 'solvex-ai-blogger' ) + ' ' + ( index + 1 ) }
 	>
 		<td className="py-4 pl-4 pr-3 text-sm sm:pl-6">
 			<div className="flex items-center">

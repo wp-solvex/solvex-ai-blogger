@@ -9,7 +9,7 @@ import ErrorBoundary from '@Components/ErrorBoundary';
  */
 const Dashboard = () => {
 	return (
-		<div className="auto-ai-blogger-dashboard" role="main">
+		<div className="solvex-ai-blogger-dashboard" role="main">
 			<ErrorBoundary>
 				<MainNav />
 				<SettingsSavedNotification />

@@ -1,6 +1,6 @@
 <?php
 
-namespace SureCart\Licensing;
+namespace WPSolvex\AutoAIBlogger\Licensing;
 
 // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound
 
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Settings {
 	/**
-	 * SureCart\Licensing\Client
+	 * WPSolvex\AutoAIBlogger\Licensing\Client
 	 *
 	 * @var object
 	 */
@@ -41,7 +41,7 @@ class Settings {
 	/**
 	 * Create the pages.
 	 *
-	 * @param SureCart\Licensing\Client $client The client.
+	 * @param WPSolvex\AutoAIBlogger\Licensing\Client $client The client.
 	 */
 	public function __construct( Client $client ) {
 		$this->client     = $client;
@@ -200,9 +200,9 @@ class Settings {
 					<h2><?php echo esc_html( $this->menu_args['page_title'] ); ?></h2>
 					<label for="license_key">
 						<?php if ( $action === 'activate' ) { ?>
-							<?php echo esc_html( sprintf( $this->client->__( 'Enter your license key to activate %s.', 'auto-ai-blogger' ), $this->client->name ) ); ?>
+							<?php echo esc_html( sprintf( $this->client->__( 'Enter your license key to activate %s.', 'solvex-ai-blogger' ), $this->client->name ) ); ?>
 						<?php } else { ?>
-							<?php echo esc_html( sprintf( $this->client->__( 'Your license is succesfully activated for this site.', 'auto-ai-blogger' ), $this->client->name ) ); ?>
+							<?php echo esc_html( sprintf( $this->client->__( 'Your license is succesfully activated for this site.', 'solvex-ai-blogger' ), $this->client->name ) ); ?>
 						<?php } ?>
 					</label>
 
@@ -211,10 +211,10 @@ class Settings {
 					<?php } ?>
 
 					<?php if ( isset( $_GET['debug'] ) ) { // phpcs:ignore?>
-						<label for="license_id"><?php echo esc_html( sprintf( $this->client->__( 'License ID', 'auto-ai-blogger' ), $this->client->name ) ); ?></label>
+						<label for="license_id"><?php echo esc_html( sprintf( $this->client->__( 'License ID', 'solvex-ai-blogger' ), $this->client->name ) ); ?></label>
 						<input class="widefat" type="text" autocomplete="off" name="license_id" id="license_id" value="<?php echo esc_attr( $this->license_id ); ?>" autofocus>
 
-						<label for="activation_id"><?php echo esc_html( sprintf( $this->client->__( 'Activation ID', 'auto-ai-blogger' ), $this->client->name ) ); ?></label>
+						<label for="activation_id"><?php echo esc_html( sprintf( $this->client->__( 'Activation ID', 'solvex-ai-blogger' ), $this->client->name ) ); ?></label>
 						<input class="widefat" type="text" autocomplete="off" name="activation_id" id="activation_id" value="<?php echo esc_attr( $this->activation_id ); ?>" autofocus>
 					<?php } ?>
 
@@ -231,8 +231,8 @@ class Settings {
 	 * @return void
 	 */
 	public function print_css(): void {
-		wp_enqueue_style( 'autoaib-sc-licensing-style', AUTOAIB_BASE_URL . 'inc/licensing/assets/style.css', [], AUTOAIB_VERSION );
-		wp_add_inline_style( 'autoaib-sc-licensing-style', $this->get_css() );
+		wp_enqueue_style( 'wpsolvex-autoaiblogger-sc-licensing-style', WPSOLVEX_AUTOAIBLOGGER_BASE_URL . 'inc/licensing/assets/style.css', [], WPSOLVEX_AUTOAIBLOGGER_VERSION );
+		wp_add_inline_style( 'wpsolvex-autoaiblogger-sc-licensing-style', $this->get_css() );
 	}
 
 	/**
@@ -262,7 +262,7 @@ class Settings {
 		if ( $this->activation_id ) {
 			$activation = $this->client->activation()->get( $this->activation_id );
 			if ( is_wp_error( $activation ) ) {
-				$this->add_error( 'deactivaed', $this->client->__( 'Your license has been deactivated for this site.', 'auto-ai-blogger' ) );
+				$this->add_error( 'deactivaed', $this->client->__( 'Your license has been deactivated for this site.', 'solvex-ai-blogger' ) );
 				$this->clear_options();
 			}
 		}
@@ -302,7 +302,7 @@ class Settings {
 				return;
 			}
 
-			return $this->add_success( 'activated', $this->client->__( 'This site was successfully activated.', 'auto-ai-blogger' ) );
+			return $this->add_success( 'activated', $this->client->__( 'This site was successfully activated.', 'solvex-ai-blogger' ) );
 		}
 
 		// handle deactivation.
@@ -316,7 +316,7 @@ class Settings {
 				$this->add_error( $deactivated->get_error_code(), $deactivated->get_error_message() );
 			}
 
-			return $this->add_success( 'deactivated', $this->client->__( 'This site was successfully deactivated.', 'auto-ai-blogger' ) );
+			return $this->add_success( 'deactivated', $this->client->__( 'This site was successfully deactivated.', 'solvex-ai-blogger' ) );
 		}
 	}
 
@@ -366,7 +366,7 @@ class Settings {
 	 * Form action URL
 	 */
 	private function form_action_url() {
-		return apply_filters( 'autoaib_client_license_form_action', '' ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		return apply_filters( 'wpsolvex_autoaiblogger_client_license_form_action', '' ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 	}
 
 	/**

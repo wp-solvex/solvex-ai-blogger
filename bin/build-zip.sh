@@ -31,17 +31,17 @@ fi
 
 
 # Copy files for zip.
-rsync -rc --delete --exclude-from ".distignore" "./" "artifact/auto-ai-blogger"
+rsync -rc --delete --exclude-from ".distignore" "./" "artifact/solvex-ai-blogger"
 
 # Go to directory
 cd artifact
 
 # Create a zip copied files.
-zip -r auto-ai-blogger.zip "./auto-ai-blogger"
+zip -r solvex-ai-blogger.zip "./solvex-ai-blogger"
 
 if [ "no-clean" != "$1" ]; then
 	# Removed copied files folder.
-	rm -rf auto-ai-blogger
+	rm -rf solvex-ai-blogger
 fi
 
-success "Done. Your Auto AI Blogger zip is ready..! 🎉"
+success "Done. Your Solvex AI Blogger zip is ready..! 🎉"

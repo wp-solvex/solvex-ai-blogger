@@ -38,12 +38,12 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 
 		try {
 			const formData = new FormData();
-			formData.append( 'action', 'autoaib_get_campaign_analytics' );
-			formData.append( 'security', autoaib_localized_data.admin_nonce );
+			formData.append( 'action', 'wpsolvex_autoaiblogger_get_campaign_analytics' );
+			formData.append( 'security', wpsolvex_autoaiblogger_localized_data.admin_nonce );
 			formData.append( 'campaign_id', campaignId );
 
 			const response = await apiFetch( {
-				url: autoaib_localized_data.ajax_url,
+				url: wpsolvex_autoaiblogger_localized_data.ajax_url,
 				method: 'POST',
 				body: formData,
 			} );
@@ -51,11 +51,11 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 			if ( response.success ) {
 				setAnalyticsData( response.data );
 			} else {
-				setError( response.data || __( 'Failed to fetch analytics data', 'auto-ai-blogger' ) );
+				setError( response.data || __( 'Failed to fetch analytics data', 'solvex-ai-blogger' ) );
 			}
 		} catch ( err ) {
 			console.error( 'Analytics fetch error:', err );
-			setError( __( 'Error fetching analytics data', 'auto-ai-blogger' ) );
+			setError( __( 'Error fetching analytics data', 'solvex-ai-blogger' ) );
 		} finally {
 			setLoading( false );
 		}
@@ -72,14 +72,14 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 	};
 
 	const onUpgradePro = ( e ) => {
-		if ( autoaib_localized_data.pro_available ) {
+		if ( wpsolvex_autoaiblogger_localized_data.pro_available ) {
 			return;
 		}
 
 		e.preventDefault();
 		e.stopPropagation();
 
-		window.open( autoaib_localized_data.pro_purchase_url, '_blank' );
+		window.open( wpsolvex_autoaiblogger_localized_data.pro_purchase_url, '_blank' );
 	};
 
 	return (
@@ -100,10 +100,10 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 								</div>
 								<div>
 									<h3 className="text-lg font-semibold text-gray-900 m-0">
-										{ __( 'Campaign Analytics', 'auto-ai-blogger' ) }
+										{ __( 'Campaign Analytics', 'solvex-ai-blogger' ) }
 									</h3>
 									<p className="text-sm text-gray-600 m-0">
-										{ campaignData?.name || __( 'Campaign', 'auto-ai-blogger' ) }
+										{ campaignData?.name || __( 'Campaign', 'solvex-ai-blogger' ) }
 									</p>
 								</div>
 							</div>
@@ -122,7 +122,7 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 								{ loading ? (
 									<div className="flex items-center justify-center py-12">
 										<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-										<span className="ml-3 text-gray-600">{ __( 'Loading analytics…', 'auto-ai-blogger' ) }</span>
+										<span className="ml-3 text-gray-600">{ __( 'Loading analytics…', 'solvex-ai-blogger' ) }</span>
 									</div>
 								) : error ? (
 									<div className="text-center py-12">
@@ -131,7 +131,7 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 											onClick={ fetchAnalyticsData }
 											className="text-indigo-600 hover:text-indigo-500 text-sm p-2 rounded border border-indigo-200 hover:border-indigo-300 transition-colors"
 										>
-											{ __( 'Try again', 'auto-ai-blogger' ) }
+											{ __( 'Try again', 'solvex-ai-blogger' ) }
 										</button>
 									</div>
 								) : (
@@ -142,7 +142,7 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 											<div className="bg-gradient-to-r from-brand-50 to-indigo-50 p-4 rounded-lg border border-brand-200">
 												<div className="flex items-center justify-between">
 													<div className="flex flex-col gap-2">
-														<p className="text-sm font-medium text-brand-600 m-0">{ __( 'Created Posts', 'auto-ai-blogger' ) }</p>
+														<p className="text-sm font-medium text-brand-600 m-0">{ __( 'Created Posts', 'solvex-ai-blogger' ) }</p>
 														<p className="text-2xl font-bold text-brand-900 m-0">{ analyticsData?.publishedPosts || campaignData?.postsCreated || 0 }</p>
 													</div>
 													<TrendingUp className="w-6 h-6 text-brand-500" />
@@ -153,7 +153,7 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 											<div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg border border-blue-200">
 												<div className="flex items-center justify-between">
 													<div className="flex flex-col gap-2">
-														<p className="text-sm font-medium text-blue-600 m-0">{ __( 'Total Visits', 'auto-ai-blogger' ) }</p>
+														<p className="text-sm font-medium text-blue-600 m-0">{ __( 'Total Visits', 'solvex-ai-blogger' ) }</p>
 														<p className="text-2xl font-bold text-blue-900 m-0">{ formatNumber( analyticsData?.totalViews || campaignData?.postsVisit || 0 ) }</p>
 													</div>
 													<Eye className="w-6 h-6 text-blue-500" />
@@ -164,7 +164,7 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 											<div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200">
 												<div className="flex items-center justify-between">
 													<div className="flex flex-col gap-2">
-														<p className="text-sm font-medium text-green-600 m-0">{ __( 'Success Rate', 'auto-ai-blogger' ) }</p>
+														<p className="text-sm font-medium text-green-600 m-0">{ __( 'Success Rate', 'solvex-ai-blogger' ) }</p>
 														<p className="text-2xl font-bold text-green-900 m-0">{ analyticsData?.successRate || '95' }%</p>
 													</div>
 													<CheckCircle className="w-6 h-6 text-green-500" />
@@ -175,7 +175,7 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 											<div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg border border-purple-200">
 												<div className="flex items-center justify-between">
 													<div className="flex flex-col gap-2">
-														<p className="text-sm font-medium text-purple-600 m-0">{ __( 'Total Comments', 'auto-ai-blogger' ) }</p>
+														<p className="text-sm font-medium text-purple-600 m-0">{ __( 'Total Comments', 'solvex-ai-blogger' ) }</p>
 														<p className="text-2xl font-bold text-purple-900 m-0">{ formatNumber( analyticsData?.totalComments || 0 ) }</p>
 													</div>
 													<MessageSquare className="w-6 h-6 text-purple-500" />
@@ -188,9 +188,9 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 											<div className="flex items-center justify-between mb-3">
 												<div className="flex items-center">
 													<Trophy className="w-4 h-4 text-yellow-600 mr-2" />
-													<h4 className="text-base font-semibold text-gray-900 m-0">{ __( 'Top Performing Posts', 'auto-ai-blogger' ) }</h4>
+													<h4 className="text-base font-semibold text-gray-900 m-0">{ __( 'Top Performing Posts', 'solvex-ai-blogger' ) }</h4>
 												</div>
-												<span className="text-xs text-gray-500">{ __( 'By views', 'auto-ai-blogger' ) }</span>
+												<span className="text-xs text-gray-500">{ __( 'By views', 'solvex-ai-blogger' ) }</span>
 											</div>
 
 											<div className="space-y-2">
@@ -208,14 +208,14 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 															</div>
 															<div className="text-right flex flex-col gap-1">
 																<p className="text-xs font-medium text-gray-900 m-0">{ formatNumber( post.views ) }</p>
-																<p className="text-xs text-gray-500 m-0">{ __( 'views', 'auto-ai-blogger' ) }</p>
+																<p className="text-xs text-gray-500 m-0">{ __( 'views', 'solvex-ai-blogger' ) }</p>
 															</div>
 														</div>
 													) )
 												) : (
 													<div className="text-center py-4">
 														<Trophy className="w-6 h-6 text-gray-300 mx-auto mb-1" />
-														<p className="text-gray-500 text-xs">{ __( 'No posts data available yet', 'auto-ai-blogger' ) }</p>
+														<p className="text-gray-500 text-xs">{ __( 'No posts data available yet', 'solvex-ai-blogger' ) }</p>
 													</div>
 												) }
 											</div>
@@ -229,9 +229,9 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 														<Crown className="w-5 h-5 text-white" />
 													</div>
 													<div>
-														<h4 className="text-base font-bold m-0">{ __( 'Get more features with Pro', 'auto-ai-blogger' ) }</h4>
+														<h4 className="text-base font-bold m-0">{ __( 'Get more features with Pro', 'solvex-ai-blogger' ) }</h4>
 														<p className="text-indigo-100 text-sm m-0">
-															{ __( 'Unlock premium tools, advanced controls, and more automation.', 'auto-ai-blogger' ) }
+															{ __( 'Unlock premium tools, advanced controls, and more automation.', 'solvex-ai-blogger' ) }
 														</p>
 													</div>
 												</div>
@@ -239,7 +239,7 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 													<Zap className="w-4 h-4" />
 													<span>
 														{
-															autoaib_localized_data.pro_available ? __( 'Soon', 'auto-ai-blogger' ) : __( 'Upgrade', 'auto-ai-blogger' )
+															wpsolvex_autoaiblogger_localized_data.pro_available ? __( 'Soon', 'solvex-ai-blogger' ) : __( 'Upgrade', 'solvex-ai-blogger' )
 														}
 													</span>
 												</button>
@@ -248,15 +248,15 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 											<div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4">
 												<div className="flex items-center space-x-1">
 													<CheckCircle className="w-4 h-4 text-green-300" />
-													<span className="text-sm">{ __( 'Unlimited Ideas', 'auto-ai-blogger' ) }</span>
+													<span className="text-sm">{ __( 'Unlimited Ideas', 'solvex-ai-blogger' ) }</span>
 												</div>
 												<div className="flex items-center justify-center space-x-1">
 													<CheckCircle className="w-4 h-4 text-green-300" />
-													<span className="text-sm">{ __( 'More tokens', 'auto-ai-blogger' ) }</span>
+													<span className="text-sm">{ __( 'More tokens', 'solvex-ai-blogger' ) }</span>
 												</div>
 												<div className="flex items-center justify-end space-x-1">
 													<CheckCircle className="w-4 h-4 text-green-300" />
-													<span className="text-sm">{ __( 'Up to 5000 words per post', 'auto-ai-blogger' ) }</span>
+													<span className="text-sm">{ __( 'Up to 5000 words per post', 'solvex-ai-blogger' ) }</span>
 												</div>
 											</div>
 										</div>

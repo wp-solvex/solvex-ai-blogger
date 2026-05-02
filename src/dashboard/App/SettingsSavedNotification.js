@@ -196,11 +196,11 @@ export default function SettingsSavedNotification() {
 											group
 										"
 										onClick={ dismissNotification }
-										aria-label={ __( 'Close notification', 'auto-ai-blogger' ) }
+										aria-label={ __( 'Close notification', 'solvex-ai-blogger' ) }
 										aria-describedby="notification-message"
 									>
 										<span className="sr-only">
-											{ __( 'Close notification', 'auto-ai-blogger' ) }
+											{ __( 'Close notification', 'solvex-ai-blogger' ) }
 										</span>
 										<XIcon
 											className="h-3 w-3 transition-transform duration-150 group-hover:scale-110"

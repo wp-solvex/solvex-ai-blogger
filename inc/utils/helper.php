@@ -5,7 +5,7 @@
  * This class provides utility functions for settings management
  * with input validation, data sanitization, and security checks.
  *
- * @package auto-ai-blogger
+ * @package solvex-ai-blogger
  * @subpackage Utils
  * @since 1.0.0
  */
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * This class provides utility functions for managing plugin settings
  * with validation, sanitization, and access control.
  *
- * @package auto-ai-blogger
+ * @package solvex-ai-blogger
  * @subpackage Utils
  * @since 1.0.0
  */
@@ -120,7 +120,7 @@ class Helper {
 		if ( ! is_string( $key ) || empty( $key ) ) {
 			return [
 				'success' => false,
-				'error'   => __( 'Invalid key parameter', 'auto-ai-blogger' ),
+				'error'   => __( 'Invalid key parameter', 'solvex-ai-blogger' ),
 			];
 		}
 
@@ -167,7 +167,7 @@ class Helper {
 			];
 		}
 
-		$settings = get_option( AUTOAIB_DB_OPTION, [] );
+		$settings = get_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, [] );
 
 		// Validate settings is array.
 		if ( ! is_array( $settings ) ) {
@@ -191,7 +191,7 @@ class Helper {
 		// Validate final settings array.
 		$validated_settings = self::validate_settings_array( $settings );
 
-		update_option( AUTOAIB_DB_OPTION, $validated_settings );
+		update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $validated_settings );
 
 		// Return success with the sanitized value.
 		return [
@@ -232,7 +232,7 @@ class Helper {
 			return false;
 		}
 
-		$settings = get_option( AUTOAIB_DB_OPTION, [] );
+		$settings = get_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, [] );
 
 		// Validate settings is array.
 		if ( ! is_array( $settings ) ) {
@@ -248,7 +248,7 @@ class Helper {
 		// Validate final settings array.
 		$settings = self::validate_settings_array( $settings );
 
-		return update_option( AUTOAIB_DB_OPTION, $settings );
+		return update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $settings );
 	}
 
 	/**
@@ -264,7 +264,7 @@ class Helper {
 			return false;
 		}
 
-		$settings = get_option( AUTOAIB_DB_OPTION, [] );
+		$settings = get_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, [] );
 
 		if ( ! is_array( $settings ) ) {
 			$settings = [];
@@ -299,7 +299,7 @@ class Helper {
 
 		if ( $updated ) {
 			$settings = self::validate_settings_array( $settings );
-			return update_option( AUTOAIB_DB_OPTION, $settings );
+			return update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $settings );
 		}
 
 		return true;

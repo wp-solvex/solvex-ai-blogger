@@ -69,7 +69,7 @@ const formatLastPostRun = ( lastRun ) => {
 // Enhanced campaign card component with better UX.
 const CampaignCard = memo( ( { campaign } ) => {
 	const navigate = useNavigate();
-	const defaultMetaDefaults = autoaib_localized_data.postmeta_defaults;
+	const defaultMetaDefaults = wpsolvex_autoaiblogger_localized_data.postmeta_defaults;
 
 	const campaigns = useSelector( ( state ) => state.allCampaigns ) || {};
 	const isPerformant = ( campaign?.postsVisit || 0 ) > 100;
@@ -83,12 +83,12 @@ const CampaignCard = memo( ( { campaign } ) => {
 	const fetchCampaignMetaData = async ( campaignId ) => {
 		const formData = new window.FormData();
 
-		formData.append( 'action', 'autoaib_get_campaign_metadata' );
-		formData.append( 'security', autoaib_localized_data.admin_nonce );
+		formData.append( 'action', 'wpsolvex_autoaiblogger_get_campaign_metadata' );
+		formData.append( 'security', wpsolvex_autoaiblogger_localized_data.admin_nonce );
 		formData.append( 'campaign_id', campaignId );
 
 		const response = await apiFetch( {
-			url: autoaib_localized_data.ajax_url,
+			url: wpsolvex_autoaiblogger_localized_data.ajax_url,
 			method: 'POST',
 			body: formData,
 		} )
@@ -140,14 +140,14 @@ const CampaignCard = memo( ( { campaign } ) => {
 		const postType = campaignData?.postType || 'post'; // Default to 'post' if not found.
 
 		// Redirect to All Posts page with campaign filter
-		const adminUrl = autoaib_localized_data.admin_url || '/wp-admin/';
+		const adminUrl = wpsolvex_autoaiblogger_localized_data.admin_url || '/wp-admin/';
 		let filterUrl;
 
 		// For 'post' type, we don't need to specify post_type parameter
 		if ( postType === 'post' ) {
-			filterUrl = `${ adminUrl }edit.php?autoaib_campaign_id=${ campaignId }`;
+			filterUrl = `${ adminUrl }edit.php?wpsolvex_autoaiblogger_campaign_id=${ campaignId }`;
 		} else {
-			filterUrl = `${ adminUrl }edit.php?post_type=${ postType }&autoaib_campaign_id=${ campaignId }`;
+			filterUrl = `${ adminUrl }edit.php?post_type=${ postType }&wpsolvex_autoaiblogger_campaign_id=${ campaignId }`;
 		}
 
 		window.open( filterUrl, '_blank' );
@@ -172,7 +172,7 @@ const CampaignCard = memo( ( { campaign } ) => {
 			{ /* Performance indicator */ }
 			{ isPerformant && (
 				<div className="absolute top-2 right-2 bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded-full font-medium z-10">
-					{ __( 'High', 'auto-ai-blogger' ) }
+					{ __( 'High', 'solvex-ai-blogger' ) }
 				</div>
 			) }
 
@@ -180,20 +180,20 @@ const CampaignCard = memo( ( { campaign } ) => {
 				{ /* Metrics grid */ }
 				<div className="flex flex-col gap-2">
 					<MetricCard
-						metric={ __( 'Posts', 'auto-ai-blogger' ) }
+						metric={ __( 'Posts', 'solvex-ai-blogger' ) }
 						value={ campaign?.postsCreated || '0' }
 						icon={ BarChart3 }
 						getOnlyDetails={ true }
 					/>
 					<MetricCard
-						metric={ __( 'Visits', 'auto-ai-blogger' ) }
+						metric={ __( 'Visits', 'solvex-ai-blogger' ) }
 						value={ campaign?.postsVisit || '0' }
 						icon={ Eye }
 						trend={ campaign?.visitTrend }
 						getOnlyDetails={ true }
 					/>
 					<div className="flex items-center justify-between min-h-[24px]">
-						<span className="text-xs font-medium text-gray-600">{ __( 'Status', 'auto-ai-blogger' ) }</span>
+						<span className="text-xs font-medium text-gray-600">{ __( 'Status', 'solvex-ai-blogger' ) }</span>
 						<div className="text-sm font-semibold text-right capitalize">
 							{ ( () => {
 								// Use same logic as Campaigns.js switch tooltip
@@ -209,17 +209,17 @@ const CampaignCard = memo( ( { campaign } ) => {
 								const isCompleted = campaign?.status === 'draft' || isTargetMet || allAttemptsMade || campaignCompleted;
 
 								if ( isCompleted ) {
-									return <span className="text-gray-600">{ __( 'Complete', 'auto-ai-blogger' ) }</span>;
+									return <span className="text-gray-600">{ __( 'Complete', 'solvex-ai-blogger' ) }</span>;
 								}
 								if ( isPaused ) {
-									return <span className="text-brand">{ __( 'Paused', 'auto-ai-blogger' ) }</span>;
+									return <span className="text-brand">{ __( 'Paused', 'solvex-ai-blogger' ) }</span>;
 								}
-								return <span className="text-green-600">{ __( 'Active', 'auto-ai-blogger' ) }</span>;
+								return <span className="text-green-600">{ __( 'Active', 'solvex-ai-blogger' ) }</span>;
 							} )() }
 						</div>
 					</div>
 					<div className="flex items-center justify-between min-h-[24px]">
-						<span className="text-xs font-medium text-gray-600">{ __( 'Last Post Run', 'auto-ai-blogger' ) }</span>
+						<span className="text-xs font-medium text-gray-600">{ __( 'Last Post Run', 'solvex-ai-blogger' ) }</span>
 						<div className="text-sm font-semibold text-gray-900 text-right">
 							{ formatLastPostRun( campaign?.lastRun ) }
 						</div>
@@ -230,16 +230,16 @@ const CampaignCard = memo( ( { campaign } ) => {
 			{ /* Enhanced footer with action - Fixed height for consistency */ }
 			<div className="bg-gray-50 px-3 py-2.5 border-t border-gray-100 w-full flex items-center justify-between text-sm font-medium transition-all duration-200 min-h-[52px]">
 				<a
-					href={ `?page=auto-ai-blogger&path=campaigns&id=${ campaign.id }` }
+					href={ `?page=solvex-ai-blogger&path=campaigns&id=${ campaign.id }` }
 					className="text-brand hover:text-brand-700 focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 rounded-md transition-colors duration-200 no-underline truncate flex-1 min-w-0 mr-2"
 					onClick={ ( e ) => {
 						e.preventDefault();
-						navigate( `?page=auto-ai-blogger&path=campaigns&id=${ campaign.id }` );
+						navigate( `?page=solvex-ai-blogger&path=campaigns&id=${ campaign.id }` );
 					} }
-					title={ campaign?.title || __( 'Unnamed Campaign', 'auto-ai-blogger' ) }
+					title={ campaign?.title || __( 'Unnamed Campaign', 'solvex-ai-blogger' ) }
 				>
 					<TrimWordsContent
-						content={ campaign?.title || __( 'Unnamed Campaign', 'auto-ai-blogger' ) }
+						content={ campaign?.title || __( 'Unnamed Campaign', 'solvex-ai-blogger' ) }
 						count={ 5 }
 					/>
 				</a>
@@ -248,7 +248,7 @@ const CampaignCard = memo( ( { campaign } ) => {
 					<a href="#" className="text-gray-500 hover:text-brand-900" data-campaign_id={ campaign.id } onClick={ ( e ) => {
 						viewCampaignPosts( e, campaign.id );
 					} }>
-						<Tooltip text={ __( 'Posts List', 'auto-ai-blogger' ) }
+						<Tooltip text={ __( 'Posts List', 'solvex-ai-blogger' ) }
 							delay={ 100 }
 							className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
 						>
@@ -259,7 +259,7 @@ const CampaignCard = memo( ( { campaign } ) => {
 					<a href="#" className="text-gray-500 hover:text-brand-900" data-campaign_id={ campaign.id } onClick={ ( e ) => {
 						openCampaignAnalytics( e, campaign.id );
 					} }>
-						<Tooltip text={ __( 'Analytics', 'auto-ai-blogger' ) }
+						<Tooltip text={ __( 'Analytics', 'solvex-ai-blogger' ) }
 							delay={ 100 }
 							className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
 						>
@@ -268,7 +268,7 @@ const CampaignCard = memo( ( { campaign } ) => {
 					</a>
 
 					<a href="#" data-campaign_id={ campaign.id } className="text-gray-500 hover:text-brand-900" onClick={ configureCampaign }>
-						<Tooltip text={ __( 'Configure', 'auto-ai-blogger' ) }
+						<Tooltip text={ __( 'Configure', 'solvex-ai-blogger' ) }
 							delay={ 100 }
 							className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
 						>
@@ -319,10 +319,10 @@ const LicenseRequiredState = memo( ( { onNavigateToLicense } ) => (
 
 		<div className="text-center space-y-2">
 			<h3 className="text-xl font-semibold text-orange-900">
-				{ __( 'License Required', 'auto-ai-blogger' ) }
+				{ __( 'License Required', 'solvex-ai-blogger' ) }
 			</h3>
 			<p className="text-orange-700 max-w-md">
-				{ __( 'Activate your license to access campaign insights and performance analytics.', 'auto-ai-blogger' ) }
+				{ __( 'Activate your license to access campaign insights and performance analytics.', 'solvex-ai-blogger' ) }
 			</p>
 		</div>
 
@@ -330,9 +330,9 @@ const LicenseRequiredState = memo( ( { onNavigateToLicense } ) => (
 			type="button"
 			onClick={ onNavigateToLicense }
 			className="inline-flex items-center gap-2 rounded-lg bg-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105"
-			aria-label={ __( 'Navigate to license settings', 'auto-ai-blogger' ) }
+			aria-label={ __( 'Navigate to license settings', 'solvex-ai-blogger' ) }
 		>
-			{ __( 'Activate License', 'auto-ai-blogger' ) }
+			{ __( 'Activate License', 'solvex-ai-blogger' ) }
 			<ExternalLink className="w-4 h-4" aria-hidden="true" />
 		</button>
 	</div>
@@ -347,10 +347,10 @@ const EmptyState = memo( () => (
 			<BarChart3 className="w-8 h-8 text-gray-400" aria-hidden="true" />
 		</div>
 		<h3 className="text-lg font-medium text-gray-900 mb-2">
-			{ __( 'No Campaign Data Available', 'auto-ai-blogger' ) }
+			{ __( 'No Campaign Data Available', 'solvex-ai-blogger' ) }
 		</h3>
 		<p className="text-gray-500 max-w-lg !m-auto">
-			{ __( 'Campaign insights will appear here once you create and run your first campaign.', 'auto-ai-blogger' ) }
+			{ __( 'Campaign insights will appear here once you create and run your first campaign.', 'solvex-ai-blogger' ) }
 		</p>
 	</div>
 ) );
@@ -362,7 +362,7 @@ function CampaignsInsights( { onError } ) {
 	const navigate = useNavigate();
 	const licenseStatus = useSelector( ( state ) => state.license_status ) || 'unlicensed';
 	const allCampaigns = useSelector( ( state ) => state.allCampaigns ) || {};
-	const homeSlug = useSelector( ( state ) => state.homeSlug ) || 'auto-ai-blogger';
+	const homeSlug = useSelector( ( state ) => state.homeSlug ) || 'solvex-ai-blogger';
 	const scrollContainerRef = useRef( null );
 	const [ canScrollLeft, setCanScrollLeft ] = useState( false );
 	const [ canScrollRight, setCanScrollRight ] = useState( false );
@@ -466,10 +466,10 @@ function CampaignsInsights( { onError } ) {
 			>
 				<div className="mb-6">
 					<h2 id="campaigns-insights-heading" className="text-xl font-bold text-gray-900 p-0 m-0">
-						{ __( 'Campaigns Insights', 'auto-ai-blogger' ) }
+						{ __( 'Campaigns Insights', 'solvex-ai-blogger' ) }
 					</h2>
 					<p className="text-gray-600 mt-1">
-						{ __( 'Monitor your campaign performance and analytics.', 'auto-ai-blogger' ) }
+						{ __( 'Monitor your campaign performance and analytics.', 'solvex-ai-blogger' ) }
 					</p>
 				</div>
 				<EmptyState />
@@ -485,7 +485,7 @@ function CampaignsInsights( { onError } ) {
 			{ /* Header with View All link */ }
 			<div className="flex items-center justify-between mb-6">
 				<h2 id="campaigns-insights-heading" className="text-xl font-bold text-gray-900 p-0 m-0">
-					{ __( 'Campaigns Insights', 'auto-ai-blogger' ) }
+					{ __( 'Campaigns Insights', 'solvex-ai-blogger' ) }
 				</h2>
 				<a
 					href={ `?page=${ homeSlug }&path=campaigns` }
@@ -495,7 +495,7 @@ function CampaignsInsights( { onError } ) {
 					} }
 					className="inline-flex items-center gap-1 text-sm font-medium text-brand hover:text-brand-700 no-underline transition-colors"
 				>
-					{ __( 'View All', 'auto-ai-blogger' ) }
+					{ __( 'View All', 'solvex-ai-blogger' ) }
 					<ExternalLink className="w-3.5 h-3.5" />
 				</a>
 			</div>
@@ -507,7 +507,7 @@ function CampaignsInsights( { onError } ) {
 					<button
 						onClick={ scrollLeft }
 						className="absolute left-2 top-1/2 -translate-y-1/2 pb-1 z-10 bg-white hover:bg-gray-50 border-[3px] border-brand rounded-full p-2 shadow-lg transition-all duration-200"
-						aria-label={ __( 'Scroll left', 'auto-ai-blogger' ) }
+						aria-label={ __( 'Scroll left', 'solvex-ai-blogger' ) }
 					>
 						<ChevronLeft className="w-5 h-5 text-brand" />
 					</button>
@@ -518,7 +518,7 @@ function CampaignsInsights( { onError } ) {
 					<button
 						onClick={ scrollRight }
 						className="absolute right-2 top-1/2 -translate-y-1/2 pb-1 z-10 bg-white hover:bg-gray-50 border-[3px] border-brand rounded-full p-2 shadow-lg transition-all duration-200"
-						aria-label={ __( 'Scroll right', 'auto-ai-blogger' ) }
+						aria-label={ __( 'Scroll right', 'solvex-ai-blogger' ) }
 					>
 						<ChevronRight className="w-5 h-5 text-brand" />
 					</button>
@@ -546,10 +546,10 @@ function CampaignsInsights( { onError } ) {
 							<div className="w-full flex flex-col items-center justify-center py-12 text-gray-500">
 								<BarChart3 className="w-12 h-12 mb-4 text-gray-300" />
 								<p className="text-lg font-medium mb-2">
-									{ __( 'No campaigns found', 'auto-ai-blogger' ) }
+									{ __( 'No campaigns found', 'solvex-ai-blogger' ) }
 								</p>
 								<p className="text-sm">
-									{ __( 'Create your first campaign to start generating content automatically.', 'auto-ai-blogger' ) }
+									{ __( 'Create your first campaign to start generating content automatically.', 'solvex-ai-blogger' ) }
 								</p>
 							</div>
 						) }

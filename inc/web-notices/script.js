@@ -75,8 +75,8 @@
 				url: ajaxurl,
 				type: 'POST',
 				data: {
-					action: 'autoaib-notice-dismiss',
-					nonce: autoaib_web_notices._notice_nonce,
+					action: 'wpsolvex-autoaiblogger-notice-dismiss',
+					nonce: wpsolvex_autoaiblogger_web_notices._notice_nonce,
 					notice_id,
 					repeat_notice_after: parseInt( repeat_notice_after ),
 				},

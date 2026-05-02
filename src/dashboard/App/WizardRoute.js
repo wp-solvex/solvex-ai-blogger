@@ -4,8 +4,8 @@ import { WelcomeStep, PersonaFormStep, LicenseStep, OptinStep, ReadyStep } from 
 import { NavigationBar, FooterNavigationBar } from '@WizardFields';
 
 const WizardRoute = () => {
-	// Add a "auto-ai-blogger-wizard" class to the body tag.
-	document.body.classList.add( 'auto-ai-blogger-wizard' );
+	// Add a "solvex-ai-blogger-wizard" class to the body tag.
+	document.body.classList.add( 'solvex-ai-blogger-wizard' );
 
 	const query = new URLSearchParams( useLocation().search );
 	const action = query.get( 'step' );

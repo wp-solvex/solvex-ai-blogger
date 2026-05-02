@@ -136,7 +136,7 @@ const globalDataReducer = ( state = {}, action ) => {
 		UPDATE_LICENSE_STATUS: () => ( { ...state, license_status: String( action.payload || 'inactive' ) } ),
 
 		// Static configuration updates (rarely used but available if needed)
-		UPDATE_HOME_SLUG: () => ( { ...state, homeSlug: String( action.payload || 'auto-ai-blogger' ) } ),
+		UPDATE_HOME_SLUG: () => ( { ...state, homeSlug: String( action.payload || 'solvex-ai-blogger' ) } ),
 		UPDATE_ADMIN_NONCE: () => ( { ...state, adminNonce: String( action.payload || '' ) } ),
 		UPDATE_AJAX_URL: () => ( { ...state, ajaxUrl: String( action.payload || '' ) } ),
 		UPDATE_EDIT_POST_LINK: () => ( { ...state, editPostLink: String( action.payload || '/wp-admin/post.php?post={{POST_ID}}&action=edit' ) } ),

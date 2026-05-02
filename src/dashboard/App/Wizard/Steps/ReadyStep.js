@@ -54,10 +54,10 @@ const NextStepsCard = memo( () => (
 			</div>
 			<div>
 				<h3 className="text-lg font-semibold text-gray-900">
-					{ __( 'What\'s Next?', 'auto-ai-blogger' ) }
+					{ __( 'What\'s Next?', 'solvex-ai-blogger' ) }
 				</h3>
 				<p className="text-sm text-gray-600">
-					{ __( 'Learn how to get the most out of Solvex AI Blogger', 'auto-ai-blogger' ) }
+					{ __( 'Learn how to get the most out of Solvex AI Blogger', 'solvex-ai-blogger' ) }
 				</p>
 			</div>
 		</div>
@@ -65,15 +65,15 @@ const NextStepsCard = memo( () => (
 		<div className="space-y-3">
 			<div className="flex items-center gap-3 text-sm">
 				<CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" aria-hidden="true" />
-				<span className="text-gray-700">{ __( 'Create your first AI-powered blog post', 'auto-ai-blogger' ) }</span>
+				<span className="text-gray-700">{ __( 'Create your first AI-powered blog post', 'solvex-ai-blogger' ) }</span>
 			</div>
 			<div className="flex items-center gap-3 text-sm">
 				<CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" aria-hidden="true" />
-				<span className="text-gray-700">{ __( 'Set up automated content schedules', 'auto-ai-blogger' ) }</span>
+				<span className="text-gray-700">{ __( 'Set up automated content schedules', 'solvex-ai-blogger' ) }</span>
 			</div>
 			<div className="flex items-center gap-3 text-sm">
 				<CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" aria-hidden="true" />
-				<span className="text-gray-700">{ __( 'Optimize your content for search engines', 'auto-ai-blogger' ) }</span>
+				<span className="text-gray-700">{ __( 'Optimize your content for search engines', 'solvex-ai-blogger' ) }</span>
 			</div>
 		</div>
 
@@ -84,10 +84,10 @@ const NextStepsCard = memo( () => (
 				hover:text-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500
 				focus:ring-offset-2 rounded transition-colors duration-200
 			"
-			aria-label={ __( 'Watch getting started video', 'auto-ai-blogger' ) }
+			aria-label={ __( 'Watch getting started video', 'solvex-ai-blogger' ) }
 		>
 			<PlayCircle className="w-4 h-4" aria-hidden="true" />
-			{ __( 'Watch Getting Started Video', 'auto-ai-blogger' ) }
+			{ __( 'Watch Getting Started Video', 'solvex-ai-blogger' ) }
 			<ExternalLink className="w-3 h-3" aria-hidden="true" />
 		</a>
 	</div>
@@ -118,7 +118,7 @@ const FinishButton = memo( ( { onClick, loading, children } ) => {
 				transform transition-all duration-200 hover:scale-105 hover:shadow-xl
 				disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
 			"
-			aria-label={ __( 'Complete setup and go to dashboard', 'auto-ai-blogger' ) }
+			aria-label={ __( 'Complete setup and go to dashboard', 'solvex-ai-blogger' ) }
 		>
 			{ loading ? (
 				<Loader2 className="w-6 h-6 animate-spin" aria-hidden="true" />
@@ -148,7 +148,7 @@ const ReadyStep = memo( () => {
 	// Enhanced confetti effect
 	const triggerConfetti = useCallback( () => {
 		const ConfettiFrame = confetti.create(
-			document.getElementById( 'autoaib-confetti-wrapper' ),
+			document.getElementById( 'wpsolvex-autoaiblogger-confetti-wrapper' ),
 			{ resize: true }
 		);
 
@@ -212,8 +212,8 @@ const ReadyStep = memo( () => {
 		// Auto-redirect after delay (optional)
 		const autoRedirectTimer = setTimeout( () => {
 			if ( ! isFinishingSetup ) {
-				const redirectUrl = '?page=auto-ai-blogger';
-				window.location.href = autoaib_localized_data.admin_base_url + redirectUrl;
+				const redirectUrl = '?page=solvex-ai-blogger';
+				window.location.href = wpsolvex_autoaiblogger_localized_data.admin_base_url + redirectUrl;
 			}
 		}, 15000 ); // 15 seconds
 
@@ -227,27 +227,27 @@ const ReadyStep = memo( () => {
 
 		// Small delay for better UX
 		setTimeout( () => {
-			const redirectUrl = '?page=auto-ai-blogger';
-			window.location.href = autoaib_localized_data.admin_base_url + redirectUrl;
+			const redirectUrl = '?page=solvex-ai-blogger';
+			window.location.href = wpsolvex_autoaiblogger_localized_data.admin_base_url + redirectUrl;
 		}, 1000 );
 	}, [] );
 
 	const successFeatures = [
 		{
 			icon: CheckCircle2,
-			title: __( 'Setup Complete', 'auto-ai-blogger' ),
-			description: __( 'Your WordPress site is now connected to our AI-powered content generation system.', 'auto-ai-blogger' ),
+			title: __( 'Setup Complete', 'solvex-ai-blogger' ),
+			description: __( 'Your WordPress site is now connected to our AI-powered content generation system.', 'solvex-ai-blogger' ),
 			highlight: true,
 		},
 		{
 			icon: Star,
-			title: __( 'AI Models Ready', 'auto-ai-blogger' ),
-			description: __( 'Advanced language models are configured and ready to create high-quality content.', 'auto-ai-blogger' ),
+			title: __( 'AI Models Ready', 'solvex-ai-blogger' ),
+			description: __( 'Advanced language models are configured and ready to create high-quality content.', 'solvex-ai-blogger' ),
 		},
 		{
 			icon: Gift,
-			title: __( 'Free Credits Applied', 'auto-ai-blogger' ),
-			description: __( 'Your account has been credited with free tokens to get you started immediately.', 'auto-ai-blogger' ),
+			title: __( 'Free Credits Applied', 'solvex-ai-blogger' ),
+			description: __( 'Your account has been credited with free tokens to get you started immediately.', 'solvex-ai-blogger' ),
 		},
 	];
 
@@ -259,7 +259,7 @@ const ReadyStep = memo( () => {
 		>
 			{ /* Confetti canvas */ }
 			<canvas
-				id="autoaib-confetti-wrapper"
+				id="wpsolvex-autoaiblogger-confetti-wrapper"
 				width={ typeof window !== 'undefined' ? window.innerWidth : 800 }
 				height={ typeof window !== 'undefined' ? window.innerHeight : 600 }
 				className="absolute inset-0 pointer-events-none z-10"
@@ -281,14 +281,14 @@ const ReadyStep = memo( () => {
 						<div className="mb-4">
 							<span className="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 text-white text-sm font-medium rounded-full tracking-wide uppercase">
 								<Trophy className="w-4 h-4 mr-2" aria-hidden="true" />
-								{ __( 'Setup Complete', 'auto-ai-blogger' ) }
+								{ __( 'Setup Complete', 'solvex-ai-blogger' ) }
 							</span>
 						</div>
 						<h1 id="ready-heading" className="text-4xl font-bold text-white mb-4">
-							{ __( '🎉 Congratulations!', 'auto-ai-blogger' ) }
+							{ __( '🎉 Congratulations!', 'solvex-ai-blogger' ) }
 						</h1>
 						<p className="text-green-100 text-xl max-w-2xl mx-auto">
-							{ __( 'Solvex AI Blogger is now ready to transform your content creation process with the power of artificial intelligence.', 'auto-ai-blogger' ) }
+							{ __( 'Solvex AI Blogger is now ready to transform your content creation process with the power of artificial intelligence.', 'solvex-ai-blogger' ) }
 						</p>
 					</div>
 
@@ -316,8 +316,8 @@ const ReadyStep = memo( () => {
 								loading={ isFinishingSetup }
 							>
 								{ isFinishingSetup
-									? __( 'Finishing Setup…', 'auto-ai-blogger' )
-									: __( 'Start Creating Amazing Content!', 'auto-ai-blogger' )
+									? __( 'Finishing Setup…', 'solvex-ai-blogger' )
+									: __( 'Start Creating Amazing Content!', 'solvex-ai-blogger' )
 								}
 							</FinishButton>
 						</div>
@@ -325,7 +325,7 @@ const ReadyStep = memo( () => {
 						{ /* Additional encouragement */ }
 						<div className="mt-8 text-center">
 							<p className="text-gray-600 text-sm leading-relaxed">
-								{ __( 'You\'re all set! Your WordPress site is now equipped with powerful AI tools to help you create engaging, high-quality content faster than ever before.', 'auto-ai-blogger' ) }
+								{ __( 'You\'re all set! Your WordPress site is now equipped with powerful AI tools to help you create engaging, high-quality content faster than ever before.', 'solvex-ai-blogger' ) }
 							</p>
 						</div>
 					</div>
@@ -334,8 +334,8 @@ const ReadyStep = memo( () => {
 
 			{ /* Screen reader announcements */ }
 			<div className="sr-only" aria-live="polite" aria-atomic="true">
-				{ isFinishingSetup && __( 'Finishing setup and redirecting to dashboard…', 'auto-ai-blogger' ) }
-				{ ! showConfetti && __( 'Congratulations! Setup completed successfully with celebration.', 'auto-ai-blogger' ) }
+				{ isFinishingSetup && __( 'Finishing setup and redirecting to dashboard…', 'solvex-ai-blogger' ) }
+				{ ! showConfetti && __( 'Congratulations! Setup completed successfully with celebration.', 'solvex-ai-blogger' ) }
 			</div>
 		</main>
 	);

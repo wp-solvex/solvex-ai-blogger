@@ -60,7 +60,7 @@ const ActionButton = memo( ( { onClick, children, icon: Icon } ) => {
 				"
 				onClick={ handleClick }
 				onKeyDown={ handleKeyDown }
-				aria-label={ __( 'Start the setup wizard', 'auto-ai-blogger' ) }
+				aria-label={ __( 'Start the setup wizard', 'solvex-ai-blogger' ) }
 			>
 				{ /* Animated background shimmer */ }
 				<div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
@@ -91,18 +91,18 @@ const WelcomeStep = memo( () => {
 	const features = [
 		{
 			icon: Sparkles,
-			title: __( 'AI Content Generation', 'auto-ai-blogger' ),
-			description: __( 'Create engaging blog posts automatically', 'auto-ai-blogger' ),
+			title: __( 'AI Content Generation', 'solvex-ai-blogger' ),
+			description: __( 'Create engaging blog posts automatically', 'solvex-ai-blogger' ),
 		},
 		{
 			icon: Zap,
-			title: __( 'Quick Setup', 'auto-ai-blogger' ),
-			description: __( 'Ready in under 5 minutes', 'auto-ai-blogger' ),
+			title: __( 'Quick Setup', 'solvex-ai-blogger' ),
+			description: __( 'Ready in under 5 minutes', 'solvex-ai-blogger' ),
 		},
 		{
 			icon: Globe,
-			title: __( 'Automated Scheduling', 'auto-ai-blogger' ),
-			description: __( 'Schedule AI-generated blog posts automatically', 'auto-ai-blogger' ),
+			title: __( 'Automated Scheduling', 'solvex-ai-blogger' ),
+			description: __( 'Schedule AI-generated blog posts automatically', 'solvex-ai-blogger' ),
 		},
 	];
 
@@ -126,7 +126,7 @@ const WelcomeStep = memo( () => {
 					<div className="mb-5">
 						<span className="inline-flex items-center px-5 py-2.5 bg-white/90 backdrop-blur-xl border border-brand-200/50 text-brand-700 text-[13px] font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
 							<Sparkles className="w-3.5 h-3.5 mr-2 animate-pulse text-brand-500" aria-hidden="true" />
-							{ __( 'Step 1 of 5', 'auto-ai-blogger' ) }
+							{ __( 'Step 1 of 5', 'solvex-ai-blogger' ) }
 							<div className="ml-2 w-1.5 h-1.5 bg-brand-400 rounded-full animate-ping" />
 						</span>
 					</div>
@@ -136,10 +136,10 @@ const WelcomeStep = memo( () => {
 						id="welcome-heading"
 						className="text-2xl md:text-[36px] font-black text-gray-900 mb-3.5 leading-[1.1] tracking-tight"
 					>
-						{ __( 'Turn Ideas Into', 'auto-ai-blogger' ) }
+						{ __( 'Turn Ideas Into', 'solvex-ai-blogger' ) }
 						<br />
 						<span className="bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent drop-shadow-sm">
-							{ __( 'AI-Powered Blogs', 'auto-ai-blogger' ) }
+							{ __( 'AI-Powered Blogs', 'solvex-ai-blogger' ) }
 						</span>
 					</h1>
 
@@ -147,7 +147,7 @@ const WelcomeStep = memo( () => {
 					<h3 className="text-[15px] md:text-[17px] text-gray-700 mx-auto mb-5 leading-relaxed font-medium">
 						{ __(
 							'Set once and forget - automatically publish high-quality blog posts on schedule.',
-							'auto-ai-blogger'
+							'solvex-ai-blogger'
 						) }
 					</h3>
 
@@ -157,7 +157,7 @@ const WelcomeStep = memo( () => {
 							onClick={ handleStepRedirection }
 							icon={ ArrowRight }
 						>
-							{ __( 'Start Building', 'auto-ai-blogger' ) }
+							{ __( 'Start Building', 'solvex-ai-blogger' ) }
 						</ActionButton>
 					</div>
 				</div>
@@ -177,7 +177,7 @@ const WelcomeStep = memo( () => {
 
 			{ /* Screen reader announcements */ }
 			<div className="sr-only" aria-live="polite">
-				{ __( 'Welcome to Solvex AI Blogger setup wizard. Use the Start Building button to begin.', 'auto-ai-blogger' ) }
+				{ __( 'Welcome to Solvex AI Blogger setup wizard. Use the Start Building button to begin.', 'solvex-ai-blogger' ) }
 			</div>
 		</main>
 	);

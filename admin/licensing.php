@@ -6,7 +6,7 @@
  * Implements comprehensive input validation, data sanitization, rate limiting,
  * and secure license management.
  *
- * @package auto-ai-blogger
+ * @package solvex-ai-blogger
  * @subpackage Admin
  * @since 1.0.0
  */
@@ -15,6 +15,7 @@ namespace WPSolvex\AutoAIBlogger\Admin;
 
 use WPSolvex\AutoAIBlogger\Inc\Traits\Get_Instance;
 use WPSolvex\AutoAIBlogger\Inc\Utils\Helper;
+use WPSolvex\AutoAIBlogger\Inc\Web_Notices\Notices;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -24,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * This class provides license management including activation, deactivation,
  * validation, and status checking with security measures.
  *
- * @package auto-ai-blogger
+ * @package solvex-ai-blogger
  * @subpackage Admin
  * @since 1.0.0
  */
@@ -88,8 +89,8 @@ class Licensing {
 		}
 
 		// Check if licensing client class exists.
-		if ( ! class_exists( 'SureCart\Licensing\Client' ) ) {
-			$client_path = AUTOAIB_DIR . '/inc/licensing/Client.php';
+		if ( ! class_exists( 'WPSolvex\AutoAIBlogger\Licensing\Client' ) ) {
+			$client_path = WPSOLVEX_AUTOAIBLOGGER_DIR . '/inc/licensing/Client.php';
 			if ( ! file_exists( $client_path ) || ! is_readable( $client_path ) ) {
 				return;
 			}
@@ -106,8 +107,8 @@ class Licensing {
 		add_action( 'admin_notices', [ $this, 'license_activation_notice' ] );
 
 		// AJAX handlers with security validation (only for admin users).
-		add_action( 'wp_ajax_autoaib_activate_license', [ $this, 'activate_license' ] );
-		add_action( 'wp_ajax_autoaib_deactivate_license', [ $this, 'deactivate_license' ] );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_activate_license', [ $this, 'activate_license' ] );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_deactivate_license', [ $this, 'deactivate_license' ] );
 
 		// Add hooks for periodic license validation.
 		add_action( 'wp_loaded', [ $this, 'validate_license_periodically' ] );
@@ -120,24 +121,24 @@ class Licensing {
 	 * and validation of required constants.
 	 *
 	 * @since 1.0.0
-	 * @return \SureCart\Licensing\Client|null Client instance or null on failure.
+	 * @return \WPSolvex\AutoAIBlogger\Licensing\Client|null Client instance or null on failure.
 	 */
 	public static function licensing_setup() {
 		// Validate required constants.
-		if ( ! defined( 'AUTOAIB_PRODUCT_NAME' ) ||
-			! defined( 'AUTOAIB_PUBLIC_TOKEN' ) ||
-			! defined( 'AUTOAIB_PRODUCT_FILE' ) ) {
+		if ( ! defined( 'WPSOLVEX_AUTOAIBLOGGER_PRODUCT_NAME' ) ||
+			! defined( 'WPSOLVEX_AUTOAIBLOGGER_PUBLIC_TOKEN' ) ||
+			! defined( 'WPSOLVEX_AUTOAIBLOGGER_PRODUCT_FILE' ) ) {
 			return null;
 		}
 
 		try {
-			$client = new \SureCart\Licensing\Client(
-				AUTOAIB_PRODUCT_NAME,
-				AUTOAIB_PUBLIC_TOKEN,
-				AUTOAIB_PRODUCT_FILE
+			$client = new \WPSolvex\AutoAIBlogger\Licensing\Client(
+				WPSOLVEX_AUTOAIBLOGGER_PRODUCT_NAME,
+				WPSOLVEX_AUTOAIBLOGGER_PUBLIC_TOKEN,
+				WPSOLVEX_AUTOAIBLOGGER_PRODUCT_FILE
 			);
 
-			$client->set_textdomain( 'auto-ai-blogger' );
+			$client->set_textdomain( 'solvex-ai-blogger' );
 
 			return $client;
 		} catch ( \Exception $e ) {
@@ -158,7 +159,7 @@ class Licensing {
 	/**
 	 * Activate license with security validation.
 	 *
-	 * @hooked wp_ajax_autoaib_activate_license
+	 * @hooked wp_ajax_wpsolvex_autoaiblogger_activate_license
 	 * @since 1.0.0
 	 * @return void
 	 */
@@ -198,7 +199,7 @@ class Licensing {
 			}
 
 			// Validate product ID match.
-			if ( ! empty( $get_license->product ) && $get_license->product !== AUTOAIB_PRODUCT_ID ) {
+			if ( ! empty( $get_license->product ) && $get_license->product !== WPSOLVEX_AUTOAIBLOGGER_PRODUCT_ID ) {
 				wp_send_json_error( [ 'message' => $this->error_messages['incorrect_product'] ] );
 			}
 
@@ -220,7 +221,7 @@ class Licensing {
 
 			wp_send_json_success(
 				[
-					'message' => __( 'License activated successfully.', 'auto-ai-blogger' ),
+					'message' => __( 'License activated successfully.', 'solvex-ai-blogger' ),
 					'status'  => 'licensed',
 				]
 			);
@@ -233,7 +234,7 @@ class Licensing {
 	/**
 	 * Deactivate license with security validation.
 	 *
-	 * @hooked wp_ajax_autoaib_deactivate_license
+	 * @hooked wp_ajax_wpsolvex_autoaiblogger_deactivate_license
 	 * @since 1.0.0
 	 * @return void
 	 */
@@ -274,7 +275,7 @@ class Licensing {
 			Helper::update_option( 'license_status', 'unlicensed' );
 
 			// Clear token data using the shared helper function.
-			autoaib_update_token_data(
+			wpsolvex_autoaiblogger_update_token_data(
 				[
 					'total'     => 0,
 					'remaining' => 0,
@@ -286,7 +287,7 @@ class Licensing {
 
 			wp_send_json_success(
 				[
-					'message' => __( 'License deactivated successfully.', 'auto-ai-blogger' ),
+					'message' => __( 'License deactivated successfully.', 'solvex-ai-blogger' ),
 					'status'  => 'unlicensed',
 				]
 			);
@@ -330,7 +331,7 @@ class Licensing {
 			}
 
 			// Validate product ID match.
-			if ( ! empty( $get_license->product ) && $get_license->product !== AUTOAIB_PRODUCT_ID ) {
+			if ( ! empty( $get_license->product ) && $get_license->product !== WPSOLVEX_AUTOAIBLOGGER_PRODUCT_ID ) {
 				return false;
 			}
 
@@ -382,7 +383,7 @@ class Licensing {
 		}
 
 		// Validate and escape CTA URL.
-		$cta_url = esc_url( admin_url( 'edit.php?page=' . AUTOAIB_SLUG ) );
+		$cta_url = esc_url( admin_url( 'edit.php?page=' . WPSOLVEX_AUTOAIBLOGGER_SLUG ) );
 
 		if ( empty( $cta_url ) ) {
 			return;
@@ -391,19 +392,19 @@ class Licensing {
 		// Secure notice message with proper escaping.
 		$notice_message = sprintf(
 			/* translators: %1$s: opening link tag, %2$s: closing link tag, %3$s: product name, %4$s: opening emphasis tag, %5$s: closing emphasis tag */
-			__( 'Please %1$sactivate%2$s your copy to claim tokens %4$s%3$s%5$s to generate blog posts.', 'auto-ai-blogger' ),
+			__( 'Please %1$sactivate%2$s your copy to claim tokens %4$s%3$s%5$s to generate blog posts.', 'solvex-ai-blogger' ),
 			'<a href="' . $cta_url . '">',
 			'</a>',
-			esc_html( AUTOAIB_PRODUCT_NAME ),
+			esc_html( WPSOLVEX_AUTOAIBLOGGER_PRODUCT_NAME ),
 			'<em>',
 			'</em>'
 		);
 
-		// Only show notice if Autoaib_Notices class exists.
-		if ( class_exists( 'Autoaib_Notices' ) ) {
-			\Autoaib_Notices::add_notice(
+		// Only show notice if the Notices class is available.
+		if ( class_exists( Notices::class ) ) {
+			Notices::add_notice(
 				[
-					'id'                         => 'auto-ai-blogger-activation-notice',
+					'id'                         => 'solvex-ai-blogger-activation-notice',
 					'type'                       => 'error',
 					'message'                    => sprintf(
 						'<div class="notice-content" style="margin: 0;">%s</div>',
@@ -426,17 +427,17 @@ class Licensing {
 	 */
 	public function validate_license_periodically(): void {
 		// Only run validation once per day.
-		$last_validation = get_transient( 'autoaib_license_validation' );
+		$last_validation = get_transient( 'wpsolvex_autoaiblogger_license_validation' );
 		if ( $last_validation !== false ) {
 			return;
 		}
 
 		// Set validation timestamp.
-		set_transient( 'autoaib_license_validation', time(), DAY_IN_SECONDS );
+		set_transient( 'wpsolvex_autoaiblogger_license_validation', time(), DAY_IN_SECONDS );
 
 		// Check license status in background.
 		if ( function_exists( 'wp_schedule_single_event' ) ) {
-			wp_schedule_single_event( time() + 300, 'autoaib_validate_license_background' );
+			wp_schedule_single_event( time() + 300, 'wpsolvex_autoaiblogger_validate_license_background' );
 		}
 	}
 
@@ -450,19 +451,19 @@ class Licensing {
 	 */
 	private function set_error_messages(): void {
 		$this->error_messages = [
-			'nonce'                    => esc_html__( 'Security verification failed. Please refresh the page and try again.', 'auto-ai-blogger' ),
-			'permission'               => esc_html__( 'Sorry, you are not allowed to manage licenses.', 'auto-ai-blogger' ),
-			'invalid_license'          => esc_html__( 'Please enter a valid license key.', 'auto-ai-blogger' ),
-			'invalid_license_format'   => esc_html__( 'The license key format is invalid. Please check and try again.', 'auto-ai-blogger' ),
-			'license_too_long'         => esc_html__( 'License key is too long. Please check and try again.', 'auto-ai-blogger' ),
-			'rate_limit'               => esc_html__( 'Too many license requests. Please wait a moment and try again.', 'auto-ai-blogger' ),
-			'client_error'             => esc_html__( 'License service is temporarily unavailable. Please try again later.', 'auto-ai-blogger' ),
-			'license_retrieval_failed' => esc_html__( 'Unable to verify license. Please check your internet connection and try again.', 'auto-ai-blogger' ),
-			'incorrect_product'        => esc_html__( 'This license key is not valid for this plugin.', 'auto-ai-blogger' ),
-			'activation_failed'        => esc_html__( 'License activation failed. Please verify your license key and try again.', 'auto-ai-blogger' ),
-			'deactivation_failed'      => esc_html__( 'License deactivation failed. Please try again or contact support.', 'auto-ai-blogger' ),
-			'activation_exception'     => esc_html__( 'An unexpected error occurred during license activation. Please try again.', 'auto-ai-blogger' ),
-			'deactivation_exception'   => esc_html__( 'An unexpected error occurred during license deactivation. Please try again.', 'auto-ai-blogger' ),
+			'nonce'                    => esc_html__( 'Security verification failed. Please refresh the page and try again.', 'solvex-ai-blogger' ),
+			'permission'               => esc_html__( 'Sorry, you are not allowed to manage licenses.', 'solvex-ai-blogger' ),
+			'invalid_license'          => esc_html__( 'Please enter a valid license key.', 'solvex-ai-blogger' ),
+			'invalid_license_format'   => esc_html__( 'The license key format is invalid. Please check and try again.', 'solvex-ai-blogger' ),
+			'license_too_long'         => esc_html__( 'License key is too long. Please check and try again.', 'solvex-ai-blogger' ),
+			'rate_limit'               => esc_html__( 'Too many license requests. Please wait a moment and try again.', 'solvex-ai-blogger' ),
+			'client_error'             => esc_html__( 'License service is temporarily unavailable. Please try again later.', 'solvex-ai-blogger' ),
+			'license_retrieval_failed' => esc_html__( 'Unable to verify license. Please check your internet connection and try again.', 'solvex-ai-blogger' ),
+			'incorrect_product'        => esc_html__( 'This license key is not valid for this plugin.', 'solvex-ai-blogger' ),
+			'activation_failed'        => esc_html__( 'License activation failed. Please verify your license key and try again.', 'solvex-ai-blogger' ),
+			'deactivation_failed'      => esc_html__( 'License deactivation failed. Please try again or contact support.', 'solvex-ai-blogger' ),
+			'activation_exception'     => esc_html__( 'An unexpected error occurred during license activation. Please try again.', 'solvex-ai-blogger' ),
+			'deactivation_exception'   => esc_html__( 'An unexpected error occurred during license deactivation. Please try again.', 'solvex-ai-blogger' ),
 		];
 	}
 
@@ -480,7 +481,7 @@ class Licensing {
 		if ( ! wp_doing_ajax() || ! is_admin() ) {
 			return new \WP_Error(
 				'invalid_context',
-				esc_html__( 'License operations are only allowed in admin AJAX context.', 'auto-ai-blogger' )
+				esc_html__( 'License operations are only allowed in admin AJAX context.', 'solvex-ai-blogger' )
 			);
 		}
 
@@ -490,7 +491,7 @@ class Licensing {
 		}
 
 		// CSRF protection - check nonce.
-		$nonce_field = 'autoaib_licensing_nonce';
+		$nonce_field = 'wpsolvex_autoaiblogger_licensing_nonce';
 		$nonce_value = sanitize_text_field( wp_unslash( $_POST[ $nonce_field ] ?? '' ) );
 
 		if ( empty( $nonce_value ) || ! wp_verify_nonce( $nonce_value, $nonce_field ) ) {
@@ -501,7 +502,7 @@ class Licensing {
 		if ( ! is_user_logged_in() ) {
 			return new \WP_Error(
 				'not_logged_in',
-				esc_html__( 'You must be logged in to perform this action.', 'auto-ai-blogger' )
+				esc_html__( 'You must be logged in to perform this action.', 'solvex-ai-blogger' )
 			);
 		}
 
@@ -517,7 +518,7 @@ class Licensing {
 	 */
 	private function check_license_rate_limit( string $operation ): \WP_Error|bool {
 		$user_id   = get_current_user_id();
-		$cache_key = 'autoaib_license_rate_limit_' . $user_id . '_' . $operation;
+		$cache_key = 'wpsolvex_autoaiblogger_license_rate_limit_' . $user_id . '_' . $operation;
 
 		// Get cached data.
 		$cached_data = get_transient( $cache_key );
@@ -668,7 +669,7 @@ class Licensing {
 	 */
 	private function log_license_activity( string $action, string $license_key, int $user_id ): void {
 		// Store basic activity information in transient for security tracking.
-		$activity_key  = 'autoaib_license_activity_' . $user_id;
+		$activity_key  = 'wpsolvex_autoaiblogger_license_activity_' . $user_id;
 		$activity_data = [
 			'action'    => sanitize_key( $action ),
 			'user_id'   => absint( $user_id ),
@@ -732,7 +733,7 @@ class Licensing {
 	 * @return void
 	 */
 	private static function update_license_cache( string $license_key, string $status ): void {
-		$cache_key  = 'autoaib_license_cache';
+		$cache_key  = 'wpsolvex_autoaiblogger_license_cache';
 		$cache_data = [
 			'license_key' => sanitize_text_field( $license_key ),
 			'status'      => sanitize_key( $status ),
@@ -784,7 +785,7 @@ class Licensing {
 			add_query_arg(
 				'license',
 				urlencode( $sanitized_key ),
-				AUTOAIB_TOKEN_USAGE_API
+				WPSOLVEX_AUTOAIBLOGGER_TOKEN_USAGE_API
 			)
 		);
 
@@ -837,6 +838,6 @@ class Licensing {
 		}
 
 		// Update token data using the shared helper function.
-		return autoaib_update_token_data( $data['data'] );
+		return wpsolvex_autoaiblogger_update_token_data( $data['data'] );
 	}
 }

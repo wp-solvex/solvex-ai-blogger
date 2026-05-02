@@ -22,11 +22,11 @@ const Persona = memo( () => {
 	const validateSiteTitle = useCallback( ( value ) => {
 		const trimmedValue = value.trim();
 		if ( ! trimmedValue ) {
-			setErrors( ( prev ) => ( { ...prev, siteTitle: __( 'Site title is required', 'auto-ai-blogger' ) } ) );
+			setErrors( ( prev ) => ( { ...prev, siteTitle: __( 'Site title is required', 'solvex-ai-blogger' ) } ) );
 			return false;
 		}
 		if ( trimmedValue.length > 100 ) {
-			setErrors( ( prev ) => ( { ...prev, siteTitle: __( 'Site title must be 100 characters or less', 'auto-ai-blogger' ) } ) );
+			setErrors( ( prev ) => ( { ...prev, siteTitle: __( 'Site title must be 100 characters or less', 'solvex-ai-blogger' ) } ) );
 			return false;
 		}
 		setErrors( ( prev ) => ( { ...prev, siteTitle: null } ) );
@@ -36,15 +36,15 @@ const Persona = memo( () => {
 	const validateSiteFor = useCallback( ( value ) => {
 		const trimmedValue = value.trim();
 		if ( ! trimmedValue ) {
-			setErrors( ( prev ) => ( { ...prev, siteFor: __( 'Site for is required', 'auto-ai-blogger' ) } ) );
+			setErrors( ( prev ) => ( { ...prev, siteFor: __( 'Site for is required', 'solvex-ai-blogger' ) } ) );
 			return false;
 		}
 		if ( trimmedValue.length < 10 ) {
-			setErrors( ( prev ) => ( { ...prev, siteFor: __( 'Please provide a more detailed description (at least 10 characters)', 'auto-ai-blogger' ) } ) );
+			setErrors( ( prev ) => ( { ...prev, siteFor: __( 'Please provide a more detailed description (at least 10 characters)', 'solvex-ai-blogger' ) } ) );
 			return false;
 		}
 		if ( trimmedValue.length > 200 ) {
-			setErrors( ( prev ) => ( { ...prev, siteFor: __( 'Description must be 200 characters or less', 'auto-ai-blogger' ) } ) );
+			setErrors( ( prev ) => ( { ...prev, siteFor: __( 'Description must be 200 characters or less', 'solvex-ai-blogger' ) } ) );
 			return false;
 		}
 		setErrors( ( prev ) => ( { ...prev, siteFor: null } ) );
@@ -54,15 +54,15 @@ const Persona = memo( () => {
 	const validateSiteDescription = useCallback( ( value ) => {
 		const trimmedValue = value.trim();
 		if ( ! trimmedValue ) {
-			setErrors( ( prev ) => ( { ...prev, siteDescription: __( 'Detailed site information is required', 'auto-ai-blogger' ) } ) );
+			setErrors( ( prev ) => ( { ...prev, siteDescription: __( 'Detailed site information is required', 'solvex-ai-blogger' ) } ) );
 			return false;
 		}
 		if ( trimmedValue.length < 20 ) {
-			setErrors( ( prev ) => ( { ...prev, siteDescription: __( 'Please provide more detailed information (at least 20 characters)', 'auto-ai-blogger' ) } ) );
+			setErrors( ( prev ) => ( { ...prev, siteDescription: __( 'Please provide more detailed information (at least 20 characters)', 'solvex-ai-blogger' ) } ) );
 			return false;
 		}
 		if ( trimmedValue.length > 500 ) {
-			setErrors( ( prev ) => ( { ...prev, siteDescription: __( 'Description must be 500 characters or less', 'auto-ai-blogger' ) } ) );
+			setErrors( ( prev ) => ( { ...prev, siteDescription: __( 'Description must be 500 characters or less', 'solvex-ai-blogger' ) } ) );
 			return false;
 		}
 		setErrors( ( prev ) => ( { ...prev, siteDescription: null } ) );
@@ -106,7 +106,7 @@ const Persona = memo( () => {
 						<SettingLabel
 							forId="name-of-the-blog"
 							required={ true }
-							title={ __( 'Site Title', 'auto-ai-blogger' ) }
+							title={ __( 'Site Title', 'solvex-ai-blogger' ) }
 						/>
 
 						<div className="relative">
@@ -114,7 +114,7 @@ const Persona = memo( () => {
 								id="name-of-the-blog"
 								value={ siteTitle }
 								onChange={ handleSiteTitleChange }
-								placeholder={ __( 'Enter your site title', 'auto-ai-blogger' ) }
+								placeholder={ __( 'Enter your site title', 'solvex-ai-blogger' ) }
 								maxLength={ 100 }
 								aria-describedby="site-title-error"
 								className={ `${ errors.siteTitle ? 'border-red-300 focus:ring-red-500' : '' }` }
@@ -135,7 +135,7 @@ const Persona = memo( () => {
 								<p id="site-title-error" className="text-xs text-red-600 mt-1 flex items-center gap-1">
 									{ errors.siteTitle }
 								</p>
-							) : <span> { __( 'The main title of your website or blog.', 'auto-ai-blogger' ) } </span> }
+							) : <span> { __( 'The main title of your website or blog.', 'solvex-ai-blogger' ) } </span> }
 							<span> { siteTitle.length }/100 </span>
 						</p>
 					</SettingField>
@@ -144,7 +144,7 @@ const Persona = memo( () => {
 						<SettingLabel
 							forId="blog-for"
 							required={ true }
-							title={ __( 'Site For', 'auto-ai-blogger' ) }
+							title={ __( 'Site For', 'solvex-ai-blogger' ) }
 						/>
 
 						<div className="relative">
@@ -152,7 +152,7 @@ const Persona = memo( () => {
 								id="blog-for"
 								value={ siteFor }
 								onChange={ handleSiteForChange }
-								placeholder={ __( 'Brief description of your site', 'auto-ai-blogger' ) }
+								placeholder={ __( 'Brief description of your site', 'solvex-ai-blogger' ) }
 								maxLength={ 200 }
 								aria-describedby="site-for-error"
 								className={ `${ errors.siteFor ? 'border-red-300 focus:ring-red-500' : '' }` }
@@ -173,7 +173,7 @@ const Persona = memo( () => {
 								<p id="site-for-error" className="text-xs text-red-600 mt-1 flex items-center gap-1">
 									{ errors.siteFor }
 								</p>
-							) : <span> { __( 'Who is your target audience?', 'auto-ai-blogger' ) } </span> }
+							) : <span> { __( 'Who is your target audience?', 'solvex-ai-blogger' ) } </span> }
 							<span> { siteFor.length }/200 </span>
 						</p>
 					</SettingField>
@@ -185,7 +185,7 @@ const Persona = memo( () => {
 				<SettingField>
 					<SettingLabel
 						forId="more-about-blog"
-						title={ __( 'Detailed Site Information', 'auto-ai-blogger' ) }
+						title={ __( 'Detailed Site Information', 'solvex-ai-blogger' ) }
 						required={ true }
 					/>
 
@@ -197,7 +197,7 @@ const Persona = memo( () => {
 							className={ `block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm resize-vertical !pr-10 ${ errors.siteDescription ? 'border-red-300 focus:ring-red-500' : '' }` }
 							rows={ 6 }
 							maxLength={ maxDescriptionLength }
-							placeholder={ __( 'Provide detailed information about your site, target audience, content style, and any specific requirements…', 'auto-ai-blogger' ) }
+							placeholder={ __( 'Provide detailed information about your site, target audience, content style, and any specific requirements…', 'solvex-ai-blogger' ) }
 							aria-describedby="description-count site-description-error"
 						/>
 						{ /* Check mark indicator */ }
@@ -219,7 +219,7 @@ const Persona = memo( () => {
 						</p>
 					) : (
 						<p id="description-count" className="text-xs text-gray-500 mt-1">
-							{ __( 'This information helps AI generate more relevant and targeted content for your audience.', 'auto-ai-blogger' ) }
+							{ __( 'This information helps AI generate more relevant and targeted content for your audience.', 'solvex-ai-blogger' ) }
 						</p> ) }
 
 				</SettingField>
@@ -231,20 +231,20 @@ const Persona = memo( () => {
 			{ /* Pro Tips section */ }
 			<InfoCard
 				icon={ Lightbulb }
-				title={ __( 'Pro Tips for Better Results', 'auto-ai-blogger' ) }
+				title={ __( 'Pro Tips for Better Results', 'solvex-ai-blogger' ) }
 				items={ [
-					__( 'Be specific about your target audience and industry.', 'auto-ai-blogger' ),
-					__( 'Include your brand voice and tone preferences.', 'auto-ai-blogger' ),
-					__( 'Mention any specific topics or keywords you focus on.', 'auto-ai-blogger' ),
+					__( 'Be specific about your target audience and industry.', 'solvex-ai-blogger' ),
+					__( 'Include your brand voice and tone preferences.', 'solvex-ai-blogger' ),
+					__( 'Mention any specific topics or keywords you focus on.', 'solvex-ai-blogger' ),
 				] }
 				colorScheme="blue"
 				className="mt-6"
-				ariaLabel={ __( 'Pro tips for better content generation results', 'auto-ai-blogger' ) }
+				ariaLabel={ __( 'Pro tips for better content generation results', 'solvex-ai-blogger' ) }
 			/>
 
 			{ /* Screen reader summary */ }
 			<div className="sr-only" aria-live="polite">
-				{ __( 'Persona settings configuration completed', 'auto-ai-blogger' ) }
+				{ __( 'Persona settings configuration completed', 'solvex-ai-blogger' ) }
 			</div>
 		</div>
 	);

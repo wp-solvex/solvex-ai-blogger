@@ -6,12 +6,12 @@
 
 @import url( "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" );
 
-#auto-ai-blogger-main-page--wrapper *,
+#solvex-ai-blogger-main-page--wrapper *,
 .ai-blogger-container * {
 	box-sizing: border-box;
 }
 
-#auto-ai-blogger-main-page--wrapper,
+#solvex-ai-blogger-main-page--wrapper,
 .ai-blogger-container {
 	font-family: inter, sans-serif;
 	position: relative;
@@ -21,37 +21,37 @@
 @tailwind components;
 @tailwind utilities;
 
-.posts_page_auto-ai-blogger {
+.posts_page_solvex-ai-blogger {
 	--tw-bg-opacity: 1;
 	background-color: rgb( 249 250 251 / var( --tw-bg-opacity, 1 ) );
 }
 
-.posts_page_auto-ai-blogger,
-.posts_page_auto-ai-blogger.auto-ai-blogger-wizard {
+.posts_page_solvex-ai-blogger,
+.posts_page_solvex-ai-blogger.solvex-ai-blogger-wizard {
 	background: #f9fafb;
 }
 
-.autoaib-vertical-divider {
+.wpsolvex-autoaiblogger-vertical-divider {
 	width: 1px;
 	height: 24px;
 	border-left: 1px solid #e5e7eb;
 	border-right: 1px solid #e5e7eb;
 }
 
-#auto-ai-blogger-main-page--wrapper .clear {
+#solvex-ai-blogger-main-page--wrapper .clear {
 	display: none;
 }
 
-.posts_page_auto-ai-blogger #wpcontent {
+.posts_page_solvex-ai-blogger #wpcontent {
 	padding-left: 0;
 }
 
 #headlessui-portal-root button,
-#auto-ai-blogger-main-page--wrapper button {
+#solvex-ai-blogger-main-page--wrapper button {
 	cursor: pointer;
 	border: none;
 }
-.autoaib-content-header {
+.wpsolvex-autoaiblogger-content-header {
 	border-bottom: 1px solid #e5e7eb;
 }
 .campaign-settings-tab {
@@ -59,7 +59,7 @@
 }
 
 #headlessui-portal-root select,
-.posts_page_auto-ai-blogger select.autoaib-select-control {
+.posts_page_solvex-ai-blogger select.wpsolvex-autoaiblogger-select-control {
 	@apply col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-brand-600 sm:text-sm/6;
 }
 
@@ -67,35 +67,35 @@
 	width: 50%;
 }
 
-.posts_page_auto-ai-blogger input {
+.posts_page_solvex-ai-blogger input {
 	padding-top: 0.375rem;
 	padding-bottom: 0.375rem;
 	padding-left: 0.75rem;
 	padding-right: 0.75rem;
 }
-.posts_page_auto-ai-blogger input[type="range"] {
+.posts_page_solvex-ai-blogger input[type="range"] {
 	padding: 0;
 }
 
 /* Override WordPress default focus styles for all inputs within our plugin */
-.posts_page_auto-ai-blogger input[type="checkbox"]:focus,
-.posts_page_auto-ai-blogger input[type="color"]:focus,
-.posts_page_auto-ai-blogger input[type="date"]:focus,
-.posts_page_auto-ai-blogger input[type="datetime-local"]:focus,
-.posts_page_auto-ai-blogger input[type="datetime"]:focus,
-.posts_page_auto-ai-blogger input[type="email"]:focus,
-.posts_page_auto-ai-blogger input[type="month"]:focus,
-.posts_page_auto-ai-blogger input[type="number"]:focus,
-.posts_page_auto-ai-blogger input[type="password"]:focus,
-.posts_page_auto-ai-blogger input[type="radio"]:focus,
-.posts_page_auto-ai-blogger input[type="search"]:focus,
-.posts_page_auto-ai-blogger input[type="tel"]:focus,
-.posts_page_auto-ai-blogger input[type="text"]:focus,
-.posts_page_auto-ai-blogger input[type="time"]:focus,
-.posts_page_auto-ai-blogger input[type="url"]:focus,
-.posts_page_auto-ai-blogger input[type="week"]:focus,
-.posts_page_auto-ai-blogger select:focus,
-.posts_page_auto-ai-blogger textarea:focus,
+.posts_page_solvex-ai-blogger input[type="checkbox"]:focus,
+.posts_page_solvex-ai-blogger input[type="color"]:focus,
+.posts_page_solvex-ai-blogger input[type="date"]:focus,
+.posts_page_solvex-ai-blogger input[type="datetime-local"]:focus,
+.posts_page_solvex-ai-blogger input[type="datetime"]:focus,
+.posts_page_solvex-ai-blogger input[type="email"]:focus,
+.posts_page_solvex-ai-blogger input[type="month"]:focus,
+.posts_page_solvex-ai-blogger input[type="number"]:focus,
+.posts_page_solvex-ai-blogger input[type="password"]:focus,
+.posts_page_solvex-ai-blogger input[type="radio"]:focus,
+.posts_page_solvex-ai-blogger input[type="search"]:focus,
+.posts_page_solvex-ai-blogger input[type="tel"]:focus,
+.posts_page_solvex-ai-blogger input[type="text"]:focus,
+.posts_page_solvex-ai-blogger input[type="time"]:focus,
+.posts_page_solvex-ai-blogger input[type="url"]:focus,
+.posts_page_solvex-ai-blogger input[type="week"]:focus,
+.posts_page_solvex-ai-blogger select:focus,
+.posts_page_solvex-ai-blogger textarea:focus,
 #headlessui-portal-root input[type="checkbox"]:focus,
 #headlessui-portal-root input[type="color"]:focus,
 #headlessui-portal-root input[type="date"]:focus,
@@ -114,20 +114,20 @@
 #headlessui-portal-root input[type="week"]:focus,
 #headlessui-portal-root select:focus,
 #headlessui-portal-root textarea:focus {
-	border-color: var( --autoaib-brand-600 ) !important;
-	box-shadow: 0 0 0 1px var( --autoaib-brand-600 ) !important;
+	border-color: var( --wpsolvex-autoaiblogger-brand-600 ) !important;
+	box-shadow: 0 0 0 1px var( --wpsolvex-autoaiblogger-brand-600 ) !important;
 	outline: 2px solid transparent !important;
 }
 
-.auto-ai-blogger-wizard #wpfooter {
+.solvex-ai-blogger-wizard #wpfooter {
 	display: none;
 }
 
 #headlessui-portal-root p,
-#auto-ai-blogger-main-page--wrapper p {
+#solvex-ai-blogger-main-page--wrapper p {
 	margin: 0;
 	padding: 0;
-	&.autoaib-step-text {
+	&.wpsolvex-autoaiblogger-step-text {
 		margin-bottom: 2rem;
 	}
 }
@@ -150,7 +150,7 @@
 	left: 50%;
 }
 
-#autoaib-confetti-wrapper {
+#wpsolvex-autoaiblogger-confetti-wrapper {
 	pointer-events: none;
 	position: fixed;
 	z-index: 2;
@@ -178,75 +178,75 @@
 }
 
 @media ( max-width: 960px ) {
-	.autoaib-setup-header,
-	.autoaib-setup-footer {
+	.wpsolvex-autoaiblogger-setup-header,
+	.wpsolvex-autoaiblogger-setup-footer {
 		left: 36px;
 	}
 }
 @media ( max-width: 782px ) {
-	.autoaib-setup-header,
-	.autoaib-setup-footer {
+	.wpsolvex-autoaiblogger-setup-header,
+	.wpsolvex-autoaiblogger-setup-footer {
 		left: 0px;
 	}
 }
 
-.autoaib-container {
+.wpsolvex-autoaiblogger-container {
 	@apply max-w-7xl mx-auto  p-4;
 
-	.autoaib-row {
+	.wpsolvex-autoaiblogger-row {
 		@apply mx-auto max-w-md;
 	}
 }
 
-.posts_page_auto-ai-blogger ::scrollbar {
+.posts_page_solvex-ai-blogger ::scrollbar {
 	width: 4px;
 	height: 4px;
 }
-.posts_page_auto-ai-blogger ::scrollbar-thumb {
+.posts_page_solvex-ai-blogger ::scrollbar-thumb {
 	background: #d5d6d7;
 }
-.posts_page_auto-ai-blogger ::scrollbar-track {
+.posts_page_solvex-ai-blogger ::scrollbar-track {
 	background: #f1f1f1;
 }
 
-.posts_page_auto-ai-blogger #wpbody,
-.posts_page_auto-ai-blogger #wpwrap {
+.posts_page_solvex-ai-blogger #wpbody,
+.posts_page_solvex-ai-blogger #wpwrap {
 	height: 100%;
 }
 
-.posts_page_auto-ai-blogger #wpbody {
+.posts_page_solvex-ai-blogger #wpbody {
 	background: #f9fafb;
 }
-.posts_page_auto-ai-blogger #wpbody-content {
+.posts_page_solvex-ai-blogger #wpbody-content {
 	padding-left: 0;
 	padding-right: 0;
 	padding-bottom: 0;
 }
 
-.posts_page_auto-ai-blogger a:active,
-.posts_page_auto-ai-blogger a:focus {
+.posts_page_solvex-ai-blogger a:active,
+.posts_page_solvex-ai-blogger a:focus {
 	outline: none;
 	box-shadow: none;
 }
 
-.posts_page_auto-ai-blogger #wpbody-content a:active:not( .autoaib-menu ):not( .campaign-settings-tab ),
-.posts_page_auto-ai-blogger #wpbody-content a:hover:not( .autoaib-menu ):not( .campaign-settings-tab ) {
-	color: var( --autoaib-brand-primary-hover );
+.posts_page_solvex-ai-blogger #wpbody-content a:active:not( .wpsolvex-autoaiblogger-menu ):not( .campaign-settings-tab ),
+.posts_page_solvex-ai-blogger #wpbody-content a:hover:not( .wpsolvex-autoaiblogger-menu ):not( .campaign-settings-tab ) {
+	color: var( --wpsolvex-autoaiblogger-brand-primary-hover );
 }
 
-.autoaib-button {
-	@apply bg-[var(--autoaib-brand-primary)] text-white hover:bg-[var(--autoaib-brand-primary-hover)] rounded-s p-2 text-sm font-semibold;
+.wpsolvex-autoaiblogger-button {
+	@apply bg-[var(--wpsolvex-autoaiblogger-brand-primary)] text-white hover:bg-[var(--wpsolvex-autoaiblogger-brand-primary-hover)] rounded-s p-2 text-sm font-semibold;
 }
 
-.autoaib-active-state-button {
-	border-bottom: 2px solid var( --autoaib-brand-primary );
+.wpsolvex-autoaiblogger-active-state-button {
+	border-bottom: 2px solid var( --wpsolvex-autoaiblogger-brand-primary );
 }
 
 .lucide-loader-pinwheel {
-	color: var( --autoaib-brand-primary );
+	color: var( --wpsolvex-autoaiblogger-brand-primary );
 }
 
-#auto-ai-blogger-main-page--wrapper a {
+#solvex-ai-blogger-main-page--wrapper a {
 	text-decoration: none;
 }
 
@@ -257,19 +257,19 @@
 	border-bottom: 1px solid #e5e7eb;
 }
 
-.autoaib-menu {
+.wpsolvex-autoaiblogger-menu {
 	border-bottom: 2px solid transparent;
 }
-.autoaib-menu.autoaib-active-menu {
-	border-color: var( --autoaib-brand-primary ) !important;
-	color: var( --autoaib-brand-primary ) !important;
+.wpsolvex-autoaiblogger-menu.wpsolvex-autoaiblogger-active-menu {
+	border-color: var( --wpsolvex-autoaiblogger-brand-primary ) !important;
+	color: var( --wpsolvex-autoaiblogger-brand-primary ) !important;
 }
 
-.autoaib-wizard--button {
-	@apply rounded border border-transparent px-5 py-2.5 bg-[var(--autoaib-brand-primary)] cursor-pointer text-[15px] justify-center text-center font-medium text-white shadow flex-shrink-0 flex items-center;
+.wpsolvex-autoaiblogger-wizard--button {
+	@apply rounded border border-transparent px-5 py-2.5 bg-[var(--wpsolvex-autoaiblogger-brand-primary)] cursor-pointer text-[15px] justify-center text-center font-medium text-white shadow flex-shrink-0 flex items-center;
 
 	&:hover {
-		@apply hover:bg-[var(--autoaib-brand-primary-hover)];
+		@apply hover:bg-[var(--wpsolvex-autoaiblogger-brand-primary-hover)];
 	}
 	&:focus {
 		@apply outline-none ring-2 ring-white ring-offset-2 ring-offset-purple-400;
@@ -288,26 +288,26 @@
 	}
 }
 
-.autoaib-step-heading {
+.wpsolvex-autoaiblogger-step-heading {
 	@apply text-center text-4xl font-semibold text-slate-800;
 }
 
 @screen sm {
-	.autoaib-container {
+	.wpsolvex-autoaiblogger-container {
 		@apply p-4;
 
-		.autoaib-row {
+		.wpsolvex-autoaiblogger-row {
 			@apply max-w-4xl;
 		}
 	}
 
-	.autoaib-wizard--button {
+	.wpsolvex-autoaiblogger-wizard--button {
 		@apply px-8;
 	}
 }
 
 @screen lg {
-	.autoaib-row {
+	.wpsolvex-autoaiblogger-row {
 		@apply max-w-4xl;
 	}
 }

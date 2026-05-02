@@ -92,8 +92,8 @@ const SettingLabel = forwardRef( ( {
 					{ required && (
 						<span
 							className="ml-[2px] text-red-500"
-							aria-label={ __( 'Required field', 'auto-ai-blogger' ) }
-							title={ __( 'This field is required', 'auto-ai-blogger' ) }
+							aria-label={ __( 'Required field', 'solvex-ai-blogger' ) }
+							title={ __( 'This field is required', 'solvex-ai-blogger' ) }
 						>
 							*
 						</span>
@@ -102,9 +102,9 @@ const SettingLabel = forwardRef( ( {
 					{ optional && ! required && (
 						<span
 							className="ml-1 text-slate-400 text-xs font-normal"
-							aria-label={ __( 'Optional field', 'auto-ai-blogger' ) }
+							aria-label={ __( 'Optional field', 'solvex-ai-blogger' ) }
 						>
-							({ __( 'optional', 'auto-ai-blogger' ) })
+							({ __( 'optional', 'solvex-ai-blogger' ) })
 						</span>
 					) }
 

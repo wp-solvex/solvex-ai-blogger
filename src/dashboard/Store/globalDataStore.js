@@ -51,10 +51,10 @@ const safeParseLocalizedData = ( value, type = 'string', defaultValue = '', pars
  * @return {Object} Complete initial state object for Redux store
  */
 const getInitialState = () => {
-	// Ensure autoaib_localized_data exists
-	if ( typeof autoaib_localized_data === 'undefined' ) {
+	// Ensure wpsolvex_autoaiblogger_localized_data exists
+	if ( typeof wpsolvex_autoaiblogger_localized_data === 'undefined' ) {
 		if ( process.env.NODE_ENV === 'development' ) {
-			console.warn( 'autoaib_localized_data is not defined, using minimal fallback state' );
+			console.warn( 'wpsolvex_autoaiblogger_localized_data is not defined, using minimal fallback state' );
 		}
 		return {
 			initialStateSetFlag: false,
@@ -74,47 +74,47 @@ const getInitialState = () => {
 		settingsSavedNotification: false,
 		confettiShow: false,
 		onboardingTab: 0,
-		userName: safeParseLocalizedData( autoaib_localized_data.current_user_name, 'string', '' ),
-		userEmail: safeParseLocalizedData( autoaib_localized_data.current_user_email, 'string', '' ),
-		userOnboarded: safeParseLocalizedData( autoaib_localized_data.userOnboarded, 'boolean', false ),
+		userName: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.current_user_name, 'string', '' ),
+		userEmail: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.current_user_email, 'string', '' ),
+		userOnboarded: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.userOnboarded, 'boolean', false ),
 		pluginSettings: {},
-		siteTitle: safeParseLocalizedData( autoaib_localized_data.site_title, 'string', '' ),
-		siteFor: safeParseLocalizedData( autoaib_localized_data.site_for, 'string', '' ),
-		siteDescription: safeParseLocalizedData( autoaib_localized_data.site_description, 'string', '' ),
-		temperature: safeParseLocalizedData( autoaib_localized_data.temperature, 'number', 1.0 ),
-		harassment: safeParseLocalizedData( autoaib_localized_data.harassment, 'number', 2 ),
-		hate: safeParseLocalizedData( autoaib_localized_data.hate, 'number', 2 ),
-		sexuallyExplicit: safeParseLocalizedData( autoaib_localized_data.sexually_explicit, 'number', 2 ),
-		dangerousContent: safeParseLocalizedData( autoaib_localized_data.dangerous_content, 'number', 2 ),
-		license: safeParseLocalizedData( autoaib_localized_data.license, 'string', '' ),
-		postIdeas: safeParseLocalizedData( autoaib_localized_data.postIdeas, 'string', '' ),
-		createdPostIdeas: safeParseLocalizedData( autoaib_localized_data.createdPostIdeas, 'object', {}, true ),
-		tokenTotal: safeParseLocalizedData( autoaib_localized_data.token_total, 'number', 0 ),
-		tokenRemaining: safeParseLocalizedData( autoaib_localized_data.token_remaining, 'number', 0 ),
-		license_status: safeParseLocalizedData( autoaib_localized_data.license_status, 'string', 'inactive' ),
+		siteTitle: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.site_title, 'string', '' ),
+		siteFor: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.site_for, 'string', '' ),
+		siteDescription: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.site_description, 'string', '' ),
+		temperature: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.temperature, 'number', 1.0 ),
+		harassment: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.harassment, 'number', 2 ),
+		hate: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.hate, 'number', 2 ),
+		sexuallyExplicit: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.sexually_explicit, 'number', 2 ),
+		dangerousContent: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.dangerous_content, 'number', 2 ),
+		license: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.license, 'string', '' ),
+		postIdeas: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.postIdeas, 'string', '' ),
+		createdPostIdeas: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.createdPostIdeas, 'object', {}, true ),
+		tokenTotal: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.token_total, 'number', 0 ),
+		tokenRemaining: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.token_remaining, 'number', 0 ),
+		license_status: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.license_status, 'string', 'inactive' ),
 
 		// Static configuration data that doesn't change during app lifecycle.
-		homeSlug: safeParseLocalizedData( autoaib_localized_data.home_slug, 'string', 'auto-ai-blogger' ),
-		adminNonce: safeParseLocalizedData( autoaib_localized_data.admin_nonce, 'string', '' ),
-		ajaxUrl: safeParseLocalizedData( autoaib_localized_data.ajax_url, 'string', '' ),
-		editPostLink: safeParseLocalizedData( autoaib_localized_data.edit_post_link, 'string', '/wp-admin/post.php?post={{POST_ID}}&action=edit' ),
-		allCampaigns: safeParseLocalizedData( autoaib_localized_data.all_campaigns, 'object', {} ),
-		postmetaDefaults: safeParseLocalizedData( autoaib_localized_data.postmeta_defaults, 'object', {} ),
-		licensingNonce: safeParseLocalizedData( autoaib_localized_data.licensing_nonce, 'string', '' ),
-		upgradeLink: safeParseLocalizedData( autoaib_localized_data.upgrade_link, 'string', '#' ),
-		noLicenseKeyUrl: safeParseLocalizedData( autoaib_localized_data.registration_url, 'string', '#' ),
-		adminEmail: safeParseLocalizedData( autoaib_localized_data.admin_email, 'string', '' ),
-		adminAppUrl: safeParseLocalizedData( autoaib_localized_data.admin_app_url, 'string', '' ),
-		adminBaseUrl: safeParseLocalizedData( autoaib_localized_data.admin_base_url, 'string', '' ),
-		proPurchaseUrl: safeParseLocalizedData( autoaib_localized_data.pro_purchase_url, 'string', 'https://wpaiblogger.com/#pricing' ),
-		proAvailable: safeParseLocalizedData( autoaib_localized_data.pro_available, 'boolean', false ),
-		version: safeParseLocalizedData( autoaib_localized_data.version, 'string', '1.0.0' ),
-		proVersion: safeParseLocalizedData( autoaib_localized_data.pro_version, 'string', '' ),
-		postTypes: safeParseLocalizedData( autoaib_localized_data.post_types, 'object', {} ),
+		homeSlug: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.home_slug, 'string', 'solvex-ai-blogger' ),
+		adminNonce: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.admin_nonce, 'string', '' ),
+		ajaxUrl: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.ajax_url, 'string', '' ),
+		editPostLink: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.edit_post_link, 'string', '/wp-admin/post.php?post={{POST_ID}}&action=edit' ),
+		allCampaigns: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.all_campaigns, 'object', {} ),
+		postmetaDefaults: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.postmeta_defaults, 'object', {} ),
+		licensingNonce: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.licensing_nonce, 'string', '' ),
+		upgradeLink: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.upgrade_link, 'string', '#' ),
+		noLicenseKeyUrl: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.registration_url, 'string', '#' ),
+		adminEmail: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.admin_email, 'string', '' ),
+		adminAppUrl: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.admin_app_url, 'string', '' ),
+		adminBaseUrl: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.admin_base_url, 'string', '' ),
+		proPurchaseUrl: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.pro_purchase_url, 'string', 'https://wpaiblogger.com/#pricing' ),
+		proAvailable: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.pro_available, 'boolean', false ),
+		version: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.version, 'string', '1.0.0' ),
+		proVersion: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.pro_version, 'string', '' ),
+		postTypes: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.post_types, 'object', {} ),
 
 		// Notification settings - default to false/empty
-		emailNotificationEnabled: safeParseLocalizedData( autoaib_localized_data.email_notification_enabled, 'boolean', false ),
-		emailNotificationValue: safeParseLocalizedData( autoaib_localized_data.email_notification_value, 'string', autoaib_localized_data.admin_email || '' ),
+		emailNotificationEnabled: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.email_notification_enabled, 'boolean', false ),
+		emailNotificationValue: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.email_notification_value, 'string', wpsolvex_autoaiblogger_localized_data.admin_email || '' ),
 
 		isLoading: false,
 		error: null,

@@ -4,7 +4,7 @@
  *
  * Provides HTML email templates for various notification types.
  *
- * @package auto-ai-blogger
+ * @package solvex-ai-blogger
  * @subpackage Inc\Notifications
  * @since 1.0.0
  */
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Email Templates class.
  *
- * @package auto-ai-blogger
+ * @package solvex-ai-blogger
  * @subpackage Inc\Notifications
  * @since 1.0.0
  */
@@ -58,37 +58,37 @@ class Email_Templates {
 	private function campaign_started_template( $data ): array {
 		$subject = sprintf(
 			/* translators: %s: Campaign name */
-			__( '🚀 Campaign Started: %s', 'auto-ai-blogger' ),
+			__( '🚀 Campaign Started: %s', 'solvex-ai-blogger' ),
 			$data['campaign_name']
 		);
 
 		$body  = $this->get_email_header();
 		$body .= sprintf(
 			'<h2 style="color: #4F46E5; margin-bottom: 16px; display: flex; gap: 4px; align-items: center;">%s</h2>',
-			__( '🚀 Campaign Started Successfully!', 'auto-ai-blogger' )
+			__( '🚀 Campaign Started Successfully!', 'solvex-ai-blogger' )
 		);
 
 		$body .= sprintf(
 			'<p style="font-size: 16px; line-height: 24px; color: #374151; margin-bottom: 24px;">%s</p>',
 			sprintf(
 				/* translators: %s: Campaign name */
-				__( 'Your campaign "%s" has been started and the first post will be created soon.', 'auto-ai-blogger' ),
+				__( 'Your campaign "%s" has been started and the first post will be created soon.', 'solvex-ai-blogger' ),
 				esc_html( $data['campaign_name'] )
 			)
 		);
 
 		$body .= '<div style="background-color: #F3F4F6; border-radius: 8px; padding: 20px; margin-bottom: 24px;">';
-		$body .= '<h3 style="font-size: 14px; font-weight: 600; color: #6B7280; margin-bottom: 12px; text-transform: uppercase;">' . __( 'Campaign Details', 'auto-ai-blogger' ) . '</h3>';
+		$body .= '<h3 style="font-size: 14px; font-weight: 600; color: #6B7280; margin-bottom: 12px; text-transform: uppercase;">' . __( 'Campaign Details', 'solvex-ai-blogger' ) . '</h3>';
 
-		$body .= $this->get_detail_row( __( 'Campaign Name', 'auto-ai-blogger' ), esc_html( $data['campaign_name'] ) );
-		$body .= $this->get_detail_row( __( 'Target Posts', 'auto-ai-blogger' ), esc_html( $data['target_posts'] ) );
-		$body .= $this->get_detail_row( __( 'Frequency', 'auto-ai-blogger' ), esc_html( $data['frequency'] ) );
-		$body .= $this->get_detail_row( __( 'Keywords', 'auto-ai-blogger' ), esc_html( $data['keywords'] ) );
+		$body .= $this->get_detail_row( __( 'Campaign Name', 'solvex-ai-blogger' ), esc_html( $data['campaign_name'] ) );
+		$body .= $this->get_detail_row( __( 'Target Posts', 'solvex-ai-blogger' ), esc_html( $data['target_posts'] ) );
+		$body .= $this->get_detail_row( __( 'Frequency', 'solvex-ai-blogger' ), esc_html( $data['frequency'] ) );
+		$body .= $this->get_detail_row( __( 'Keywords', 'solvex-ai-blogger' ), esc_html( $data['keywords'] ) );
 
 		$body .= '</div>';
 
 		$body .= $this->get_action_button(
-			__( 'View Campaign', 'auto-ai-blogger' ),
+			__( 'View Campaign', 'solvex-ai-blogger' ),
 			esc_url( $data['campaign_url'] )
 		);
 
@@ -110,42 +110,42 @@ class Email_Templates {
 	private function post_created_template( $data ): array {
 		$subject = sprintf(
 			/* translators: %s: Post title */
-			__( '✅ New Post Created: %s', 'auto-ai-blogger' ),
+			__( '✅ New Post Created: %s', 'solvex-ai-blogger' ),
 			$data['post_title']
 		);
 
 		$body  = $this->get_email_header();
 		$body .= sprintf(
 			'<h2 style="color: #10B981; margin-bottom: 16px; display: flex; gap: 4px; align-items: center;">%s</h2>',
-			__( '✅ New Post Created Successfully!', 'auto-ai-blogger' )
+			__( '✅ New Post Created Successfully!', 'solvex-ai-blogger' )
 		);
 
 		$body .= sprintf(
 			'<p style="font-size: 16px; line-height: 24px; color: #374151; margin-bottom: 24px;">%s</p>',
 			sprintf(
 				/* translators: %s: Campaign name */
-				__( 'A new post has been created from your campaign "%s".', 'auto-ai-blogger' ),
+				__( 'A new post has been created from your campaign "%s".', 'solvex-ai-blogger' ),
 				esc_html( $data['campaign_name'] )
 			)
 		);
 
 		$body .= '<div style="background-color: #F3F4F6; border-radius: 8px; padding: 20px; margin-bottom: 24px;">';
-		$body .= '<h3 style="font-size: 14px; font-weight: 600; color: #6B7280; margin-bottom: 12px; text-transform: uppercase;">' . __( 'Post Details', 'auto-ai-blogger' ) . '</h3>';
+		$body .= '<h3 style="font-size: 14px; font-weight: 600; color: #6B7280; margin-bottom: 12px; text-transform: uppercase;">' . __( 'Post Details', 'solvex-ai-blogger' ) . '</h3>';
 
-		$body .= $this->get_detail_row( __( 'Post Title', 'auto-ai-blogger' ), esc_html( $data['post_title'] ) );
-		$body .= $this->get_detail_row( __( 'Post Number', 'auto-ai-blogger' ), sprintf( '#%d', $data['post_number'] ) );
-		$body .= $this->get_detail_row( __( 'Campaign Progress', 'auto-ai-blogger' ), sprintf( '%d / %d posts', $data['posts_created'], $data['posts_target'] ) );
+		$body .= $this->get_detail_row( __( 'Post Title', 'solvex-ai-blogger' ), esc_html( $data['post_title'] ) );
+		$body .= $this->get_detail_row( __( 'Post Number', 'solvex-ai-blogger' ), sprintf( '#%d', $data['post_number'] ) );
+		$body .= $this->get_detail_row( __( 'Campaign Progress', 'solvex-ai-blogger' ), sprintf( '%d / %d posts', $data['posts_created'], $data['posts_target'] ) );
 
 		$body .= '</div>';
 
 		$body .= '<div style="display: flex; gap: 12px; margin-bottom: 24px;">';
 		$body .= $this->get_action_button(
-			__( 'View Post', 'auto-ai-blogger' ),
+			__( 'View Post', 'solvex-ai-blogger' ),
 			esc_url( $data['post_url'] ),
 			'#10B981'
 		);
 		$body .= $this->get_action_button(
-			__( 'Edit Post', 'auto-ai-blogger' ),
+			__( 'Edit Post', 'solvex-ai-blogger' ),
 			esc_url( $data['edit_url'] ),
 			'#6B7280'
 		);
@@ -169,37 +169,37 @@ class Email_Templates {
 	private function campaign_completed_template( $data ): array {
 		$subject = sprintf(
 			/* translators: %s: Campaign name */
-			__( '🎉 Campaign Completed: %s', 'auto-ai-blogger' ),
+			__( '🎉 Campaign Completed: %s', 'solvex-ai-blogger' ),
 			$data['campaign_name']
 		);
 
 		$body  = $this->get_email_header();
 		$body .= sprintf(
 			'<h2 style="color: #8B5CF6; margin-bottom: 16px; display: flex; gap: 4px; align-items: center;">%s</h2>',
-			__( '🎉 Campaign Completed Successfully!', 'auto-ai-blogger' )
+			__( '🎉 Campaign Completed Successfully!', 'solvex-ai-blogger' )
 		);
 
 		$body .= sprintf(
 			'<p style="font-size: 16px; line-height: 24px; color: #374151; margin-bottom: 24px;">%s</p>',
 			sprintf(
 				/* translators: %s: Campaign name */
-				__( 'Congratulations! Your campaign "%s" has been completed successfully.', 'auto-ai-blogger' ),
+				__( 'Congratulations! Your campaign "%s" has been completed successfully.', 'solvex-ai-blogger' ),
 				esc_html( $data['campaign_name'] )
 			)
 		);
 
 		$body .= '<div style="background-color: #F3F4F6; border-radius: 8px; padding: 20px; margin-bottom: 24px;">';
-		$body .= '<h3 style="font-size: 14px; font-weight: 600; color: #6B7280; margin-bottom: 12px; text-transform: uppercase;">' . __( 'Campaign Summary', 'auto-ai-blogger' ) . '</h3>';
+		$body .= '<h3 style="font-size: 14px; font-weight: 600; color: #6B7280; margin-bottom: 12px; text-transform: uppercase;">' . __( 'Campaign Summary', 'solvex-ai-blogger' ) . '</h3>';
 
-		$body .= $this->get_detail_row( __( 'Campaign Name', 'auto-ai-blogger' ), esc_html( $data['campaign_name'] ) );
-		$body .= $this->get_detail_row( __( 'Total Posts Created', 'auto-ai-blogger' ), sprintf( '%d / %d', $data['posts_created'], $data['posts_target'] ) );
-		$body .= $this->get_detail_row( __( 'Completion Time', 'auto-ai-blogger' ), esc_html( $data['completion_time'] ) );
-		$body .= $this->get_detail_row( __( 'Status', 'auto-ai-blogger' ), __( 'Completed', 'auto-ai-blogger' ) );
+		$body .= $this->get_detail_row( __( 'Campaign Name', 'solvex-ai-blogger' ), esc_html( $data['campaign_name'] ) );
+		$body .= $this->get_detail_row( __( 'Total Posts Created', 'solvex-ai-blogger' ), sprintf( '%d / %d', $data['posts_created'], $data['posts_target'] ) );
+		$body .= $this->get_detail_row( __( 'Completion Time', 'solvex-ai-blogger' ), esc_html( $data['completion_time'] ) );
+		$body .= $this->get_detail_row( __( 'Status', 'solvex-ai-blogger' ), __( 'Completed', 'solvex-ai-blogger' ) );
 
 		$body .= '</div>';
 
 		$body .= $this->get_action_button(
-			__( 'View Campaign', 'auto-ai-blogger' ),
+			__( 'View Campaign', 'solvex-ai-blogger' ),
 			esc_url( $data['campaign_url'] )
 		);
 
@@ -221,39 +221,39 @@ class Email_Templates {
 	private function campaign_failed_template( $data ): array {
 		$subject = sprintf(
 			/* translators: %s: Campaign name */
-			__( '⚠️ Campaign Failed: %s', 'auto-ai-blogger' ),
+			__( '⚠️ Campaign Failed: %s', 'solvex-ai-blogger' ),
 			$data['campaign_name']
 		);
 
 		$body  = $this->get_email_header();
 		$body .= sprintf(
 			'<h2 style="color: #EF4444; margin-bottom: 16px; display: flex; gap: 4px; align-items: center;">%s</h2>',
-			__( '⚠️ Campaign Failed/Terminated', 'auto-ai-blogger' )
+			__( '⚠️ Campaign Failed/Terminated', 'solvex-ai-blogger' )
 		);
 
 		$body .= sprintf(
 			'<p style="font-size: 16px; line-height: 24px; color: #374151; margin-bottom: 24px;">%s</p>',
 			sprintf(
 				/* translators: %s: Campaign name */
-				__( 'Your campaign "%s" has been terminated due to multiple failures.', 'auto-ai-blogger' ),
+				__( 'Your campaign "%s" has been terminated due to multiple failures.', 'solvex-ai-blogger' ),
 				esc_html( $data['campaign_name'] )
 			)
 		);
 
 		$body .= '<div style="background-color: #FEF2F2; border-left: 4px solid #EF4444; border-radius: 8px; padding: 20px; margin-bottom: 24px;">';
-		$body .= '<h3 style="font-size: 14px; font-weight: 600; color: #991B1B; margin-bottom: 12px; text-transform: uppercase;">' . __( 'Failure Details', 'auto-ai-blogger' ) . '</h3>';
+		$body .= '<h3 style="font-size: 14px; font-weight: 600; color: #991B1B; margin-bottom: 12px; text-transform: uppercase;">' . __( 'Failure Details', 'solvex-ai-blogger' ) . '</h3>';
 
-		$body .= $this->get_detail_row( __( 'Campaign Name', 'auto-ai-blogger' ), esc_html( $data['campaign_name'] ), '#DC2626' );
-		$body .= $this->get_detail_row( __( 'Posts Created', 'auto-ai-blogger' ), sprintf( '%d / %d', $data['posts_created'], $data['posts_target'] ), '#DC2626' );
-		$body .= $this->get_detail_row( __( 'Posts Failed', 'auto-ai-blogger' ), esc_html( $data['posts_failed'] ), '#DC2626' );
-		$body .= $this->get_detail_row( __( 'Reason', 'auto-ai-blogger' ), esc_html( $data['failure_reason'] ), '#DC2626' );
+		$body .= $this->get_detail_row( __( 'Campaign Name', 'solvex-ai-blogger' ), esc_html( $data['campaign_name'] ), '#DC2626' );
+		$body .= $this->get_detail_row( __( 'Posts Created', 'solvex-ai-blogger' ), sprintf( '%d / %d', $data['posts_created'], $data['posts_target'] ), '#DC2626' );
+		$body .= $this->get_detail_row( __( 'Posts Failed', 'solvex-ai-blogger' ), esc_html( $data['posts_failed'] ), '#DC2626' );
+		$body .= $this->get_detail_row( __( 'Reason', 'solvex-ai-blogger' ), esc_html( $data['failure_reason'] ), '#DC2626' );
 
 		$body .= '</div>';
 
-		$body .= '<p style="font-size: 14px; line-height: 20px; color: #6B7280; margin-bottom: 24px;">' . __( 'Please review your campaign settings and try again. Check your API credits, keywords, and campaign configuration.', 'auto-ai-blogger' ) . '</p>';
+		$body .= '<p style="font-size: 14px; line-height: 20px; color: #6B7280; margin-bottom: 24px;">' . __( 'Please review your campaign settings and try again. Check your API credits, keywords, and campaign configuration.', 'solvex-ai-blogger' ) . '</p>';
 
 		$body .= $this->get_action_button(
-			__( 'Review Campaign', 'auto-ai-blogger' ),
+			__( 'Review Campaign', 'solvex-ai-blogger' ),
 			esc_url( $data['campaign_url'] ),
 			'#EF4444'
 		);
@@ -281,7 +281,7 @@ class Email_Templates {
 		<head>
 			<meta charset="UTF-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<title>' . esc_html( $site_name ) . ' - ' . __( 'Solvex AI Blogger Notification', 'auto-ai-blogger' ) . '</title>
+			<title>' . esc_html( $site_name ) . ' - ' . __( 'Solvex AI Blogger Notification', 'solvex-ai-blogger' ) . '</title>
 		</head>
 		<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, \'Helvetica Neue\', Arial, sans-serif; background-color: #F9FAFB;">
 			<table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #F9FAFB;">
@@ -291,7 +291,7 @@ class Email_Templates {
 							<tr>
 								<td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 32px 40px; text-align: center;">
 									<h1 style="margin: 0; color: #FFFFFF; font-size: 24px; font-weight: 700;">' . esc_html( $site_name ) . '</h1>
-									<p style="margin: 8px 0 0 0; color: #E0E7FF; font-size: 14px;">' . __( 'Solvex AI Blogger', 'auto-ai-blogger' ) . '</p>
+									<p style="margin: 8px 0 0 0; color: #E0E7FF; font-size: 14px;">' . __( 'Solvex AI Blogger', 'solvex-ai-blogger' ) . '</p>
 								</td>
 							</tr>
 							<tr>
@@ -314,9 +314,9 @@ class Email_Templates {
 							</tr>
 							<tr>
 								<td style="background-color: #F9FAFB; padding: 32px 40px; border-top: 1px solid #E5E7EB;">
-									<p style="margin: 0 0 12px 0; font-size: 14px; color: #6B7280; text-align: center;">' . __( 'You are receiving this notification because you have enabled notifications for Solvex AI Blogger.', 'auto-ai-blogger' ) . '</p>
+									<p style="margin: 0 0 12px 0; font-size: 14px; color: #6B7280; text-align: center;">' . __( 'You are receiving this notification because you have enabled notifications for Solvex AI Blogger.', 'solvex-ai-blogger' ) . '</p>
 									<p style="margin: 0; font-size: 12px; color: #9CA3AF; text-align: center;">
-										© ' . gmdate( 'Y' ) . ' <a href="' . esc_url( $site_url ) . '" style="color: #4F46E5; text-decoration: none;">' . esc_html( $site_name ) . '</a>. ' . __( 'All rights reserved.', 'auto-ai-blogger' ) . '
+										© ' . gmdate( 'Y' ) . ' <a href="' . esc_url( $site_url ) . '" style="color: #4F46E5; text-decoration: none;">' . esc_html( $site_name ) . '</a>. ' . __( 'All rights reserved.', 'solvex-ai-blogger' ) . '
 									</p>
 								</td>
 							</tr>

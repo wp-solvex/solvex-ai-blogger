@@ -16,10 +16,10 @@ parameters:
 	scanFiles:
 	bootstrapFiles:
 		- %rootDir%/../../php-stubs/wordpress-stubs/wordpress-stubs.php
-		- tests/php/stubs/auto-ai-blogger-constants.php
-		- tests/php/stubs/auto-ai-blogger-stubs.php
+		- tests/php/stubs/solvex-ai-blogger-constants.php
+		- tests/php/stubs/solvex-ai-blogger-stubs.php
 	paths:
-		- auto-ai-blogger.php
+		- solvex-ai-blogger.php
 		- inc
 		- core
 		- admin
