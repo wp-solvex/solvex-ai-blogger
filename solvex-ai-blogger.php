@@ -6,7 +6,7 @@
  * Author URI: https://wpsolvex.com/
  * Version: 0.0.6
  * License: GPLv2 or later
- * Requires at least: 6.0
+ * Requires at least: 6.7
  * Requires PHP: 7.4
  * Description: AI‑powered auto‑blogging that creates high‑quality, optimized posts automatically, delivering smarter content beyond traditional blogging tools.
  * Text Domain: solvex-ai-blogger

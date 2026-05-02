@@ -2,20 +2,20 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Solvex AI Blogger 0.0.2\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/auto-ai-blogger\n"
+"Project-Id-Version: Solvex AI Blogger 0.0.6\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/solvex-ai-blogger\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-02-01T08:14:38+00:00\n"
+"POT-Creation-Date: 2026-05-02T06:51:48+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
-"X-Domain: auto-ai-blogger\n"
+"X-Domain: solvex-ai-blogger\n"
 
 #. Plugin Name of the plugin
-#: auto-ai-blogger.php
+#: solvex-ai-blogger.php
 #: admin/menu.php:338
 #: admin/menu.php:339
 #: inc/notifications/email-templates.php:294
@@ -23,22 +23,22 @@ msgid "Solvex AI Blogger"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: auto-ai-blogger.php
+#: solvex-ai-blogger.php
 msgid "https://wpaiblogger.com/"
 msgstr ""
 
 #. Description of the plugin
-#: auto-ai-blogger.php
+#: solvex-ai-blogger.php
 msgid "AI‑powered auto‑blogging that creates high‑quality, optimized posts automatically, delivering smarter content beyond traditional blogging tools."
 msgstr ""
 
 #. Author of the plugin
-#: auto-ai-blogger.php
+#: solvex-ai-blogger.php
 msgid "WP Solvex"
 msgstr ""
 
 #. Author URI of the plugin
-#: auto-ai-blogger.php
+#: solvex-ai-blogger.php
 msgid "https://wpsolvex.com/"
 msgstr ""
 
@@ -79,377 +79,377 @@ msgstr ""
 msgid "Content exceeds maximum allowed length."
 msgstr ""
 
-#: admin/ajax.php:269
-#: admin/ajax.php:383
+#: admin/ajax.php:270
+#: admin/ajax.php:378
 msgid "Campaign title is required."
 msgstr ""
 
-#: admin/ajax.php:354
-#: admin/ajax.php:449
-#: admin/ajax.php:738
-#: admin/ajax.php:969
-#: admin/ajax.php:1015
-#: admin/ajax.php:1070
-#: admin/ajax.php:1138
+#: admin/ajax.php:349
+#: admin/ajax.php:444
+#: admin/ajax.php:733
+#: admin/ajax.php:964
+#: admin/ajax.php:1010
+#: admin/ajax.php:1065
+#: admin/ajax.php:1133
 msgid "Invalid campaign ID."
 msgstr ""
 
-#: admin/ajax.php:361
-#: admin/ajax.php:456
-#: admin/ajax.php:745
-#: admin/ajax.php:975
-#: admin/ajax.php:1022
-#: admin/ajax.php:1076
-#: admin/ajax.php:1144
+#: admin/ajax.php:356
+#: admin/ajax.php:451
+#: admin/ajax.php:740
+#: admin/ajax.php:970
+#: admin/ajax.php:1017
+#: admin/ajax.php:1071
+#: admin/ajax.php:1139
 msgid "Campaign not found."
 msgstr ""
 
-#: admin/ajax.php:469
+#: admin/ajax.php:464
 msgid "Failed to retrieve campaign data."
 msgstr ""
 
-#: admin/ajax.php:485
+#: admin/ajax.php:480
 msgid "Campaign data retrieved successfully."
 msgstr ""
 
-#: admin/ajax.php:537
+#: admin/ajax.php:532
 msgid "Post title is required."
 msgstr ""
 
-#: admin/ajax.php:547
+#: admin/ajax.php:542
 msgid "Post title is too long (max 200 characters)."
 msgstr ""
 
-#: admin/ajax.php:602
+#: admin/ajax.php:597
 msgid "Post content is too long."
 msgstr ""
 
-#: admin/ajax.php:621
+#: admin/ajax.php:616
 msgid "You do not have permission to create this type of post."
 msgstr ""
 
-#: admin/ajax.php:656
+#: admin/ajax.php:651
 msgid "Failed to create post - unknown error occurred."
 msgstr ""
 
-#: admin/ajax.php:701
+#: admin/ajax.php:696
 msgid "An unexpected error occurred while creating the post. Please try again."
 msgstr ""
 
-#: admin/ajax.php:730
+#: admin/ajax.php:725
 msgid "You do not have permission to run campaigns."
 msgstr ""
 
-#: admin/ajax.php:756
+#: admin/ajax.php:751
 msgid "Campaign must be published to run."
 msgstr ""
 
-#: admin/ajax.php:777
+#: admin/ajax.php:772
 msgid "Failed to create post from campaign."
 msgstr ""
 
-#: admin/ajax.php:894
+#: admin/ajax.php:889
 #: assets/build/869.js:1
 msgid "Unknown"
 msgstr ""
 
-#: admin/ajax.php:985
+#: admin/ajax.php:980
 #: assets/build/869.js:1
 msgid "Campaign deleted successfully."
 msgstr ""
 
-#: admin/ajax.php:987
+#: admin/ajax.php:982
 msgid "Error occurred while deleting campaign: "
 msgstr ""
 
-#: admin/ajax.php:1038
+#: admin/ajax.php:1033
 msgid "Logs retrieved successfully."
 msgstr ""
 
-#: admin/ajax.php:1087
+#: admin/ajax.php:1082
 msgid "Campaign is already paused."
 msgstr ""
 
-#: admin/ajax.php:1093
+#: admin/ajax.php:1088
 msgid "Cannot pause a completed campaign."
 msgstr ""
 
-#: admin/ajax.php:1105
+#: admin/ajax.php:1100
 msgid "Campaign paused successfully."
 msgstr ""
 
-#: admin/ajax.php:1111
+#: admin/ajax.php:1106
 msgid "An error occurred while pausing the campaign."
 msgstr ""
 
-#: admin/ajax.php:1155
+#: admin/ajax.php:1150
 msgid "Campaign is not paused."
 msgstr ""
 
-#: admin/ajax.php:1161
+#: admin/ajax.php:1156
 msgid "Cannot resume a completed campaign."
 msgstr ""
 
-#: admin/ajax.php:1169
+#: admin/ajax.php:1164
 msgid "Campaign target already reached."
 msgstr ""
 
-#: admin/ajax.php:1192
+#: admin/ajax.php:1187
 msgid "Campaign resumed successfully."
 msgstr ""
 
-#: admin/ajax.php:1198
+#: admin/ajax.php:1193
 msgid "An error occurred while resuming the campaign."
 msgstr ""
 
-#: admin/ajax.php:1212
+#: admin/ajax.php:1207
 msgid "Security check failed"
 msgstr ""
 
-#: admin/ajax.php:1217
+#: admin/ajax.php:1212
 msgid "You do not have permission to perform this action"
 msgstr ""
 
-#: admin/ajax.php:1224
+#: admin/ajax.php:1219
 msgid "Invalid campaign ID"
 msgstr ""
 
-#: admin/ajax.php:1233
+#: admin/ajax.php:1228
 msgid "Campaign is missing repeat interval or unit"
 msgstr ""
 
-#: admin/ajax.php:1248
+#: admin/ajax.php:1243
 msgid "Campaign cron jobs rescheduled successfully!"
 msgstr ""
 
-#: admin/ajax.php:1253
+#: admin/ajax.php:1248
 msgid "Failed to reschedule campaign"
 msgstr ""
 
-#: admin/ajax.php:1418
+#: admin/ajax.php:1413
 msgid "Campaign title is too long."
 msgstr ""
 
-#: admin/ajax.php:1689
+#: admin/ajax.php:1684
 msgid "Failed to connect to content generation API: "
 msgstr ""
 
-#: admin/ajax.php:1702
+#: admin/ajax.php:1697
 msgid "Invalid JSON response from API"
 msgstr ""
 
 #. translators: %d is the HTTP status code
-#: admin/ajax.php:1721
+#: admin/ajax.php:1716
 msgid "API returned HTTP error %d"
 msgstr ""
 
-#: admin/ajax.php:1731
+#: admin/ajax.php:1726
 msgid "Unknown API error"
 msgstr ""
 
-#: admin/ajax.php:1745
+#: admin/ajax.php:1740
 msgid "API did not return generated content"
 msgstr ""
 
-#: admin/ajax.php:1755
+#: admin/ajax.php:1750
 msgid "Generated content is too short or empty"
 msgstr ""
 
-#: admin/ajax.php:1778
+#: admin/ajax.php:1773
 msgid "Exception occurred during content generation: "
 msgstr ""
 
-#: admin/ajax.php:1811
+#: admin/ajax.php:1806
 msgid "Content must be a string."
 msgstr ""
 
-#: admin/ajax.php:1898
+#: admin/ajax.php:1893
 msgid "Exception occurred during image processing: "
 msgstr ""
 
-#: admin/ajax.php:2080
+#: admin/ajax.php:2075
 #: inc/cron-handler.php:913
 msgid "Failed to download image: "
 msgstr ""
 
 #. translators: %d is the HTTP status code
-#: admin/ajax.php:2090
+#: admin/ajax.php:2085
 #: inc/cron-handler.php:923
 msgid "Image download returned HTTP error %d"
 msgstr ""
 
-#: admin/ajax.php:2100
+#: admin/ajax.php:2095
 #: inc/cron-handler.php:933
 msgid "Downloaded image data is empty"
 msgstr ""
 
-#: admin/ajax.php:2122
+#: admin/ajax.php:2117
 #: inc/cron-handler.php:955
 msgid "Failed to upload image: "
 msgstr ""
 
-#: admin/ajax.php:2154
+#: admin/ajax.php:2149
 #: inc/cron-handler.php:987
 msgid "Exception occurred during image upload: "
 msgstr ""
 
 #. translators: 1: Interval number, 2: Time unit, 3: s (if interval is greater than 1).
-#: admin/ajax.php:2295
+#: admin/ajax.php:2290
 msgid "Every %1$d %2$s%3$s"
 msgstr ""
 
-#: admin/ajax.php:2329
+#: admin/ajax.php:2324
 #: inc/functions/common.php:1094
 msgid "ago"
 msgstr ""
 
 #. translators: %d is the post number.
-#: admin/ajax.php:2339
-#: admin/ajax.php:2434
+#: admin/ajax.php:2334
+#: admin/ajax.php:2429
 msgid "Post #%d Created"
 msgstr ""
 
 #. translators: %s is the success message.
-#: admin/ajax.php:2340
+#: admin/ajax.php:2335
 msgid "Post was created successfully and published."
 msgstr ""
 
 #. translators: %1$s: Post number, %2$s: Default post title.
 #. translators: %d is the post number.
-#: admin/ajax.php:2342
-#: admin/ajax.php:2437
+#: admin/ajax.php:2337
+#: admin/ajax.php:2432
 msgid "Generated Blog Post #%d"
+msgstr ""
+
+#: admin/ajax.php:2341
+#: admin/ajax.php:2405
+#: admin/ajax.php:2454
+#: inc/functions/common.php:1113
+msgid "Campaign validation passed"
 msgstr ""
 
 #: admin/ajax.php:2346
 #: admin/ajax.php:2410
 #: admin/ajax.php:2459
-#: inc/functions/common.php:1113
-msgid "Campaign validation passed"
-msgstr ""
-
-#: admin/ajax.php:2351
-#: admin/ajax.php:2415
-#: admin/ajax.php:2464
 #: inc/functions/common.php:1118
 msgid "API request initiated"
 msgstr ""
 
-#: admin/ajax.php:2356
-#: admin/ajax.php:2420
+#: admin/ajax.php:2351
+#: admin/ajax.php:2415
 msgid "Content generated successfully"
 msgstr ""
 
-#: admin/ajax.php:2361
-#: admin/ajax.php:2425
+#: admin/ajax.php:2356
+#: admin/ajax.php:2420
 msgid "Post created and published"
 msgstr ""
 
 #. translators: %d is the post number.
 #. translators: %d: Post number.
-#: admin/ajax.php:2435
+#: admin/ajax.php:2430
 #: inc/functions/common.php:1017
 msgid "Post #%d was created successfully and published."
 msgstr ""
 
-#: admin/ajax.php:2445
+#: admin/ajax.php:2440
 msgid "API quota exceeded. Please check your subscription limits."
 msgstr ""
 
-#: admin/ajax.php:2446
+#: admin/ajax.php:2441
 msgid "Network timeout occurred during content generation."
 msgstr ""
 
-#: admin/ajax.php:2447
+#: admin/ajax.php:2442
 msgid "Invalid keywords provided. Content generation failed."
 msgstr ""
 
-#: admin/ajax.php:2448
+#: admin/ajax.php:2443
 msgid "Database connection error while saving post."
 msgstr ""
 
-#: admin/ajax.php:2449
+#: admin/ajax.php:2444
 msgid "Content filtering blocked the generated text."
 msgstr ""
 
-#: admin/ajax.php:2469
+#: admin/ajax.php:2464
 msgid "Content generation failed"
 msgstr ""
 
-#: admin/ajax.php:2474
+#: admin/ajax.php:2469
 msgid "Post creation aborted"
 msgstr ""
 
 #. translators: %d is the post number.
-#: admin/ajax.php:2483
+#: admin/ajax.php:2478
 msgid "Post #%d Creation - Failed"
 msgstr ""
 
 #. translators: %d is the post number.
-#: admin/ajax.php:2484
+#: admin/ajax.php:2479
 msgid "Post #%d creation failed due to an error."
 msgstr ""
 
 #. translators: %d is the post number.
-#: admin/ajax.php:2497
+#: admin/ajax.php:2492
 msgid "Post #%d Creation - Scheduled"
 msgstr ""
 
 #. translators: %d is the post number.
-#: admin/ajax.php:2498
+#: admin/ajax.php:2493
 msgid "Post #%d is scheduled to be created in the next cron run."
 msgstr ""
 
-#: admin/ajax.php:2502
+#: admin/ajax.php:2497
 msgid "Waiting for scheduled time..."
 msgstr ""
 
 #. translators: %d is the success rate.
-#: admin/ajax.php:2519
+#: admin/ajax.php:2514
 msgid "Campaign Completed - %d%% Successful"
 msgstr ""
 
 #. translators: %1$d is the number of successful posts, %2$d is the number of attempts, %3$d is the number of failed posts, %4$d is the target number of posts.
-#: admin/ajax.php:2522
+#: admin/ajax.php:2517
 msgid "Campaign completed with %1$d successful posts out of %2$d attempts (%3$d failed). Target of %4$d posts reached."
 msgstr ""
 
-#: admin/ajax.php:2530
+#: admin/ajax.php:2525
 msgid "Campaign Completed Successfully"
 msgstr ""
 
 #. translators: %d is the number of successful posts.
-#: admin/ajax.php:2531
+#: admin/ajax.php:2526
 msgid "Campaign successfully completed with all %d posts created without any failures."
 msgstr ""
 
 #. translators: %d is the number of successful posts.
-#: admin/ajax.php:2543
+#: admin/ajax.php:2538
 msgid "%d posts created successfully"
 msgstr ""
 
 #. translators: %d is the number of failed posts.
-#: admin/ajax.php:2547
+#: admin/ajax.php:2542
 msgid "%d posts failed"
 msgstr ""
 
-#: admin/ajax.php:2551
+#: admin/ajax.php:2546
 msgid "Campaign marked as completed"
 msgstr ""
 
-#: admin/ajax.php:2555
+#: admin/ajax.php:2550
 msgid "Scheduled events cleared"
 msgstr ""
 
-#: admin/ajax.php:2567
+#: admin/ajax.php:2562
 msgid "Campaign Inactive"
 msgstr ""
 
-#: admin/ajax.php:2568
+#: admin/ajax.php:2563
 msgid "Campaign is currently inactive. Activate the campaign to start creating posts."
 msgstr ""
 
-#: admin/ajax.php:2569
+#: admin/ajax.php:2564
 msgid "Campaign status is set to draft. Change status to published to enable post creation."
 msgstr ""
 
@@ -542,77 +542,77 @@ msgstr ""
 msgid "Campaign"
 msgstr ""
 
-#: admin/licensing.php:223
+#: admin/licensing.php:224
 msgid "License activated successfully."
 msgstr ""
 
-#: admin/licensing.php:289
+#: admin/licensing.php:290
 msgid "License deactivated successfully."
 msgstr ""
 
 #. translators: %1$s: opening link tag, %2$s: closing link tag, %3$s: product name, %4$s: opening emphasis tag, %5$s: closing emphasis tag
-#: admin/licensing.php:394
+#: admin/licensing.php:395
 msgid "Please %1$sactivate%2$s your copy to claim tokens %4$s%3$s%5$s to generate blog posts."
 msgstr ""
 
-#: admin/licensing.php:453
+#: admin/licensing.php:454
 #: assets/build/229.js:2
 msgid "Security verification failed. Please refresh the page and try again."
 msgstr ""
 
-#: admin/licensing.php:454
+#: admin/licensing.php:455
 msgid "Sorry, you are not allowed to manage licenses."
 msgstr ""
 
-#: admin/licensing.php:455
+#: admin/licensing.php:456
 msgid "Please enter a valid license key."
 msgstr ""
 
-#: admin/licensing.php:456
+#: admin/licensing.php:457
 msgid "The license key format is invalid. Please check and try again."
 msgstr ""
 
-#: admin/licensing.php:457
+#: admin/licensing.php:458
 msgid "License key is too long. Please check and try again."
 msgstr ""
 
-#: admin/licensing.php:458
+#: admin/licensing.php:459
 msgid "Too many license requests. Please wait a moment and try again."
 msgstr ""
 
-#: admin/licensing.php:459
+#: admin/licensing.php:460
 msgid "License service is temporarily unavailable. Please try again later."
 msgstr ""
 
-#: admin/licensing.php:460
+#: admin/licensing.php:461
 msgid "Unable to verify license. Please check your internet connection and try again."
 msgstr ""
 
-#: admin/licensing.php:461
+#: admin/licensing.php:462
 msgid "This license key is not valid for this plugin."
 msgstr ""
 
-#: admin/licensing.php:462
+#: admin/licensing.php:463
 msgid "License activation failed. Please verify your license key and try again."
 msgstr ""
 
-#: admin/licensing.php:463
+#: admin/licensing.php:464
 msgid "License deactivation failed. Please try again or contact support."
 msgstr ""
 
-#: admin/licensing.php:464
+#: admin/licensing.php:465
 msgid "An unexpected error occurred during license activation. Please try again."
 msgstr ""
 
-#: admin/licensing.php:465
+#: admin/licensing.php:466
 msgid "An unexpected error occurred during license deactivation. Please try again."
 msgstr ""
 
-#: admin/licensing.php:483
+#: admin/licensing.php:484
 msgid "License operations are only allowed in admin AJAX context."
 msgstr ""
 
-#: admin/licensing.php:504
+#: admin/licensing.php:505
 msgid "You must be logged in to perform this action."
 msgstr ""
 
@@ -1070,11 +1070,11 @@ msgstr ""
 msgid "Not Started Yet."
 msgstr ""
 
-#: inc/web-notices/class-web-notices.php:87
+#: inc/web-notices/class-web-notices.php:89
 msgid "WordPress Nonce not validated."
 msgstr ""
 
-#: loader.php:280
+#: loader.php:288
 msgid "Automate Blogging"
 msgstr ""
 
