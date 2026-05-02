@@ -51,18 +51,18 @@ class Ajax {
 	 * @var array<string>
 	 */
 	public $ajax_events = [
-		'solvex_aib_update_admin_setting',
-		'solvex_aib_create_campaign',
-		'solvex_aib_update_campaign',
-		'solvex_aib_get_campaign_metadata',
-		'solvex_aib_create_post',
-		'solvex_aib_run_campaign',
-		'solvex_aib_get_campaign_analytics',
-		'solvex_aib_delete_campaign',
-		'solvex_aib_get_campaign_logs',
-		'solvex_aib_pause_campaign',
-		'solvex_aib_resume_campaign',
-		'solvex_aib_reschedule_campaign',
+		'wpsolvex_autoaiblogger_update_admin_setting',
+		'wpsolvex_autoaiblogger_create_campaign',
+		'wpsolvex_autoaiblogger_update_campaign',
+		'wpsolvex_autoaiblogger_get_campaign_metadata',
+		'wpsolvex_autoaiblogger_create_post',
+		'wpsolvex_autoaiblogger_run_campaign',
+		'wpsolvex_autoaiblogger_get_campaign_analytics',
+		'wpsolvex_autoaiblogger_delete_campaign',
+		'wpsolvex_autoaiblogger_get_campaign_logs',
+		'wpsolvex_autoaiblogger_pause_campaign',
+		'wpsolvex_autoaiblogger_resume_campaign',
+		'wpsolvex_autoaiblogger_reschedule_campaign',
 	];
 
 	/**
@@ -108,16 +108,16 @@ class Ajax {
 		}
 
 		// Add security headers for AJAX responses.
-		add_action( 'wp_ajax_solvex_aib_update_admin_setting', [ $this, 'add_security_headers' ], 1 );
-		add_action( 'wp_ajax_solvex_aib_create_campaign', [ $this, 'add_security_headers' ], 1 );
-		add_action( 'wp_ajax_solvex_aib_update_campaign', [ $this, 'add_security_headers' ], 1 );
-		add_action( 'wp_ajax_solvex_aib_get_campaign_metadata', [ $this, 'add_security_headers' ], 1 );
-		add_action( 'wp_ajax_solvex_aib_create_post', [ $this, 'add_security_headers' ], 1 );
-		add_action( 'wp_ajax_solvex_aib_run_campaign', [ $this, 'add_security_headers' ], 1 );
-		add_action( 'wp_ajax_solvex_aib_delete_campaign', [ $this, 'add_security_headers' ], 1 );
-		add_action( 'wp_ajax_solvex_aib_get_campaign_logs', [ $this, 'add_security_headers' ], 1 );
-		add_action( 'wp_ajax_solvex_aib_pause_campaign', [ $this, 'add_security_headers' ], 1 );
-		add_action( 'wp_ajax_solvex_aib_resume_campaign', [ $this, 'add_security_headers' ], 1 );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_update_admin_setting', [ $this, 'add_security_headers' ], 1 );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_create_campaign', [ $this, 'add_security_headers' ], 1 );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_update_campaign', [ $this, 'add_security_headers' ], 1 );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_get_campaign_metadata', [ $this, 'add_security_headers' ], 1 );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_create_post', [ $this, 'add_security_headers' ], 1 );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_run_campaign', [ $this, 'add_security_headers' ], 1 );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_delete_campaign', [ $this, 'add_security_headers' ], 1 );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_get_campaign_logs', [ $this, 'add_security_headers' ], 1 );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_pause_campaign', [ $this, 'add_security_headers' ], 1 );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_resume_campaign', [ $this, 'add_security_headers' ], 1 );
 	}
 
 	/**
@@ -157,7 +157,7 @@ class Ajax {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function solvex_aib_update_admin_setting(): void {
+	public function wpsolvex_autoaiblogger_update_admin_setting(): void {
 		try {
 			// security validation.
 			$security_check = $this->validate_ajax_security( 'update_admin_setting' );
@@ -167,7 +167,7 @@ class Ajax {
 			}
 
 			// Nonce validation.
-			if ( ! check_ajax_referer( 'solvex_aib_admin_nonce', 'security', false ) ) {
+			if ( ! check_ajax_referer( 'wpsolvex_autoaiblogger_admin_nonce', 'security', false ) ) {
 				wp_send_json_error( [ 'message' => $this->get_error_msg( 'nonce' ) ] );
 				return;
 			}
@@ -224,7 +224,7 @@ class Ajax {
 		 * @since 1.0.0
 		 * @return void
 		 */
-	public function solvex_aib_create_campaign(): void {
+	public function wpsolvex_autoaiblogger_create_campaign(): void {
 		try {
 			// security validation.
 			$security_check = $this->validate_ajax_security( 'create_campaign' );
@@ -234,7 +234,7 @@ class Ajax {
 			}
 
 			// Nonce validation.
-			if ( ! check_ajax_referer( 'solvex_aib_admin_nonce', 'security', false ) ) {
+			if ( ! check_ajax_referer( 'wpsolvex_autoaiblogger_admin_nonce', 'security', false ) ) {
 				wp_send_json_error( [ 'message' => $this->get_error_msg( 'nonce' ) ] );
 				return;
 			}
@@ -277,7 +277,7 @@ class Ajax {
 					'post_title'   => $formatted_campaign_data['title'],
 					'post_content' => $formatted_campaign_data['content'] ?? '',
 					'post_status'  => $formatted_campaign_data['status'] ?? 'draft',
-					'post_type'    => SOLVEX_AIB_CPT_CAMPAIGN,
+					'post_type'    => WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN,
 					'meta_input'   => $formatted_campaign_data['meta_input'] ?? [],
 				]
 			);
@@ -315,7 +315,7 @@ class Ajax {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function solvex_aib_update_campaign(): void {
+	public function wpsolvex_autoaiblogger_update_campaign(): void {
 		try {
 			// security validation.
 			$security_check = $this->validate_ajax_security( 'update_campaign' );
@@ -325,7 +325,7 @@ class Ajax {
 			}
 
 			// Nonce validation.
-			if ( ! check_ajax_referer( 'solvex_aib_admin_nonce', 'security', false ) ) {
+			if ( ! check_ajax_referer( 'wpsolvex_autoaiblogger_admin_nonce', 'security', false ) ) {
 				wp_send_json_error( [ 'message' => $this->get_error_msg( 'nonce' ) ] );
 				return;
 			}
@@ -352,7 +352,7 @@ class Ajax {
 
 			// Check if campaign exists and user can edit it.
 			$campaign_post = get_post( $campaign_id );
-			if ( ! $campaign_post || $campaign_post->post_type !== SOLVEX_AIB_CPT_CAMPAIGN ) {
+			if ( ! $campaign_post || $campaign_post->post_type !== WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN ) {
 				wp_send_json_error( [ 'message' => __( 'Campaign not found.', 'solvex-ai-blogger' ) ] );
 				return;
 			}
@@ -423,7 +423,7 @@ class Ajax {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function solvex_aib_get_campaign_metadata(): void {
+	public function wpsolvex_autoaiblogger_get_campaign_metadata(): void {
 		try {
 			// security validation.
 			$security_check = $this->validate_ajax_security( 'get_campaign_metadata' );
@@ -433,7 +433,7 @@ class Ajax {
 			}
 
 			// Nonce validation.
-			if ( ! check_ajax_referer( 'solvex_aib_admin_nonce', 'security', false ) ) {
+			if ( ! check_ajax_referer( 'wpsolvex_autoaiblogger_admin_nonce', 'security', false ) ) {
 				wp_send_json_error( [ 'message' => $this->get_error_msg( 'nonce' ) ] );
 				return;
 			}
@@ -447,7 +447,7 @@ class Ajax {
 
 			// Check if campaign exists and user can read it.
 			$campaign_post = get_post( $campaign_id );
-			if ( ! $campaign_post || $campaign_post->post_type !== SOLVEX_AIB_CPT_CAMPAIGN ) {
+			if ( ! $campaign_post || $campaign_post->post_type !== WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN ) {
 				wp_send_json_error( [ 'message' => __( 'Campaign not found.', 'solvex-ai-blogger' ) ] );
 				return;
 			}
@@ -492,7 +492,7 @@ class Ajax {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function solvex_aib_create_post(): void {
+	public function wpsolvex_autoaiblogger_create_post(): void {
 		try {
 			// security validation.
 			$security_check = $this->validate_ajax_security( 'create_post' );
@@ -502,7 +502,7 @@ class Ajax {
 			}
 
 			// Nonce validation.
-			if ( ! check_ajax_referer( 'solvex_aib_admin_nonce', 'security', false ) ) {
+			if ( ! check_ajax_referer( 'wpsolvex_autoaiblogger_admin_nonce', 'security', false ) ) {
 				wp_send_json_error( [ 'message' => $this->get_error_msg( 'nonce' ) ] );
 				return;
 			}
@@ -672,7 +672,7 @@ class Ajax {
 
 			// Update token data if available from API response.
 			if ( is_array( $token_data ) && isset( $token_data['total'] ) && isset( $token_data['remaining'] ) ) {
-				solvex_aib_update_token_data( $token_data );
+				wpsolvex_autoaiblogger_update_token_data( $token_data );
 			}
 
 			$success_response = [
@@ -705,7 +705,7 @@ class Ajax {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function solvex_aib_run_campaign(): void {
+	public function wpsolvex_autoaiblogger_run_campaign(): void {
 		try {
 			// security validation.
 			$security_check = $this->validate_ajax_security( 'run_campaign' );
@@ -715,7 +715,7 @@ class Ajax {
 			}
 
 			// Nonce validation.
-			if ( ! check_ajax_referer( 'solvex_aib_admin_nonce', 'security', false ) ) {
+			if ( ! check_ajax_referer( 'wpsolvex_autoaiblogger_admin_nonce', 'security', false ) ) {
 				wp_send_json_error( [ 'message' => $this->get_error_msg( 'nonce' ) ] );
 				return;
 			}
@@ -736,7 +736,7 @@ class Ajax {
 
 			// Check if campaign exists and user can edit it.
 			$campaign_post = get_post( $campaign_id );
-			if ( ! $campaign_post || $campaign_post->post_type !== SOLVEX_AIB_CPT_CAMPAIGN ) {
+			if ( ! $campaign_post || $campaign_post->post_type !== WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN ) {
 				wp_send_json_error( [ 'message' => __( 'Campaign not found.', 'solvex-ai-blogger' ) ] );
 				return;
 			}
@@ -807,7 +807,7 @@ class Ajax {
 	 * @since 0.0.2
 	 * @return void
 	 */
-	public function solvex_aib_get_campaign_analytics(): void {
+	public function wpsolvex_autoaiblogger_get_campaign_analytics(): void {
 		try {
 			// security validation.
 			$security_check = $this->validate_ajax_security( 'get_campaign_analytics' );
@@ -817,7 +817,7 @@ class Ajax {
 			}
 
 			// Validate nonce.
-			if ( ! check_ajax_referer( 'solvex_aib_admin_nonce', 'security', false ) ) {
+			if ( ! check_ajax_referer( 'wpsolvex_autoaiblogger_admin_nonce', 'security', false ) ) {
 				wp_send_json_error( [ 'message' => $this->get_error_msg( 'nonce' ) ] );
 			}
 
@@ -837,7 +837,7 @@ class Ajax {
 					'post_status'            => 'any',
 					'meta_query'             => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Using meta query for campaign posts.
 						[
-							'key'     => 'solvex_aib_campaign_id',
+							'key'     => 'wpsolvex_autoaiblogger_campaign_id',
 							'value'   => $campaign_id,
 							'compare' => '=',
 						],
@@ -944,7 +944,7 @@ class Ajax {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function solvex_aib_delete_campaign(): void {
+	public function wpsolvex_autoaiblogger_delete_campaign(): void {
 		try {
 			// security validation.
 			$security_check = $this->validate_ajax_security( 'delete_campaign' );
@@ -954,7 +954,7 @@ class Ajax {
 			}
 
 			// Nonce validation.
-			if ( ! check_ajax_referer( 'solvex_aib_admin_nonce', 'security', false ) ) {
+			if ( ! check_ajax_referer( 'wpsolvex_autoaiblogger_admin_nonce', 'security', false ) ) {
 				wp_send_json_error( [ 'message' => $this->get_error_msg( 'nonce' ) ] );
 			}
 
@@ -966,7 +966,7 @@ class Ajax {
 
 			// Check if campaign exists and user can read it.
 			$campaign_post = get_post( $campaign_id );
-			if ( ! $campaign_post || $campaign_post->post_type !== SOLVEX_AIB_CPT_CAMPAIGN ) {
+			if ( ! $campaign_post || $campaign_post->post_type !== WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN ) {
 				wp_send_json_error( [ 'message' => __( 'Campaign not found.', 'solvex-ai-blogger' ) ] );
 			}
 
@@ -975,7 +975,7 @@ class Ajax {
 			}
 
 			// Clear scheduled events for this campaign.
-			wp_clear_scheduled_hook( 'solvex_aib_create_single_post', [ $campaign_id ] );
+			wp_clear_scheduled_hook( 'wpsolvex_autoaiblogger_create_single_post', [ $campaign_id ] );
 			wp_delete_post( $campaign_id, true );
 			wp_send_json_success( [ 'message' => __( 'Campaign deleted successfully.', 'solvex-ai-blogger' ) ] );
 		} catch ( \Exception $e ) {
@@ -989,7 +989,7 @@ class Ajax {
 	 * @since 0.0.2
 	 * @return void
 	 */
-	public function solvex_aib_get_campaign_logs(): void {
+	public function wpsolvex_autoaiblogger_get_campaign_logs(): void {
 		try {
 			// Security validation.
 			$security_check = $this->validate_ajax_security( 'get_campaign_logs' );
@@ -999,7 +999,7 @@ class Ajax {
 			}
 
 			// Nonce validation.
-			if ( ! check_ajax_referer( 'solvex_aib_admin_nonce', 'security', false ) ) {
+			if ( ! check_ajax_referer( 'wpsolvex_autoaiblogger_admin_nonce', 'security', false ) ) {
 				wp_send_json_error( [ 'message' => $this->get_error_msg( 'nonce' ) ] );
 				return;
 			}
@@ -1013,7 +1013,7 @@ class Ajax {
 
 			// Check if campaign exists and user can read it.
 			$campaign_post = get_post( $campaign_id );
-			if ( ! $campaign_post || $campaign_post->post_type !== SOLVEX_AIB_CPT_CAMPAIGN ) {
+			if ( ! $campaign_post || $campaign_post->post_type !== WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN ) {
 				wp_send_json_error( [ 'message' => __( 'Campaign not found.', 'solvex-ai-blogger' ) ] );
 				return;
 			}
@@ -1045,7 +1045,7 @@ class Ajax {
 	 * @since 0.0.2
 	 * @return void
 	 */
-	public function solvex_aib_pause_campaign(): void {
+	public function wpsolvex_autoaiblogger_pause_campaign(): void {
 		try {
 			// Validate security.
 			$security_check = $this->validate_ajax_security( 'pause_campaign' );
@@ -1054,7 +1054,7 @@ class Ajax {
 			}
 
 			// Nonce validation.
-			if ( ! check_ajax_referer( 'solvex_aib_admin_nonce', 'security', false ) ) {
+			if ( ! check_ajax_referer( 'wpsolvex_autoaiblogger_admin_nonce', 'security', false ) ) {
 				wp_send_json_error( [ 'message' => $this->get_error_msg( 'nonce' ) ] );
 			}
 
@@ -1067,7 +1067,7 @@ class Ajax {
 
 			// Verify campaign exists.
 			$campaign = get_post( $campaign_id );
-			if ( ! $campaign || $campaign->post_type !== SOLVEX_AIB_CPT_CAMPAIGN ) {
+			if ( ! $campaign || $campaign->post_type !== WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN ) {
 				wp_send_json_error( [ 'message' => __( 'Campaign not found.', 'solvex-ai-blogger' ) ] );
 			}
 
@@ -1093,7 +1093,7 @@ class Ajax {
 			Metadata::update_campaign_meta( $campaign_id, 'pausedAt', current_time( 'mysql' ) );
 
 			// Clear scheduled events.
-			wp_clear_scheduled_hook( 'solvex_aib_create_single_post', [ $campaign_id ] );
+			wp_clear_scheduled_hook( 'wpsolvex_autoaiblogger_create_single_post', [ $campaign_id ] );
 
 			wp_send_json_success(
 				[
@@ -1113,7 +1113,7 @@ class Ajax {
 	 * @since 0.0.2
 	 * @return void
 	 */
-	public function solvex_aib_resume_campaign(): void {
+	public function wpsolvex_autoaiblogger_resume_campaign(): void {
 		try {
 			// Validate security.
 			$security_check = $this->validate_ajax_security( 'resume_campaign' );
@@ -1122,7 +1122,7 @@ class Ajax {
 			}
 
 			// Nonce validation.
-			if ( ! check_ajax_referer( 'solvex_aib_admin_nonce', 'security', false ) ) {
+			if ( ! check_ajax_referer( 'wpsolvex_autoaiblogger_admin_nonce', 'security', false ) ) {
 				wp_send_json_error( [ 'message' => $this->get_error_msg( 'nonce' ) ] );
 			}
 
@@ -1135,7 +1135,7 @@ class Ajax {
 
 			// Verify campaign exists.
 			$campaign = get_post( $campaign_id );
-			if ( ! $campaign || $campaign->post_type !== SOLVEX_AIB_CPT_CAMPAIGN ) {
+			if ( ! $campaign || $campaign->post_type !== WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN ) {
 				wp_send_json_error( [ 'message' => __( 'Campaign not found.', 'solvex-ai-blogger' ) ] );
 			}
 
@@ -1180,7 +1180,7 @@ class Ajax {
 
 			// Schedule the next post immediately (or after a short delay).
 			$next_run = time() + 60; // Start in 1 minute.
-			wp_schedule_single_event( $next_run, 'solvex_aib_create_single_post', [ $campaign_id ] );
+			wp_schedule_single_event( $next_run, 'wpsolvex_autoaiblogger_create_single_post', [ $campaign_id ] );
 
 			wp_send_json_success(
 				[
@@ -1200,10 +1200,10 @@ class Ajax {
 	 * @since 0.0.2
 	 * @return void
 	 */
-	public function solvex_aib_reschedule_campaign(): void {
+	public function wpsolvex_autoaiblogger_reschedule_campaign(): void {
 		try {
 			// Nonce validation.
-			if ( ! check_ajax_referer( 'solvex_aib_reschedule_nonce', 'security', false ) ) {
+			if ( ! check_ajax_referer( 'wpsolvex_autoaiblogger_reschedule_nonce', 'security', false ) ) {
 				wp_send_json_error( [ 'message' => __( 'Security check failed', 'solvex-ai-blogger' ) ] );
 			}
 
@@ -1259,7 +1259,7 @@ class Ajax {
 	private function validate_ajax_security( $action = '' ) {
 		try {
 			// Check user capabilities.
-			if ( ! current_user_can( SOLVEX_AIB_CAPABILITY ) ) {
+			if ( ! current_user_can( WPSOLVEX_AUTOAIBLOGGER_CAPABILITY ) ) {
 				return new \WP_Error( 'permission_denied', $this->get_error_msg( 'permission' ) );
 			}
 
@@ -1513,7 +1513,7 @@ class Ajax {
 	 * @since 0.0.2
 	 */
 	private function remove_post_idea_from_db( $post_title ): void {
-		$lock_key = 'solvex_aib_postideas_lock'; // Define early to avoid undefined variable issues.
+		$lock_key = 'wpsolvex_autoaiblogger_postideas_lock'; // Define early to avoid undefined variable issues.
 
 		try {
 			// Sanitize the title.
@@ -1663,7 +1663,7 @@ class Ajax {
 			}
 
 			// Make API request.
-			$api_url = SOLVEX_AIB_CONTENT_FROM_TITLE_POST_API;
+			$api_url = WPSOLVEX_AUTOAIBLOGGER_CONTENT_FROM_TITLE_POST_API;
 
 			$response = wp_remote_post(
 				$api_url,
@@ -1671,7 +1671,7 @@ class Ajax {
 					'timeout' => 90,
 					'headers' => [
 						'Content-Type' => 'application/json',
-						'User-Agent'   => 'Solvex-AI-Blogger/' . SOLVEX_AIB_VERSION . ' WordPress/' . get_bloginfo( 'version' ),
+						'User-Agent'   => 'Solvex-AI-Blogger/' . WPSOLVEX_AUTOAIBLOGGER_VERSION . ' WordPress/' . get_bloginfo( 'version' ),
 					],
 					'body'    => $api_data ? wp_json_encode( $api_data ) : '',
 				]
@@ -2064,7 +2064,7 @@ class Ajax {
 				[
 					'timeout' => 30,
 					'headers' => [
-						'User-Agent' => 'Solvex-AI-Blogger/' . SOLVEX_AIB_VERSION . ' WordPress/' . get_bloginfo( 'version' ),
+						'User-Agent' => 'Solvex-AI-Blogger/' . WPSOLVEX_AUTOAIBLOGGER_VERSION . ' WordPress/' . get_bloginfo( 'version' ),
 					],
 				]
 			);
@@ -2173,7 +2173,7 @@ class Ajax {
 			}
 
 			// Clear any existing scheduled events for this campaign.
-			wp_clear_scheduled_hook( 'solvex_aib_create_single_post', [ $campaign_id ] );
+			wp_clear_scheduled_hook( 'wpsolvex_autoaiblogger_create_single_post', [ $campaign_id ] );
 
 			// Check if campaign post is published (active).
 			$campaign_post = get_post( $campaign_id );
@@ -2230,7 +2230,7 @@ class Ajax {
 			// Schedule the first post at the user-defined start date/time using single event.
 			// The cron handler will self-schedule subsequent posts after each execution.
 			// This matches the pause/resume pattern where we schedule one event at a time.
-			wp_schedule_single_event( $start_timestamp, 'solvex_aib_create_single_post', [ $campaign_id ] );
+			wp_schedule_single_event( $start_timestamp, 'wpsolvex_autoaiblogger_create_single_post', [ $campaign_id ] );
 		} catch ( \Exception $e ) {
 			return;
 		}
@@ -2256,7 +2256,7 @@ class Ajax {
 		$seconds = $interval * ( $multipliers[ $unit ] ?? DAY_IN_SECONDS );
 
 		// Allow testing plugins to modify intervals.
-		return apply_filters( 'solvex_aib_campaign_interval_seconds', $seconds, $interval, $unit );
+		return apply_filters( 'wpsolvex_autoaiblogger_campaign_interval_seconds', $seconds, $interval, $unit );
 	}
 
 	/**
@@ -2277,11 +2277,11 @@ class Ajax {
 		}
 
 		// Create custom schedule name.
-		$schedule_name = "solvex_aib_{$interval}_{$unit}";
+		$schedule_name = "wpsolvex_autoaiblogger_{$interval}_{$unit}";
 
 		// Register custom schedule dynamically using a globally registered filter.
 		// We store the schedule info in an option so the filter can pick it up.
-		$custom_schedules = get_option( 'solvex_aib_custom_cron_schedules', [] );
+		$custom_schedules = get_option( 'wpsolvex_autoaiblogger_custom_cron_schedules', [] );
 		if ( ! isset( $custom_schedules[ $schedule_name ] ) ) {
 			$custom_schedules[ $schedule_name ] = [
 				'interval' => $this->calculate_interval_seconds( $interval, $unit ),
@@ -2293,7 +2293,7 @@ class Ajax {
 					$interval > 1 ? 's' : ''
 				),
 			];
-			update_option( 'solvex_aib_custom_cron_schedules', $custom_schedules );
+			update_option( 'wpsolvex_autoaiblogger_custom_cron_schedules', $custom_schedules );
 		}
 
 		return $schedule_name;
@@ -2310,7 +2310,7 @@ class Ajax {
 		$logs = [];
 
 		// Get real success logs using the helper function.
-		$success_logs = solvex_aib_get_campaign_success_logs( $campaign_id, 20 );
+		$success_logs = wpsolvex_autoaiblogger_get_campaign_success_logs( $campaign_id, 20 );
 
 		foreach ( $success_logs as $index => $log ) {
 			// Use stored timestamp data directly (no backward compatibility needed).
@@ -2361,7 +2361,7 @@ class Ajax {
 		}
 
 		// Get real error logs using our new function.
-		$error_logs = solvex_aib_get_campaign_error_logs( $campaign_id, 50 );
+		$error_logs = wpsolvex_autoaiblogger_get_campaign_error_logs( $campaign_id, 50 );
 
 		// Merge success and error logs.
 		$logs = array_merge( $logs, $error_logs );

@@ -17,11 +17,11 @@ export default function ConfigureDrawer( props ) {
 	const [ handlingCampaign, setHandlingCampaign ] = useState( false );
 	const [ open, setOpen ] = useState( openDrawer );
 	const [ drawerData, setDrawerData ] = useState( {} );
-	const postTypes = solvex_aib_localized_data?.post_types || {};
-	const authors = solvex_aib_localized_data?.authors || [];
-	const postStatuses = solvex_aib_localized_data?.post_statuses || {};
-	const categories = solvex_aib_localized_data?.categories || {};
-	const tags = solvex_aib_localized_data?.tags || {};
+	const postTypes = wpsolvex_autoaiblogger_localized_data?.post_types || {};
+	const authors = wpsolvex_autoaiblogger_localized_data?.authors || [];
+	const postStatuses = wpsolvex_autoaiblogger_localized_data?.post_statuses || {};
+	const categories = wpsolvex_autoaiblogger_localized_data?.categories || {};
+	const tags = wpsolvex_autoaiblogger_localized_data?.tags || {};
 	const isViewMode = mode === 'view';
 	const [ errorMessage, setErrorMessage ] = useState( '' );
 	const [ fieldErrors, setFieldErrors ] = useState( {} );
@@ -179,7 +179,7 @@ export default function ConfigureDrawer( props ) {
 										</div>
 									</div>
 
-									<div className="bg-white px-4 sm:px-6 solvex-aib-campaign-nav">
+									<div className="bg-white px-4 sm:px-6 wpsolvex-autoaiblogger-campaign-nav">
 										<nav className="justify-between flex" aria-label="Tabs">
 											<a
 												onClick={ () => setActiveTab( 'campaign' ) }
@@ -347,7 +347,7 @@ export default function ConfigureDrawer( props ) {
 																	className={ `block w-20 rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 ${ isViewMode ? 'bg-gray-50 outline-gray-200' : 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand' }` }
 																/>
 																<select
-																	className={ `min-w-[100px] ${ isViewMode ? 'solvex-aib-select-control-readonly' : 'solvex-aib-select-control' }` }
+																	className={ `min-w-[100px] ${ isViewMode ? 'wpsolvex-autoaiblogger-select-control-readonly' : 'wpsolvex-autoaiblogger-select-control' }` }
 																	value={ drawerData.repeatUnit || 'day' }
 																	onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, repeatUnit: e.target.value } ) }
 																	disabled={ isViewMode }
@@ -518,7 +518,7 @@ export default function ConfigureDrawer( props ) {
 															</label>
 															<div>
 																<select
-																	className={ isViewMode ? 'solvex-aib-select-control-readonly' : 'solvex-aib-select-control' }
+																	className={ isViewMode ? 'wpsolvex-autoaiblogger-select-control-readonly' : 'wpsolvex-autoaiblogger-select-control' }
 																	id="post-type"
 																	value={ drawerData.postType }
 																	onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, postType: e.target.value } ) }
@@ -539,7 +539,7 @@ export default function ConfigureDrawer( props ) {
 															</label>
 															<div>
 																<select
-																	className={ isViewMode ? 'solvex-aib-select-control-readonly' : 'solvex-aib-select-control' }
+																	className={ isViewMode ? 'wpsolvex-autoaiblogger-select-control-readonly' : 'wpsolvex-autoaiblogger-select-control' }
 																	id="post-author"
 																	value={ drawerData.author }
 																	onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, author: e.target.value } ) }
@@ -560,7 +560,7 @@ export default function ConfigureDrawer( props ) {
 															</label>
 															<div>
 																<select
-																	className={ isViewMode ? 'solvex-aib-select-control-readonly' : 'solvex-aib-select-control' }
+																	className={ isViewMode ? 'wpsolvex-autoaiblogger-select-control-readonly' : 'wpsolvex-autoaiblogger-select-control' }
 																	id="post-status"
 																	value={ drawerData.postStatus }
 																	onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, postStatus: e.target.value } ) }
@@ -584,7 +584,7 @@ export default function ConfigureDrawer( props ) {
 																		</label>
 																		<div>
 																			<select
-																				className={ isViewMode ? 'solvex-aib-select-control-readonly' : 'solvex-aib-select-control' }
+																				className={ isViewMode ? 'wpsolvex-autoaiblogger-select-control-readonly' : 'wpsolvex-autoaiblogger-select-control' }
 																				id="post-category"
 																				value={ drawerData.category || '' }
 																				onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, category: e.target.value } ) }
@@ -606,7 +606,7 @@ export default function ConfigureDrawer( props ) {
 																		</label>
 																		<div>
 																			<select
-																				className={ isViewMode ? 'solvex-aib-select-control-readonly' : 'solvex-aib-select-control' }
+																				className={ isViewMode ? 'wpsolvex-autoaiblogger-select-control-readonly' : 'wpsolvex-autoaiblogger-select-control' }
 																				id="post-tag"
 																				value={ drawerData.tag || '' }
 																				onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, tag: e.target.value } ) }
@@ -639,7 +639,7 @@ export default function ConfigureDrawer( props ) {
 															<label htmlFor="maximum-words" className="flex items-center text-sm/6 font-medium text-gray-900">
 																{ __( 'Maximum Content Words', 'solvex-ai-blogger' ) }
 																<Tooltip
-																	text={ solvex_aib_localized_data.pro_available
+																	text={ wpsolvex_autoaiblogger_localized_data.pro_available
 																		? __( 'Set the maximum number of words for generated content (100-5000 words).', 'solvex-ai-blogger' )
 																		: __( 'Free users are limited to 1000 words. Upgrade to Pro to customize up to 5000 words.', 'solvex-ai-blogger' )
 																	}
@@ -663,7 +663,7 @@ export default function ConfigureDrawer( props ) {
 																			return;
 																		}
 																		let value = parseInt( e.target.value ) || 0;
-																		const maxLimit = solvex_aib_localized_data.pro_available ? 5000 : 1000;
+																		const maxLimit = wpsolvex_autoaiblogger_localized_data.pro_available ? 5000 : 1000;
 
 																		// Enforce limits
 																		if ( value > maxLimit ) {
@@ -677,10 +677,10 @@ export default function ConfigureDrawer( props ) {
 																	onWheel={ ( e ) => e.target.blur() }
 																	type="number"
 																	min="100"
-																	max={ solvex_aib_localized_data.pro_available ? 5000 : 1000 }
+																	max={ wpsolvex_autoaiblogger_localized_data.pro_available ? 5000 : 1000 }
 																	readOnly={ isViewMode }
-																	disabled={ solvex_aib_localized_data.pro_available ? false : true }
-																	placeholder={ solvex_aib_localized_data.pro_available ? __( 'e.g., 1500', 'solvex-ai-blogger' ) : __( '1000 (Free limit)', 'solvex-ai-blogger' ) }
+																	disabled={ wpsolvex_autoaiblogger_localized_data.pro_available ? false : true }
+																	placeholder={ wpsolvex_autoaiblogger_localized_data.pro_available ? __( 'e.g., 1500', 'solvex-ai-blogger' ) : __( '1000 (Free limit)', 'solvex-ai-blogger' ) }
 																	className={ `block w-full rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 ${ isViewMode ? 'bg-gray-50 outline-gray-200' : 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand' }` }
 																/>
 															</div>
@@ -690,7 +690,7 @@ export default function ConfigureDrawer( props ) {
 															<label htmlFor="number-of-images" className="flex items-center text-sm/6 font-medium text-gray-900">
 																{ __( 'Number of Content Images', 'solvex-ai-blogger' ) }
 																<Tooltip
-																	text={ solvex_aib_localized_data.pro_available
+																	text={ wpsolvex_autoaiblogger_localized_data.pro_available
 																		? __( 'Number of images in post content (1-5). A featured image is automatically included.', 'solvex-ai-blogger' )
 																		: __( 'Free users are limited to 1 content image. Upgrade to Pro for up to 5. Featured image is always included.', 'solvex-ai-blogger' )
 																	}
@@ -714,7 +714,7 @@ export default function ConfigureDrawer( props ) {
 																			return;
 																		}
 																		let value = parseInt( e.target.value ) || 0;
-																		const maxLimit = solvex_aib_localized_data.pro_available ? 5 : 1;
+																		const maxLimit = wpsolvex_autoaiblogger_localized_data.pro_available ? 5 : 1;
 
 																		// Enforce limits
 																		if ( value > maxLimit ) {
@@ -728,10 +728,10 @@ export default function ConfigureDrawer( props ) {
 																	onWheel={ ( e ) => e.target.blur() }
 																	type="number"
 																	min="1"
-																	max={ solvex_aib_localized_data.pro_available ? 5 : 1 }
+																	max={ wpsolvex_autoaiblogger_localized_data.pro_available ? 5 : 1 }
 																	readOnly={ isViewMode }
-																	disabled={ solvex_aib_localized_data.pro_available ? false : true }
-																	placeholder={ solvex_aib_localized_data.pro_available ? __( 'e.g., 3', 'solvex-ai-blogger' ) : __( '1 (Free limit)', 'solvex-ai-blogger' ) }
+																	disabled={ wpsolvex_autoaiblogger_localized_data.pro_available ? false : true }
+																	placeholder={ wpsolvex_autoaiblogger_localized_data.pro_available ? __( 'e.g., 3', 'solvex-ai-blogger' ) : __( '1 (Free limit)', 'solvex-ai-blogger' ) }
 																	className={ `block w-full rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 ${ isViewMode ? 'bg-gray-50 outline-gray-200' : 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand' }` }
 																/>
 															</div>
@@ -741,7 +741,7 @@ export default function ConfigureDrawer( props ) {
 															<label htmlFor="override-site-persona" className="flex items-center text-sm/6 font-medium text-gray-900">
 																{ __( 'Override Site Persona for this Campaign?', 'solvex-ai-blogger' ) }
 																<Tooltip
-																	text={ solvex_aib_localized_data.pro_available
+																	text={ wpsolvex_autoaiblogger_localized_data.pro_available
 																		? __( 'Customize site persona specifically for this campaign. This overrides your global site settings.', 'solvex-ai-blogger' )
 																		: __( 'Pro feature: Customize site persona per campaign. Upgrade to unlock.', 'solvex-ai-blogger' )
 																	}
@@ -759,7 +759,7 @@ export default function ConfigureDrawer( props ) {
 																	checked={ drawerData.overrideSitePersona }
 																	onChange={ () => ! isViewMode && setDrawerData( { ...drawerData, overrideSitePersona: ! drawerData.overrideSitePersona } ) }
 																	id="override-site-persona"
-																	disabled={ isViewMode || ! solvex_aib_localized_data.pro_available }
+																	disabled={ isViewMode || ! wpsolvex_autoaiblogger_localized_data.pro_available }
 																/>
 															</div>
 														</div>
@@ -840,12 +840,12 @@ export default function ConfigureDrawer( props ) {
 															</div>
 														</div>
 
-														{ ! solvex_aib_localized_data.pro_available &&
+														{ ! wpsolvex_autoaiblogger_localized_data.pro_available &&
 															<DynamicCard
 																heading={ __( 'Unlock Premium Features', 'solvex-ai-blogger' ) }
 																subHeading={ __( 'Upgrade to Pro for more features and benefits.', 'solvex-ai-blogger' ) }
 																linkText={ __( 'Upgrade Now', 'solvex-ai-blogger' ) }
-																linkUrl={ solvex_aib_localized_data.pro_purchase_url }
+																linkUrl={ wpsolvex_autoaiblogger_localized_data.pro_purchase_url }
 																colorScheme="brand"
 																size="medium"
 																ariaLabel={ __( 'Upgrade Now', 'solvex-ai-blogger' ) }

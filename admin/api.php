@@ -42,7 +42,7 @@ class API extends \WP_REST_Controller {
 	 *
 	 * @var string
 	 */
-	protected $namespace = SOLVEX_AIB_SLUG . '/v1';
+	protected $namespace = WPSOLVEX_AUTOAIBLOGGER_SLUG . '/v1';
 
 	/**
 	 * Route base.
@@ -72,7 +72,7 @@ class API extends \WP_REST_Controller {
 	 * @var string $option_name DB option name.
 	 * @since 1.0.0
 	 */
-	private static $option_name = SOLVEX_AIB_DB_OPTION;
+	private static $option_name = WPSOLVEX_AUTOAIBLOGGER_DB_OPTION;
 
 	/**
 	 * Admin settings dataset
@@ -272,7 +272,7 @@ class API extends \WP_REST_Controller {
 		// Update settings using update_option directly for settings array.
 		$current_settings = Settings::get_ai_blogger_settings();
 		$merged_settings  = array_merge( $current_settings, $sanitized_settings );
-		$updated          = update_option( SOLVEX_AIB_DB_OPTION, $merged_settings );
+		$updated          = update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $merged_settings );
 
 		if ( ! $updated ) {
 			return new \WP_Error(
@@ -304,9 +304,9 @@ class API extends \WP_REST_Controller {
 	 */
 	public function get_permissions_check( \WP_REST_Request $request ): \WP_Error|bool {
 		// Basic capability check.
-		if ( ! current_user_can( SOLVEX_AIB_CAPABILITY ) ) {
+		if ( ! current_user_can( WPSOLVEX_AUTOAIBLOGGER_CAPABILITY ) ) {
 			return new \WP_Error(
-				'solvex_aib_rest_cannot_view',
+				'wpsolvex_autoaiblogger_rest_cannot_view',
 				__( 'Sorry, you cannot access this resource.', 'solvex-ai-blogger' ),
 				[ 'status' => rest_authorization_required_code() ]
 			);
@@ -330,9 +330,9 @@ class API extends \WP_REST_Controller {
 	 */
 	public function update_permissions_check( \WP_REST_Request $request ): \WP_Error|bool {
 		// Only site administrators may update plugin settings.
-		if ( ! current_user_can( SOLVEX_AIB_CAPABILITY ) ) {
+		if ( ! current_user_can( WPSOLVEX_AUTOAIBLOGGER_CAPABILITY ) ) {
 			return new \WP_Error(
-				'solvex_aib_rest_cannot_update',
+				'wpsolvex_autoaiblogger_rest_cannot_update',
 				__( 'Sorry, you cannot update this resource.', 'solvex-ai-blogger' ),
 				[ 'status' => rest_authorization_required_code() ]
 			);
@@ -368,7 +368,7 @@ class API extends \WP_REST_Controller {
 		// Admin-only capability for license management.
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return new \WP_Error(
-				'solvex_aib_rest_cannot_manage_license',
+				'wpsolvex_autoaiblogger_rest_cannot_manage_license',
 				__( 'Sorry, you cannot manage licenses.', 'solvex-ai-blogger' ),
 				[ 'status' => rest_authorization_required_code() ]
 			);

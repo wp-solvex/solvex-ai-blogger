@@ -182,7 +182,7 @@ const Notifications = memo( () => {
 	// Get notification settings from Redux store or set defaults
 	const emailNotificationEnabled = useSelector( ( state ) => state.emailNotificationEnabled ) ?? false;
 	const emailNotificationValue = useSelector( ( state ) => state.emailNotificationValue ) ??
-		( ( typeof solvex_aib_localized_data !== 'undefined' && solvex_aib_localized_data?.admin_email ) || '' );
+		( ( typeof wpsolvex_autoaiblogger_localized_data !== 'undefined' && wpsolvex_autoaiblogger_localized_data?.admin_email ) || '' );
 
 	// Get Redux config for API calls
 	const adminNonce = useSelector( ( state ) => state.adminNonce );

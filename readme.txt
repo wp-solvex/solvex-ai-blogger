@@ -3,9 +3,11 @@
 Contributors: wpsolvex
 Tags: blog, blogging, content creation, auto blogging, ai
 Tested up to: 6.9
-Stable tag: 0.0.5
+Stable tag: 0.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Requires at least: 6.7
+Requires PHP: 7.4
 
 Beyond ordinary content creators — experience true AI‑driven auto‑blogging.
 
@@ -29,7 +31,7 @@ The plugin's core content-generation features are powered by the WP AI Blogger s
 **Endpoints called and when:**
 - `POST https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-content-from-title` — called when the site administrator triggers generation of a single post. Sends the post title, safety settings, and a temperature value.
 - `POST https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-campaign-post` — called when a campaign runs (manually or via cron). Sends the user-selected keywords, word/title limits, safety settings, desired image count, site title, and site description.
-- `GET https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/get-token-data?license=...` — called to refresh the user's token quota and usage. Sends the plugin license key.
+- `GET https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/get-token-data` — called to refresh the user's token quota and usage. The plugin license key is sent as a query parameter (`license`).
 
 **What data is sent:**
 - Post titles, keywords, and campaign configuration entered by the site administrator
@@ -108,6 +110,13 @@ To build the plugin assets from source:
 The plugin uses `@wordpress/scripts` (webpack) as its build tool.
 
 == Changelog ==
+
+= 0.0.6 =
+* Improvement: Standardized all PHP identifiers (functions, hooks, filters, options, AJAX actions, nonces, constants, JS-localized handles) under a single `wpsolvex_autoaiblogger_*` / `WPSOLVEX_AUTOAIBLOGGER_*` prefix family, matching the existing `WPSolvex\AutoAIBlogger` namespace, per WordPress Plugin Review Team feedback on uniform prefixing.
+* Improvement: Renamed bundled SureCart Licensing SDK namespace from `SureCart\Licensing` to `WPSolvex\AutoAIBlogger\Licensing` for plugin-prefix uniformity.
+* Improvement: Renamed bundled Web Notices library class from global `Autoaib_Notices` to namespaced `WPSolvex\AutoAIBlogger\Inc\Web_Notices\Notices`.
+* Improvement: Cleaned up External Services URL formatting in readme.txt to satisfy Plugin Check URL probes.
+* Notice: Settings stored under the previous `solvex_aib_*` option keys are not automatically migrated; sites updating from 0.0.5 must reconfigure plugin settings, license key, and campaigns.
 
 = 0.0.5 =
 * Improvement: Renamed plugin main file to `solvex-ai-blogger.php` and corrected the Text Domain to match the plugin slug per WordPress Plugin Review Team feedback.

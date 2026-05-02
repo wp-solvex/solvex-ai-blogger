@@ -7,44 +7,44 @@
 
 :root {
 	/* Primary Brand Colors */
-	--solvex-aib-brand-primary: #9138c8;
-	--solvex-aib-brand-primary-hover: #7c2fb0;
-	--solvex-aib-brand-primary-light: #b565db;
-	--solvex-aib-brand-primary-dark: #7c2fb0;
+	--wpsolvex-autoaiblogger-brand-primary: #9138c8;
+	--wpsolvex-autoaiblogger-brand-primary-hover: #7c2fb0;
+	--wpsolvex-autoaiblogger-brand-primary-light: #b565db;
+	--wpsolvex-autoaiblogger-brand-primary-dark: #7c2fb0;
 
 	/* Brand Color Tints (for backgrounds, borders, etc.) */
-	--solvex-aib-brand-50: #f9f5fc;
-	--solvex-aib-brand-100: #f3eaf8;
-	--solvex-aib-brand-200: #e7d4f1;
-	--solvex-aib-brand-300: #d0abe3;
-	--solvex-aib-brand-400: #b565db;
-	--solvex-aib-brand-500: #9f48d0;
-	--solvex-aib-brand-600: #9138c8;
-	--solvex-aib-brand-700: #7c2fb0;
-	--solvex-aib-brand-800: #672898;
-	--solvex-aib-brand-900: #3d1954;
+	--wpsolvex-autoaiblogger-brand-50: #f9f5fc;
+	--wpsolvex-autoaiblogger-brand-100: #f3eaf8;
+	--wpsolvex-autoaiblogger-brand-200: #e7d4f1;
+	--wpsolvex-autoaiblogger-brand-300: #d0abe3;
+	--wpsolvex-autoaiblogger-brand-400: #b565db;
+	--wpsolvex-autoaiblogger-brand-500: #9f48d0;
+	--wpsolvex-autoaiblogger-brand-600: #9138c8;
+	--wpsolvex-autoaiblogger-brand-700: #7c2fb0;
+	--wpsolvex-autoaiblogger-brand-800: #672898;
+	--wpsolvex-autoaiblogger-brand-900: #3d1954;
 
 	/* RGB values for opacity usage */
-	--solvex-aib-brand-rgb: 145, 56, 200;
+	--wpsolvex-autoaiblogger-brand-rgb: 145, 56, 200;
 }
 
 /* Utility classes for brand colors */
-.solvex-aib-bg-brand {
-	background-color: var( --solvex-aib-brand-primary );
+.wpsolvex-autoaiblogger-bg-brand {
+	background-color: var( --wpsolvex-autoaiblogger-brand-primary );
 }
 
-.solvex-aib-bg-brand-hover:hover {
-	background-color: var( --solvex-aib-brand-primary-hover );
+.wpsolvex-autoaiblogger-bg-brand-hover:hover {
+	background-color: var( --wpsolvex-autoaiblogger-brand-primary-hover );
 }
 
-.solvex-aib-text-brand {
-	color: var( --solvex-aib-brand-primary );
+.wpsolvex-autoaiblogger-text-brand {
+	color: var( --wpsolvex-autoaiblogger-brand-primary );
 }
 
-.solvex-aib-border-brand {
-	border-color: var( --solvex-aib-brand-primary );
+.wpsolvex-autoaiblogger-border-brand {
+	border-color: var( --wpsolvex-autoaiblogger-brand-primary );
 }
 
-.solvex-aib-gradient-brand {
-	background: linear-gradient( 135deg, var( --solvex-aib-brand-500 ) 0%, var( --solvex-aib-brand-700 ) 100% );
+.wpsolvex-autoaiblogger-gradient-brand {
+	background: linear-gradient( 135deg, var( --wpsolvex-autoaiblogger-brand-500 ) 0%, var( --wpsolvex-autoaiblogger-brand-700 ) 100% );
 }

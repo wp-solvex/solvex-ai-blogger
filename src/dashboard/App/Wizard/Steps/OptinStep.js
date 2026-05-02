@@ -327,7 +327,7 @@ const OptinStep = memo( () => {
 
 								<form className="space-y-5" onSubmit={ submitOptinForm }>
 									<FormField
-										id="solvex-aib-user-name"
+										id="wpsolvex-autoaiblogger-user-name"
 										label={ __( 'First Name', 'solvex-ai-blogger' ) }
 										type="text"
 										value={ name }
@@ -339,7 +339,7 @@ const OptinStep = memo( () => {
 									/>
 
 									<FormField
-										id="solvex-aib-user-email"
+										id="wpsolvex-autoaiblogger-user-email"
 										label={ __( 'Email Address', 'solvex-ai-blogger' ) }
 										type="email"
 										value={ email }

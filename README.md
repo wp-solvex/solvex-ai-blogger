@@ -3,7 +3,7 @@
 **Contributors:** [wpsolvex](https://profiles.wordpress.org/wpsolvex/)  
 **Tags:** blog, blogging, content creation, auto blogging, ai  
 **Tested up to:** 6.9  
-**Stable tag:** 0.0.4  
+**Stable tag:** 0.0.6  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -15,35 +15,53 @@ Not just another content creator — experience AI‑powered auto‑blogging lik
 
 ## External Services ##
 
-This plugin relies on an external service operated by WP AI Blogger (WP Solvex) to provide AI-powered content generation features.
+This plugin connects to several third-party services. Each is documented below with what is sent, when it is sent, and the relevant Terms of Service and Privacy Policy.
 
-The external service is required for the core functionality of the plugin, including generating blog posts and managing token usage.
+### WP AI Blogger API (wpaiblogger.com)
 
-### What the service is used for
-- Generating AI-based blog post content from post titles
-- Generating campaign-based blog posts using user-defined keywords and configurations
-- Generating post content from a provided title
-- Retrieving token usage and license detail
+The plugin's core content-generation features are powered by the WP AI Blogger service, operated by WP Solvex. The service is required for the plugin to function.
 
-### What data is sent and when
-The plugin sends data to the external service only when initiated by the site administrator. Depending on the feature used, this may include:
-- Post titles, keywords, and campaign configuration entered by the user
+**What the service is used for:**
+- Generating AI-based blog post content from a provided post title
+- Generating campaign-based blog posts using user-defined keywords, configuration, and safety settings
+- Retrieving token quota and usage information for the user's license
+
+**Endpoints called and when:**
+- `POST https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-content-from-title` — called when the site administrator triggers generation of a single post. Sends the post title, safety settings, and a temperature value.
+- `POST https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-campaign-post` — called when a campaign runs (manually or via cron). Sends the user-selected keywords, word/title limits, safety settings, desired image count, site title, and site description.
+- `GET https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/get-token-data` — called to refresh the user's token quota and usage. The plugin license key is sent as a query parameter (`license`).
+
+**What data is sent:**
+- Post titles, keywords, and campaign configuration entered by the site administrator
 - Site metadata such as site title and site description (used to improve content relevance)
-- Plugin license key and token usage identifiers
-- Technical information such as plugin version and WordPress version
+- The plugin license key and token usage identifiers
+- Technical information such as plugin version and WordPress version (sent as the User-Agent header)
 
-User name and email address are collected only when the user explicitly provides consent.
-If consent is not provided, we do not collect or process any personal user data.
+User name and email address are collected only when the user explicitly provides consent. If consent is not provided, we do not collect or process any personal user data.
 
-### Service provider
-The external service is provided by:
+**Service provider:** WP AI Blogger (WP Solvex), API domain: https://wpaiblogger.com
 
-WP AI Blogger (WP Solvex)
-API domain: https://wpaiblogger.com
-
-### Terms and Privacy Policy
+**Terms and Privacy Policy:**
 - Terms of Service: https://wpaiblogger.com/terms-and-conditions/
 - Privacy Policy: https://wpaiblogger.com/privacy-policy/
+
+### Image downloads (Unsplash and Pixabay)
+
+When the WP AI Blogger API returns generated post content, the response may include one or more image URLs. These URLs point to assets hosted on the Unsplash and Pixabay content delivery networks. The plugin fetches each image URL with `wp_remote_get` and sideloads the image into the WordPress Media Library so it can be attached to the generated post.
+
+**What data is sent:** An HTTP GET request to the returned image URL. No user data is transmitted in the request body. The request includes a User-Agent header identifying the plugin version and the WordPress version.
+
+**When:** During post generation (foreground, triggered by the administrator) and during scheduled campaign runs (background, triggered by WP-Cron).
+
+**Service provider:** Unsplash
+API domain: https://images.unsplash.com (and related Unsplash CDN hosts)
+- Terms of Service: https://unsplash.com/terms
+- Privacy Policy: https://unsplash.com/privacy
+
+**Service provider:** Pixabay
+API domain: https://pixabay.com (and related Pixabay CDN hosts)
+- Terms of Service: https://pixabay.com/service/terms/
+- Privacy Policy: https://pixabay.com/service/privacy/
 
 ### SureCart (License Management)
 
@@ -51,14 +69,12 @@ This plugin uses the SureCart API for license activation, deactivation, and veri
 
 **What the service is used for:**
 - Activating and deactivating the plugin license key
-- Verifying the license status
+- Verifying the current license status
 
 **What data is sent and when:**
 - The plugin license key and site URL are sent when the site administrator activates, deactivates, or verifies the license.
 
-**Service provider:**
-SureCart
-API domain: https://api.surecart.com
+**Service provider:** SureCart, API domain: https://api.surecart.com
 
 **Terms and Privacy Policy:**
 - Terms and Conditions: https://surecart.com/terms-and-conditions/
@@ -92,6 +108,22 @@ To build the plugin assets from source:
 The plugin uses `@wordpress/scripts` (webpack) as its build tool.
 
 ## Changelog ##
+
+### 0.0.6 ###
+* Improvement: Standardized all PHP identifiers (functions, hooks, filters, options, AJAX actions, nonces, constants, JS-localized handles) under a single `wpsolvex_autoaiblogger_*` / `WPSOLVEX_AUTOAIBLOGGER_*` prefix family, matching the existing `WPSolvex\AutoAIBlogger` namespace, per WordPress Plugin Review Team feedback on uniform prefixing.
+* Improvement: Renamed bundled SureCart Licensing SDK namespace from `SureCart\Licensing` to `WPSolvex\AutoAIBlogger\Licensing` for plugin-prefix uniformity.
+* Improvement: Renamed bundled Web Notices library class from global `Autoaib_Notices` to namespaced `WPSolvex\AutoAIBlogger\Inc\Web_Notices\Notices`.
+* Improvement: Cleaned up External Services URL formatting in readme.txt to satisfy Plugin Check URL probes.
+* Notice: Settings stored under the previous `solvex_aib_*` option keys are not automatically migrated; sites updating from 0.0.5 must reconfigure plugin settings, license key, and campaigns.
+
+### 0.0.5 ###
+* Improvement: Renamed plugin main file to `solvex-ai-blogger.php` and corrected the Text Domain to match the plugin slug per WordPress Plugin Review Team feedback.
+* Improvement: Renamed all internal PHP constants and JavaScript identifiers from `AUTOAIB_`/`autoaib_` to `SOLVEX_AIB_`/`solvex_aib_` for consistency with the plugin name.
+* Improvement: Changed the plugin settings option key from `autoaib_settings` to `solvex_aib_settings`; previous settings on test installs must be reconfigured.
+* Improvement: Changed the REST API namespace from `/autoaib/v1/` to `/solvex-ai-blogger/v1/`.
+* Improvement: Expanded the External Services disclosure in readme.txt to cover the token-usage endpoint, image downloads, and the Unsplash and Pixabay CDNs image URLs resolve to.
+* Security: Simplified the REST settings-update permission check to require `manage_options` only (removed the redundant `edit_posts` check).
+* Fix: Resolved all `WordPress.WP.I18n.TextDomainMismatch` sniff errors by replacing the old `auto-ai-blogger` text domain with `solvex-ai-blogger`.
 
 ### 0.0.4 ###
 * Improvement: Renamed plugin from "Auto AI Blogger" to "Solvex AI Blogger" per WordPress Plugin Review Team feedback.

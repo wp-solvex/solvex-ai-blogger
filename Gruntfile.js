@@ -108,8 +108,8 @@ module.exports = function (grunt) {
 				overwrite: true,
 				replacements: [
 					{
-						from: /SOLVEX_AIB_VERSION', '.*?'/g,
-						to: 'SOLVEX_AIB_VERSION\', \'<%= pkg.version %>\''
+						from: /WPSOLVEX_AUTOAIBLOGGER_VERSION', '.*?'/g,
+						to: 'WPSOLVEX_AUTOAIBLOGGER_VERSION\', \'<%= pkg.version %>\''
 					}
 				]
 			},
@@ -295,4 +295,82 @@ module.exports = function (grunt) {
 		'compress:main',
 		'clean:main',
 	]);
+
+	// Generate release.json - required for SureCart licensing
+	grunt.registerTask( 'release-json', 'Generate release.json from readme.txt', function () {
+		const releaseJson = {
+			name: 'Solvex AI Blogger',
+			slug: 'solvex-ai-blogger',
+			author: "<a href='https://wpsolvex.com/'>WP Solvex</a>",
+			author_profile: 'https://wpsolvex.com/',
+			version: getVersionFromReadme(),
+			requires: getValueFromReadme( 'Requires at least' ),
+			tested: getValueFromReadme( 'Tested up to' ),
+			requires_php: getValueFromReadme( 'Requires PHP' ),
+			sections: {
+				description:
+					'Premium version of SureCookie with advanced cookie consent management features.',
+				changelog: getChangelogFromReadme(),
+			},
+		};
+
+		grunt.file.write(
+			'release.json',
+			JSON.stringify( releaseJson, null, 4 )
+		);
+		grunt.log.writeln( 'release.json generated successfully.' );
+	} );
+
+	function getVersionFromReadme() {
+		const regex = /Stable tag:\s([\d.]+(-.+)?)/;
+		const match = regex.exec( grunt.file.read( 'readme.txt' ) );
+		return match ? match[ 1 ] : '';
+	}
+
+	function getValueFromReadme( key ) {
+		const regex = new RegExp( key + ':\\s([^\\n\\r]+)' );
+		const match = regex.exec( grunt.file.read( 'readme.txt' ) );
+		return match ? match[ 1 ] : '';
+	}
+
+	function getChangelogFromReadme() {
+		const regex = /== Changelog ==([\s\S]+)$/;
+		const match = regex.exec( grunt.file.read( 'readme.txt' ) );
+		return match
+			? formatChangelog(
+				match[ 1 ].replace( '== Changelog ==', '' ).trim()
+			  )
+			: '';
+	}
+
+	function formatChangelog( changelog ) {
+		const lines = changelog.split( '\n' );
+		let result = '';
+		let isList = false;
+
+		for ( let line of lines ) {
+			line = line.trim();
+			if ( line.startsWith( '=' ) && line.endsWith( '=' ) ) {
+				if ( isList ) {
+					result += '</ul>';
+					isList = false;
+				}
+				const header = line.slice( 1, -1 ).trim();
+				result += `<h4>${ header }</h4>`;
+			} else if ( line.startsWith( '*' ) ) {
+				if ( ! isList ) {
+					result += '<ul>';
+					isList = true;
+				}
+				const listItem = line.slice( 1 ).trim();
+				result += `<li>${ listItem }</li>`;
+			}
+		}
+
+		if ( isList ) {
+			result += '</ul>';
+		}
+
+		return result;
+	}
 };

@@ -34,7 +34,7 @@ export const CoreVersion = () => {
 				<>
 					<span>-</span>
 					<Tooltip
-						text={ solvex_aib_localized_data?.pro_plugin_name || 'PRO' }
+						text={ wpsolvex_autoaiblogger_localized_data?.pro_plugin_name || 'PRO' }
 						delay={ 100 }
 						className="z-[99999] bg-black text-white shadow-md p-2 rounded-md uppercase"
 					>
@@ -49,7 +49,7 @@ export const CoreVersion = () => {
 			) }
 
 			{ wp?.hooks?.applyFilters?.(
-				'solvex_aib_dashboard.after_navigation_version',
+				'wpsolvex_autoaiblogger_dashboard.after_navigation_version',
 				<span />
 			) }
 		</>
@@ -213,7 +213,7 @@ export const TokenDisplayAndRefresh = () => {
 				</Tooltip>
 			</button>
 
-			<span className="solvex-aib-vertical-divider" />
+			<span className="wpsolvex-autoaiblogger-vertical-divider" />
 		</div>
 	);
 };

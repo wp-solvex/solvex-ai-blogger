@@ -37,7 +37,7 @@ class Menu {
 	/**
 	 * Settings page ID for Plugin settings.
 	 */
-	public const PAGE_ID = SOLVEX_AIB_SLUG;
+	public const PAGE_ID = WPSOLVEX_AUTOAIBLOGGER_SLUG;
 
 	/**
 	 * Constructor with security setup.
@@ -94,7 +94,7 @@ class Menu {
 		}
 
 		// Check user capabilities.
-		if ( ! current_user_can( SOLVEX_AIB_CAPABILITY ) ) {
+		if ( ! current_user_can( WPSOLVEX_AUTOAIBLOGGER_CAPABILITY ) ) {
 			return;
 		}
 
@@ -131,12 +131,12 @@ class Menu {
 	 */
 	public function render_settings_page(): void {
 		// Security validation before rendering.
-		if ( ! current_user_can( SOLVEX_AIB_CAPABILITY ) ) {
+		if ( ! current_user_can( WPSOLVEX_AUTOAIBLOGGER_CAPABILITY ) ) {
 			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'solvex-ai-blogger' ) );
 		}
 
 		// Additional CSRF protection.
-		$nonce = wp_create_nonce( 'solvex_aib_admin_page' );
+		$nonce = wp_create_nonce( 'wpsolvex_autoaiblogger_admin_page' );
 
 		echo '<div id="solvex-ai-blogger-main-page--wrapper" data-nonce="' . esc_attr( $nonce ) . '"></div>';
 	}
@@ -152,7 +152,7 @@ class Menu {
 			return;
 		}
 
-		if ( ! current_user_can( SOLVEX_AIB_CAPABILITY ) ) {
+		if ( ! current_user_can( WPSOLVEX_AUTOAIBLOGGER_CAPABILITY ) ) {
 			return;
 		}
 
@@ -191,31 +191,31 @@ class Menu {
 		$authors           = Sanitizer::get_sanitized_authors();
 		$post_types        = Sanitizer::get_sanitized_post_types();
 		$postmeta_defaults = Metadata::get_default_settings();
-		$all_campaigns     = solvex_aib_get_all_campaigns();
-		$generated_posts   = solvex_aib_get_generated_posts();
+		$all_campaigns     = wpsolvex_autoaiblogger_get_all_campaigns();
+		$generated_posts   = wpsolvex_autoaiblogger_get_generated_posts();
 
 		$localized_data = apply_filters(
-			'solvex_aib_localized_admin_data',
+			'wpsolvex_autoaiblogger_localized_admin_data',
 			[
 				// Core WordPress URLs and nonces.
 				'ajax_url'                   => admin_url( 'admin-ajax.php' ),
-				'rest_url'                   => rest_url( SOLVEX_AIB_SLUG . '/v1/' ),
-				'admin_nonce'                => wp_create_nonce( 'solvex_aib_admin_nonce' ),
+				'rest_url'                   => rest_url( WPSOLVEX_AUTOAIBLOGGER_SLUG . '/v1/' ),
+				'admin_nonce'                => wp_create_nonce( 'wpsolvex_autoaiblogger_admin_nonce' ),
 				'rest_nonce'                 => wp_create_nonce( 'wp_rest' ),
-				'admin_page_nonce'           => wp_create_nonce( 'solvex_aib_admin_page' ),
-				'licensing_nonce'            => wp_create_nonce( 'solvex_aib_licensing_nonce' ),
+				'admin_page_nonce'           => wp_create_nonce( 'wpsolvex_autoaiblogger_admin_page' ),
+				'licensing_nonce'            => wp_create_nonce( 'wpsolvex_autoaiblogger_licensing_nonce' ),
 
 				// Static configuration that doesn't change during app lifecycle.
-				'version'                    => SOLVEX_AIB_VERSION,
+				'version'                    => WPSOLVEX_AUTOAIBLOGGER_VERSION,
 				'home_slug'                  => sanitize_key( self::PAGE_ID ),
 				'admin_base_url'             => esc_url( admin_url( 'edit.php' ) ),
 				'admin_app_url'              => esc_url( admin_url( 'edit.php?page=' . self::PAGE_ID ) ),
-				'upgrade_link'               => defined( 'SOLVEX_AIB_UPGRADE_LINK' ) ? esc_url( SOLVEX_AIB_UPGRADE_LINK ) : '#',
-				'registration_url'           => defined( 'SOLVEX_AIB_REGISTRATION_URL' ) ? esc_url( SOLVEX_AIB_REGISTRATION_URL ) : '#',
-				'pro_purchase_url'           => esc_url( SOLVEX_AIB_UPGRADE_LINK ),
-				'pro_available'              => defined( 'SOLVEX_AIB_PRO_VERSION' ),
-				'pro_version'                => defined( 'SOLVEX_AIB_PRO_VERSION' ) ? SOLVEX_AIB_PRO_VERSION : '',
-				'pro_plugin_name'            => defined( 'SOLVEX_AIB_PRO_PRODUCT_NAME' ) ? str_replace( 'Solvex AI Blogger ', '', SOLVEX_AIB_PRO_PRODUCT_NAME ) : '',
+				'upgrade_link'               => defined( 'WPSOLVEX_AUTOAIBLOGGER_UPGRADE_LINK' ) ? esc_url( WPSOLVEX_AUTOAIBLOGGER_UPGRADE_LINK ) : '#',
+				'registration_url'           => defined( 'WPSOLVEX_AUTOAIBLOGGER_REGISTRATION_URL' ) ? esc_url( WPSOLVEX_AUTOAIBLOGGER_REGISTRATION_URL ) : '#',
+				'pro_purchase_url'           => esc_url( WPSOLVEX_AUTOAIBLOGGER_UPGRADE_LINK ),
+				'pro_available'              => defined( 'WPSOLVEX_AUTOAIBLOGGER_PRO_VERSION' ),
+				'pro_version'                => defined( 'WPSOLVEX_AUTOAIBLOGGER_PRO_VERSION' ) ? WPSOLVEX_AUTOAIBLOGGER_PRO_VERSION : '',
+				'pro_plugin_name'            => defined( 'WPSOLVEX_AUTOAIBLOGGER_PRO_PRODUCT_NAME' ) ? str_replace( 'Solvex AI Blogger ', '', WPSOLVEX_AUTOAIBLOGGER_PRO_PRODUCT_NAME ) : '',
 				'edit_post_link'             => esc_url(
 					add_query_arg(
 						[
@@ -227,8 +227,8 @@ class Menu {
 				),
 
 				// User and site information.
-				'current_user_name'          => sanitize_text_field( solvex_aib_get_user_detail( 'name' ) ),
-				'current_user_email'         => sanitize_email( solvex_aib_get_user_detail( 'email' ) ),
+				'current_user_name'          => sanitize_text_field( wpsolvex_autoaiblogger_get_user_detail( 'name' ) ),
+				'current_user_email'         => sanitize_email( wpsolvex_autoaiblogger_get_user_detail( 'email' ) ),
 				'current_user_id'            => get_current_user_id(),
 				'admin_email'                => $admin_site_email_address,
 				'site_title'                 => $site_title,
@@ -272,9 +272,9 @@ class Menu {
 			]
 		);
 
-		$handle            = 'solvex_aib_admin_scripts';
-		$build_path        = SOLVEX_AIB_BASE_URL . 'assets/build/';
-		$script_asset_path = SOLVEX_AIB_DIR . 'assets/build/blog-app.asset.php';
+		$handle            = 'wpsolvex_autoaiblogger_admin_scripts';
+		$build_path        = WPSOLVEX_AUTOAIBLOGGER_BASE_URL . 'assets/build/';
+		$script_asset_path = WPSOLVEX_AUTOAIBLOGGER_DIR . 'assets/build/blog-app.asset.php';
 
 		// Validate script file exists.
 		if ( ! file_exists( $script_asset_path ) ) {
@@ -292,7 +292,7 @@ class Menu {
 
 		// Validate script file exists.
 		$script_file = $build_path . 'blog-app.js';
-		if ( ! $this->validate_script_file( SOLVEX_AIB_DIR . 'assets/build/blog-app.js' ) ) {
+		if ( ! $this->validate_script_file( WPSOLVEX_AUTOAIBLOGGER_DIR . 'assets/build/blog-app.js' ) ) {
 			return;
 		}
 
@@ -300,20 +300,20 @@ class Menu {
 			$handle,
 			$script_file,
 			$script_dep,
-			SOLVEX_AIB_VERSION,
+			WPSOLVEX_AUTOAIBLOGGER_VERSION,
 			true
 		);
 
-		wp_localize_script( $handle, 'solvex_aib_localized_data', $localized_data );
+		wp_localize_script( $handle, 'wpsolvex_autoaiblogger_localized_data', $localized_data );
 
-		wp_set_script_translations( $handle, 'solvex-ai-blogger', SOLVEX_AIB_DIR . 'languages' );
+		wp_set_script_translations( $handle, 'solvex-ai-blogger', WPSOLVEX_AUTOAIBLOGGER_DIR . 'languages' );
 
 		// Validate and enqueue styles.
 		$style_file = is_rtl() ? $build_path . 'blog-app-rtl.css' : $build_path . 'blog-app.css';
-		$style_path = is_rtl() ? SOLVEX_AIB_DIR . 'assets/build/blog-app-rtl.css' : SOLVEX_AIB_DIR . 'assets/build/blog-app.css';
+		$style_path = is_rtl() ? WPSOLVEX_AUTOAIBLOGGER_DIR . 'assets/build/blog-app-rtl.css' : WPSOLVEX_AUTOAIBLOGGER_DIR . 'assets/build/blog-app.css';
 
 		if ( $this->validate_style_file( $style_path ) ) {
-			wp_enqueue_style( $handle, $style_file, [], SOLVEX_AIB_VERSION );
+			wp_enqueue_style( $handle, $style_file, [], WPSOLVEX_AUTOAIBLOGGER_VERSION );
 		}
 	}
 
@@ -332,12 +332,12 @@ class Menu {
 	 * @since 1.0.0
 	 */
 	public function register_plugin_menus(): void {
-		if ( current_user_can( SOLVEX_AIB_CAPABILITY ) ) {
+		if ( current_user_can( WPSOLVEX_AUTOAIBLOGGER_CAPABILITY ) ) {
 			add_submenu_page(
 				'edit.php',
 				__( 'Solvex AI Blogger', 'solvex-ai-blogger' ),
 				__( 'Solvex AI Blogger', 'solvex-ai-blogger' ),
-				SOLVEX_AIB_CAPABILITY,
+				WPSOLVEX_AUTOAIBLOGGER_CAPABILITY,
 				self::PAGE_ID,
 				[ $this, 'render_settings_page' ]
 			);

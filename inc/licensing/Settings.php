@@ -1,6 +1,6 @@
 <?php
 
-namespace SureCart\Licensing;
+namespace WPSolvex\AutoAIBlogger\Licensing;
 
 // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound
 
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Settings {
 	/**
-	 * SureCart\Licensing\Client
+	 * WPSolvex\AutoAIBlogger\Licensing\Client
 	 *
 	 * @var object
 	 */
@@ -41,7 +41,7 @@ class Settings {
 	/**
 	 * Create the pages.
 	 *
-	 * @param SureCart\Licensing\Client $client The client.
+	 * @param WPSolvex\AutoAIBlogger\Licensing\Client $client The client.
 	 */
 	public function __construct( Client $client ) {
 		$this->client     = $client;
@@ -231,8 +231,8 @@ class Settings {
 	 * @return void
 	 */
 	public function print_css(): void {
-		wp_enqueue_style( 'solvex-aib-sc-licensing-style', SOLVEX_AIB_BASE_URL . 'inc/licensing/assets/style.css', [], SOLVEX_AIB_VERSION );
-		wp_add_inline_style( 'solvex-aib-sc-licensing-style', $this->get_css() );
+		wp_enqueue_style( 'wpsolvex-autoaiblogger-sc-licensing-style', WPSOLVEX_AUTOAIBLOGGER_BASE_URL . 'inc/licensing/assets/style.css', [], WPSOLVEX_AUTOAIBLOGGER_VERSION );
+		wp_add_inline_style( 'wpsolvex-autoaiblogger-sc-licensing-style', $this->get_css() );
 	}
 
 	/**
@@ -366,7 +366,7 @@ class Settings {
 	 * Form action URL
 	 */
 	private function form_action_url() {
-		return apply_filters( 'solvex_aib_client_license_form_action', '' ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		return apply_filters( 'wpsolvex_autoaiblogger_client_license_form_action', '' ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 	}
 
 	/**

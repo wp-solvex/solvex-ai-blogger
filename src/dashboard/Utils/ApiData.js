@@ -35,7 +35,7 @@ const createSecureFormData = ( action, key, value, config = {} ) => {
 	const formData = new window.FormData();
 
 	formData.append( 'action', action );
-	formData.append( 'security', config.nonce || ( typeof solvex_aib_localized_data !== 'undefined' && solvex_aib_localized_data?.admin_nonce ) || '' );
+	formData.append( 'security', config.nonce || ( typeof wpsolvex_autoaiblogger_localized_data !== 'undefined' && wpsolvex_autoaiblogger_localized_data?.admin_nonce ) || '' );
 	formData.append( 'key', key );
 
 	// Properly serialize complex values
@@ -70,10 +70,10 @@ const updateApiData = async ( key, value, dispatch, config = {} ) => {
 	}
 
 	try {
-		const formData = createSecureFormData( 'solvex_aib_update_admin_setting', key, value, config );
+		const formData = createSecureFormData( 'wpsolvex_autoaiblogger_update_admin_setting', key, value, config );
 
 		const response = await apiFetch( {
-			url: config.ajaxUrl || ( typeof solvex_aib_localized_data !== 'undefined' && solvex_aib_localized_data?.ajax_url ) || '',
+			url: config.ajaxUrl || ( typeof wpsolvex_autoaiblogger_localized_data !== 'undefined' && wpsolvex_autoaiblogger_localized_data?.ajax_url ) || '',
 			method: 'POST',
 			body: formData,
 			timeout: 30000, // 30 second timeout
@@ -136,11 +136,11 @@ const updateCampaign = async ( value, isNew, abortControllerRef = null, config =
 	}
 
 	try {
-		const action = isNew ? 'solvex_aib_create_campaign' : 'solvex_aib_update_campaign';
+		const action = isNew ? 'wpsolvex_autoaiblogger_create_campaign' : 'wpsolvex_autoaiblogger_update_campaign';
 		const formData = createSecureFormData( action, 'campaign_details', value, config );
 
 		const response = await apiFetch( {
-			url: config.ajaxUrl || ( typeof solvex_aib_localized_data !== 'undefined' && solvex_aib_localized_data?.ajax_url ) || '',
+			url: config.ajaxUrl || ( typeof wpsolvex_autoaiblogger_localized_data !== 'undefined' && wpsolvex_autoaiblogger_localized_data?.ajax_url ) || '',
 			method: 'POST',
 			body: formData,
 			signal: abortController.signal,

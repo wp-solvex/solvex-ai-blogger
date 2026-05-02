@@ -41,7 +41,7 @@ module.exports = {
 		navigator: true,
 		docsMenuChange: true,
 		hub_admin_nav_menu_data: true,
-		solvex_aib_localized_data: true,
+		wpsolvex_autoaiblogger_localized_data: true,
 		WebNotices: true,
 	},
 };

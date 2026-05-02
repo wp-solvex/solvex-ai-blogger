@@ -46,24 +46,24 @@ class Maintenance {
 	 * @return void
 	 */
 	public static function init(): void {
-		do_action( 'solvex_aib_update_before' );
+		do_action( 'wpsolvex_autoaiblogger_update_before' );
 
 		// Get auto saved version number.
-		$saved_version = get_option( 'solvex_aib_saved_version', false );
+		$saved_version = get_option( 'wpsolvex_autoaiblogger_saved_version', false );
 
 		// Update auto saved version number.
 		if ( ! $saved_version ) {
-			update_option( 'solvex_aib_saved_version', SOLVEX_AIB_VERSION );
+			update_option( 'wpsolvex_autoaiblogger_saved_version', WPSOLVEX_AUTOAIBLOGGER_VERSION );
 		}
 
 		// If equals then return.
-		if ( version_compare( strval( $saved_version ), SOLVEX_AIB_VERSION, '=' ) ) {
+		if ( version_compare( strval( $saved_version ), WPSOLVEX_AUTOAIBLOGGER_VERSION, '=' ) ) {
 			return;
 		}
 
 		// Update auto saved version number.
-		update_option( 'solvex_aib_saved_version', SOLVEX_AIB_VERSION );
+		update_option( 'wpsolvex_autoaiblogger_saved_version', WPSOLVEX_AUTOAIBLOGGER_VERSION );
 
-		do_action( 'solvex_aib_update_after' );
+		do_action( 'wpsolvex_autoaiblogger_update_after' );
 	}
 }

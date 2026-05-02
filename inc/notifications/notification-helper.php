@@ -169,16 +169,16 @@ class Notification_Helper {
 	 */
 	private function init_hooks(): void {
 		// Campaign Started.
-		add_action( 'solvex_aib_campaign_started', [ $this, 'handle_campaign_started' ], 10, 2 );
+		add_action( 'wpsolvex_autoaiblogger_campaign_started', [ $this, 'handle_campaign_started' ], 10, 2 );
 
 		// Post Created Successfully.
-		add_action( 'solvex_aib_post_created_successfully', [ $this, 'handle_post_created' ], 10, 3 );
+		add_action( 'wpsolvex_autoaiblogger_post_created_successfully', [ $this, 'handle_post_created' ], 10, 3 );
 
 		// Campaign Completed.
-		add_action( 'solvex_aib_campaign_completed', [ $this, 'handle_campaign_completed' ], 10, 3 );
+		add_action( 'wpsolvex_autoaiblogger_campaign_completed', [ $this, 'handle_campaign_completed' ], 10, 3 );
 
 		// Campaign Failed/Terminated.
-		add_action( 'solvex_aib_campaign_failed', [ $this, 'handle_campaign_failed' ], 10, 3 );
+		add_action( 'wpsolvex_autoaiblogger_campaign_failed', [ $this, 'handle_campaign_failed' ], 10, 3 );
 	}
 
 	/**

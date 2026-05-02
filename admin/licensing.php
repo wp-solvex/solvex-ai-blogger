@@ -15,6 +15,7 @@ namespace WPSolvex\AutoAIBlogger\Admin;
 
 use WPSolvex\AutoAIBlogger\Inc\Traits\Get_Instance;
 use WPSolvex\AutoAIBlogger\Inc\Utils\Helper;
+use WPSolvex\AutoAIBlogger\Inc\Web_Notices\Notices;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -88,8 +89,8 @@ class Licensing {
 		}
 
 		// Check if licensing client class exists.
-		if ( ! class_exists( 'SureCart\Licensing\Client' ) ) {
-			$client_path = SOLVEX_AIB_DIR . '/inc/licensing/Client.php';
+		if ( ! class_exists( 'WPSolvex\AutoAIBlogger\Licensing\Client' ) ) {
+			$client_path = WPSOLVEX_AUTOAIBLOGGER_DIR . '/inc/licensing/Client.php';
 			if ( ! file_exists( $client_path ) || ! is_readable( $client_path ) ) {
 				return;
 			}
@@ -106,8 +107,8 @@ class Licensing {
 		add_action( 'admin_notices', [ $this, 'license_activation_notice' ] );
 
 		// AJAX handlers with security validation (only for admin users).
-		add_action( 'wp_ajax_solvex_aib_activate_license', [ $this, 'activate_license' ] );
-		add_action( 'wp_ajax_solvex_aib_deactivate_license', [ $this, 'deactivate_license' ] );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_activate_license', [ $this, 'activate_license' ] );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_deactivate_license', [ $this, 'deactivate_license' ] );
 
 		// Add hooks for periodic license validation.
 		add_action( 'wp_loaded', [ $this, 'validate_license_periodically' ] );
@@ -120,21 +121,21 @@ class Licensing {
 	 * and validation of required constants.
 	 *
 	 * @since 1.0.0
-	 * @return \SureCart\Licensing\Client|null Client instance or null on failure.
+	 * @return \WPSolvex\AutoAIBlogger\Licensing\Client|null Client instance or null on failure.
 	 */
 	public static function licensing_setup() {
 		// Validate required constants.
-		if ( ! defined( 'SOLVEX_AIB_PRODUCT_NAME' ) ||
-			! defined( 'SOLVEX_AIB_PUBLIC_TOKEN' ) ||
-			! defined( 'SOLVEX_AIB_PRODUCT_FILE' ) ) {
+		if ( ! defined( 'WPSOLVEX_AUTOAIBLOGGER_PRODUCT_NAME' ) ||
+			! defined( 'WPSOLVEX_AUTOAIBLOGGER_PUBLIC_TOKEN' ) ||
+			! defined( 'WPSOLVEX_AUTOAIBLOGGER_PRODUCT_FILE' ) ) {
 			return null;
 		}
 
 		try {
-			$client = new \SureCart\Licensing\Client(
-				SOLVEX_AIB_PRODUCT_NAME,
-				SOLVEX_AIB_PUBLIC_TOKEN,
-				SOLVEX_AIB_PRODUCT_FILE
+			$client = new \WPSolvex\AutoAIBlogger\Licensing\Client(
+				WPSOLVEX_AUTOAIBLOGGER_PRODUCT_NAME,
+				WPSOLVEX_AUTOAIBLOGGER_PUBLIC_TOKEN,
+				WPSOLVEX_AUTOAIBLOGGER_PRODUCT_FILE
 			);
 
 			$client->set_textdomain( 'solvex-ai-blogger' );
@@ -158,7 +159,7 @@ class Licensing {
 	/**
 	 * Activate license with security validation.
 	 *
-	 * @hooked wp_ajax_solvex_aib_activate_license
+	 * @hooked wp_ajax_wpsolvex_autoaiblogger_activate_license
 	 * @since 1.0.0
 	 * @return void
 	 */
@@ -198,7 +199,7 @@ class Licensing {
 			}
 
 			// Validate product ID match.
-			if ( ! empty( $get_license->product ) && $get_license->product !== SOLVEX_AIB_PRODUCT_ID ) {
+			if ( ! empty( $get_license->product ) && $get_license->product !== WPSOLVEX_AUTOAIBLOGGER_PRODUCT_ID ) {
 				wp_send_json_error( [ 'message' => $this->error_messages['incorrect_product'] ] );
 			}
 
@@ -233,7 +234,7 @@ class Licensing {
 	/**
 	 * Deactivate license with security validation.
 	 *
-	 * @hooked wp_ajax_solvex_aib_deactivate_license
+	 * @hooked wp_ajax_wpsolvex_autoaiblogger_deactivate_license
 	 * @since 1.0.0
 	 * @return void
 	 */
@@ -274,7 +275,7 @@ class Licensing {
 			Helper::update_option( 'license_status', 'unlicensed' );
 
 			// Clear token data using the shared helper function.
-			solvex_aib_update_token_data(
+			wpsolvex_autoaiblogger_update_token_data(
 				[
 					'total'     => 0,
 					'remaining' => 0,
@@ -330,7 +331,7 @@ class Licensing {
 			}
 
 			// Validate product ID match.
-			if ( ! empty( $get_license->product ) && $get_license->product !== SOLVEX_AIB_PRODUCT_ID ) {
+			if ( ! empty( $get_license->product ) && $get_license->product !== WPSOLVEX_AUTOAIBLOGGER_PRODUCT_ID ) {
 				return false;
 			}
 
@@ -382,7 +383,7 @@ class Licensing {
 		}
 
 		// Validate and escape CTA URL.
-		$cta_url = esc_url( admin_url( 'edit.php?page=' . SOLVEX_AIB_SLUG ) );
+		$cta_url = esc_url( admin_url( 'edit.php?page=' . WPSOLVEX_AUTOAIBLOGGER_SLUG ) );
 
 		if ( empty( $cta_url ) ) {
 			return;
@@ -394,14 +395,14 @@ class Licensing {
 			__( 'Please %1$sactivate%2$s your copy to claim tokens %4$s%3$s%5$s to generate blog posts.', 'solvex-ai-blogger' ),
 			'<a href="' . $cta_url . '">',
 			'</a>',
-			esc_html( SOLVEX_AIB_PRODUCT_NAME ),
+			esc_html( WPSOLVEX_AUTOAIBLOGGER_PRODUCT_NAME ),
 			'<em>',
 			'</em>'
 		);
 
-		// Only show notice if Autoaib_Notices class exists.
-		if ( class_exists( 'Autoaib_Notices' ) ) {
-			\Autoaib_Notices::add_notice(
+		// Only show notice if the Notices class is available.
+		if ( class_exists( Notices::class ) ) {
+			Notices::add_notice(
 				[
 					'id'                         => 'solvex-ai-blogger-activation-notice',
 					'type'                       => 'error',
@@ -426,17 +427,17 @@ class Licensing {
 	 */
 	public function validate_license_periodically(): void {
 		// Only run validation once per day.
-		$last_validation = get_transient( 'solvex_aib_license_validation' );
+		$last_validation = get_transient( 'wpsolvex_autoaiblogger_license_validation' );
 		if ( $last_validation !== false ) {
 			return;
 		}
 
 		// Set validation timestamp.
-		set_transient( 'solvex_aib_license_validation', time(), DAY_IN_SECONDS );
+		set_transient( 'wpsolvex_autoaiblogger_license_validation', time(), DAY_IN_SECONDS );
 
 		// Check license status in background.
 		if ( function_exists( 'wp_schedule_single_event' ) ) {
-			wp_schedule_single_event( time() + 300, 'solvex_aib_validate_license_background' );
+			wp_schedule_single_event( time() + 300, 'wpsolvex_autoaiblogger_validate_license_background' );
 		}
 	}
 
@@ -490,7 +491,7 @@ class Licensing {
 		}
 
 		// CSRF protection - check nonce.
-		$nonce_field = 'solvex_aib_licensing_nonce';
+		$nonce_field = 'wpsolvex_autoaiblogger_licensing_nonce';
 		$nonce_value = sanitize_text_field( wp_unslash( $_POST[ $nonce_field ] ?? '' ) );
 
 		if ( empty( $nonce_value ) || ! wp_verify_nonce( $nonce_value, $nonce_field ) ) {
@@ -517,7 +518,7 @@ class Licensing {
 	 */
 	private function check_license_rate_limit( string $operation ): \WP_Error|bool {
 		$user_id   = get_current_user_id();
-		$cache_key = 'solvex_aib_license_rate_limit_' . $user_id . '_' . $operation;
+		$cache_key = 'wpsolvex_autoaiblogger_license_rate_limit_' . $user_id . '_' . $operation;
 
 		// Get cached data.
 		$cached_data = get_transient( $cache_key );
@@ -668,7 +669,7 @@ class Licensing {
 	 */
 	private function log_license_activity( string $action, string $license_key, int $user_id ): void {
 		// Store basic activity information in transient for security tracking.
-		$activity_key  = 'solvex_aib_license_activity_' . $user_id;
+		$activity_key  = 'wpsolvex_autoaiblogger_license_activity_' . $user_id;
 		$activity_data = [
 			'action'    => sanitize_key( $action ),
 			'user_id'   => absint( $user_id ),
@@ -732,7 +733,7 @@ class Licensing {
 	 * @return void
 	 */
 	private static function update_license_cache( string $license_key, string $status ): void {
-		$cache_key  = 'solvex_aib_license_cache';
+		$cache_key  = 'wpsolvex_autoaiblogger_license_cache';
 		$cache_data = [
 			'license_key' => sanitize_text_field( $license_key ),
 			'status'      => sanitize_key( $status ),
@@ -784,7 +785,7 @@ class Licensing {
 			add_query_arg(
 				'license',
 				urlencode( $sanitized_key ),
-				SOLVEX_AIB_TOKEN_USAGE_API
+				WPSOLVEX_AUTOAIBLOGGER_TOKEN_USAGE_API
 			)
 		);
 
@@ -837,6 +838,6 @@ class Licensing {
 		}
 
 		// Update token data using the shared helper function.
-		return solvex_aib_update_token_data( $data['data'] );
+		return wpsolvex_autoaiblogger_update_token_data( $data['data'] );
 	}
 }

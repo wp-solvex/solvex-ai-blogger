@@ -1,6 +1,6 @@
 <?php
 
-namespace SureCart\Licensing;
+namespace WPSolvex\AutoAIBlogger\Licensing;
 
 // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound
 
@@ -18,7 +18,7 @@ class License {
 	protected $endpoint = 'v1/public/licenses';
 
 	/**
-	 * SureCart\Licensing\Client
+	 * WPSolvex\AutoAIBlogger\Licensing\Client
 	 *
 	 * @var object
 	 */
@@ -34,7 +34,7 @@ class License {
 	/**
 	 * Initialize the class.
 	 *
-	 * @param SureCart\Licensing\Client $client The client.
+	 * @param WPSolvex\AutoAIBlogger\Licensing\Client $client The client.
 	 */
 	public function __construct( Client $client ) {
 		$this->client = $client;

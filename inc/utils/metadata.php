@@ -33,7 +33,7 @@ class Metadata {
 	 */
 	public static function get_settings_dataset() {
 		return apply_filters(
-			'solvex_aib_postmeta_dataset',
+			'wpsolvex_autoaiblogger_postmeta_dataset',
 			[
 				'type'                    => [
 					'default' => 'new',
@@ -225,7 +225,7 @@ class Metadata {
 
 		// Verify post exists and is a campaign.
 		$post = get_post( $campaign_id );
-		if ( ! $post || $post->post_type !== SOLVEX_AIB_CPT_CAMPAIGN ) {
+		if ( ! $post || $post->post_type !== WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN ) {
 			return self::get_default_option( $key );
 		}
 
@@ -280,7 +280,7 @@ class Metadata {
 
 		// Verify post exists and is a campaign.
 		$post = get_post( $campaign_id );
-		if ( ! $post || $post->post_type !== SOLVEX_AIB_CPT_CAMPAIGN ) {
+		if ( ! $post || $post->post_type !== WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN ) {
 			return false;
 		}
 
@@ -363,7 +363,7 @@ class Metadata {
 				return sanitize_email( $value );
 
 			case 'array':
-				return is_array( $value ) ? solvex_aib_clean_data( $value ) : [];
+				return is_array( $value ) ? wpsolvex_autoaiblogger_clean_data( $value ) : [];
 
 			case 'html':
 				return wp_kses_post( $value );
@@ -404,7 +404,7 @@ class Metadata {
 				break;
 
 			case 'array':
-				$output = ! empty( $value ) ? solvex_aib_clean_data( $value ) : '';
+				$output = ! empty( $value ) ? wpsolvex_autoaiblogger_clean_data( $value ) : '';
 				break;
 
 			case 'html':
@@ -494,7 +494,7 @@ class Metadata {
 				'post_status'            => 'any',
 				'meta_query'             => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Using meta query for campaign posts.
 					[
-						'key'     => 'solvex_aib_campaign_id',
+						'key'     => 'wpsolvex_autoaiblogger_campaign_id',
 						'value'   => $campaign_id,
 						'compare' => '=',
 					],
@@ -534,7 +534,7 @@ class Metadata {
 			return false;
 		}
 
-		if ( ! $campaign->post_type || $campaign->post_type !== SOLVEX_AIB_CPT_CAMPAIGN ) {
+		if ( ! $campaign->post_type || $campaign->post_type !== WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN ) {
 			return false;
 		}
 

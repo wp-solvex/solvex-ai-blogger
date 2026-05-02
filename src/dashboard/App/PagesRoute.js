@@ -132,10 +132,16 @@ const PagesRoute = () => {
 			// Safely access localized data
 			const currentHomeSlug = homeSlug;
 
+			// A missing `page` query param is treated as valid: the React bundle
+			// only loads from the plugin admin page (where `page=<slug>` is
+			// guaranteed by PHP), so a missing param here just means an internal
+			// SPA navigation dropped it (e.g. wizard `navigate('?step=...')` which
+			// replaces the whole search string). Only flag as invalid when a page
+			// is set AND it doesn't match the home slug.
 			return {
 				page: currentPage,
 				path: currentPath,
-				isValidPage: currentPage === currentHomeSlug,
+				isValidPage: ! currentPage || currentPage === currentHomeSlug,
 			};
 		} catch ( error ) {
 			console.warn( 'Error parsing URL parameters:', error );

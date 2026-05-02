@@ -158,7 +158,7 @@ const NavigationBar = memo( () => {
 			await updateApiData( 'userOnboarded', true, dispatch, abortControllerRef );
 
 			// Navigate to dashboard or show success message
-			window.location.href = solvex_aib_localized_data.admin_app_url;
+			window.location.href = wpsolvex_autoaiblogger_localized_data.admin_app_url;
 		} catch ( error ) {
 			console.error( 'Failed to exit wizard:', error );
 		}
@@ -173,7 +173,7 @@ const NavigationBar = memo( () => {
 
 	return (
 		<header
-			className="solvex-aib-setup-header bg-white border-b border-gray-200 shadow-sm"
+			className="wpsolvex-autoaiblogger-setup-header bg-white border-b border-gray-200 shadow-sm"
 			role="banner"
 			aria-label={ __( 'Setup wizard navigation', 'solvex-ai-blogger' ) }
 		>

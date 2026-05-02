@@ -35,12 +35,12 @@ const CampaignDeleteModal = ( { isOpen, onClose, campaignId, onDeleted } ) => {
 
 		try {
 			const formData = new FormData();
-			formData.append( 'action', 'solvex_aib_delete_campaign' );
-			formData.append( 'security', solvex_aib_localized_data.admin_nonce );
+			formData.append( 'action', 'wpsolvex_autoaiblogger_delete_campaign' );
+			formData.append( 'security', wpsolvex_autoaiblogger_localized_data.admin_nonce );
 			formData.append( 'campaign_id', campaignId );
 
 			const response = await apiFetch( {
-				url: solvex_aib_localized_data.ajax_url,
+				url: wpsolvex_autoaiblogger_localized_data.ajax_url,
 				method: 'POST',
 				body: formData,
 			} );

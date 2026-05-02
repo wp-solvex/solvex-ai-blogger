@@ -148,7 +148,7 @@ const ReadyStep = memo( () => {
 	// Enhanced confetti effect
 	const triggerConfetti = useCallback( () => {
 		const ConfettiFrame = confetti.create(
-			document.getElementById( 'solvex-aib-confetti-wrapper' ),
+			document.getElementById( 'wpsolvex-autoaiblogger-confetti-wrapper' ),
 			{ resize: true }
 		);
 
@@ -213,7 +213,7 @@ const ReadyStep = memo( () => {
 		const autoRedirectTimer = setTimeout( () => {
 			if ( ! isFinishingSetup ) {
 				const redirectUrl = '?page=solvex-ai-blogger';
-				window.location.href = solvex_aib_localized_data.admin_base_url + redirectUrl;
+				window.location.href = wpsolvex_autoaiblogger_localized_data.admin_base_url + redirectUrl;
 			}
 		}, 15000 ); // 15 seconds
 
@@ -228,7 +228,7 @@ const ReadyStep = memo( () => {
 		// Small delay for better UX
 		setTimeout( () => {
 			const redirectUrl = '?page=solvex-ai-blogger';
-			window.location.href = solvex_aib_localized_data.admin_base_url + redirectUrl;
+			window.location.href = wpsolvex_autoaiblogger_localized_data.admin_base_url + redirectUrl;
 		}, 1000 );
 	}, [] );
 
@@ -259,7 +259,7 @@ const ReadyStep = memo( () => {
 		>
 			{ /* Confetti canvas */ }
 			<canvas
-				id="solvex-aib-confetti-wrapper"
+				id="wpsolvex-autoaiblogger-confetti-wrapper"
 				width={ typeof window !== 'undefined' ? window.innerWidth : 800 }
 				height={ typeof window !== 'undefined' ? window.innerHeight : 600 }
 				className="absolute inset-0 pointer-events-none z-10"

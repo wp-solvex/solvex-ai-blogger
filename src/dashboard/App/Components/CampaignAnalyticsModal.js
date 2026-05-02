@@ -38,12 +38,12 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 
 		try {
 			const formData = new FormData();
-			formData.append( 'action', 'solvex_aib_get_campaign_analytics' );
-			formData.append( 'security', solvex_aib_localized_data.admin_nonce );
+			formData.append( 'action', 'wpsolvex_autoaiblogger_get_campaign_analytics' );
+			formData.append( 'security', wpsolvex_autoaiblogger_localized_data.admin_nonce );
 			formData.append( 'campaign_id', campaignId );
 
 			const response = await apiFetch( {
-				url: solvex_aib_localized_data.ajax_url,
+				url: wpsolvex_autoaiblogger_localized_data.ajax_url,
 				method: 'POST',
 				body: formData,
 			} );
@@ -72,14 +72,14 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 	};
 
 	const onUpgradePro = ( e ) => {
-		if ( solvex_aib_localized_data.pro_available ) {
+		if ( wpsolvex_autoaiblogger_localized_data.pro_available ) {
 			return;
 		}
 
 		e.preventDefault();
 		e.stopPropagation();
 
-		window.open( solvex_aib_localized_data.pro_purchase_url, '_blank' );
+		window.open( wpsolvex_autoaiblogger_localized_data.pro_purchase_url, '_blank' );
 	};
 
 	return (
@@ -239,7 +239,7 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 													<Zap className="w-4 h-4" />
 													<span>
 														{
-															solvex_aib_localized_data.pro_available ? __( 'Soon', 'solvex-ai-blogger' ) : __( 'Upgrade', 'solvex-ai-blogger' )
+															wpsolvex_autoaiblogger_localized_data.pro_available ? __( 'Soon', 'solvex-ai-blogger' ) : __( 'Upgrade', 'solvex-ai-blogger' )
 														}
 													</span>
 												</button>

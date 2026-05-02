@@ -1,14 +1,14 @@
 {
-  "name": "Solvex AI Blogger",
-  "slug": "solvex-ai-blogger",
-  "author": "<a href='https://wpsolvex.com/'>WP Solvex</a>",
-  "author_profile": "https://wpaiblogger.com/",
-  "version": "0.0.5",
-  "requires": "6.0",
-  "tested": "6.9",
-  "requires_php": "7.4",
-  "sections": {
-    "description": "Auto blogging with AI.",
-    "changelog": "<h4>Version 0.0.5</h4><ul><li>Renamed main plugin file to solvex-ai-blogger.php and text domain to solvex-ai-blogger per WordPress Plugin Review Team feedback.</li><li>Renamed internal constants from AUTOAIB_ to SOLVEX_AIB_ and option key from autoaib_settings to solvex_aib_settings.</li><li>Expanded External Services disclosure to cover token-usage endpoint, image downloads, and Unsplash/Pixabay CDNs.</li><li>Simplified REST settings-update permission check to require manage_options only.</li></ul><h4>Version 0.0.4</h4><ul><li>Renamed plugin from Auto AI Blogger to Solvex AI Blogger.</li></ul><h4>Version 0.0.3</h4><ul><li>WordPress plugin review team improvements.</li></ul><h4>Version 0.0.2</h4><ul><li>Improvement: Feedback as per WordPress plugin review team has been implemented.</li></ul><h4>Version 0.0.1</h4><ul><li>Initial Release.</li></ul>"
-  }
+    "name": "Solvex AI Blogger",
+    "slug": "solvex-ai-blogger",
+    "author": "<a href='https://wpsolvex.com/'>WP Solvex</a>",
+    "author_profile": "https://wpsolvex.com/",
+    "version": "0.0.6",
+    "requires": "6.7",
+    "tested": "6.9",
+    "requires_php": "7.4",
+    "sections": {
+        "description": "Premium version of SureCookie with advanced cookie consent management features.",
+        "changelog": "<h4>0.0.6</h4><ul><li>Improvement: Standardized all PHP identifiers (functions, hooks, filters, options, AJAX actions, nonces, constants, JS-localized handles) under a single `wpsolvex_autoaiblogger_*` / `WPSOLVEX_AUTOAIBLOGGER_*` prefix family, matching the existing `WPSolvex\\AutoAIBlogger` namespace, per WordPress Plugin Review Team feedback on uniform prefixing.</li><li>Improvement: Renamed bundled SureCart Licensing SDK namespace from `SureCart\\Licensing` to `WPSolvex\\AutoAIBlogger\\Licensing` for plugin-prefix uniformity.</li><li>Improvement: Renamed bundled Web Notices library class from global `Autoaib_Notices` to namespaced `WPSolvex\\AutoAIBlogger\\Inc\\Web_Notices\\Notices`.</li><li>Improvement: Cleaned up External Services URL formatting in readme.txt to satisfy Plugin Check URL probes.</li><li>Notice: Settings stored under the previous `solvex_aib_*` option keys are not automatically migrated; sites updating from 0.0.5 must reconfigure plugin settings, license key, and campaigns.</li></ul><h4>0.0.5</h4><ul><li>Improvement: Renamed plugin main file to `solvex-ai-blogger.php` and corrected the Text Domain to match the plugin slug per WordPress Plugin Review Team feedback.</li><li>Improvement: Renamed all internal PHP constants and JavaScript identifiers from `AUTOAIB_`/`autoaib_` to `SOLVEX_AIB_`/`solvex_aib_` for consistency with the plugin name.</li><li>Improvement: Changed the plugin settings option key from `autoaib_settings` to `solvex_aib_settings`; previous settings on test installs must be reconfigured.</li><li>Improvement: Changed the REST API namespace from `/autoaib/v1/` to `/solvex-ai-blogger/v1/`.</li><li>Improvement: Expanded the External Services disclosure in readme.txt to cover the token-usage endpoint, image downloads, and the Unsplash and Pixabay CDNs image URLs resolve to.</li><li>Security: Simplified the REST settings-update permission check to require `manage_options` only (removed the redundant `edit_posts` check).</li><li>Fix: Resolved all `WordPress.WP.I18n.TextDomainMismatch` sniff errors by replacing the old `auto-ai-blogger` text domain with `solvex-ai-blogger`.</li></ul><h4>0.0.4</h4><ul><li>Improvement: Renamed plugin from \"Auto AI Blogger\" to \"Solvex AI Blogger\" per WordPress Plugin Review Team feedback.</li></ul><h4>0.0.3</h4><ul><li>Improvement: Documented SureCart licensing service and third-party libraries in readme.</li><li>Improvement: Added source code repository link and build instructions in readme.</li><li>Security: Improved nonce verification flow in license activation with early returns.</li><li>Security: Enhanced input sanitization for AJAX settings and campaign handlers.</li><li>Security: Added json_last_error() checks for all JSON decode operations.</li><li>Security: Improved CSS output escaping in licensing settings.</li><li>Fix: Removed hardcoded AJAX URL fallbacks in JavaScript source files.</li><li>Fix: Renamed generic JavaScript object name to use plugin prefix.</li></ul><h4>0.0.2</h4><ul><li>Improvement: Feedback as per WordPress plugin review team has been implemented.</li></ul><h4>0.0.1</h4><ul><li>Initial release</li></ul>"
+    }
 }

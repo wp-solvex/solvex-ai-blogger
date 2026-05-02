@@ -40,7 +40,7 @@ class Frontend {
 		if ( is_singular() ) {
 			global $post;
 			if ( $post ) {
-				solvex_aib_track_post_view( $post->ID );
+				wpsolvex_autoaiblogger_track_post_view( $post->ID );
 			}
 		}
 	}

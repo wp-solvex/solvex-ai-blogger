@@ -1,5 +1,12 @@
 *** Solvex AI Blogger Changelog ***
 
+0.0.6
+* Improvement: Standardized all PHP identifiers (functions, hooks, filters, options, AJAX actions, nonces, constants, JS-localized handles) under a single wpsolvex_autoaiblogger_ / WPSOLVEX_AUTOAIBLOGGER_ prefix family, matching the existing WPSolvex\AutoAIBlogger namespace, per WordPress Plugin Review Team feedback on uniform prefixing.
+* Improvement: Renamed bundled SureCart Licensing SDK namespace from SureCart\Licensing to WPSolvex\AutoAIBlogger\Licensing for plugin-prefix uniformity.
+* Improvement: Renamed bundled Web Notices library class from global Autoaib_Notices to namespaced WPSolvex\AutoAIBlogger\Inc\Web_Notices\Notices.
+* Improvement: Cleaned up External Services URL formatting in readme.txt to satisfy Plugin Check URL probes.
+* Notice: Settings stored under the previous solvex_aib_ option keys are not automatically migrated; sites updating from 0.0.5 must reconfigure plugin settings, license key, and campaigns.
+
 0.0.5
 * Improvement: Renamed plugin main file to solvex-ai-blogger.php and corrected the Text Domain to match the plugin slug per WordPress Plugin Review Team feedback.
 * Improvement: Renamed all internal PHP constants and JavaScript identifiers from AUTOAIB_/autoaib_ to SOLVEX_AIB_/solvex_aib_ for consistency with the plugin name.

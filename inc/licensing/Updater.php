@@ -1,6 +1,6 @@
 <?php
 
-namespace SureCart\Licensing;
+namespace WPSolvex\AutoAIBlogger\Licensing;
 
 // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound
 
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Updater {
 	/**
-	 * SureCart\Licensing\Client.
+	 * WPSolvex\AutoAIBlogger\Licensing\Client.
 	 *
 	 * @var object
 	 */
@@ -27,11 +27,11 @@ class Updater {
 	/**
 	 * Initialize the class.
 	 *
-	 * @param SureCart\Licensing\Client $client The client.
+	 * @param WPSolvex\AutoAIBlogger\Licensing\Client $client The client.
 	 */
 	public function __construct( Client $client ) {
 		$this->client    = $client;
-		$this->cache_key = 'solvex_aib_' . md5( $this->client->slug ) . '_version_info';
+		$this->cache_key = 'wpsolvex_autoaiblogger_' . md5( $this->client->slug ) . '_version_info';
 	}
 
 	/**
@@ -63,7 +63,7 @@ class Updater {
 	}
 
 	/**
-	 * Get plugin info from SureCart\Licensing
+	 * Get plugin info from WPSolvex\AutoAIBlogger\Licensing
 	 */
 	private function get_project_latest_version() {
 		$current_release = $this->client->license()->get_current_release( 3 * HOUR_IN_SECONDS );

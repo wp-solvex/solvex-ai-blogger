@@ -48,17 +48,17 @@ class Loader {
 		spl_autoload_register( [ $this, 'autoload' ] );
 
 		// Activation hook.
-		register_activation_hook( SOLVEX_AIB_FILE, [ $this, 'activation_actions' ] );
+		register_activation_hook( WPSOLVEX_AUTOAIBLOGGER_FILE, [ $this, 'activation_actions' ] );
 
 		// Deactivation hook.
-		register_deactivation_hook( SOLVEX_AIB_FILE, [ $this, 'deactivation_actions' ] );
+		register_deactivation_hook( WPSOLVEX_AUTOAIBLOGGER_FILE, [ $this, 'deactivation_actions' ] );
 
 		add_action( 'plugins_loaded', [ $this, 'setup' ], 1 );
 
 		// Remove this after the translation error is fixed.
 		add_filter( 'doing_it_wrong_trigger_error', [ $this, 'suppress_translation_error' ], 10, 4 );
 
-		add_filter( 'plugin_action_links_' . SOLVEX_AIB_BASE_PATH, [ $this, 'plugin_action_links' ] );
+		add_filter( 'plugin_action_links_' . WPSOLVEX_AUTOAIBLOGGER_BASE_PATH, [ $this, 'plugin_action_links' ] );
 	}
 
 	/**
@@ -91,9 +91,9 @@ class Loader {
 		add_filter( 'cron_schedules', [ $this, 'register_custom_cron_schedules' ] );
 
 		/* Enforce free user limits for max content words if Pro is not available */
-		if ( ! defined( 'SOLVEX_AIB_PRO_VERSION' ) ) {
-			add_filter( 'solvex_aib_max_content_words', [ $this, 'enforce_free_max_words_limit' ], 10, 2 );
-			add_filter( 'solvex_aib_campaign_image_count', [ $this, 'enforce_free_image_limit' ], 10, 2 );
+		if ( ! defined( 'WPSOLVEX_AUTOAIBLOGGER_PRO_VERSION' ) ) {
+			add_filter( 'wpsolvex_autoaiblogger_max_content_words', [ $this, 'enforce_free_max_words_limit' ], 10, 2 );
+			add_filter( 'wpsolvex_autoaiblogger_campaign_image_count', [ $this, 'enforce_free_image_limit' ], 10, 2 );
 		}
 
 		if ( is_admin() ) {
@@ -121,9 +121,9 @@ class Loader {
 	 * @return void
 	 */
 	public function define_store_constants(): void {
-		define( 'SOLVEX_AIB_PRODUCT_ID', defined( 'SOLVEX_AIB_PRO_PRODUCT_ID' ) ? SOLVEX_AIB_PRO_PRODUCT_ID : '2effb53f-1066-40d3-9667-ef9f09f91db1' );
-		define( 'SOLVEX_AIB_PRODUCT_NAME', defined( 'SOLVEX_AIB_PRO_PRODUCT_NAME' ) ? SOLVEX_AIB_PRO_PRODUCT_NAME : 'Solvex AI Blogger' );
-		define( 'SOLVEX_AIB_PRODUCT_FILE', defined( 'SOLVEX_AIB_PRO_FILE' ) ? SOLVEX_AIB_PRO_FILE : SOLVEX_AIB_FILE );
+		define( 'WPSOLVEX_AUTOAIBLOGGER_PRODUCT_ID', defined( 'WPSOLVEX_AUTOAIBLOGGER_PRO_PRODUCT_ID' ) ? WPSOLVEX_AUTOAIBLOGGER_PRO_PRODUCT_ID : '2effb53f-1066-40d3-9667-ef9f09f91db1' );
+		define( 'WPSOLVEX_AUTOAIBLOGGER_PRODUCT_NAME', defined( 'WPSOLVEX_AUTOAIBLOGGER_PRO_PRODUCT_NAME' ) ? WPSOLVEX_AUTOAIBLOGGER_PRO_PRODUCT_NAME : 'Solvex AI Blogger' );
+		define( 'WPSOLVEX_AUTOAIBLOGGER_PRODUCT_FILE', defined( 'WPSOLVEX_AUTOAIBLOGGER_PRO_FILE' ) ? WPSOLVEX_AUTOAIBLOGGER_PRO_FILE : WPSOLVEX_AUTOAIBLOGGER_FILE );
 	}
 
 	/**
@@ -151,7 +151,7 @@ class Loader {
 	 * @since 1.0.0
 	 */
 	public function register_custom_cron_schedules( $schedules ) {
-		$custom_schedules = get_option( 'solvex_aib_custom_cron_schedules', [] );
+		$custom_schedules = get_option( 'wpsolvex_autoaiblogger_custom_cron_schedules', [] );
 
 		if ( ! empty( $custom_schedules ) && is_array( $custom_schedules ) ) {
 			foreach ( $custom_schedules as $name => $schedule ) {
@@ -192,6 +192,14 @@ class Loader {
 
 		$class_to_load = substr( $class, strlen( $namespace_prefix ) );
 
+		// Bundled SureCart Licensing SDK lives under inc/licensing/ with capitalized
+		// filenames and is loaded via explicit require_once in admin/licensing.php.
+		// Skip it here so the autoloader doesn't attempt a lowercased path that
+		// fails on case-sensitive filesystems.
+		if ( strpos( $class_to_load, 'Licensing\\' ) === 0 ) {
+			return;
+		}
+
 		$filename = preg_replace(
 			[ '/([a-z])([A-Z])/', '/_/' ],
 			[ '$1-$2', '-' ],
@@ -201,7 +209,7 @@ class Loader {
 		if ( is_string( $filename ) ) {
 			$filename = strtolower( str_replace( '\\', DIRECTORY_SEPARATOR, $filename ) );
 
-			$file = SOLVEX_AIB_DIR . $filename . '.php';
+			$file = WPSOLVEX_AUTOAIBLOGGER_DIR . $filename . '.php';
 
 			// if the file readable, include it.
 			if ( is_readable( $file ) ) {

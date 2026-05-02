@@ -1,6 +1,6 @@
 <?php
 
-namespace SureCart\Licensing;
+namespace WPSolvex\AutoAIBlogger\Licensing;
 
 // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound
 
@@ -164,7 +164,7 @@ class Client {
 	/**
 	 * Initialize license model
 	 *
-	 * @return SureCart\Licensing
+	 * @return WPSolvex\AutoAIBlogger\Licensing
 	 */
 	public function license() {
 		if ( ! class_exists( __NAMESPACE__ . '\License' ) ) {
@@ -180,7 +180,7 @@ class Client {
 	/**
 	 * Initialize activation model
 	 *
-	 * @return SureCart\Licensing
+	 * @return WPSolvex\AutoAIBlogger\Licensing
 	 */
 	public function activation() {
 		if ( ! class_exists( __NAMESPACE__ . '\Activation' ) ) {
@@ -196,7 +196,7 @@ class Client {
 	/**
 	 * Initialize settings page
 	 *
-	 * @return SureCart\Licensing
+	 * @return WPSolvex\AutoAIBlogger\Licensing
 	 */
 	public function settings() {
 		if ( ! class_exists( __NAMESPACE__ . '\Settings' ) ) {
@@ -221,7 +221,7 @@ class Client {
 		}
 
 		// filterable endpoint.
-		return trailingslashit( apply_filters( 'solvex_aib_licensing_endpoint', 'https://api.surecart.com' ) ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		return trailingslashit( apply_filters( 'wpsolvex_autoaiblogger_licensing_endpoint', 'https://api.surecart.com' ) ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 	}
 
 	/**
@@ -284,7 +284,7 @@ class Client {
 	public function is_local_server() {
 		$remote_addr = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 		$is_local    = in_array( $remote_addr, [ '127.0.0.1', '::1' ], true );
-		return apply_filters( 'solvex_aib_licensing_is_local', $is_local ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		return apply_filters( 'wpsolvex_autoaiblogger_licensing_is_local', $is_local ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 	}
 
 	/**
@@ -303,7 +303,7 @@ class Client {
 	 */
 	protected function set_basename_and_slug(): void {
 		// it's a plugin.
-		$this->basename = SOLVEX_AIB_BASE_PATH;
+		$this->basename = WPSOLVEX_AUTOAIBLOGGER_BASE_PATH;
 
 		[ $this->slug ] = explode( '/', $this->basename );
 

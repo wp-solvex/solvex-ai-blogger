@@ -69,7 +69,7 @@ const formatLastPostRun = ( lastRun ) => {
 // Enhanced campaign card component with better UX.
 const CampaignCard = memo( ( { campaign } ) => {
 	const navigate = useNavigate();
-	const defaultMetaDefaults = solvex_aib_localized_data.postmeta_defaults;
+	const defaultMetaDefaults = wpsolvex_autoaiblogger_localized_data.postmeta_defaults;
 
 	const campaigns = useSelector( ( state ) => state.allCampaigns ) || {};
 	const isPerformant = ( campaign?.postsVisit || 0 ) > 100;
@@ -83,12 +83,12 @@ const CampaignCard = memo( ( { campaign } ) => {
 	const fetchCampaignMetaData = async ( campaignId ) => {
 		const formData = new window.FormData();
 
-		formData.append( 'action', 'solvex_aib_get_campaign_metadata' );
-		formData.append( 'security', solvex_aib_localized_data.admin_nonce );
+		formData.append( 'action', 'wpsolvex_autoaiblogger_get_campaign_metadata' );
+		formData.append( 'security', wpsolvex_autoaiblogger_localized_data.admin_nonce );
 		formData.append( 'campaign_id', campaignId );
 
 		const response = await apiFetch( {
-			url: solvex_aib_localized_data.ajax_url,
+			url: wpsolvex_autoaiblogger_localized_data.ajax_url,
 			method: 'POST',
 			body: formData,
 		} )
@@ -140,14 +140,14 @@ const CampaignCard = memo( ( { campaign } ) => {
 		const postType = campaignData?.postType || 'post'; // Default to 'post' if not found.
 
 		// Redirect to All Posts page with campaign filter
-		const adminUrl = solvex_aib_localized_data.admin_url || '/wp-admin/';
+		const adminUrl = wpsolvex_autoaiblogger_localized_data.admin_url || '/wp-admin/';
 		let filterUrl;
 
 		// For 'post' type, we don't need to specify post_type parameter
 		if ( postType === 'post' ) {
-			filterUrl = `${ adminUrl }edit.php?solvex_aib_campaign_id=${ campaignId }`;
+			filterUrl = `${ adminUrl }edit.php?wpsolvex_autoaiblogger_campaign_id=${ campaignId }`;
 		} else {
-			filterUrl = `${ adminUrl }edit.php?post_type=${ postType }&solvex_aib_campaign_id=${ campaignId }`;
+			filterUrl = `${ adminUrl }edit.php?post_type=${ postType }&wpsolvex_autoaiblogger_campaign_id=${ campaignId }`;
 		}
 
 		window.open( filterUrl, '_blank' );

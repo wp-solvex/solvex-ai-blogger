@@ -304,7 +304,7 @@ export default function PostIdeas() {
 		);
 	}
 
-	const solvex_aib_create_post = ( e, title ) => {
+	const wpsolvex_autoaiblogger_create_post = ( e, title ) => {
 		e.preventDefault();
 
 		if ( e.target.dataset.type === 'open-post' ) {
@@ -321,7 +321,7 @@ export default function PostIdeas() {
 		setCreatingPosts( ( prev ) => new Set( prev ).add( title ) );
 
 		const formData = new window.FormData();
-		formData.append( 'action', 'solvex_aib_create_post' );
+		formData.append( 'action', 'wpsolvex_autoaiblogger_create_post' );
 		formData.append( 'security', adminNonce );
 
 		const postData = {
@@ -330,7 +330,7 @@ export default function PostIdeas() {
 			post_type: 'post',
 			post_content: '',
 			excerpt: '',
-			metadata: JSON.stringify( { solvex_aib_reference: 1 } ),
+			metadata: JSON.stringify( { wpsolvex_autoaiblogger_reference: 1 } ),
 			// Include license and site information for content generation
 			license,
 			site_title: siteTitle,
@@ -586,7 +586,7 @@ export default function PostIdeas() {
 															<a
 																target="_blank"
 																href="#"
-																onClick={ ( e ) => solvex_aib_create_post( e, postTitle || '' ) }
+																onClick={ ( e ) => wpsolvex_autoaiblogger_create_post( e, postTitle || '' ) }
 																className={ `flex items-center gap-x-1 cursor-pointer justify-end ${
 																	creatingPosts.size > 0
 																		? ( creatingPosts.has( postTitle )

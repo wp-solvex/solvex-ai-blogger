@@ -49,7 +49,7 @@ class Cron_Handler {
 			}
 
 			$campaign = get_post( $campaign_id );
-			if ( ! $campaign || $campaign->post_type !== SOLVEX_AIB_CPT_CAMPAIGN ) {
+			if ( ! $campaign || $campaign->post_type !== WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN ) {
 				return;
 			}
 
@@ -76,7 +76,7 @@ class Cron_Handler {
 			$started_notification_sent = Metadata::get_campaign_meta( $campaign_id, 'startedNotificationSent' );
 			if ( ! $started_notification_sent && $posts_created === 0 && $posts_scheduled === 0 ) {
 				do_action(
-					'solvex_aib_campaign_started',
+					'wpsolvex_autoaiblogger_campaign_started',
 					$campaign_id,
 					[
 						'postsTarget'    => Metadata::get_campaign_meta( $campaign_id, 'postsTarget' ),
@@ -114,7 +114,7 @@ class Cron_Handler {
 				Metadata::update_campaign_meta( $campaign_id, 'retryTracking', $retry_tracking );
 
 				// Log success with post and attempt information.
-				solvex_aib_log_campaign_success(
+				wpsolvex_autoaiblogger_log_campaign_success(
 					$campaign_id,
 					$result['post_id'],
 					[
@@ -131,7 +131,7 @@ class Cron_Handler {
 
 				// Trigger notification: Post Created Successfully.
 				do_action(
-					'solvex_aib_post_created_successfully',
+					'wpsolvex_autoaiblogger_post_created_successfully',
 					$campaign_id,
 					$result['post_id'],
 					[
@@ -165,7 +165,7 @@ class Cron_Handler {
 					$result['message'] ?? 'Unknown error'
 				);
 
-				solvex_aib_log_campaign_error(
+				wpsolvex_autoaiblogger_log_campaign_error(
 					$campaign_id,
 					$error_type,
 					$error_message,
@@ -183,7 +183,7 @@ class Cron_Handler {
 					Metadata::update_campaign_meta( $campaign_id, 'retryTracking', $retry_tracking );
 
 					// Log that we're giving up on this post.
-					solvex_aib_log_campaign_error(
+					wpsolvex_autoaiblogger_log_campaign_error(
 						$campaign_id,
 						'post_abandoned',
 						sprintf(
@@ -226,7 +226,7 @@ class Cron_Handler {
 
 			// Apply filter to allow Pro plugin to modify max_words.
 			// Free users are limited to 1000 words, Pro users can customize.
-			$max_words = apply_filters( 'solvex_aib_max_content_words', $max_words, $campaign_id );
+			$max_words = apply_filters( 'wpsolvex_autoaiblogger_max_content_words', $max_words, $campaign_id );
 
 			$post_type          = Metadata::get_campaign_meta( $campaign_id, 'postType' );
 			$post_status        = Metadata::get_campaign_meta( $campaign_id, 'postStatus' );
@@ -257,7 +257,7 @@ class Cron_Handler {
 
 			// Update token data if present in the API response.
 			if ( isset( $api_data['token_data'] ) && is_array( $api_data['token_data'] ) ) {
-				solvex_aib_update_token_data( $api_data['token_data'] );
+				wpsolvex_autoaiblogger_update_token_data( $api_data['token_data'] );
 			}
 
 			// Process images if they exist in the API response.
@@ -276,8 +276,8 @@ class Cron_Handler {
 			}
 
 			// Replace internal link placeholders with actual WordPress URLs.
-			$previous_posts = solvex_aib_get_previous_campaign_posts( $campaign_id, 5 );
-			$post_content   = solvex_aib_replace_internal_link_placeholders( $post_content, $previous_posts );
+			$previous_posts = wpsolvex_autoaiblogger_get_previous_campaign_posts( $campaign_id, 5 );
+			$post_content   = wpsolvex_autoaiblogger_replace_internal_link_placeholders( $post_content, $previous_posts );
 
 			$post_data = [
 				'post_title'   => sanitize_text_field( $api_data['post_title'] ?? 'Generated Post' ),
@@ -318,8 +318,8 @@ class Cron_Handler {
 			}
 
 			// Add campaign reference meta to the post.
-			add_post_meta( $post_id, 'solvex_aib_reference', 1 );
-			add_post_meta( $post_id, 'solvex_aib_campaign_id', $campaign_id );
+			add_post_meta( $post_id, 'wpsolvex_autoaiblogger_reference', 1 );
+			add_post_meta( $post_id, 'wpsolvex_autoaiblogger_campaign_id', $campaign_id );
 			$posts_created     = Metadata::get_campaign_meta( $campaign_id, 'postsCreated' );
 			$new_posts_created = intval( $posts_created ) + 1;
 			Metadata::update_campaign_meta( $campaign_id, 'postsCreated', $new_posts_created );
@@ -334,7 +334,7 @@ class Cron_Handler {
 
 				// Trigger notification: Campaign Completed.
 				do_action(
-					'solvex_aib_campaign_completed',
+					'wpsolvex_autoaiblogger_campaign_completed',
 					$campaign_id,
 					'target_reached',
 					[
@@ -371,7 +371,7 @@ class Cron_Handler {
 	 * Register cron actions.
 	 */
 	private function init_hooks(): void {
-		add_action( 'solvex_aib_create_single_post', [ $this, 'create_single_post_from_campaign' ] );
+		add_action( 'wpsolvex_autoaiblogger_create_single_post', [ $this, 'create_single_post_from_campaign' ] );
 	}
 
 	/**
@@ -387,7 +387,7 @@ class Cron_Handler {
 		try {
 			$max_words = $max_words ? $max_words : 1000;
 
-			$site_persona_details = solvex_aib_get_site_persona_details( $campaign_id );
+			$site_persona_details = wpsolvex_autoaiblogger_get_site_persona_details( $campaign_id );
 
 			// Get campaign name for better context.
 			$campaign_post = get_post( $campaign_id );
@@ -398,7 +398,7 @@ class Cron_Handler {
 
 			// Apply filter to allow Pro plugin to modify image count.
 			// Free users are limited to 1 image, Pro users can customize 1-4.
-			$image_count = apply_filters( 'solvex_aib_campaign_image_count', $image_count, $campaign_id );
+			$image_count = apply_filters( 'wpsolvex_autoaiblogger_campaign_image_count', $image_count, $campaign_id );
 			$image_count = max( 1, min( 4, absint( $image_count ) ) ); // Limit: 1-4 content images.
 
 			// Add 1 for featured image (first image is always featured, rest go in content).
@@ -410,7 +410,7 @@ class Cron_Handler {
 			$response    = null;
 
 			for ( $attempt = 1; $attempt <= $max_retries; $attempt++ ) {
-				$response = solvex_aib_get_post_creation_api_response( $keywords, $max_words, $site_persona_details, $campaign_id, $campaign_name, $total_image_count );
+				$response = wpsolvex_autoaiblogger_get_post_creation_api_response( $keywords, $max_words, $site_persona_details, $campaign_id, $campaign_name, $total_image_count );
 
 				if ( ! is_wp_error( $response ) ) {
 					break;
@@ -515,7 +515,7 @@ class Cron_Handler {
 			// Determine scheduling interval.
 			if ( $is_retry ) {
 				// For retries after failures, use a short interval (2 minutes).
-				$interval_seconds = apply_filters( 'solvex_aib_retry_interval_seconds', 120 ); // 2 minutes default.
+				$interval_seconds = apply_filters( 'wpsolvex_autoaiblogger_retry_interval_seconds', 120 ); // 2 minutes default.
 				$next_run         = time() + $interval_seconds;
 			} else {
 				// Check if this is a weekly campaign with specific days selected.
@@ -537,7 +537,7 @@ class Cron_Handler {
 				}
 			}
 
-			wp_schedule_single_event( $next_run, 'solvex_aib_create_single_post', [ $campaign_id ] );
+			wp_schedule_single_event( $next_run, 'wpsolvex_autoaiblogger_create_single_post', [ $campaign_id ] );
 
 		} catch ( \Exception $e ) {
 			return;
@@ -574,7 +574,7 @@ class Cron_Handler {
 		}
 
 		// Allow testing plugins to modify intervals.
-		return apply_filters( 'solvex_aib_cron_interval_seconds', $seconds, $interval, $unit );
+		return apply_filters( 'wpsolvex_autoaiblogger_cron_interval_seconds', $seconds, $interval, $unit );
 	}
 
 	/**
@@ -647,7 +647,7 @@ class Cron_Handler {
 		// Allow testing plugins to modify the weekday interval.
 		// Pass the days_to_add for context (testing plugins can use this).
 		return apply_filters(
-			'solvex_aib_weekday_next_occurrence',
+			'wpsolvex_autoaiblogger_weekday_next_occurrence',
 			$next_timestamp,
 			$selected_days,
 			$days_to_add,
@@ -747,7 +747,7 @@ class Cron_Handler {
 			$posts_failed = Metadata::get_campaign_meta( $campaign_id, 'postsFailed' );
 			$max_failures = Metadata::get_campaign_meta( $campaign_id, 'maxFailures' );
 
-			solvex_aib_log_campaign_error(
+			wpsolvex_autoaiblogger_log_campaign_error(
 				$campaign_id,
 				'campaign_terminated',
 				sprintf(
@@ -765,7 +765,7 @@ class Cron_Handler {
 
 			// Trigger notification: Campaign Failed/Terminated.
 			do_action(
-				'solvex_aib_campaign_failed',
+				'wpsolvex_autoaiblogger_campaign_failed',
 				$campaign_id,
 				sprintf(
 					/* translators: %1$d is the number of posts failed, %2$d is the maximum number of failures. */
@@ -782,7 +782,7 @@ class Cron_Handler {
 		}
 
 		// Clear any scheduled events since campaign is now complete.
-		wp_clear_scheduled_hook( 'solvex_aib_create_single_post', [ $campaign_id ] );
+		wp_clear_scheduled_hook( 'wpsolvex_autoaiblogger_create_single_post', [ $campaign_id ] );
 	}
 
 	/**
@@ -814,7 +814,7 @@ class Cron_Handler {
 			$attachment_id = $this->upload_image_to_media_library( $image['url'], $alt_text );
 
 			if ( is_wp_error( $attachment_id ) ) {
-				solvex_aib_log_error(
+				wpsolvex_autoaiblogger_log_error(
 					'image_upload_failed',
 					$attachment_id->get_error_message(),
 					[
@@ -902,7 +902,7 @@ class Cron_Handler {
 				[
 					'timeout' => 30,
 					'headers' => [
-						'User-Agent' => 'Solvex-AI-Blogger/' . SOLVEX_AIB_VERSION . ' WordPress/' . get_bloginfo( 'version' ),
+						'User-Agent' => 'Solvex-AI-Blogger/' . WPSOLVEX_AUTOAIBLOGGER_VERSION . ' WordPress/' . get_bloginfo( 'version' ),
 					],
 				]
 			);

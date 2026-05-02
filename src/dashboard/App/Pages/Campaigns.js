@@ -10,9 +10,9 @@ import CampaignFilters from '@Components/CampaignFilters';
 import apiFetch from '@wordpress/api-fetch';
 
 export default function Campaigns() {
-	const initialCampaigns = solvex_aib_localized_data.all_campaigns;
-	const defaultMetaDefaults = solvex_aib_localized_data.postmeta_defaults;
-	const isTestingMode = solvex_aib_localized_data.campaign_testing_mode || false;
+	const initialCampaigns = wpsolvex_autoaiblogger_localized_data.all_campaigns;
+	const defaultMetaDefaults = wpsolvex_autoaiblogger_localized_data.postmeta_defaults;
+	const isTestingMode = wpsolvex_autoaiblogger_localized_data.campaign_testing_mode || false;
 
 	const [ campaigns, setCampaigns ] = useState( initialCampaigns ); // Make campaigns stateful
 	const [ configureData, setConfigureData ] = useState( defaultMetaDefaults );
@@ -179,12 +179,12 @@ export default function Campaigns() {
 	const fetchCampaignMetaData = async ( campaignId ) => {
 		const formData = new window.FormData();
 
-		formData.append( 'action', 'solvex_aib_get_campaign_metadata' );
-		formData.append( 'security', solvex_aib_localized_data.admin_nonce );
+		formData.append( 'action', 'wpsolvex_autoaiblogger_get_campaign_metadata' );
+		formData.append( 'security', wpsolvex_autoaiblogger_localized_data.admin_nonce );
 		formData.append( 'campaign_id', campaignId );
 
 		const response = await apiFetch( {
-			url: solvex_aib_localized_data.ajax_url,
+			url: wpsolvex_autoaiblogger_localized_data.ajax_url,
 			method: 'POST',
 			body: formData,
 		} )
@@ -268,14 +268,14 @@ export default function Campaigns() {
 		const postType = campaignData?.postType || 'post'; // Default to 'post' if not found
 
 		// Redirect to All Posts page with campaign filter
-		const adminUrl = solvex_aib_localized_data.admin_url || '/wp-admin/';
+		const adminUrl = wpsolvex_autoaiblogger_localized_data.admin_url || '/wp-admin/';
 		let filterUrl;
 
 		// For 'post' type, we don't need to specify post_type parameter
 		if ( postType === 'post' ) {
-			filterUrl = `${ adminUrl }edit.php?solvex_aib_campaign_id=${ campaignId }`;
+			filterUrl = `${ adminUrl }edit.php?wpsolvex_autoaiblogger_campaign_id=${ campaignId }`;
 		} else {
-			filterUrl = `${ adminUrl }edit.php?post_type=${ postType }&solvex_aib_campaign_id=${ campaignId }`;
+			filterUrl = `${ adminUrl }edit.php?post_type=${ postType }&wpsolvex_autoaiblogger_campaign_id=${ campaignId }`;
 		}
 
 		window.open( filterUrl, '_blank' );
@@ -316,15 +316,15 @@ export default function Campaigns() {
 			const isPaused = campaignData.isPaused || false;
 
 			// Determine action: pause or resume.
-			const action = isPaused ? 'solvex_aib_resume_campaign' : 'solvex_aib_pause_campaign';
+			const action = isPaused ? 'wpsolvex_autoaiblogger_resume_campaign' : 'wpsolvex_autoaiblogger_pause_campaign';
 
 			const formData = new window.FormData();
 			formData.append( 'action', action );
-			formData.append( 'security', solvex_aib_localized_data.admin_nonce );
+			formData.append( 'security', wpsolvex_autoaiblogger_localized_data.admin_nonce );
 			formData.append( 'campaign_id', campaignId );
 
 			const response = await apiFetch( {
-				url: solvex_aib_localized_data.ajax_url,
+				url: wpsolvex_autoaiblogger_localized_data.ajax_url,
 				method: 'POST',
 				body: formData,
 			} );

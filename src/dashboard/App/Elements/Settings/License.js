@@ -200,9 +200,9 @@ const License = memo( () => {
 
 		try {
 			const formData = new FormData();
-			formData.append( 'action', 'solvex_aib_activate_license' );
+			formData.append( 'action', 'wpsolvex_autoaiblogger_activate_license' );
 			formData.append( 'license_key', licenseKey );
-			formData.append( 'solvex_aib_licensing_nonce', licensingNonce );
+			formData.append( 'wpsolvex_autoaiblogger_licensing_nonce', licensingNonce );
 
 			const response = await apiFetch( {
 				url: ajaxUrl,
@@ -329,8 +329,8 @@ const License = memo( () => {
 
 		try {
 			const formData = new FormData();
-			formData.append( 'action', 'solvex_aib_deactivate_license' );
-			formData.append( 'solvex_aib_licensing_nonce', licensingNonce );
+			formData.append( 'action', 'wpsolvex_autoaiblogger_deactivate_license' );
+			formData.append( 'wpsolvex_autoaiblogger_licensing_nonce', licensingNonce );
 
 			const response = await apiFetch( {
 				url: ajaxUrl,

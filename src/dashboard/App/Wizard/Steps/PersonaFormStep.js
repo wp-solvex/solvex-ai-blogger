@@ -391,7 +391,7 @@ const PersonaFormStep = memo( () => {
 					<form className="p-5 md:p-7" onSubmit={ handleSubmit } noValidate>
 						<div className="space-y-5">
 							<FormField
-								id="solvex-aib-site-title"
+								id="wpsolvex-autoaiblogger-site-title"
 								label={ __( 'Site Title', 'solvex-ai-blogger' ) }
 								value={ formData.siteTitle }
 								onChange={ handleFieldChange( 'siteTitle' ) }
@@ -404,7 +404,7 @@ const PersonaFormStep = memo( () => {
 							/>
 
 							<FormField
-								id="solvex-aib-site-for"
+								id="wpsolvex-autoaiblogger-site-for"
 								label={ __( 'Site Purpose', 'solvex-ai-blogger' ) }
 								value={ formData.siteFor }
 								onChange={ handleFieldChange( 'siteFor' ) }
@@ -417,7 +417,7 @@ const PersonaFormStep = memo( () => {
 							/>
 
 							<FormField
-								id="solvex-aib-site-description"
+								id="wpsolvex-autoaiblogger-site-description"
 								label={ __( 'Detailed Description', 'solvex-ai-blogger' ) }
 								type="textarea"
 								value={ formData.siteDescription }

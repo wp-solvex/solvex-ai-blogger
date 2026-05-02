@@ -17,7 +17,7 @@ const LicenseInput = memo( ( { value, onChange, error, disabled, processing } ) 
 	return (
 		<div className="space-y-2">
 			<label
-				htmlFor="solvex-aib-license"
+				htmlFor="wpsolvex-autoaiblogger-license"
 				className="flex items-center text-[13px] font-semibold text-gray-900 relative"
 			>
 				<Key className="w-3.5 h-3.5 text-gray-600 mr-1.5" aria-hidden="true" />
@@ -27,7 +27,7 @@ const LicenseInput = memo( ( { value, onChange, error, disabled, processing } ) 
 
 			<div className="relative">
 				<input
-					id="solvex-aib-license"
+					id="wpsolvex-autoaiblogger-license"
 					type="text"
 					value={ value }
 					onChange={ ( e ) => onChange( e.target.value ) }
@@ -240,9 +240,9 @@ const LicenseStep = memo( () => {
 
 		try {
 			const formData = new FormData();
-			formData.append( 'action', 'solvex_aib_activate_license' );
+			formData.append( 'action', 'wpsolvex_autoaiblogger_activate_license' );
 			formData.append( 'license_key', licenseValue );
-			formData.append( 'solvex_aib_licensing_nonce', licensingNonce );
+			formData.append( 'wpsolvex_autoaiblogger_licensing_nonce', licensingNonce );
 
 			const response = await apiFetch( {
 				url: ajaxUrl,

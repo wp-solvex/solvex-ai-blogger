@@ -182,7 +182,7 @@ const ContentHeader = ( {
 	}, [ title ] );
 
 	return (
-		<div className={ `flex items-center w-full justify-between mb-8 solvex-aib-content-header bg-gradient-to-r from-brand-50 to-indigo-50 border rounded-xl border-b border-gray-200 p-6` }>
+		<div className={ `flex items-center w-full justify-between mb-8 wpsolvex-autoaiblogger-content-header bg-gradient-to-r from-brand-50 to-indigo-50 border rounded-xl border-b border-gray-200 p-6` }>
 			<div className={ `flex items-center w-full gap-4` }>
 				{ Icon && (
 					<div className={ `p-3 bg-brand-100 rounded-lg flex` }>

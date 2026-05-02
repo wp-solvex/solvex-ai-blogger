@@ -1,5 +1,5 @@
 {
-	"name": "solvex-ai-blogger/solvex-ai-blogger",
+	"name": "wpsolvex/solvex-ai-blogger",
 	"description": "This is not just a content creator, its beyond the blogging.",
 	"require-dev": {
 		"squizlabs/php_codesniffer": "^3.5",
