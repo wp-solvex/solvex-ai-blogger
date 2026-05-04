@@ -1,17 +1,19 @@
 <?php
+/**
+ * Settings class
+ *
+ * @since 1.0.0
+ * @package solvex-ai-blogger
+ */
 
-namespace WPSolvex\AutoAIBlogger\Licensing;
-
-// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound
-
-defined( 'ABSPATH' ) || exit;
+namespace SureCart\Licensing;
 
 /**
  * The settings class.
  */
 class Settings {
 	/**
-	 * WPSolvex\AutoAIBlogger\Licensing\Client
+	 * SureCart\Licensing\Client
 	 *
 	 * @var object
 	 */
@@ -41,7 +43,7 @@ class Settings {
 	/**
 	 * Create the pages.
 	 *
-	 * @param WPSolvex\AutoAIBlogger\Licensing\Client $client The client.
+	 * @param SureCart\Licensing\Client $client The client.
 	 */
 	public function __construct( Client $client ) {
 		$this->client     = $client;
@@ -79,7 +81,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	public function add_page( $args ): void {
+	public function add_page( $args ) {
 		// store menu args for proper menu creation.
 		$this->menu_args = wp_parse_args(
 			$args,
@@ -115,7 +117,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	public function admin_menu(): void {
+	public function admin_menu() {
 		switch ( $this->menu_args['type'] ) {
 			case 'menu':
 				$this->create_menu_page();
@@ -178,7 +180,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	public function settings_output(): void {
+	public function settings_output() {
 		$this->license_form_submit();
 
 		$this->print_css();
@@ -192,33 +194,33 @@ class Settings {
 			<?php settings_errors(); ?>
 
 			<div class="<?php echo esc_attr( $this->name ) . '-form-container'; ?>">
-				<form method="post" action="<?php echo esc_attr( $this->form_action_url() ); ?>">
+				<form method="post" action="<?php echo esc_url( $this->form_action_url() ); ?>">
 					<input type="hidden" name="_action" value="<?php echo esc_attr( $action ); ?>">
 					<input type="hidden" name="_nonce" value="<?php echo esc_attr( wp_create_nonce( $this->client->name ) ); ?>">
 					<input type="hidden" name="activation_id" value="<?php echo esc_attr( $this->activation_id ); ?>">
 
 					<h2><?php echo esc_html( $this->menu_args['page_title'] ); ?></h2>
 					<label for="license_key">
-						<?php if ( $action === 'activate' ) { ?>
-							<?php echo esc_html( sprintf( $this->client->__( 'Enter your license key to activate %s.', 'solvex-ai-blogger' ), $this->client->name ) ); ?>
+						<?php if ( 'activate' === $action ) { ?>
+							<?php echo esc_html( sprintf( $this->client->__( 'Enter your license key to activate %s.', 'surecart' ), $this->client->name ) ); ?>
 						<?php } else { ?>
-							<?php echo esc_html( sprintf( $this->client->__( 'Your license is succesfully activated for this site.', 'solvex-ai-blogger' ), $this->client->name ) ); ?>
+							<?php echo esc_html( sprintf( $this->client->__( 'Your license is successfully activated for this site.', 'surecart' ), $this->client->name ) ); ?>
 						<?php } ?>
 					</label>
 
-					<?php if ( $action === 'activate' ) { ?>
+					<?php if ( 'activate' === $action ) { ?>
 						<input class="widefat" type="password" autocomplete="off" name="license_key" id="license_key" value="<?php echo esc_attr( $this->license_key ); ?>" autofocus>
 					<?php } ?>
 
-					<?php if ( isset( $_GET['debug'] ) ) { // phpcs:ignore?>
-						<label for="license_id"><?php echo esc_html( sprintf( $this->client->__( 'License ID', 'solvex-ai-blogger' ), $this->client->name ) ); ?></label>
+					<?php if ( isset( $_GET['debug'] ) ) { // phpcs:ignore  ?>
+						<label for="license_id"><?php echo esc_html( sprintf( $this->client->__( 'License ID', 'surecart' ), $this->client->name ) ); ?></label>
 						<input class="widefat" type="text" autocomplete="off" name="license_id" id="license_id" value="<?php echo esc_attr( $this->license_id ); ?>" autofocus>
 
-						<label for="activation_id"><?php echo esc_html( sprintf( $this->client->__( 'Activation ID', 'solvex-ai-blogger' ), $this->client->name ) ); ?></label>
+						<label for="activation_id"><?php echo esc_html( sprintf( $this->client->__( 'Activation ID', 'surecart' ), $this->client->name ) ); ?></label>
 						<input class="widefat" type="text" autocomplete="off" name="activation_id" id="activation_id" value="<?php echo esc_attr( $this->activation_id ); ?>" autofocus>
 					<?php } ?>
 
-					<?php submit_button( $action === 'activate' ? $this->client->__( 'Activate License' ) : $this->client->__( 'Deactivate License' ) ); ?>
+					<?php submit_button( 'activate' === $action ? $this->client->__( 'Activate License' ) : $this->client->__( 'Deactivate License' ) ); ?>
 				</form>
 			</div>
 		</div>
@@ -230,26 +232,37 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	public function print_css(): void {
-		wp_enqueue_style( 'wpsolvex-autoaiblogger-sc-licensing-style', WPSOLVEX_AUTOAIBLOGGER_BASE_URL . 'inc/licensing/assets/style.css', [], WPSOLVEX_AUTOAIBLOGGER_VERSION );
-		wp_add_inline_style( 'wpsolvex-autoaiblogger-sc-licensing-style', $this->get_css() );
-	}
-
-	/**
-	 * Get the css for the form.
-	 *
-	 * @return string
-	 */
-	public function get_css() {
-		return '
-			.' . sanitize_html_class( $this->name ) . '-form-container form {
+	public function print_css() {
+		?>
+		<style>
+			.spinner {
+				float: none;
+			}
+			<?php echo '.' . esc_attr( $this->name ) . '-form-container'; ?> form {
 				padding:30px;
 				background: #fff;
 				display: grid;
 				gap: 1em;
 				max-width: 600px;
 			}
-		';
+			h2 {
+				padding: 0;
+				margin: 0;
+			}
+			label {
+				display: block;
+				font-size: 1.1em;
+				margin-bottom: 5px;
+			}
+			label[hidden] {
+				display: none;
+			}
+			p.submit {
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+		<?php
 	}
 
 	/**
@@ -262,7 +275,7 @@ class Settings {
 		if ( $this->activation_id ) {
 			$activation = $this->client->activation()->get( $this->activation_id );
 			if ( is_wp_error( $activation ) ) {
-				$this->add_error( 'deactivaed', $this->client->__( 'Your license has been deactivated for this site.', 'solvex-ai-blogger' ) );
+				$this->add_error( 'deactivaed', $this->client->__( 'Your license has been deactivated for this site.', 'surecart' ) );
 				$this->clear_options();
 			}
 		}
@@ -278,46 +291,67 @@ class Settings {
 			return;
 		}
 
+		$nonce = isset( $_POST['_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_nonce'] ) ) : '';
+
 		// Check nonce.
-		if ( ! isset( $_POST['_nonce'], $_POST['_action'] ) ) {
+		if ( ! isset( $nonce, $_POST['_action'] ) ) {
 			$this->add_error( 'missing_info', $this->client->__( 'Please add all information' ) );
 			return;
 		}
 
 		// Cerify nonce.
-		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_nonce'] ) ), $this->client->name ) ) {
+		if ( ! wp_verify_nonce( $nonce, $this->client->name ) ) {
 			$this->add_error( 'unauthorized', $this->client->__( "You don't have permission to manage licenses." ) );
 			return;
 		}
 
 		// handle activation.
-		if ( $_POST['_action'] === 'activate' ) {
-			if ( ! isset( $_POST['license_key'] ) ) {
-				$this->add_error( 'missing_license_key', $this->client->__( 'Please enter a license key.' ) );
-				return;
-			}
-			$activated = $this->client->license()->activate( sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) );
+		if ( 'activate' === $_POST['_action'] ) {
+			$activated = isset( $_POST['license_key'] ) ? $this->client->license()->activate( sanitize_text_field( $_POST['license_key'] ) ) : new \WP_Error( 'missing_key', $this->client->__( 'Please enter a license key.' ) );
 			if ( is_wp_error( $activated ) ) {
 				$this->add_error( $activated->get_error_code(), $activated->get_error_message() );
 				return;
 			}
 
-			return $this->add_success( 'activated', $this->client->__( 'This site was successfully activated.', 'solvex-ai-blogger' ) );
+			if ( ! empty( $this->menu_args['activated_redirect'] ) ) {
+				$this->redirect( $this->menu_args['activated_redirect'] );
+				exit;
+			}
+
+			return $this->add_success( 'activated', $this->client->__( 'This site was successfully activated.', 'surecart' ) );
 		}
 
 		// handle deactivation.
-		if ( $_POST['_action'] === 'deactivate' ) {
-			if ( ! isset( $_POST['activation_id'] ) ) {
-				$this->add_error( 'missing_activation_id', $this->client->__( 'Activation ID is missing.' ) );
-				return;
-			}
-			$deactivated = $this->client->license()->deactivate( sanitize_text_field( wp_unslash( $_POST['activation_id'] ) ) );
+		if ( 'deactivate' === $_POST['_action'] ) {
+			$deactivated = isset( $_POST['activation_id'] ) ? $this->client->license()->deactivate( sanitize_text_field( $_POST['activation_id'] ) ) : new \WP_Error( 'missing_activation_id', $this->client->__( 'Please enter an activation id.' ) );
 			if ( is_wp_error( $deactivated ) ) {
 				$this->add_error( $deactivated->get_error_code(), $deactivated->get_error_message() );
 			}
 
-			return $this->add_success( 'deactivated', $this->client->__( 'This site was successfully deactivated.', 'solvex-ai-blogger' ) );
+			if ( ! empty( $this->menu_args['deactivated_redirect'] ) ) {
+				$this->redirect( $this->menu_args['deactivated_redirect'] );
+				exit;
+			}
+
+			return $this->add_success( 'deactivated', $this->client->__( 'This site was successfully deactivated.', 'surecart' ) );
 		}
+	}
+
+	/**
+	 * Redirect to a url client-side.
+	 * We need to do this to avoid "headers already sent" messages.
+	 *
+	 * @param string $url Url to redirect.
+	 *
+	 * @return void
+	 */
+	public function redirect( $url ) {
+		?>
+		<div class="spinner is-active"></div>
+		<script>
+			window.location.assign("<?php echo esc_url( $url ); ?>");
+		</script>
+		<?php
 	}
 
 	/**
@@ -329,7 +363,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	public function add_notice( $code, $message, $type = 'info' ): void {
+	public function add_notice( $code, $message, $type = 'info' ) {
 		add_settings_error(
 			$this->name . '_license_options', // matches what we registered in `register_setting.
 			$code, // the error code.
@@ -346,7 +380,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	public function add_error( $code, $message ): void {
+	public function add_error( $code, $message ) {
 		$this->add_notice( $code, $message, 'error' );
 	}
 
@@ -358,7 +392,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	public function add_success( $code, $message ): void {
+	public function add_success( $code, $message ) {
 		$this->add_notice( $code, $message, 'success' );
 	}
 
@@ -366,13 +400,13 @@ class Settings {
 	 * Form action URL
 	 */
 	private function form_action_url() {
-		return apply_filters( 'wpsolvex_autoaiblogger_client_license_form_action', '' ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		return apply_filters( 'surecart_client_license_form_action', '' );
 	}
 
 	/**
 	 * Add license menu page
 	 */
-	private function create_menu_page(): void {
+	private function create_menu_page() {
 		call_user_func(
 			'add_menu_page',
 			$this->menu_args['page_title'],
@@ -388,7 +422,7 @@ class Settings {
 	/**
 	 * Add submenu page
 	 */
-	private function create_submenu_page(): void {
+	private function create_submenu_page() {
 		call_user_func(
 			'add_submenu_page',
 			$this->menu_args['parent_slug'],
@@ -404,7 +438,7 @@ class Settings {
 	/**
 	 * Add submenu page
 	 */
-	private function create_options_page(): void {
+	private function create_options_page() {
 		call_user_func(
 			'add_options_page',
 			$this->menu_args['page_title'],

@@ -267,6 +267,7 @@ module.exports = function (grunt) {
 	grunt.registerTask( 'readme', [ 'wp_readme_to_markdown' ] );
 
 	/* Bump Version - `grunt version-bump --ver=<version-number>` */
+	// svn commit -m "Initial commit of plugin files" --username wpsolvex --password ch$M7IRC4oudmwxJ
     grunt.registerTask('version-bump', function (ver) {
 
         var newVersion = grunt.option('ver');
