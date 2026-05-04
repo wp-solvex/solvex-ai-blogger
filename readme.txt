@@ -3,7 +3,7 @@
 Contributors: wpsolvex
 Tags: blog, blogging, content creation, auto blogging, ai
 Tested up to: 6.9
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires at least: 6.7
@@ -62,6 +62,9 @@ API domain: https://pixabay.com (and related Pixabay CDN hosts)
 3. Settings - General settings with Advance AI Settings
 
 == Changelog ==
+
+= 1.0.1 =
+* Fix: Premium license key validation issue.
 
 = 1.0.0 =
 * Initial release

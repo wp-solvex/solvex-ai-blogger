@@ -4,7 +4,7 @@
  * Plugin URI: https://wpaiblogger.com/
  * Author: WP Solvex
  * Author URI: https://wpsolvex.com/
- * Version: 1.0.0
+ * Version: 1.0.1
  * License: GPLv2 or later
  * Requires at least: 6.7
  * Requires PHP: 7.4
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Define Constants.
 define( 'WPSOLVEX_AUTOAIBLOGGER_FILE', __FILE__ );
-define( 'WPSOLVEX_AUTOAIBLOGGER_VERSION', '1.0.0' );
+define( 'WPSOLVEX_AUTOAIBLOGGER_VERSION', '1.0.1' );
 define( 'WPSOLVEX_AUTOAIBLOGGER_DIR', plugin_dir_path( WPSOLVEX_AUTOAIBLOGGER_FILE ) );
 define( 'WPSOLVEX_AUTOAIBLOGGER_BASE_PATH', plugin_basename( WPSOLVEX_AUTOAIBLOGGER_FILE ) );
 define( 'WPSOLVEX_AUTOAIBLOGGER_BASE_URL', plugins_url( '/', WPSOLVEX_AUTOAIBLOGGER_FILE ) );
