@@ -55,6 +55,12 @@ API domain: https://pixabay.com (and related Pixabay CDN hosts)
 1. Upload the plugin files to the `/wp-content/plugins/solvex-ai-blogger` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
 
+## Screenshots ##
+
+1. Dashboard - Campaign Insights with Posts Ideas
+2. Campaigns - List of your target oriented campaigns
+3. Settings - General settings with Advance AI Settings
+
 ## Changelog ##
 
 ### 1.0.0 ###
