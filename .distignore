@@ -57,9 +57,11 @@ artifacts
 admin/assets/src
 wordpress
 sass
+src
 unminified
 coverage-report
 phpinsights.php
 playwright-report
 .claude
 .claudeignore
+debug_tokens.js

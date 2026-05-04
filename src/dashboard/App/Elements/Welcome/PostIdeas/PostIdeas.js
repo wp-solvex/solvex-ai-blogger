@@ -545,7 +545,7 @@ export default function PostIdeas() {
 										// Special case for when postIdeasFromRedux is "-1"
 										<tr>
 											<td colSpan="2" className="px-6 py-4 text-center text-amber-600 font-medium">
-												{ __( '🚀 Want more post ideas? Pro users get unlimited suggestions', 'solvex-ai-blogger' ) }
+												{ __( '🚀 Need more ideas? Go Pro for unlimited suggestions', 'solvex-ai-blogger' ) }
 											</td>
 										</tr>
 									) : postIdeasArr && Array.isArray( postIdeasArr ) && postIdeasArr.length > 0 ? (
@@ -683,7 +683,7 @@ export default function PostIdeas() {
 														size="default"
 														icon={ <MoveRight className="w-5 h-5" /> }
 													>
-														{ __( 'Upgrade to Pro - Get Unlimited Ideas', 'solvex-ai-blogger' ) }
+														{ __( 'Upgrade to Pro', 'solvex-ai-blogger' ) }
 													</ProButton>
 												</div>
 											</td>
