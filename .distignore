@@ -64,3 +64,4 @@ phpinsights.php
 playwright-report
 .claude
 .claudeignore
+debug_tokens.js
