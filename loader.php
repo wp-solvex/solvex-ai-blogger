@@ -43,8 +43,6 @@ class Loader {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		$this->define_store_constants();
-
 		spl_autoload_register( [ $this, 'autoload' ] );
 
 		// Activation hook.
@@ -68,6 +66,9 @@ class Loader {
 	 * @return void
 	 */
 	public function setup(): void {
+
+		/* Define store constants for both Free and Pro versions */
+		$this->define_store_constants();
 
 		/* Maintenance init */
 		Maintenance::get_instance();
@@ -122,7 +123,7 @@ class Loader {
 	 */
 	public function define_store_constants(): void {
 		define( 'WPSOLVEX_AUTOAIBLOGGER_PRODUCT_ID', defined( 'WPSOLVEX_AUTOAIBLOGGER_PRO_PRODUCT_ID' ) ? WPSOLVEX_AUTOAIBLOGGER_PRO_PRODUCT_ID : '2effb53f-1066-40d3-9667-ef9f09f91db1' );
-		define( 'WPSOLVEX_AUTOAIBLOGGER_PRODUCT_NAME', defined( 'WPSOLVEX_AUTOAIBLOGGER_PRO_PRODUCT_NAME' ) ? WPSOLVEX_AUTOAIBLOGGER_PRO_PRODUCT_NAME : 'Solvex AI Blogger' );
+		define( 'WPSOLVEX_AUTOAIBLOGGER_PRODUCT_NAME', defined( 'WPSOLVEX_AUTOAIBLOGGER_PRO_PRODUCT_NAME' ) ? WPSOLVEX_AUTOAIBLOGGER_PRO_PRODUCT_NAME : 'Solvex AI Blogger - Free' );
 		define( 'WPSOLVEX_AUTOAIBLOGGER_PRODUCT_FILE', defined( 'WPSOLVEX_AUTOAIBLOGGER_PRO_FILE' ) ? WPSOLVEX_AUTOAIBLOGGER_PRO_FILE : WPSOLVEX_AUTOAIBLOGGER_FILE );
 	}
 

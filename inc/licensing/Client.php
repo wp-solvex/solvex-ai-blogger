@@ -1,10 +1,12 @@
 <?php
+/**
+ * Client
+ *
+ * @since 1.0.0
+ * @package solvex-ai-blogger
+ */
 
-namespace WPSolvex\AutoAIBlogger\Licensing;
-
-// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound
-
-defined( 'ABSPATH' ) || exit;
+namespace SureCart\Licensing;
 
 /**
  * SureCart Client
@@ -17,7 +19,7 @@ class Client {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.2';
+	public $version = '1.0.1';
 
 	/**
 	 * Name of the plugin
@@ -148,11 +150,11 @@ class Client {
 	/**
 	 * Initialize plugin/theme updater
 	 *
-	 * @return SureCart\Updater|null
+	 * @return SureCart\Updater
 	 */
 	public function updater() {
 		if ( ! class_exists( __NAMESPACE__ . '\Updater' ) ) {
-			require_once __DIR__ . '/Updater.php';
+			require_once __DIR__ . '/updater.php';
 		}
 
 		// if already instantiated, return the cached one.
@@ -164,11 +166,11 @@ class Client {
 	/**
 	 * Initialize license model
 	 *
-	 * @return WPSolvex\AutoAIBlogger\Licensing
+	 * @return SureCart\Licensing
 	 */
 	public function license() {
 		if ( ! class_exists( __NAMESPACE__ . '\License' ) ) {
-			require_once __DIR__ . '/License.php';
+			require_once __DIR__ . '/license.php';
 		}
 
 		// if already instantiated, return the cached one.
@@ -180,11 +182,11 @@ class Client {
 	/**
 	 * Initialize activation model
 	 *
-	 * @return WPSolvex\AutoAIBlogger\Licensing
+	 * @return SureCart\Licensing
 	 */
 	public function activation() {
 		if ( ! class_exists( __NAMESPACE__ . '\Activation' ) ) {
-			require_once __DIR__ . '/Activation.php';
+			require_once __DIR__ . '/activation.php';
 		}
 
 		// if already instantiated, return the cached one.
@@ -196,11 +198,11 @@ class Client {
 	/**
 	 * Initialize settings page
 	 *
-	 * @return WPSolvex\AutoAIBlogger\Licensing
+	 * @return SureCart\Licensing
 	 */
 	public function settings() {
 		if ( ! class_exists( __NAMESPACE__ . '\Settings' ) ) {
-			require_once __DIR__ . '/Settings.php';
+			require_once __DIR__ . '/settings.php';
 		}
 
 		// if already instantiated, return the cached one.
@@ -217,11 +219,11 @@ class Client {
 	public function endpoint() {
 		// allow a constant to be set.
 		if ( defined( 'SURECART_LICENSING_ENDPOINT' ) ) {
-			return trailingslashit( constant( 'SURECART_LICENSING_ENDPOINT' ) );
+			return trailingslashit( SURECART_LICENSING_ENDPOINT );
 		}
 
 		// filterable endpoint.
-		return trailingslashit( apply_filters( 'wpsolvex_autoaiblogger_licensing_endpoint', 'https://api.surecart.com' ) ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		return trailingslashit( apply_filters( 'surecart_licensing_endpoint', 'https://api.surecart.com' ) );
 	}
 
 	/**
@@ -249,7 +251,7 @@ class Client {
 			[
 				'headers'  => $headers,
 				'method'   => $method,
-				'timeout'  => 30,
+				'timeout'  => 30, // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
 				'blocking' => $blocking,
 				'body'     => $body,
 			]
@@ -263,7 +265,7 @@ class Client {
 		$response_body = json_decode( wp_remote_retrieve_body( $response ) );
 
 		if ( ! in_array( $response_code, [ 200, 201 ], true ) ) {
-			if ( $response_code === 404 ) {
+			if ( 404 === $response_code ) {
 				return new \WP_Error( 'not_found', $this->__( 'Not found' ) );
 			}
 
@@ -282,9 +284,8 @@ class Client {
 	 * @return bool
 	 */
 	public function is_local_server() {
-		$remote_addr = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
-		$is_local    = in_array( $remote_addr, [ '127.0.0.1', '::1' ], true );
-		return apply_filters( 'wpsolvex_autoaiblogger_licensing_is_local', $is_local ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		$is_local = isset( $_SERVER['REMOTE_ADDR'] ) ? in_array( $_SERVER['REMOTE_ADDR'], [ '127.0.0.1', '::1' ], true ) : false;
+		return apply_filters( 'surecart_licensing_is_local', $is_local );
 	}
 
 	/**
@@ -292,7 +293,7 @@ class Client {
 	 *
 	 * @param string $textdomain The textdomain for translations.
 	 */
-	public function set_textdomain( $textdomain ): void {
+	public function set_textdomain( $textdomain ) {
 		$this->textdomain = $textdomain;
 	}
 
@@ -301,27 +302,50 @@ class Client {
 	 *
 	 * @return void
 	 */
-	protected function set_basename_and_slug(): void {
+	protected function set_basename_and_slug() {
 		// it's a plugin.
-		$this->basename = WPSOLVEX_AUTOAIBLOGGER_BASE_PATH;
+		if ( strpos( $this->file, WP_CONTENT_DIR . '/themes/' ) === false ) {
+			$this->basename = plugin_basename( $this->file );
 
-		[ $this->slug ] = explode( '/', $this->basename );
+			[ $this->slug ] = explode( '/', $this->basename );
 
-		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-		$plugin_data = get_plugin_data( $this->file );
+			$plugin_data = get_plugin_data( $this->file );
 
-		if ( empty( $plugin_data['Version'] ) ) {
-			add_action(
-				'admin_notices',
-				function(): void {
-					printf( '<div class="notice notice-error"><p>' . esc_html( $this->name ) . ' Licensing Configuration Error: The <code>__FILE__</code> must point to the main file of your plugin.</p></div>' );
-				}
-			);
+			if ( empty( $plugin_data['Version'] ) ) {
+				add_action(
+					'admin_notices',
+					function() {
+						printf( '<div class="notice notice-error"><p>' . esc_html( $this->name ) . ' Licensing Configuration Error: The <code>__FILE__</code> must point to the main file of your plugin.</p></div>' );
+					}
+				);
+			}
+
+			$this->project_version = $plugin_data['Version'];
+			$this->type            = 'plugin';
+
+			// it's a theme.
+		} else {
+			$this->basename = str_replace( WP_CONTENT_DIR . '/themes/', '', $this->file );
+
+			[ $this->slug ] = explode( '/', $this->basename );
+
+			$theme = wp_get_theme( $this->slug );
+
+			$this->project_version = $theme->version;
+
+			if ( empty( $theme->version ) ) {
+				add_action(
+					'admin_notices',
+					function() {
+						printf( '<div class="notice notice-error"><p>' . esc_html( $this->name ) . ' Licensing Configuration Error: The <code>__FILE__</code> must point to the main file of your theme.</p></div>' );
+					}
+				);
+			}
+
+			$this->type = 'theme';
 		}
-
-		$this->project_version = $plugin_data['Version'];
-		$this->type            = 'plugin';
 
 		$this->textdomain = $this->slug;
 	}

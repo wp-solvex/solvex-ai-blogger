@@ -1,10 +1,12 @@
 <?php
+/**
+ * License model
+ *
+ * @since 1.0.0
+ * @package solvex-ai-blogger
+ */
 
-namespace WPSolvex\AutoAIBlogger\Licensing;
-
-// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound
-
-defined( 'ABSPATH' ) || exit;
+namespace SureCart\Licensing;
 
 /**
  * License model
@@ -18,7 +20,7 @@ class License {
 	protected $endpoint = 'v1/public/licenses';
 
 	/**
-	 * WPSolvex\AutoAIBlogger\Licensing\Client
+	 * SureCart\Licensing\Client
 	 *
 	 * @var object
 	 */
@@ -34,7 +36,7 @@ class License {
 	/**
 	 * Initialize the class.
 	 *
-	 * @param WPSolvex\AutoAIBlogger\Licensing\Client $client The client.
+	 * @param SureCart\Licensing\Client $client The client.
 	 */
 	public function __construct( Client $client ) {
 		$this->client = $client;
@@ -67,7 +69,7 @@ class License {
 			// create the activation.
 			$activation = $this->client->activation()->create( $license->id );
 			if ( is_wp_error( $activation ) ) {
-				throw new \Exception( esc_html( $activation->get_error_message() ) );
+				throw new \Exception( $activation->get_error_message() );
 			}
 			$this->client->settings()->activation_id = $activation->id;
 			// validate the release.
@@ -103,7 +105,7 @@ class License {
 
 		if ( is_wp_error( $deactivated ) ) {
 			// it has been deleted remotely.
-			if ( $deactivated->get_error_code() === 'not_found' ) {
+			if ( 'not_found' === $deactivated->get_error_code() ) {
 				$this->client->settings()->clear_options();
 				return true;
 			}
@@ -155,16 +157,16 @@ class License {
 		// get license.
 		$license = $this->retrieve( sanitize_text_field( $key ) );
 		if ( is_wp_error( $license ) ) {
-			if ( $license->get_error_code() === 'not_found' ) {
-				throw new \Exception( esc_html( $this->client->__( 'This is not a valid license. Please double-check it and try again.' ) ) );
+			if ( 'not_found' === $license->get_error_code() ) {
+				throw new \Exception( $this->client->__( 'This is not a valid license. Please double-check it and try again.' ) );
 			}
-			throw new \Exception( esc_html( $license->get_error_message() ) );
+			throw new \Exception( $license->get_error_message() );
 		}
 		if ( empty( $license->id ) ) {
-			throw new \Exception( esc_html( $this->client->__( 'This is not a valid license. Please double-check it and try again.' ) ) );
+			throw new \Exception( $this->client->__( 'This is not a valid license. Please double-check it and try again.' ) );
 		}
-		if ( ( $license->status ?? 'revoked' ) === 'revoked' ) {
-			throw new \Exception( esc_html( $this->client->__( 'This license has been revoked. Please re-purchase to obtain a new license.' ) ) );
+		if ( 'revoked' === ( $license->status ?? 'revoked' ) ) {
+			throw new \Exception( $this->client->__( 'This license has been revoked. Please re-purchase to obtain a new license.' ) );
 		}
 
 		if ( $store ) {
@@ -184,11 +186,11 @@ class License {
 	public function validate_release() {
 		$current_release = $this->get_current_release();
 		if ( is_wp_error( $current_release ) ) {
-			throw new \Exception( esc_html( $current_release->get_error_message() ) );
+			throw new \Exception( $current_release->get_error_message() );
 		}
 			// if there is no slug or it does not match.
 		if ( empty( $current_release->release_json->slug ) || $this->client->slug !== $current_release->release_json->slug ) {
-			throw new \Exception( esc_html( $this->client->__( 'This license is not valid for this product.' ) ) );
+			throw new \Exception( $this->client->__( 'This license is not valid for this product.' ) );
 		}
 		return $current_release;
 	}
@@ -202,7 +204,7 @@ class License {
 	 */
 	public function is_valid( $license_key = '' ) {
 		// already set.
-		if ( $this->is_valid_license !== null ) {
+		if ( null !== $this->is_valid_license ) {
 			return $this->is_valid_license;
 		}
 
@@ -256,7 +258,7 @@ class License {
 		}
 
 		// if we have a key and the status is not revoked.
-		if ( ! empty( $license->key ) && isset( $license->status ) && $license->status !== 'revoked' ) {
+		if ( ! empty( $license->key ) && isset( $license->status ) && 'revoked' !== $license->status ) {
 			return true;
 		}
 

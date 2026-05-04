@@ -1,10 +1,12 @@
 <?php
+/**
+ * Activation model
+ *
+ * @since 1.0.0
+ * @package solvex-ai-blogger
+ */
 
-namespace WPSolvex\AutoAIBlogger\Licensing;
-
-// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound
-
-defined( 'ABSPATH' ) || exit;
+namespace SureCart\Licensing;
 
 /**
  * Activation model
@@ -18,7 +20,7 @@ class Activation {
 	protected $endpoint = 'v1/public/activations';
 
 	/**
-	 * WPSolvex\AutoAIBlogger\Licensing\Client
+	 * SureCart\Licensing\Client
 	 *
 	 * @var object
 	 */
@@ -34,11 +36,11 @@ class Activation {
 	/**
 	 * Initialize the class.
 	 *
-	 * @param WPSolvex\AutoAIBlogger\Licensing\Client $client The client.
+	 * @param SureCart\Licensing\Client $client The client.
 	 */
 	public function __construct( Client $client ) {
 		$this->client     = $client;
-		$this->option_key = 'wpsolvex_autoaiblogger_' . md5( $this->client->slug ) . '_license_activation_id';
+		$this->option_key = 'surecart_' . md5( $this->client->slug ) . '_license_activation_id';
 	}
 
 	/**
@@ -73,7 +75,7 @@ class Activation {
 
 		// no id.
 		if ( empty( $activation->id ) ) {
-			return new \WP_Error( 'could_not_activate', $this->client->__( 'Could not activate the license.', 'solvex-ai-blogger' ) );
+			return new \WP_Error( 'could_not_activate', $this->client->__( 'Could not activate the license.', 'surerank' ) );
 		}
 
 		// return the activation.

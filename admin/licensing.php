@@ -89,8 +89,8 @@ class Licensing {
 		}
 
 		// Check if licensing client class exists.
-		if ( ! class_exists( 'WPSolvex\AutoAIBlogger\Licensing\Client' ) ) {
-			$client_path = WPSOLVEX_AUTOAIBLOGGER_DIR . '/inc/licensing/Client.php';
+		if ( ! class_exists( '\SureCart\Licensing\Client' ) ) {
+			$client_path = WPSOLVEX_AUTOAIBLOGGER_DIR . '/inc/licensing/client.php';
 			if ( ! file_exists( $client_path ) || ! is_readable( $client_path ) ) {
 				return;
 			}
@@ -121,7 +121,7 @@ class Licensing {
 	 * and validation of required constants.
 	 *
 	 * @since 1.0.0
-	 * @return \WPSolvex\AutoAIBlogger\Licensing\Client|null Client instance or null on failure.
+	 * @return \SureCart\Licensing\Client|null Client instance or null on failure.
 	 */
 	public static function licensing_setup() {
 		// Validate required constants.
@@ -132,7 +132,7 @@ class Licensing {
 		}
 
 		try {
-			$client = new \WPSolvex\AutoAIBlogger\Licensing\Client(
+			$client = new \SureCart\Licensing\Client(
 				WPSOLVEX_AUTOAIBLOGGER_PRODUCT_NAME,
 				WPSOLVEX_AUTOAIBLOGGER_PUBLIC_TOKEN,
 				WPSOLVEX_AUTOAIBLOGGER_PRODUCT_FILE
