@@ -43,8 +43,6 @@ class Loader {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		$this->define_store_constants();
-
 		spl_autoload_register( [ $this, 'autoload' ] );
 
 		// Activation hook.
@@ -68,6 +66,9 @@ class Loader {
 	 * @return void
 	 */
 	public function setup(): void {
+
+		/* Define store constants for both Free and Pro versions */
+		$this->define_store_constants();
 
 		/* Maintenance init */
 		Maintenance::get_instance();
