@@ -814,14 +814,6 @@ class Cron_Handler {
 			$attachment_id = $this->upload_image_to_media_library( $image['url'], $alt_text );
 
 			if ( is_wp_error( $attachment_id ) ) {
-				wpsolvex_autoaiblogger_log_error(
-					'image_upload_failed',
-					$attachment_id->get_error_message(),
-					[
-						'image_url' => $image['url'],
-						'alt_text'  => $alt_text,
-					]
-				);
 				continue;
 			}
 
