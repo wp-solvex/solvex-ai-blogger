@@ -167,8 +167,11 @@ const globalDataReducer = ( state = {}, action ) => {
 		UPDATE_EMAIL_NOTIFICATION_VALUE: () => ( { ...state, emailNotificationValue: String( action.payload || '' ) } ),
 
 		// Server-paginated campaigns list.
-		CAMPAIGNS_LIST_REQUEST: () => ( { ...state, campaignsListLoading: true, campaignsListError: null } ),
-		CAMPAIGNS_LIST_SUCCESS: () => {
+		// Suffixes deliberately avoid `_REQUEST/_SUCCESS/_FAILURE` so the
+		// generic loading-state early-return at the top of this reducer
+		// doesn't swallow these actions before the slice can update.
+		CAMPAIGNS_LIST_START: () => ( { ...state, campaignsListLoading: true, campaignsListError: null } ),
+		CAMPAIGNS_LIST_LOADED: () => {
 			const payload = action.payload && typeof action.payload === 'object' ? action.payload : {};
 			return {
 				...state,
@@ -183,7 +186,7 @@ const globalDataReducer = ( state = {}, action ) => {
 				campaignsListError: null,
 			};
 		},
-		CAMPAIGNS_LIST_FAILURE: () => ( {
+		CAMPAIGNS_LIST_ERRORED: () => ( {
 			...state,
 			campaignsListLoading: false,
 			campaignsListError: action.payload?.message || 'Failed to load campaigns',

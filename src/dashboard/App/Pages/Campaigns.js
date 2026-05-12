@@ -141,7 +141,7 @@ function Campaigns() {
 	useEffect( () => {
 		let cancelled = false;
 
-		dispatch( { type: 'CAMPAIGNS_LIST_REQUEST' } );
+		dispatch( { type: 'CAMPAIGNS_LIST_START' } );
 		fetchCampaigns( {
 			page,
 			perPage: 20,
@@ -154,14 +154,14 @@ function Campaigns() {
 				if ( cancelled ) {
 					return;
 				}
-				dispatch( { type: 'CAMPAIGNS_LIST_SUCCESS', payload: data } );
+				dispatch( { type: 'CAMPAIGNS_LIST_LOADED', payload: data } );
 			} )
 			.catch( ( e ) => {
 				if ( cancelled ) {
 					return;
 				}
 				dispatch( {
-					type: 'CAMPAIGNS_LIST_FAILURE',
+					type: 'CAMPAIGNS_LIST_ERRORED',
 					payload: { message: e?.message || __( 'Failed to load campaigns', 'solvex-ai-blogger' ) },
 				} );
 			} );
