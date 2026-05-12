@@ -9,6 +9,10 @@ module.exports = {
 	...defaults,
 	rootDir: __dirname,
 	testMatch: [ '<rootDir>/tests/js/**/*.test.js' ],
+	setupFilesAfterEnv: [
+		...( defaults.setupFilesAfterEnv || [] ),
+		'<rootDir>/tests/js/setupTests.js',
+	],
 	moduleNameMapper: {
 		'^@AdminRoot/(.*)$': '<rootDir>/src/dashboard/$1',
 		'^@DashboardApp/(.*)$': '<rootDir>/src/dashboard/App/$1',
