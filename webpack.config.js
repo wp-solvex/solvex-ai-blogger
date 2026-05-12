@@ -13,6 +13,7 @@ module.exports = {
 		'blog-app': path.resolve( __dirname, 'src/dashboard/App.js' ),
 	},
 	resolve: {
+		extensions: [ ...( defaultConfig.resolve.extensions || [ '.js', '.json' ] ), '.jsx' ],
 		alias: {
 			...defaultConfig.resolve.alias,
 			'@AdminRoot': path.resolve( __dirname, 'src/dashboard' ),

@@ -2,24 +2,20 @@
 @use "./Styles/common.scss";
 @use "./Styles/typography-config.scss";
 @use "./Styles/tailwind-important.scss";
-@use "./Styles/brand-colors.scss";
 
-@import url( "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" );
+/* Tailwind v4 design tokens — must precede the legacy SCSS overrides below. */
+@import "./Styles/theme.css";
 
-#solvex-ai-blogger-main-page--wrapper *,
+@import url( "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" );
+
 .ai-blogger-container * {
 	box-sizing: border-box;
 }
 
-#solvex-ai-blogger-main-page--wrapper,
 .ai-blogger-container {
 	font-family: inter, sans-serif;
 	position: relative;
 }
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 .posts_page_solvex-ai-blogger {
 	--tw-bg-opacity: 1;
@@ -60,7 +56,27 @@
 
 #headlessui-portal-root select,
 .posts_page_solvex-ai-blogger select.wpsolvex-autoaiblogger-select-control {
-	@apply col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-brand-600 sm:text-sm/6;
+	grid-column-start: 1;
+	grid-row-start: 1;
+	width: 100%;
+	appearance: none;
+	border-radius: 0.375rem;
+	background-color: #fff;
+	padding: 0.375rem 2rem 0.375rem 0.75rem;
+	font-size: 1rem;
+	color: #1f2937;
+	outline: 1px solid #d1d5db;
+	outline-offset: -1px;
+
+	&:focus {
+		outline: 2px solid var( --brand );
+		outline-offset: -2px;
+	}
+
+	@media ( min-width: 640px ) {
+		font-size: 0.875rem;
+		line-height: 1.25rem;
+	}
 }
 
 .post-filters-option > * {

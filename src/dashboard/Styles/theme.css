@@ -1,0 +1,189 @@
+/**
+ * Solvex AI Blogger — Design Tokens (Tailwind v4)
+ *
+ * Light theme only. OKLch tokens ported from the radiant-blogger-studio
+ * Lovable redesign. Preflight is scoped to the plugin wrapper to leave
+ * WordPress admin chrome untouched.
+ */
+
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer( theme );
+@import "tailwindcss/utilities.css" layer( utilities );
+@import "tw-animate-css";
+
+@source "../../../src/dashboard/**/*.{js,jsx}";
+
+@theme inline {
+	--font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+	--font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+	--radius-sm: calc( var( --radius ) - 4px );
+	--radius-md: calc( var( --radius ) - 2px );
+	--radius-lg: var( --radius );
+	--radius-xl: calc( var( --radius ) + 4px );
+
+	--color-background: var( --background );
+	--color-foreground: var( --foreground );
+	--color-card: var( --card );
+	--color-card-foreground: var( --card-foreground );
+	--color-popover: var( --popover );
+	--color-popover-foreground: var( --popover-foreground );
+	--color-primary: var( --primary );
+	--color-primary-foreground: var( --primary-foreground );
+	--color-secondary: var( --secondary );
+	--color-secondary-foreground: var( --secondary-foreground );
+	--color-muted: var( --muted );
+	--color-muted-foreground: var( --muted-foreground );
+	--color-accent: var( --accent );
+	--color-accent-foreground: var( --accent-foreground );
+	--color-destructive: var( --destructive );
+	--color-destructive-foreground: var( --destructive-foreground );
+	--color-border: var( --border );
+	--color-input: var( --input );
+	--color-ring: var( --ring );
+	--color-brand: var( --brand );
+	--color-brand-soft: var( --brand-soft );
+	--color-success: var( --success );
+
+	/* Animation keyframes */
+	--animate-reveal: slide-up 0.5s cubic-bezier( 0.16, 1, 0.3, 1 ) both;
+}
+
+:root {
+	--radius: 0.625rem;
+	--background: oklch( 0.985 0 0 );
+	--foreground: oklch( 0.16 0.01 285 );
+	--card: oklch( 1 0 0 );
+	--card-foreground: oklch( 0.16 0.01 285 );
+	--popover: oklch( 1 0 0 );
+	--popover-foreground: oklch( 0.16 0.01 285 );
+	--primary: oklch( 0.5 0.22 312 );
+	--primary-foreground: oklch( 0.99 0 0 );
+	--secondary: oklch( 0.96 0.005 285 );
+	--secondary-foreground: oklch( 0.2 0.01 285 );
+	--muted: oklch( 0.97 0.005 285 );
+	--muted-foreground: oklch( 0.52 0.01 285 );
+	--accent: oklch( 0.96 0.02 312 );
+	--accent-foreground: oklch( 0.5 0.22 312 );
+	--destructive: oklch( 0.6 0.22 27 );
+	--destructive-foreground: oklch( 0.99 0 0 );
+	--border: oklch( 0.92 0.005 285 );
+	--input: oklch( 0.92 0.005 285 );
+	--ring: oklch( 0.5 0.22 312 );
+	--brand: oklch( 0.5 0.22 312 );
+	--brand-soft: oklch( 0.96 0.04 312 );
+	--success: oklch( 0.65 0.16 155 );
+
+	/* Legacy aliases — keep existing SCSS/components working until ported. */
+	--wpsolvex-autoaiblogger-brand-primary: var( --brand );
+	--wpsolvex-autoaiblogger-brand-primary-hover: oklch( 0.42 0.22 312 );
+	--wpsolvex-autoaiblogger-brand-primary-light: oklch( 0.6 0.2 312 );
+	--wpsolvex-autoaiblogger-brand-primary-dark: oklch( 0.42 0.22 312 );
+	--wpsolvex-autoaiblogger-brand-50: oklch( 0.98 0.01 312 );
+	--wpsolvex-autoaiblogger-brand-100: oklch( 0.96 0.04 312 );
+	--wpsolvex-autoaiblogger-brand-200: oklch( 0.91 0.07 312 );
+	--wpsolvex-autoaiblogger-brand-300: oklch( 0.81 0.11 312 );
+	--wpsolvex-autoaiblogger-brand-400: oklch( 0.66 0.17 312 );
+	--wpsolvex-autoaiblogger-brand-500: oklch( 0.56 0.21 312 );
+	--wpsolvex-autoaiblogger-brand-600: oklch( 0.5 0.22 312 );
+	--wpsolvex-autoaiblogger-brand-700: oklch( 0.42 0.22 312 );
+	--wpsolvex-autoaiblogger-brand-800: oklch( 0.36 0.18 312 );
+	--wpsolvex-autoaiblogger-brand-900: oklch( 0.26 0.14 312 );
+}
+
+/* Scoped preflight — applies inside our wrapper and Radix portals only. */
+@layer base {
+	#solvex-ai-blogger-main-page--wrapper,
+	#solvex-ai-blogger-main-page--wrapper *,
+	#solvex-ai-blogger-main-page--wrapper *::before,
+	#solvex-ai-blogger-main-page--wrapper *::after,
+	[data-radix-popper-content-wrapper] *,
+	[data-radix-popper-content-wrapper] *::before,
+	[data-radix-popper-content-wrapper] *::after,
+	[data-sonner-toaster] *,
+	[data-sonner-toaster] *::before,
+	[data-sonner-toaster] *::after {
+		box-sizing: border-box;
+		border-width: 0;
+		border-style: solid;
+		border-color: var( --color-border );
+	}
+
+	#solvex-ai-blogger-main-page--wrapper {
+		background-color: var( --color-background );
+		color: var( --color-foreground );
+		font-family: var( --font-sans );
+		font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
+		-webkit-font-smoothing: antialiased;
+	}
+
+	#solvex-ai-blogger-main-page--wrapper button,
+	[data-radix-popper-content-wrapper] button,
+	[data-sonner-toaster] button {
+		background: transparent;
+		border: 0;
+		cursor: pointer;
+		font: inherit;
+		color: inherit;
+		padding: 0;
+	}
+
+	#solvex-ai-blogger-main-page--wrapper ul,
+	#solvex-ai-blogger-main-page--wrapper ol,
+	[data-radix-popper-content-wrapper] ul,
+	[data-radix-popper-content-wrapper] ol {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	#solvex-ai-blogger-main-page--wrapper h1,
+	#solvex-ai-blogger-main-page--wrapper h2,
+	#solvex-ai-blogger-main-page--wrapper h3,
+	#solvex-ai-blogger-main-page--wrapper h4,
+	#solvex-ai-blogger-main-page--wrapper h5,
+	#solvex-ai-blogger-main-page--wrapper h6 {
+		font-size: inherit;
+		font-weight: inherit;
+		margin: 0;
+	}
+
+	#solvex-ai-blogger-main-page--wrapper p {
+		margin: 0;
+	}
+
+	#solvex-ai-blogger-main-page--wrapper img,
+	#solvex-ai-blogger-main-page--wrapper svg,
+	#solvex-ai-blogger-main-page--wrapper video,
+	#solvex-ai-blogger-main-page--wrapper canvas {
+		display: block;
+		max-width: 100%;
+	}
+}
+
+@keyframes slide-up {
+	from {
+		opacity: 0;
+		transform: translateY( 10px );
+	}
+	to {
+		opacity: 1;
+		transform: translateY( 0 );
+	}
+}
+
+.animate-reveal {
+	animation: slide-up 0.5s cubic-bezier( 0.16, 1, 0.3, 1 ) both;
+}
+
+/* Honor user motion preference */
+@media ( prefers-reduced-motion: reduce ) {
+	.animate-reveal {
+		animation: none;
+	}
+}
+
+[data-reduce-motion="true"] .animate-reveal {
+	animation: none;
+}
