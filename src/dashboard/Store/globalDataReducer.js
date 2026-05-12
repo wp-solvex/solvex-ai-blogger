@@ -166,6 +166,48 @@ const globalDataReducer = ( state = {}, action ) => {
 		UPDATE_EMAIL_NOTIFICATION_ENABLED: () => ( { ...state, emailNotificationEnabled: Boolean( action.payload ) } ),
 		UPDATE_EMAIL_NOTIFICATION_VALUE: () => ( { ...state, emailNotificationValue: String( action.payload || '' ) } ),
 
+		// Server-paginated campaigns list.
+		CAMPAIGNS_LIST_REQUEST: () => ( { ...state, campaignsListLoading: true, campaignsListError: null } ),
+		CAMPAIGNS_LIST_SUCCESS: () => {
+			const payload = action.payload && typeof action.payload === 'object' ? action.payload : {};
+			return {
+				...state,
+				campaignsList: payload.items || {},
+				campaignsPagination: {
+					page: Number( payload.page ) || 1,
+					perPage: Number( payload.perPage ) || 20,
+					total: Number( payload.total ) || 0,
+					totalPages: Number( payload.totalPages ) || 0,
+				},
+				campaignsListLoading: false,
+				campaignsListError: null,
+			};
+		},
+		CAMPAIGNS_LIST_FAILURE: () => ( {
+			...state,
+			campaignsListLoading: false,
+			campaignsListError: action.payload?.message || 'Failed to load campaigns',
+		} ),
+		CAMPAIGNS_LIST_UPDATE_ITEM: () => {
+			if ( ! action.payload?.id ) {
+				return state;
+			}
+			const id = String( action.payload.id );
+			const next = { ...( state.campaignsList || {} ) };
+			if ( next[ id ] ) {
+				next[ id ] = { ...next[ id ], ...action.payload.changes };
+			}
+			return { ...state, campaignsList: next };
+		},
+		CAMPAIGNS_LIST_REMOVE_ITEM: () => {
+			if ( ! action.payload?.id ) {
+				return state;
+			}
+			const next = { ...( state.campaignsList || {} ) };
+			delete next[ String( action.payload.id ) ];
+			return { ...state, campaignsList: next };
+		},
+
 		CLEAR_ERROR: () => ( { ...state, error: null } ),
 		STORE_ERROR: () => ( { ...state, error: action.payload?.message || 'Store error occurred', isLoading: false } ),
 		RESET_STATE: () => {

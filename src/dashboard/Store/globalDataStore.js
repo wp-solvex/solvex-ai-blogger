@@ -7,7 +7,7 @@ import { toast } from '@Utils/toast';
  * into Sonner toast calls so the old emit sites keep working while pages are
  * migrated to call toast.* directly. Remove once all emit sites are migrated.
  *
- * @param  store
+ * @param {Object} store Redux store instance.
  */
 const attachLegacyToastBridge = ( store ) => {
 	let last;
@@ -129,7 +129,14 @@ const getInitialState = () => {
 		adminNonce: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.admin_nonce, 'string', '' ),
 		ajaxUrl: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.ajax_url, 'string', '' ),
 		editPostLink: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.edit_post_link, 'string', '/wp-admin/post.php?post={{POST_ID}}&action=edit' ),
-		allCampaigns: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.all_campaigns, 'object', {} ),
+		// `allCampaigns` is no longer hydrated server-side — campaigns are
+		// fetched on demand via CampaignsApi.fetchCampaigns. The slot is kept
+		// for backward-compat selectors while pages migrate.
+		allCampaigns: {},
+		campaignsList: {},
+		campaignsPagination: { page: 1, perPage: 20, total: 0, totalPages: 0 },
+		campaignsListLoading: false,
+		campaignsListError: null,
 		postmetaDefaults: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.postmeta_defaults, 'object', {} ),
 		licensingNonce: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.licensing_nonce, 'string', '' ),
 		upgradeLink: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.upgrade_link, 'string', '#' ),

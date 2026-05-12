@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +11,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { ConfigureDrawer } from '@Elements/Campaigns';
 import CampaignAnalyticsModal from '@Components/CampaignAnalyticsModal';
 import { TrimWordsContent } from '@Utils/TrimWordsContent';
+import { fetchCampaigns } from '@Utils/CampaignsApi';
 import { cn } from '@Utils/cn';
 
 const formatLastRun = ( lastRun ) => {
@@ -176,7 +177,6 @@ EmptyState.displayName = 'CampaignsEmptyState';
 function CampaignsInsights() {
 	const navigate = useNavigate();
 	const licenseStatus = useSelector( ( s ) => s.license_status ) || 'unlicensed';
-	const allCampaigns = useSelector( ( s ) => s.allCampaigns ) || {};
 	const homeSlug = useSelector( ( s ) => s.homeSlug ) || 'solvex-ai-blogger';
 	const defaultMetaDefaults = useSelector( ( s ) => s.postmetaDefaults ) || {};
 
@@ -184,24 +184,25 @@ function CampaignsInsights() {
 	const [ configureData, setConfigureData ] = useState( defaultMetaDefaults );
 	const [ analyticsModal, setAnalyticsModal ] = useState( { isOpen: false, campaignId: null, campaignData: null } );
 
-	const topCampaigns = useMemo( () => {
-		const list = Object.values( allCampaigns || {} );
-		if ( ! list.length ) {
-			return [];
+	const [ topCampaigns, setTopCampaigns ] = useState( [] );
+	const [ loadingCampaigns, setLoadingCampaigns ] = useState( false );
+
+	useEffect( () => {
+		if ( licenseStatus !== 'licensed' ) {
+			return undefined;
 		}
-		return [ ...list ]
-			.sort( ( a, b ) => {
-				const aIsActive = ! a?.isPaused && a?.status !== 'draft';
-				const bIsActive = ! b?.isPaused && b?.status !== 'draft';
-				if ( aIsActive !== bIsActive ) {
-					return aIsActive ? -1 : 1;
+		const ctrl = new AbortController();
+		setLoadingCampaigns( true );
+		fetchCampaigns( { page: 1, perPage: 4, orderBy: 'date', order: 'DESC', signal: ctrl.signal } )
+			.then( ( data ) => setTopCampaigns( Object.values( data.items || {} ) ) )
+			.catch( ( e ) => {
+				if ( e?.name !== 'AbortError' ) {
+					setTopCampaigns( [] );
 				}
-				const aDate = a?.created_at ? new Date( a.created_at ).getTime() : 0;
-				const bDate = b?.created_at ? new Date( b.created_at ).getTime() : 0;
-				return bDate - aDate;
 			} )
-			.slice( 0, 4 );
-	}, [ allCampaigns ] );
+			.finally( () => setLoadingCampaigns( false ) );
+		return () => ctrl.abort();
+	}, [ licenseStatus ] );
 
 	const handleActivateLicense = useCallback( ( e ) => {
 		e?.preventDefault?.();
@@ -277,7 +278,13 @@ function CampaignsInsights() {
 				</a>
 			</header>
 
-			{ topCampaigns.length === 0 ? (
+			{ loadingCampaigns ? (
+				<div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+					{ Array.from( { length: 2 } ).map( ( _, i ) => (
+						<div key={ i } className="h-44 animate-pulse rounded-xl border border-border bg-muted/40" />
+					) ) }
+				</div>
+			) : topCampaigns.length === 0 ? (
 				<EmptyState />
 			) : (
 				<div className="grid grid-cols-1 gap-5 md:grid-cols-2">

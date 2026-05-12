@@ -191,7 +191,7 @@ class Menu {
 		$authors           = Sanitizer::get_sanitized_authors();
 		$post_types        = Sanitizer::get_sanitized_post_types();
 		$postmeta_defaults = Metadata::get_default_settings();
-		$all_campaigns     = wpsolvex_autoaiblogger_get_all_campaigns();
+		// Campaigns are fetched via REST (GET /solvex-ai-blogger/v1/campaigns) on demand.
 		$generated_posts   = wpsolvex_autoaiblogger_get_generated_posts();
 
 		$localized_data = apply_filters(
@@ -262,7 +262,6 @@ class Menu {
 				'authors'                    => $authors,
 				'post_types'                 => $post_types,
 				'postmeta_defaults'          => $postmeta_defaults,
-				'all_campaigns'              => $all_campaigns,
 				'generated_posts'            => $generated_posts,
 
 				// System configuration.
