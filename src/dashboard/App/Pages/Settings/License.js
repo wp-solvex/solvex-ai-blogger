@@ -163,7 +163,7 @@ const SettingsLicense = memo( function SettingsLicense() {
 						<Label htmlFor="settings-license-key">
 							{ __( 'License key', 'solvex-ai-blogger' ) }
 						</Label>
-						<div className="relative">
+						<div className="relative mt-3">
 							<KeyRound
 								className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
 								aria-hidden="true"

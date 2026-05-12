@@ -101,7 +101,7 @@ function Settings() {
 							const isActive = section.id === activeId;
 							const hasWarning = warnings[ section.id ];
 							return (
-								<li key={ section.id }>
+								<li key={ section.id } className='m-0'>
 									<Link
 										to={ { search: `?page=${ homeSlug }&path=${ section.path }` } }
 										onClick={ ( e ) => handleNavigate( e, section.path ) }

@@ -1324,13 +1324,6 @@
       margin-block-end: calc(calc(var(--spacing) * 8) * calc(1 - var(--tw-space-y-reverse)));
     }
   }
-  .space-y-10 {
-    :where(& > :not(:last-child)) {
-      --tw-space-y-reverse: 0;
-      margin-block-start: calc(calc(var(--spacing) * 10) * var(--tw-space-y-reverse));
-      margin-block-end: calc(calc(var(--spacing) * 10) * calc(1 - var(--tw-space-y-reverse)));
-    }
-  }
   .space-y-reverse {
     :where(& > :not(:last-child)) {
       --tw-space-y-reverse: 1;
@@ -1974,9 +1967,6 @@
   }
   .pl-7 {
     padding-left: calc(var(--spacing) * 7);
-  }
-  .pl-9 {
-    padding-left: calc(var(--spacing) * 9);
   }
   .pl-10 {
     padding-left: calc(var(--spacing) * 10);
@@ -2749,13 +2739,6 @@
     &:is(:where(.group):hover *) {
       @media (hover: hover) {
         color: var( --brand );
-      }
-    }
-  }
-  .group-hover\:text-foreground {
-    &:is(:where(.group):hover *) {
-      @media (hover: hover) {
-        color: var( --foreground );
       }
     }
   }
@@ -4012,11 +3995,6 @@
       grid-column: span 9 / span 9;
     }
   }
-  .lg\:block {
-    @media (width >= 64rem) {
-      display: block;
-    }
-  }
   .lg\:grid-cols-2 {
     @media (width >= 64rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4638,6 +4616,15 @@
 .solvex-ai-blogger-dashboard h1,.solvex-ai-blogger-dashboard h2,.solvex-ai-blogger-dashboard h3,.solvex-ai-blogger-dashboard h4,.solvex-ai-blogger-dashboard h5,.solvex-ai-blogger-dashboard h6 {
   margin-top: 0;
   margin-bottom: .3em;
+}
+label+input,label+textarea {
+  margin-top: 10px;
+}
+input+p {
+  margin-top: 5px !important;
+}
+ul li {
+  margin: 0 !important;
 }
 @property --tw-translate-x {
   syntax: "*";

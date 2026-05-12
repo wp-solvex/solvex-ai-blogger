@@ -426,7 +426,7 @@ function PostIdeas() {
 							return (
 								<li
 									key={ `idea-${ index }-${ postTitle?.slice( 0, 24 ) }` }
-									className="group grid grid-cols-[1fr_auto] items-center gap-4 px-6 py-4 transition-colors hover:bg-muted/30"
+									className="group grid grid-cols-[1fr_auto] items-center gap-4 px-6 py-4 transition-colors hover:bg-muted/30 m-0"
 								>
 									<span className="text-sm font-medium">
 										<TrimWordsContent content={ postTitle || '' } count={ 120 } />

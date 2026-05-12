@@ -148,41 +148,44 @@ export function AppShell( { children } ) {
 						</div>
 
 						<div className="flex items-center gap-5">
-							{ isLicensed && (
-								<div className="hidden flex-col items-end gap-1.5 sm:flex">
-									<div className="flex items-center gap-2">
-										<span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-											{ __( 'Tokens', 'solvex-ai-blogger' ) }
-										</span>
-										<span className="font-mono text-[11px] font-medium tabular-nums">
-											{ formatTokens( tokensUsed ) } / { formatTokens( tokenTotal ) }
-										</span>
-										<button
-											onClick={ refreshTokens }
-											disabled={ refreshing }
-											type="button"
-											className="text-muted-foreground transition-colors hover:text-brand disabled:opacity-50"
-											aria-label={ __( 'Refresh tokens', 'solvex-ai-blogger' ) }
-										>
-											<RefreshCw
-												className={ cn( 'size-3', refreshing && 'animate-spin' ) }
-												aria-hidden="true"
-											/>
-										</button>
-									</div>
-									<div className="h-1 w-36 overflow-hidden rounded-full bg-border">
-										<div
-											className="h-full bg-brand transition-all"
-											style={ { width: `${ tokenProgress }%` } }
-											role="progressbar"
-											aria-valuemin={ 0 }
-											aria-valuemax={ 100 }
-											aria-valuenow={ Math.round( tokenProgress ) }
+							<div className="hidden flex-col items-end gap-1.5 sm:flex">
+								<div className="flex items-center gap-2">
+									<span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+										{ __( 'Tokens', 'solvex-ai-blogger' ) }
+									</span>
+									<span className="font-mono text-[11px] font-medium tabular-nums">
+										{ isLicensed
+											? `${ formatTokens( tokensUsed ) } / ${ formatTokens( tokenTotal ) }`
+											: '— / —' }
+									</span>
+									<button
+										onClick={ refreshTokens }
+										disabled={ refreshing || ! isLicensed }
+										type="button"
+										className="text-muted-foreground transition-colors hover:text-brand disabled:cursor-not-allowed disabled:opacity-40"
+										aria-label={ __( 'Refresh tokens', 'solvex-ai-blogger' ) }
+										title={ isLicensed
+											? __( 'Refresh tokens', 'solvex-ai-blogger' )
+											: __( 'Activate your license to use tokens', 'solvex-ai-blogger' ) }
+									>
+										<RefreshCw
+											className={ cn( 'size-3', refreshing && 'animate-spin' ) }
+											aria-hidden="true"
 										/>
-									</div>
+									</button>
 								</div>
-							) }
-							{ isLicensed && <div className="hidden h-8 w-px bg-border sm:block" /> }
+								<div className="h-1 w-36 overflow-hidden rounded-full bg-border">
+									<div
+										className="h-full bg-brand transition-all"
+										style={ { width: `${ isLicensed ? tokenProgress : 0 }%` } }
+										role="progressbar"
+										aria-valuemin={ 0 }
+										aria-valuemax={ 100 }
+										aria-valuenow={ Math.round( isLicensed ? tokenProgress : 0 ) }
+									/>
+								</div>
+							</div>
+							<div className="hidden h-8 w-px bg-border sm:block" />
 							<span className="rounded-full border border-border bg-card px-2 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
 								v{ version }
 							</span>

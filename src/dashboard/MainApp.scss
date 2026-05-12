@@ -362,3 +362,14 @@
     margin-top: 0;
     margin-bottom: 0.3em;
 }
+
+label + input,
+label + textarea {
+    margin-top: 10px;
+}
+input + p {
+    margin-top: 5px !important;
+}
+ul li {
+	margin: 0 !important;
+}

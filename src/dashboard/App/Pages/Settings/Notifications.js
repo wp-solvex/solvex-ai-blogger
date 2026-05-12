@@ -125,11 +125,11 @@ const SettingsNotifications = memo( function SettingsNotifications() {
 						{ __( "We'll email you for each of these events while notifications are on.", 'solvex-ai-blogger' ) }
 					</p>
 				</header>
-				<ul className="space-y-2">
+				<ul className="space-y-2 flex items-center justify-between gap-4">
 					{ NOTIFICATION_TYPES.map( ( type ) => (
 						<li
 							key={ type }
-							className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3"
+							className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 w-full"
 						>
 							<CheckCircle2 className="size-4 text-brand" aria-hidden="true" />
 							<span className="text-sm font-medium">{ type }</span>
