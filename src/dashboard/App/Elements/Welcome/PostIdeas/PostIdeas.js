@@ -376,22 +376,29 @@ function PostIdeas() {
 						{ __( 'AI-ranked topics to grow your blog.', 'solvex-ai-blogger' ) }
 					</p>
 				</div>
-				<ProButton
-					variant="primary"
-					size="default"
-					icon={ proAvailable ? <WandSparkles className="h-4 w-4" /> : <Crown className="h-4 w-4" /> }
-					url={ proAvailable ? '' : proPurchaseUrl }
-					onClick={ proAvailable ? handleRefresh : null }
-					tooltip={
-						proAvailable
-							? __( 'Refresh Post Ideas', 'solvex-ai-blogger' )
-							: __( 'Limited to 5 suggestions — Upgrade to Pro', 'solvex-ai-blogger' )
-					}
-					tooltipPosition="left"
-					iconPosition="left"
-				>
-					{ refreshLabel }
-				</ProButton>
+				{ proAvailable ? (
+					<button
+						type="button"
+						onClick={ handleRefresh }
+						className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-brand/30"
+						title={ __( 'Refresh post ideas', 'solvex-ai-blogger' ) }
+					>
+						<WandSparkles className="size-3" aria-hidden="true" />
+						{ refreshLabel }
+					</button>
+				) : (
+					<ProButton
+						variant="primary"
+						size="default"
+						icon={ <Crown className="h-4 w-4" /> }
+						url={ proPurchaseUrl }
+						tooltip={ __( 'Limited to 5 suggestions — Upgrade to Pro', 'solvex-ai-blogger' ) }
+						tooltipPosition="left"
+						iconPosition="left"
+					>
+						{ refreshLabel }
+					</ProButton>
+				) }
 			</header>
 
 			<div className="overflow-hidden rounded-xl border border-border bg-card ring-1 ring-black/[0.02]">

@@ -107,13 +107,13 @@ export function AppShell( { children } ) {
 						<div className="flex items-center gap-10">
 							<Link
 								to={ { search: `?page=${ homeSlug }` } }
-								className="flex items-center gap-2.5"
+								className="flex items-center gap-2.5 text-foreground no-underline hover:text-foreground"
 								aria-label={ __( 'Solvex AI Blogger — go to welcome', 'solvex-ai-blogger' ) }
 							>
 								<div className="flex size-7 items-center justify-center rounded-md bg-brand">
 									<Sparkles className="size-3.5 text-white" strokeWidth={ 2.5 } aria-hidden="true" />
 								</div>
-								<span className="text-[15px] font-semibold tracking-tight">
+								<span className="text-[15px] font-semibold tracking-tight text-foreground">
 									{ __( 'Solvex AI Blogger', 'solvex-ai-blogger' ) }
 								</span>
 							</Link>
@@ -183,7 +183,7 @@ export function AppShell( { children } ) {
 								</div>
 							) }
 							{ isLicensed && <div className="hidden h-8 w-px bg-border sm:block" /> }
-							<span className="rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
+							<span className="rounded-full border border-border bg-card px-2 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
 								v{ version }
 							</span>
 						</div>

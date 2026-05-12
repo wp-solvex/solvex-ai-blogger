@@ -146,12 +146,12 @@ const SettingsGeneral = memo( function SettingsGeneral() {
 	};
 
 	return (
-		<div className="space-y-10">
+		<div className="space-y-8">
 			<section>
-				<header className="mb-5">
-					<h2 className="text-xl font-semibold tracking-tight">
+				<header className="mb-4">
+					<h3 className="text-base font-semibold tracking-tight">
 						{ __( 'Site persona', 'solvex-ai-blogger' ) }
-					</h2>
+					</h3>
 					<p className="mt-1 text-sm text-muted-foreground">
 						{ __( 'Used by the AI when generating content.', 'solvex-ai-blogger' ) }
 					</p>
@@ -171,8 +171,8 @@ const SettingsGeneral = memo( function SettingsGeneral() {
 								onChange={ onTitle }
 								maxLength={ 100 }
 								className={ cn(
-									'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
-									errors.siteTitle && 'border-destructive focus-visible:ring-destructive'
+									'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/15',
+									errors.siteTitle && 'border-destructive focus-visible:ring-destructive/20'
 								) }
 								placeholder={ __( 'My AI Blog', 'solvex-ai-blogger' ) }
 							/>
@@ -190,8 +190,8 @@ const SettingsGeneral = memo( function SettingsGeneral() {
 								onChange={ onFor }
 								maxLength={ 200 }
 								className={ cn(
-									'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
-									errors.siteFor && 'border-destructive focus-visible:ring-destructive'
+									'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/15',
+									errors.siteFor && 'border-destructive focus-visible:ring-destructive/20'
 								) }
 								placeholder={ __( 'Small business owners', 'solvex-ai-blogger' ) }
 							/>
@@ -210,8 +210,8 @@ const SettingsGeneral = memo( function SettingsGeneral() {
 							rows={ 5 }
 							maxLength={ 500 }
 							className={ cn(
-								'flex w-full resize-y rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
-								errors.siteDescription && 'border-destructive focus-visible:ring-destructive'
+								'flex w-full resize-y rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/15',
+								errors.siteDescription && 'border-destructive focus-visible:ring-destructive/20'
 							) }
 							placeholder={ __( 'Friendly, practical tutorials for…', 'solvex-ai-blogger' ) }
 						/>
@@ -220,23 +220,31 @@ const SettingsGeneral = memo( function SettingsGeneral() {
 			</section>
 
 			<section>
-				<header className="mb-5">
-					<h2 className="text-xl font-semibold tracking-tight">
-						{ __( 'Creativity', 'solvex-ai-blogger' ) }
-					</h2>
+				<header className="mb-1">
+					<h3 className="text-base font-semibold tracking-tight">
+						{ __( 'Advanced AI Settings', 'solvex-ai-blogger' ) }
+					</h3>
 					<p className="mt-1 text-sm text-muted-foreground">
-						{ __( 'Higher values produce more varied, surprising content.', 'solvex-ai-blogger' ) }
+						{ __( 'Configure creativity temperature and content safety filters.', 'solvex-ai-blogger' ) }
 					</p>
 				</header>
-				<div className="rounded-xl border border-border bg-card p-6 ring-1 ring-black/[0.02]">
-					<div className="flex items-baseline justify-between">
-						<Label>{ __( 'Temperature', 'solvex-ai-blogger' ) }</Label>
-						<span className="font-mono text-xs text-muted-foreground">
+
+				<div className="mt-5 rounded-xl border border-border bg-card p-6 ring-1 ring-black/[0.02]">
+					<div className="flex items-center justify-between">
+						<div>
+							<Label className="text-sm font-semibold">
+								{ __( 'Creativity Temperature', 'solvex-ai-blogger' ) }
+							</Label>
+							<p className="mt-0.5 text-xs text-muted-foreground">
+								{ __( 'Controls randomness in content generation.', 'solvex-ai-blogger' ) }
+							</p>
+						</div>
+						<span className="inline-flex items-center rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-semibold text-brand">
 							{ temperatureLabel( temperature ) } · { temperature.toFixed( 2 ) }
 						</span>
 					</div>
 					<Slider
-						className="mt-3"
+						className="mt-4"
 						value={ [ temperature ] }
 						min={ 0 }
 						max={ 2 }
@@ -244,50 +252,72 @@ const SettingsGeneral = memo( function SettingsGeneral() {
 						onValueChange={ onTemp }
 						aria-label={ __( 'Creativity temperature', 'solvex-ai-blogger' ) }
 					/>
-					<div className="mt-2 flex justify-between text-xs text-muted-foreground">
-						<span>{ __( 'Conservative', 'solvex-ai-blogger' ) }</span>
-						<span>{ __( 'Experimental', 'solvex-ai-blogger' ) }</span>
+					<div className="mt-2 flex justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+						<span>{ __( 'More predictable', 'solvex-ai-blogger' ) }</span>
+						<span>{ __( 'More creative', 'solvex-ai-blogger' ) }</span>
 					</div>
 				</div>
-			</section>
 
-			<section>
-				<header className="mb-5">
-					<h2 className="text-xl font-semibold tracking-tight">
-						{ __( 'Content safety', 'solvex-ai-blogger' ) }
-					</h2>
-					<p className="mt-1 text-sm text-muted-foreground">
-						{ __( 'Higher levels block more content. Adjust per your audience.', 'solvex-ai-blogger' ) }
-					</p>
-				</header>
-				<div className="grid gap-5 rounded-xl border border-border bg-card p-6 ring-1 ring-black/[0.02] sm:grid-cols-2">
-					{ SAFETY_FILTERS.map( ( filter ) => {
-						const current = values[ filter.key ];
-						return (
-							<div key={ filter.id } className="space-y-2">
-								<div className="flex items-baseline justify-between">
-									<Label>{ filter.title }</Label>
-									<span className="font-mono text-xs text-muted-foreground">
-										{ SAFETY_LABELS[ current ] }
-									</span>
+				<div className="mt-6">
+					<h4 className="text-sm font-semibold tracking-tight">
+						{ __( 'Content Safety Filters', 'solvex-ai-blogger' ) }
+					</h4>
+					<div className="mt-3 grid gap-4 sm:grid-cols-2">
+						{ SAFETY_FILTERS.map( ( filter ) => {
+							const current = values[ filter.key ];
+							return (
+								<div
+									key={ filter.id }
+									className="rounded-xl border border-border bg-card p-5 ring-1 ring-black/[0.02]"
+								>
+									<div className="flex items-start justify-between gap-3">
+										<div>
+											<Label className="text-sm font-semibold">{ filter.title }</Label>
+											<p className="mt-0.5 text-xs text-muted-foreground">
+												{ filter.description }
+											</p>
+										</div>
+										<span className="inline-flex shrink-0 items-center rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">
+											{ SAFETY_LABELS[ current ] }
+										</span>
+									</div>
+									<Slider
+										className="mt-4"
+										value={ [ current ] }
+										min={ 0 }
+										max={ 4 }
+										step={ 1 }
+										onValueChange={ ( [ v ] ) =>
+											dispatch( {
+												type: safetySetters[ filter.key ],
+												payload: Math.max( 0, Math.min( 4, Math.round( v ) ) ),
+											} )
+										}
+										aria-label={ filter.title }
+									/>
+									<div className="mt-1 flex justify-between text-[10px] font-medium text-muted-foreground">
+										{ [ 'Off', '1', '2', '3', '4' ].map( ( tick, idx ) => (
+											<span
+												key={ tick }
+												className={ cn(
+													'tabular-nums',
+													current === idx && 'font-bold text-brand'
+												) }
+											>
+												{ tick }
+											</span>
+										) ) }
+									</div>
 								</div>
-								<p className="text-xs text-muted-foreground">{ filter.description }</p>
-								<Slider
-									value={ [ current ] }
-									min={ 0 }
-									max={ 4 }
-									step={ 1 }
-									onValueChange={ ( [ v ] ) =>
-										dispatch( {
-											type: safetySetters[ filter.key ],
-											payload: Math.max( 0, Math.min( 4, Math.round( v ) ) ),
-										} )
-									}
-									aria-label={ filter.title }
-								/>
-							</div>
-						);
-					} ) }
+							);
+						} ) }
+					</div>
+				</div>
+
+				<div className="mt-5 rounded-xl border border-[oklch(0.85_0.08_155)] bg-[oklch(0.97_0.04_155)] px-4 py-3 text-sm text-[oklch(0.35_0.12_155)]">
+					<strong className="font-semibold">{ __( 'Safety Filter Guidelines.', 'solvex-ai-blogger' ) }</strong>
+					{ ' ' }
+					{ __( 'Higher levels provide stronger moderation but may be more restrictive. Adjust based on your audience.', 'solvex-ai-blogger' ) }
 				</div>
 			</section>
 		</div>

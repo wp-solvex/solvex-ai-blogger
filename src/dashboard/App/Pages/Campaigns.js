@@ -30,13 +30,6 @@ const SORT_OPTIONS = [
 	{ value: 'name-desc', label: __( 'Name Z → A', 'solvex-ai-blogger' ), orderBy: 'title', order: 'DESC' },
 ];
 
-const STATUS_OPTIONS = [
-	{ value: '', label: __( 'All campaigns', 'solvex-ai-blogger' ) },
-	{ value: 'active', label: __( 'Active', 'solvex-ai-blogger' ) },
-	{ value: 'paused', label: __( 'Paused', 'solvex-ai-blogger' ) },
-	{ value: 'completed', label: __( 'Completed', 'solvex-ai-blogger' ) },
-];
-
 function deriveCampaignState( campaign ) {
 	const postsCreated = parseInt( campaign?.postsCreated, 10 ) || 0;
 	const postsTarget = parseInt( campaign?.postsTarget, 10 ) || 0;
@@ -111,7 +104,6 @@ function Campaigns() {
 	const ajaxUrl = useSelector( ( s ) => s.ajaxUrl );
 
 	const [ search, setSearch ] = useState( '' );
-	const [ statusFilter, setStatusFilter ] = useState( '' );
 	const [ sortValue, setSortValue ] = useState( 'latest' );
 	const [ page, setPage ] = useState( 1 );
 	const debouncedSearch = useDebouncedValue( search, 300 );
@@ -146,7 +138,6 @@ function Campaigns() {
 			page,
 			perPage: 20,
 			search: debouncedSearch,
-			status: statusFilter,
 			orderBy,
 			order,
 		} )
@@ -169,11 +160,11 @@ function Campaigns() {
 		return () => {
 			cancelled = true;
 		};
-	}, [ dispatch, page, debouncedSearch, statusFilter, orderBy, order, reloadToken ] );
+	}, [ dispatch, page, debouncedSearch, orderBy, order, reloadToken ] );
 
 	useEffect( () => {
 		setPage( 1 );
-	}, [ debouncedSearch, statusFilter, sortValue ] );
+	}, [ debouncedSearch, sortValue ] );
 
 	const refetch = useCallback( () => setReloadToken( ( t ) => t + 1 ), [] );
 
@@ -307,17 +298,6 @@ function Campaigns() {
 				</div>
 				<div className="flex flex-wrap items-center gap-2">
 					<select
-						value={ statusFilter }
-						onChange={ ( e ) => setStatusFilter( e.target.value ) }
-						className="h-9 rounded-md border border-border bg-card px-3 text-sm font-medium text-foreground transition-colors hover:border-brand/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/15"
-					>
-						{ STATUS_OPTIONS.map( ( opt ) => (
-							<option key={ opt.value } value={ opt.value }>
-								{ opt.label }
-							</option>
-						) ) }
-					</select>
-					<select
 						value={ sortValue }
 						onChange={ ( e ) => setSortValue( e.target.value ) }
 						className="h-9 rounded-md border border-border bg-card px-3 text-sm font-medium text-foreground transition-colors hover:border-brand/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/15"
@@ -338,7 +318,7 @@ function Campaigns() {
 							value={ search }
 							onChange={ ( e ) => setSearch( e.target.value ) }
 							placeholder={ __( 'Search campaigns…', 'solvex-ai-blogger' ) }
-							className="h-9 w-64 rounded-md border border-border bg-card pl-9 pr-3 text-sm placeholder:text-muted-foreground focus-visible:border-brand/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/15"
+							className="h-9 w-64 rounded-md border border-border bg-card pr-3 text-sm placeholder:text-muted-foreground focus-visible:border-brand/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/15 force-pl-9"
 						/>
 					</div>
 					<button
@@ -388,20 +368,17 @@ function Campaigns() {
 										<div className="mx-auto flex max-w-sm flex-col items-center gap-2 text-muted-foreground">
 											<Search className="size-8 text-muted-foreground/40" aria-hidden="true" />
 											<p className="text-sm font-medium">
-												{ debouncedSearch || statusFilter
+												{ debouncedSearch
 													? __( 'No campaigns match your filters.', 'solvex-ai-blogger' )
 													: __( 'No campaigns yet — create your first one.', 'solvex-ai-blogger' ) }
 											</p>
-											{ ( debouncedSearch || statusFilter ) && (
+											{ debouncedSearch && (
 												<button
 													type="button"
-													onClick={ () => {
-														setSearch( '' );
-														setStatusFilter( '' );
-													} }
+													onClick={ () => setSearch( '' ) }
 													className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-medium hover:border-brand/30"
 												>
-													{ __( 'Clear filters', 'solvex-ai-blogger' ) }
+													{ __( 'Clear search', 'solvex-ai-blogger' ) }
 												</button>
 											) }
 										</div>

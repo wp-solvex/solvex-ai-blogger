@@ -295,6 +295,8 @@ class Menu {
 			return;
 		}
 
+		wp_dequeue_style( 'forms' );
+
 		wp_enqueue_script(
 			$handle,
 			$script_file,
