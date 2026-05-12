@@ -129,17 +129,16 @@ function Campaigns() {
 		return params.get( 'debugLogs' ) === 'true';
 	}, [] );
 
-	const sortBy = useMemo(
-		() => SORT_OPTIONS.find( ( s ) => s.value === sortValue ) || SORT_OPTIONS[ 0 ],
-		[ sortValue ]
-	);
+	const { orderBy, order } = useMemo( () => {
+		const found = SORT_OPTIONS.find( ( s ) => s.value === sortValue ) || SORT_OPTIONS[ 0 ];
+		return { orderBy: found.orderBy, order: found.order };
+	}, [ sortValue ] );
 
 	// Reload trigger so external actions (e.g. delete) can force a re-fetch
 	// without changing query params.
 	const [ reloadToken, setReloadToken ] = useState( 0 );
 
 	useEffect( () => {
-		const ctrl = new AbortController();
 		let cancelled = false;
 
 		dispatch( { type: 'CAMPAIGNS_LIST_REQUEST' } );
@@ -148,9 +147,8 @@ function Campaigns() {
 			perPage: 20,
 			search: debouncedSearch,
 			status: statusFilter,
-			orderBy: sortBy.orderBy,
-			order: sortBy.order,
-			signal: ctrl.signal,
+			orderBy,
+			order,
 		} )
 			.then( ( data ) => {
 				if ( cancelled ) {
@@ -159,7 +157,7 @@ function Campaigns() {
 				dispatch( { type: 'CAMPAIGNS_LIST_SUCCESS', payload: data } );
 			} )
 			.catch( ( e ) => {
-				if ( cancelled || e?.name === 'AbortError' ) {
+				if ( cancelled ) {
 					return;
 				}
 				dispatch( {
@@ -170,9 +168,8 @@ function Campaigns() {
 
 		return () => {
 			cancelled = true;
-			ctrl.abort();
 		};
-	}, [ dispatch, page, debouncedSearch, statusFilter, sortBy, reloadToken ] );
+	}, [ dispatch, page, debouncedSearch, statusFilter, orderBy, order, reloadToken ] );
 
 	useEffect( () => {
 		setPage( 1 );

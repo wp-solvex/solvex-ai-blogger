@@ -191,17 +191,27 @@ function CampaignsInsights() {
 		if ( licenseStatus !== 'licensed' ) {
 			return undefined;
 		}
-		const ctrl = new AbortController();
+		let cancelled = false;
 		setLoadingCampaigns( true );
-		fetchCampaigns( { page: 1, perPage: 4, orderBy: 'date', order: 'DESC', signal: ctrl.signal } )
-			.then( ( data ) => setTopCampaigns( Object.values( data.items || {} ) ) )
-			.catch( ( e ) => {
-				if ( e?.name !== 'AbortError' ) {
+		fetchCampaigns( { page: 1, perPage: 4, orderBy: 'date', order: 'DESC' } )
+			.then( ( data ) => {
+				if ( ! cancelled ) {
+					setTopCampaigns( Object.values( data.items || {} ) );
+				}
+			} )
+			.catch( () => {
+				if ( ! cancelled ) {
 					setTopCampaigns( [] );
 				}
 			} )
-			.finally( () => setLoadingCampaigns( false ) );
-		return () => ctrl.abort();
+			.finally( () => {
+				if ( ! cancelled ) {
+					setLoadingCampaigns( false );
+				}
+			} );
+		return () => {
+			cancelled = true;
+		};
 	}, [ licenseStatus ] );
 
 	const handleActivateLicense = useCallback( ( e ) => {
