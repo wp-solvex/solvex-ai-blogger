@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { useDispatch, useSelector } from 'react-redux';
 import apiFetch from '@wordpress/api-fetch';
@@ -129,55 +129,56 @@ function Campaigns() {
 		return params.get( 'debugLogs' ) === 'true';
 	}, [] );
 
-	const sortConfig = useMemo(
+	const sortBy = useMemo(
 		() => SORT_OPTIONS.find( ( s ) => s.value === sortValue ) || SORT_OPTIONS[ 0 ],
 		[ sortValue ]
 	);
 
-	const abortRef = useRef( null );
-
-	const loadCampaigns = useCallback( async () => {
-		if ( abortRef.current ) {
-			abortRef.current.abort();
-		}
-		const ctrl = new AbortController();
-		abortRef.current = ctrl;
-
-		dispatch( { type: 'CAMPAIGNS_LIST_REQUEST' } );
-		try {
-			const data = await fetchCampaigns( {
-				page,
-				perPage: 20,
-				search: debouncedSearch,
-				status: statusFilter,
-				orderBy: sortConfig.orderBy,
-				order: sortConfig.order,
-				signal: ctrl.signal,
-			} );
-			dispatch( { type: 'CAMPAIGNS_LIST_SUCCESS', payload: data } );
-		} catch ( e ) {
-			if ( e?.name === 'AbortError' ) {
-				return;
-			}
-			dispatch( {
-				type: 'CAMPAIGNS_LIST_FAILURE',
-				payload: { message: e?.message || __( 'Failed to load campaigns', 'solvex-ai-blogger' ) },
-			} );
-		}
-	}, [ dispatch, page, debouncedSearch, statusFilter, sortConfig ] );
+	// Reload trigger so external actions (e.g. delete) can force a re-fetch
+	// without changing query params.
+	const [ reloadToken, setReloadToken ] = useState( 0 );
 
 	useEffect( () => {
-		loadCampaigns();
+		const ctrl = new AbortController();
+		let cancelled = false;
+
+		dispatch( { type: 'CAMPAIGNS_LIST_REQUEST' } );
+		fetchCampaigns( {
+			page,
+			perPage: 20,
+			search: debouncedSearch,
+			status: statusFilter,
+			orderBy: sortBy.orderBy,
+			order: sortBy.order,
+			signal: ctrl.signal,
+		} )
+			.then( ( data ) => {
+				if ( cancelled ) {
+					return;
+				}
+				dispatch( { type: 'CAMPAIGNS_LIST_SUCCESS', payload: data } );
+			} )
+			.catch( ( e ) => {
+				if ( cancelled || e?.name === 'AbortError' ) {
+					return;
+				}
+				dispatch( {
+					type: 'CAMPAIGNS_LIST_FAILURE',
+					payload: { message: e?.message || __( 'Failed to load campaigns', 'solvex-ai-blogger' ) },
+				} );
+			} );
+
 		return () => {
-			if ( abortRef.current ) {
-				abortRef.current.abort();
-			}
+			cancelled = true;
+			ctrl.abort();
 		};
-	}, [ loadCampaigns ] );
+	}, [ dispatch, page, debouncedSearch, statusFilter, sortBy, reloadToken ] );
 
 	useEffect( () => {
 		setPage( 1 );
 	}, [ debouncedSearch, statusFilter, sortValue ] );
+
+	const refetch = useCallback( () => setReloadToken( ( t ) => t + 1 ), [] );
 
 	const fetchCampaignMetaData = useCallback( async ( campaignId ) => {
 		const formData = new window.FormData();
@@ -288,8 +289,8 @@ function Campaigns() {
 	const handleCampaignDeleted = useCallback( ( campaignId ) => {
 		dispatch( { type: 'CAMPAIGNS_LIST_REMOVE_ITEM', payload: { id: campaignId } } );
 		// Re-fetch to keep counts/pagination in sync.
-		loadCampaigns();
-	}, [ dispatch, loadCampaigns ] );
+		refetch();
+	}, [ dispatch, refetch ] );
 
 	const rows = useMemo( () => Object.values( campaignsList || {} ), [ campaignsList ] );
 	const totalPages = pagination.totalPages || 1;
