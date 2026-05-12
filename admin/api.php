@@ -59,13 +59,6 @@ class API extends \WP_REST_Controller {
 	protected $update_route = '/admin/settings/update';
 
 	/**
-	 * License verification route.
-	 *
-	 * @var string
-	 */
-	protected $license_route = '/admin/license/';
-
-	/**
 	 * Option name
 	 *
 	 * @access private
@@ -162,46 +155,6 @@ class API extends \WP_REST_Controller {
 					'callback'            => [ $this, 'update_admin_settings' ],
 					'permission_callback' => [ $this, 'update_permissions_check' ],
 					'args'                => $this->get_update_args(),
-				],
-			]
-		);
-
-		// License management endpoints.
-		register_rest_route(
-			$this->namespace,
-			$this->license_route . 'verify',
-			[
-				[
-					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'verify_license' ],
-					'permission_callback' => [ $this, 'license_permissions_check' ],
-					'args'                => $this->get_license_args(),
-				],
-			]
-		);
-
-		register_rest_route(
-			$this->namespace,
-			$this->license_route . 'activate',
-			[
-				[
-					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'activate_license' ],
-					'permission_callback' => [ $this, 'license_permissions_check' ],
-					'args'                => $this->get_license_args(),
-				],
-			]
-		);
-
-		register_rest_route(
-			$this->namespace,
-			$this->license_route . 'deactivate',
-			[
-				[
-					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'deactivate_license' ],
-					'permission_callback' => [ $this, 'license_permissions_check' ],
-					'args'                => [],
 				],
 			]
 		);
@@ -527,77 +480,6 @@ class API extends \WP_REST_Controller {
 	}
 
 	/**
-	 * Check whether a given request has permission to manage licenses.
-	 *
-	 * @param  \WP_REST_Request $request Full details about the request.
-	 * @return \WP_Error|bool
-	 * @since 1.0.0
-	 */
-	public function license_permissions_check( \WP_REST_Request $request ): \WP_Error|bool {
-		// Admin-only capability for license management.
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return new \WP_Error(
-				'wpsolvex_autoaiblogger_rest_cannot_manage_license',
-				__( 'Sorry, you cannot manage licenses.', 'solvex-ai-blogger' ),
-				[ 'status' => rest_authorization_required_code() ]
-			);
-		}
-
-		// Additional security checks.
-		$security_check = $this->perform_security_checks( $request );
-		if ( is_wp_error( $security_check ) ) {
-			return $security_check;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Verify license with security.
-	 *
-	 * @param \WP_REST_Request $request The request object.
-	 * @return \WP_REST_Response|\WP_Error Response or error.
-	 */
-	public function verify_license( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
-		// Implementation will be added when integrating with licensing system.
-		return new \WP_Error(
-			'not_implemented',
-			__( 'License verification not yet implemented.', 'solvex-ai-blogger' ),
-			[ 'status' => 501 ]
-		);
-	}
-
-	/**
-	 * Activate license with security.
-	 *
-	 * @param \WP_REST_Request $request The request object.
-	 * @return \WP_REST_Response|\WP_Error Response or error.
-	 */
-	public function activate_license( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
-		// Implementation will be added when integrating with licensing system.
-		return new \WP_Error(
-			'not_implemented',
-			__( 'License activation not yet implemented.', 'solvex-ai-blogger' ),
-			[ 'status' => 501 ]
-		);
-	}
-
-	/**
-	 * Deactivate license with security.
-	 *
-	 * @param \WP_REST_Request $request The request object.
-	 * @return \WP_REST_Response|\WP_Error Response or error.
-	 */
-	public function deactivate_license( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
-		// Implementation will be added when integrating with licensing system.
-		return new \WP_Error(
-			'not_implemented',
-			__( 'License deactivation not yet implemented.', 'solvex-ai-blogger' ),
-			[ 'status' => 501 ]
-		);
-	}
-
-	/**
 	 * Perform comprehensive security checks.
 	 *
 	 * @param \WP_REST_Request $request The request object.
@@ -884,23 +766,4 @@ class API extends \WP_REST_Controller {
 		];
 	}
 
-	/**
-	 * Get arguments for license endpoints.
-	 *
-	 * @return array<string,array<string,mixed>> Endpoint arguments.
-	 */
-	private function get_license_args(): array {
-		return [
-			'license_key' => [
-				'description'       => __( 'License key for activation.', 'solvex-ai-blogger' ),
-				'type'              => 'string',
-				'required'          => true,
-				'sanitize_callback' => 'sanitize_text_field',
-				'validate_callback' => static function( $param ) {
-					// Basic UUID format validation.
-					return preg_match( '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $param );
-				},
-			],
-		];
-	}
 }

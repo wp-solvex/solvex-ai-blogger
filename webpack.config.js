@@ -21,8 +21,6 @@ module.exports = {
 			'@Store': path.resolve( __dirname, 'src/dashboard/Store' ),
 			'@Utils': path.resolve( __dirname, 'src/dashboard/Utils' ),
 			'@Components': path.resolve( __dirname, 'src/dashboard/App/Components' ),
-			'@WizardSteps': path.resolve( __dirname, 'src/dashboard/App/Wizard/Steps' ),
-			'@WizardFields': path.resolve( __dirname, 'src/dashboard/App/Wizard/Fields' ),
 			'@AppImages': path.resolve( __dirname, 'src/dashboard/App/Images' ),
 			'@Elements': path.resolve( __dirname, 'src/dashboard/App/Elements' ),
 		},
