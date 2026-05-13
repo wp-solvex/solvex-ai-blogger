@@ -1,10 +1,8 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { __ } from '@wordpress/i18n';
 import { useDispatch, useSelector } from 'react-redux';
 import { Slider } from '@Components/ui/slider';
 import { Label } from '@Components/ui/label';
-import { updateApiData } from '@Utils/ApiData';
-import { useAutoSave } from '@Utils/useAutoSave';
 import { cn } from '@Utils/cn';
 
 const SAFETY_LABELS = [
@@ -111,27 +109,8 @@ const SettingsGeneral = memo( function SettingsGeneral() {
 		return out;
 	}, [ siteTitle, siteFor, siteDescription ] );
 
-	const save = useCallback(
-		async ( next ) => {
-			const map = {
-				siteTitle: 'siteTitle',
-				siteFor: 'siteFor',
-				siteDescription: 'siteDescription',
-				temperature: 'temperature',
-				harassment: 'harassment',
-				hate: 'hate',
-				sexuallyExplicit: 'sexually_explicit',
-				dangerousContent: 'dangerous_content',
-			};
-			await Promise.all(
-				Object.entries( map ).map( ( [ key, apiKey ] ) => updateApiData( apiKey, next[ key ], dispatch ) )
-			);
-		},
-		[ dispatch ]
-	);
-
-	useAutoSave( values, save );
-
+	// Persistence is owned by the Settings page Save button; this panel
+	// just keeps Redux in sync as the user types.
 	const onTitle = ( e ) => dispatch( { type: 'UPDATE_SITE_TITLE', payload: e.target.value } );
 	const onFor = ( e ) => dispatch( { type: 'UPDATE_SITE_FOR', payload: e.target.value } );
 	const onDesc = ( e ) => dispatch( { type: 'UPDATE_SITE_DESCRIPTION', payload: e.target.value } );

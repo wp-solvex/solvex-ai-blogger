@@ -7,7 +7,7 @@ import {
 	PostIdeas,
 	QuickAccess,
 	TokenNotification,
-	ProUpgradeCard,
+	WelcomeVideoCard,
 } from '@Elements/Welcome';
 
 class WelcomeErrorBoundary extends React.Component {
@@ -80,8 +80,8 @@ function Welcome() {
 						className="col-span-12 animate-reveal space-y-8 lg:col-span-4"
 						style={ { animationDelay: '120ms' } }
 					>
+						<WelcomeVideoCard />
 						<QuickAccess onError={ handleComponentError } />
-						<ProUpgradeCard />
 					</aside>
 				</div>
 			</main>

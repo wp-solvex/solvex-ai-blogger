@@ -1,12 +1,10 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { __ } from '@wordpress/i18n';
 import { useDispatch, useSelector } from 'react-redux';
 import Mail from 'lucide-react/dist/esm/icons/mail';
 import CheckCircle2 from 'lucide-react/dist/esm/icons/check-circle-2';
 import { Switch } from '@Components/ui/switch';
 import { Label } from '@Components/ui/label';
-import { updateApiData } from '@Utils/ApiData';
-import { useAutoSave } from '@Utils/useAutoSave';
 import { notificationsSchema } from './schemas';
 import { cn } from '@Utils/cn';
 
@@ -30,18 +28,8 @@ const SettingsNotifications = memo( function SettingsNotifications() {
 	const fieldError =
 		! parsed.success && parsed.error.issues.find( ( i ) => i.path[ 0 ] === 'emailNotificationValue' );
 
-	const save = useCallback(
-		async ( next ) => {
-			await Promise.all( [
-				updateApiData( 'emailNotificationEnabled', next.emailNotificationEnabled, dispatch ),
-				updateApiData( 'emailNotificationValue', next.emailNotificationValue, dispatch ),
-			] );
-		},
-		[ dispatch ]
-	);
-
-	useAutoSave( values, save );
-
+	// Persistence is owned by the Settings page Save button; this panel
+	// just keeps Redux in sync as the user toggles or types.
 	const onToggle = ( next ) =>
 		dispatch( { type: 'UPDATE_EMAIL_NOTIFICATION_ENABLED', payload: next } );
 	const onRecipient = ( e ) =>

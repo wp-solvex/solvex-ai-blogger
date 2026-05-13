@@ -1,16 +1,36 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Settings2 from 'lucide-react/dist/esm/icons/settings-2';
 import Bell from 'lucide-react/dist/esm/icons/bell';
 import KeyRound from 'lucide-react/dist/esm/icons/key-round';
 import ChevronRight from 'lucide-react/dist/esm/icons/chevron-right';
+import Loader2 from 'lucide-react/dist/esm/icons/loader-2';
 import { cn } from '@Utils/cn';
 import { toast } from '@Utils/toast';
+import { updateApiData } from '@Utils/ApiData';
 import General from './Settings/General';
 import Notifications from './Settings/Notifications';
 import License from './Settings/License';
+
+// Maps Redux state keys -> AJAX allowlist keys (must stay camelCase to match
+// Settings::get_settings_dataset).
+const SAVE_KEYS = {
+	general: [
+		'siteTitle',
+		'siteFor',
+		'siteDescription',
+		'temperature',
+		'harassment',
+		'hate',
+		'sexuallyExplicit',
+		'dangerousContent',
+	],
+	notifications: [ 'emailNotificationEnabled', 'emailNotificationValue' ],
+	// License has its own activate/deactivate flow; nothing to bulk-save here.
+	license: [],
+};
 
 const SECTIONS = [
 	{
@@ -42,14 +62,22 @@ const SECTIONS = [
 function Settings() {
 	const location = useLocation();
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const homeSlug = useSelector( ( s ) => s.homeSlug ) || 'solvex-ai-blogger';
 	const licenseStatus = useSelector( ( s ) => s.license_status ) || 'unlicensed';
 	const siteTitle = useSelector( ( s ) => s.siteTitle ) || '';
 	const siteFor = useSelector( ( s ) => s.siteFor ) || '';
 	const siteDescription = useSelector( ( s ) => s.siteDescription ) || '';
+	const temperature = useSelector( ( s ) => s.temperature ?? 1 );
+	const harassment = useSelector( ( s ) => s.harassment ?? 2 );
+	const hate = useSelector( ( s ) => s.hate ?? 2 );
+	const sexuallyExplicit = useSelector( ( s ) => s.sexuallyExplicit ?? 2 );
+	const dangerousContent = useSelector( ( s ) => s.dangerousContent ?? 2 );
 	const emailEnabled = useSelector( ( s ) => Boolean( s.emailNotificationEnabled ) );
 	const emailValue = useSelector( ( s ) => s.emailNotificationValue || '' );
+
+	const [ saving, setSaving ] = useState( false );
 
 	const activeId = useMemo( () => {
 		const path = new URLSearchParams( location.search ).get( 'path' ) || '';
@@ -83,10 +111,62 @@ function Settings() {
 	const activeMeta = SECTIONS.find( ( s ) => s.id === activeId );
 	const ActiveIcon = activeMeta?.icon || Settings2;
 
-	const handleSave = useCallback( () => {
-		// Settings auto-save on change; this button confirms the state.
-		toast.success( __( 'All changes saved', 'solvex-ai-blogger' ) );
-	}, [] );
+	const handleSave = useCallback( async () => {
+		if ( saving ) {
+			return;
+		}
+		setSaving( true );
+
+		const values = {
+			siteTitle,
+			siteFor,
+			siteDescription,
+			temperature,
+			harassment,
+			hate,
+			sexuallyExplicit,
+			dangerousContent,
+			emailNotificationEnabled: emailEnabled,
+			emailNotificationValue: emailValue,
+		};
+
+		const keysToSave = SAVE_KEYS[ activeId ] || [];
+		if ( ! keysToSave.length ) {
+			toast.success( __( 'Nothing to save here.', 'solvex-ai-blogger' ) );
+			setSaving( false );
+			return;
+		}
+
+		const results = await Promise.allSettled(
+			keysToSave.map( ( key ) =>
+				updateApiData( key, values[ key ] ?? '', dispatch )
+			)
+		);
+		const failed = results.filter( ( r ) => r.status === 'rejected' );
+
+		if ( failed.length === 0 ) {
+			toast.success( __( 'Settings saved', 'solvex-ai-blogger' ) );
+		} else {
+			toast.error(
+				__( 'Some settings failed to save. Please retry.', 'solvex-ai-blogger' )
+			);
+		}
+		setSaving( false );
+	}, [
+		saving,
+		dispatch,
+		activeId,
+		siteTitle,
+		siteFor,
+		siteDescription,
+		temperature,
+		harassment,
+		hate,
+		sexuallyExplicit,
+		dangerousContent,
+		emailEnabled,
+		emailValue,
+	] );
 
 	return (
 		<div className="animate-reveal grid grid-cols-12 gap-8">
@@ -101,7 +181,7 @@ function Settings() {
 							const isActive = section.id === activeId;
 							const hasWarning = warnings[ section.id ];
 							return (
-								<li key={ section.id } className='m-0'>
+								<li key={ section.id } className="m-0">
 									<Link
 										to={ { search: `?page=${ homeSlug }&path=${ section.path }` } }
 										onClick={ ( e ) => handleNavigate( e, section.path ) }
@@ -162,8 +242,10 @@ function Settings() {
 					<button
 						type="button"
 						onClick={ handleSave }
-						className="inline-flex items-center rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white transition-all hover:brightness-110"
+						disabled={ saving || ! SAVE_KEYS[ activeId ]?.length }
+						className="inline-flex items-center gap-2 rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
 					>
+						{ saving && <Loader2 className="size-4 animate-spin" aria-hidden="true" /> }
 						{ __( 'Save', 'solvex-ai-blogger' ) }
 					</button>
 				</div>

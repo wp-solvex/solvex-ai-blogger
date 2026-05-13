@@ -175,7 +175,7 @@ export function AppShell( { children } ) {
 										/>
 									</button>
 								</div>
-								<div className="h-1 w-36 overflow-hidden rounded-full bg-border">
+								<div className="h-1 w-full overflow-hidden rounded-full bg-border">
 									<div
 										className="h-full bg-brand transition-all"
 										style={ { width: `${ isLicensed ? tokenProgress : 0 }%` } }
