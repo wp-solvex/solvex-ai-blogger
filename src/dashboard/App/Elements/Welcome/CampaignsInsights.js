@@ -185,10 +185,14 @@ function CampaignsInsights() {
 	const [ analyticsModal, setAnalyticsModal ] = useState( { isOpen: false, campaignId: null, campaignData: null } );
 
 	const [ topCampaigns, setTopCampaigns ] = useState( [] );
-	const [ loadingCampaigns, setLoadingCampaigns ] = useState( false );
+	// Start in the loading state so the first paint shows skeletons rather
+	// than the empty state. Stale-while-revalidate keeps cached cards on
+	// revisit (only swap to skeletons when we have nothing to render).
+	const [ loadingCampaigns, setLoadingCampaigns ] = useState( true );
 
 	useEffect( () => {
 		if ( licenseStatus !== 'licensed' ) {
+			setLoadingCampaigns( false );
 			return undefined;
 		}
 		let cancelled = false;
@@ -288,7 +292,7 @@ function CampaignsInsights() {
 				</a>
 			</header>
 
-			{ loadingCampaigns ? (
+			{ loadingCampaigns && topCampaigns.length === 0 ? (
 				<div className="grid grid-cols-1 gap-5 md:grid-cols-2">
 					{ Array.from( { length: 2 } ).map( ( _, i ) => (
 						<div key={ i } className="h-44 animate-pulse rounded-xl border border-border bg-muted/40" />

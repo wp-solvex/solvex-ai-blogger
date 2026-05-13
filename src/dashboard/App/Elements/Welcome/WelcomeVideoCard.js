@@ -15,8 +15,8 @@ import X from 'lucide-react/dist/esm/icons/x';
 import { cn } from '@Utils/cn';
 
 const DEFAULT_VIDEO = {
-	thumbnail: 'https://img.youtube.com/vi/GEeTu2D74Z8/maxresdefault.jpg',
-	url: 'https://www.youtube.com/embed/GEeTu2D74Z8?autoplay=1&rel=0',
+	thumbnail: 'https://img.youtube.com/vi/Mzb5DjdXvLM/maxresdefault.jpg',
+	url: 'https://www.youtube.com/embed/Mzb5DjdXvLM?autoplay=1&rel=0',
 	docsUrl: 'https://wpaiblogger.com/docs/',
 };
 

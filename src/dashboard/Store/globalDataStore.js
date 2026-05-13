@@ -135,7 +135,9 @@ const getInitialState = () => {
 		allCampaigns: {},
 		campaignsList: {},
 		campaignsPagination: { page: 1, perPage: 20, total: 0, totalPages: 0 },
-		campaignsListLoading: false,
+		// Start in the loading state so Campaigns renders its skeleton on
+		// first mount rather than briefly flashing the empty state.
+		campaignsListLoading: true,
 		campaignsListError: null,
 		postmetaDefaults: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.postmeta_defaults, 'object', {} ),
 		licensingNonce: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.licensing_nonce, 'string', '' ),

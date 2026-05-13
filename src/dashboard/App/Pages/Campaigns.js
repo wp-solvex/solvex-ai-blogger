@@ -283,6 +283,10 @@ function Campaigns() {
 	const rows = useMemo( () => Object.values( campaignsList || {} ), [ campaignsList ] );
 	const totalPages = pagination.totalPages || 1;
 	const hasResults = rows.length > 0;
+	// Stale-while-revalidate: only show the skeleton when we have nothing
+	// to render. If we have cached rows, keep them on screen while the
+	// refresh is in flight to avoid a flash of empty state.
+	const showSkeleton = loading && ! hasResults;
 	const isEmpty = ! hasResults && ! loading;
 
 	return (
@@ -355,14 +359,37 @@ function Campaigns() {
 							</tr>
 						</thead>
 						<tbody className="divide-y divide-border">
-							{ loading && (
-								<tr>
-									<td colSpan={ 6 } className="px-6 py-10 text-center text-sm text-muted-foreground">
-										{ __( 'Loading campaigns…', 'solvex-ai-blogger' ) }
-									</td>
-								</tr>
-							) }
-							{ ! loading && isEmpty && (
+							{ showSkeleton &&
+								Array.from( { length: 5 } ).map( ( _, i ) => (
+									<tr key={ `skeleton-${ i }` } aria-hidden="true">
+										<td className="px-6 py-5">
+											<div className="h-4 w-40 animate-pulse rounded bg-muted" />
+										</td>
+										<td className="px-6 py-5">
+											<div className="h-5 w-9 animate-pulse rounded-full bg-muted" />
+										</td>
+										<td className="px-6 py-5">
+											<div className="flex gap-1.5">
+												<div className="h-5 w-20 animate-pulse rounded-full bg-muted" />
+												<div className="h-5 w-20 animate-pulse rounded-full bg-muted" />
+											</div>
+										</td>
+										<td className="px-6 py-5">
+											<div className="h-4 w-44 animate-pulse rounded bg-muted" />
+										</td>
+										<td className="px-6 py-5">
+											<div className="h-4 w-28 animate-pulse rounded bg-muted" />
+										</td>
+										<td className="px-6 py-5">
+											<div className="flex items-center justify-end gap-2">
+												{ Array.from( { length: 5 } ).map( ( __key, j ) => (
+													<div key={ j } className="size-5 animate-pulse rounded bg-muted" />
+												) ) }
+											</div>
+										</td>
+									</tr>
+								) ) }
+							{ ! showSkeleton && isEmpty && (
 								<tr>
 									<td colSpan={ 6 } className="px-6 py-12 text-center">
 										<div className="mx-auto flex max-w-sm flex-col items-center gap-2 text-muted-foreground">
@@ -385,7 +412,7 @@ function Campaigns() {
 									</td>
 								</tr>
 							) }
-							{ ! loading && hasResults && rows.map( ( campaign ) => {
+							{ ! showSkeleton && hasResults && rows.map( ( campaign ) => {
 								const state = deriveCampaignState( campaign );
 								const isUpdating = updatingStatus[ campaign.id ];
 								const switchDisabled = state === 'completed' || isUpdating;
