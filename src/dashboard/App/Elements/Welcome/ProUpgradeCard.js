@@ -23,13 +23,13 @@ export default function ProUpgradeCard() {
 			href={ upgradeLink }
 			target="_blank"
 			rel="noopener noreferrer"
-			className="block rounded-xl bg-brand p-6 text-white no-underline shadow-lg shadow-brand/15 transition-transform hover:scale-[1.01]"
+			className="rounded-xl bg-brand p-6 text-white no-underline shadow-lg shadow-brand/15 transition-transform hover:scale-[1.01] flex flex-col gap-1"
 			data-testid="pro-upgrade-card"
 		>
 			<span className="text-[10px] font-bold uppercase tracking-widest text-white/70">
 				{ __( 'Pro plan', 'solvex-ai-blogger' ) }
 			</span>
-			<h3 className="mt-2 text-lg font-semibold leading-tight text-white">
+			<h3 className="mt-2 text-lg font-semibold leading-tight text-white!">
 				{ __( 'Scale your content engine', 'solvex-ai-blogger' ) }
 			</h3>
 			<p className="mt-2 text-xs leading-relaxed text-white/80">

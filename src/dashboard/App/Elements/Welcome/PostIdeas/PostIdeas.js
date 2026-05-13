@@ -366,8 +366,8 @@ function PostIdeas() {
 				: `${ __( 'Refresh', 'solvex-ai-blogger' ) } (${ Math.min( postIdeasArr.length, 5 ) }/5)`;
 
 	return (
-		<div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm ring-1 ring-black/[0.02]">
-			<header className="flex items-end justify-between border-b border-border px-6 py-5">
+		<div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm ring-1 ring-black/2">
+			<header className="flex items-center justify-between border-b border-border px-6 py-5">
 				<div>
 					<h2 className="text-lg font-semibold tracking-tight">
 						{ __( 'Blog Post Suggestions', 'solvex-ai-blogger' ) }
@@ -380,7 +380,7 @@ function PostIdeas() {
 					<button
 						type="button"
 						onClick={ handleRefresh }
-						className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-brand/30"
+						className="inline-flex items-center gap-1.5 rounded-md border border-border bg-brand px-3 py-1.5 text-xs text-white font-medium transition-colors hover::brightness-110 hover:border-brand/30 disabled:cursor-not-allowed disabled:opacity-60"
 						title={ __( 'Refresh post ideas', 'solvex-ai-blogger' ) }
 					>
 						<WandSparkles className="size-3" aria-hidden="true" />
