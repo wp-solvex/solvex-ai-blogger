@@ -102,7 +102,7 @@ export function AppShell( { children } ) {
 			className="min-h-screen bg-background text-foreground"
 		>
 			<TooltipProvider delayDuration={ 200 }>
-				<header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
+				<header className="z-40 border-b border-border bg-background/80 backdrop-blur-md">
 					<div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-6 lg:px-10">
 						<div className="flex items-center gap-10">
 							<Link
@@ -117,43 +117,44 @@ export function AppShell( { children } ) {
 									{ __( 'Solvex AI Blogger', 'solvex-ai-blogger' ) }
 								</span>
 							</Link>
-							<nav
-								className="flex items-center gap-1"
-								aria-label={ __( 'Primary', 'solvex-ai-blogger' ) }
-							>
-								{ tabs.map( ( tab ) => {
-									const isActive =
-										tab.to === ''
-											? activePath === '' || activePath === 'getting-started'
-											: activePath === tab.to || activePath.startsWith( tab.to + '/' );
-									return (
-										<Link
-											key={ tab.to || 'home' }
-											to={ {
-												search: `?page=${ homeSlug }${ tab.to ? '&path=' + tab.to : '' }`,
-											} }
-											className={ cn(
-												'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
-												isActive
-													? 'bg-brand/10 text-brand'
-													: 'text-muted-foreground hover:text-foreground'
-											) }
-											aria-current={ isActive ? 'page' : undefined }
-										>
-											{ tab.label }
-										</Link>
-									);
-								} ) }
-							</nav>
 						</div>
 
+						<nav
+							className="flex items-center gap-1"
+							aria-label={ __( 'Primary', 'solvex-ai-blogger' ) }
+						>
+							{ tabs.map( ( tab ) => {
+								const isActive =
+									tab.to === ''
+										? activePath === '' || activePath === 'getting-started'
+										: activePath === tab.to || activePath.startsWith( tab.to + '/' );
+								return (
+									<Link
+										key={ tab.to || 'home' }
+										to={ {
+											search: `?page=${ homeSlug }${ tab.to ? '&path=' + tab.to : '' }`,
+										} }
+										className={ cn(
+											'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+											isActive
+												? 'bg-brand/10 text-brand'
+												: 'text-muted-foreground hover:text-foreground'
+										) }
+										aria-current={ isActive ? 'page' : undefined }
+									>
+										{ tab.label }
+									</Link>
+								);
+							} ) }
+						</nav>
+
 						<div className="flex items-center gap-5">
-							<div className="hidden flex-col items-end gap-1.5 sm:flex">
+							<div className="flex flex-col items-end gap-1.5">
 								<div className="flex items-center gap-2">
 									<span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
 										{ __( 'Tokens', 'solvex-ai-blogger' ) }
 									</span>
-									<span className="font-mono text-[11px] font-medium tabular-nums">
+									<span className="font-mono text-[11px] font-medium tabular-nums text-foreground">
 										{ isLicensed
 											? `${ formatTokens( tokensUsed ) } / ${ formatTokens( tokenTotal ) }`
 											: '— / —' }
@@ -185,7 +186,7 @@ export function AppShell( { children } ) {
 									/>
 								</div>
 							</div>
-							<div className="hidden h-8 w-px bg-border sm:block" />
+							<div className="h-8 w-px bg-border" />
 							<span className="rounded-full border border-border bg-card px-2 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
 								v{ version }
 							</span>
