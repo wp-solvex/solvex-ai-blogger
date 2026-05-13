@@ -145,7 +145,7 @@ const LicenseRequiredState = memo( ( { onActivate } ) => (
 		<h3 className="text-base font-semibold tracking-tight">
 			{ __( 'License required', 'solvex-ai-blogger' ) }
 		</h3>
-		<p className="mx-auto mt-1 max-w-sm text-sm text-muted-foreground">
+		<p className="mt-1 max-w-sm text-sm text-muted-foreground" style={{ marginLeft: 'auto', marginRight: 'auto' }} >
 			{ __( 'Activate your license to see campaign insights and analytics.', 'solvex-ai-blogger' ) }
 		</p>
 		<button

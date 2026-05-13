@@ -8,6 +8,7 @@ import {
 	QuickAccess,
 	TokenNotification,
 	WelcomeVideoCard,
+	ProUpgradeCard,
 } from '@Elements/Welcome';
 
 class WelcomeErrorBoundary extends React.Component {
@@ -82,6 +83,7 @@ function Welcome() {
 					>
 						<WelcomeVideoCard />
 						<QuickAccess onError={ handleComponentError } />
+						<ProUpgradeCard />
 					</aside>
 				</div>
 			</main>

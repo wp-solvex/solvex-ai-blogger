@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import LifeBuoy from 'lucide-react/dist/esm/icons/life-buoy';
 import BookOpen from 'lucide-react/dist/esm/icons/book-open';
 import LayoutDashboard from 'lucide-react/dist/esm/icons/layout-dashboard';
+import Star from 'lucide-react/dist/esm/icons/star';
 import ArrowUpRight from 'lucide-react/dist/esm/icons/arrow-up-right';
 
 const links = [
@@ -22,6 +23,11 @@ const links = [
 		label: __( 'Access Dashboard', 'solvex-ai-blogger' ),
 		url: 'https://wpaiblogger.com/customer-dashboard/',
 	},
+	{
+		icon: Star,
+		label: __( 'Enjoying AutoBlogging? Leave a Review', 'solvex-ai-blogger' ),
+		url: 'https://wordpress.org/support/plugin/solvex-ai-blogger/reviews/#new-post',
+	},
 ];
 
 export default function QuickAccess() {
@@ -31,7 +37,7 @@ export default function QuickAccess() {
 	}
 
 	return (
-		<div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm ring-1 ring-black/[0.02]">
+		<div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm ring-1 ring-black/2">
 			<header className="border-b border-border px-5 py-4">
 				<h2 className="text-base font-semibold tracking-tight">
 					{ __( 'Quick Access', 'solvex-ai-blogger' ) }
@@ -51,7 +57,7 @@ export default function QuickAccess() {
 								rel="noopener noreferrer"
 								className="group flex items-center justify-between gap-3 px-5 py-3 text-left no-underline transition-colors hover:bg-muted/40"
 							>
-								<span className="flex items-center gap-3 text-sm font-medium text-foreground">
+								<span className="flex items-center gap-3 text-sm font-normal text-foreground">
 									<Icon
 										className="size-4 text-muted-foreground transition-colors group-hover:text-brand"
 										aria-hidden="true"

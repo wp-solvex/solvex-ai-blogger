@@ -1,5 +1,9 @@
 /**
- * Tests for ProUpgradeCard — only renders when the site is unlicensed.
+ * Tests for ProUpgradeCard — only renders when the Pro plugin is inactive.
+ *
+ * Free-licensed users still see the upsell; the gate flips to hidden
+ * only after the paid Pro plugin is installed and activated
+ * (`proAvailable === true`).
  */
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
@@ -10,9 +14,9 @@ const makeStore = ( state ) =>
 	createStore( ( s = state ) => s, state );
 
 describe( 'ProUpgradeCard', () => {
-	it( 'renders the upgrade CTA when license_status !== "licensed"', () => {
+	it( 'renders the upgrade CTA when proAvailable is false', () => {
 		const store = makeStore( {
-			license_status: 'unlicensed',
+			proAvailable: false,
 			upgradeLink: 'https://example.test/upgrade',
 		} );
 		render(
@@ -26,9 +30,23 @@ describe( 'ProUpgradeCard', () => {
 		expect( screen.getByText( /Pro plan/i ) ).toBeInTheDocument();
 	} );
 
-	it( 'renders nothing when license_status === "licensed"', () => {
+	it( 'still renders for free-licensed users while Pro plugin is inactive', () => {
 		const store = makeStore( {
 			license_status: 'licensed',
+			proAvailable: false,
+			upgradeLink: 'https://example.test/upgrade',
+		} );
+		render(
+			<Provider store={ store }>
+				<ProUpgradeCard />
+			</Provider>
+		);
+		expect( screen.getByTestId( 'pro-upgrade-card' ) ).toBeInTheDocument();
+	} );
+
+	it( 'renders nothing when the Pro plugin is active', () => {
+		const store = makeStore( {
+			proAvailable: true,
 			upgradeLink: 'https://example.test/upgrade',
 		} );
 		const { container } = render(
@@ -41,7 +59,7 @@ describe( 'ProUpgradeCard', () => {
 
 	it( 'falls back to proPurchaseUrl when upgradeLink is missing', () => {
 		const store = makeStore( {
-			license_status: 'unlicensed',
+			proAvailable: false,
 			upgradeLink: '',
 			proPurchaseUrl: 'https://example.test/pro',
 		} );

@@ -176,7 +176,7 @@ const SettingsLicense = memo( function SettingsLicense() {
 								disabled={ activated || processing }
 								placeholder={ __( 'Paste your license key', 'solvex-ai-blogger' ) }
 								className={ cn(
-									'flex h-10 w-full rounded-md border border-input bg-transparent pl-10 pr-10 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60'
+									'flex h-10 w-full rounded-md border border-input bg-transparent pl-10 pr-10 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60 force-pl-9'
 								) }
 							/>
 							{ activated && (

@@ -230,7 +230,7 @@ function Settings() {
 				className="col-span-12 space-y-6 lg:col-span-9"
 				aria-label={ activeMeta?.label }
 			>
-				<div className="flex items-center justify-between rounded-xl border border-border bg-brand-soft/40 px-5 py-4 ring-1 ring-black/[0.02]">
+				<div className="flex items-center justify-between rounded-xl border border-border bg-linear-to-r from-brand-soft/40 via-card to-card px-5 py-4 ring-1 ring-black/2">
 					<div className="flex items-center gap-3">
 						<div className="flex size-9 items-center justify-center rounded-lg bg-brand-soft text-brand">
 							<ActiveIcon className="size-4" aria-hidden="true" />

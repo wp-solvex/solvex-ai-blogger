@@ -2,18 +2,19 @@ import { __ } from '@wordpress/i18n';
 import { useSelector } from 'react-redux';
 
 /**
- * Pro upgrade card — only rendered when the site is unlicensed.
+ * Pro upgrade card — rendered when the Pro plugin is not active.
  *
- * Lives in the Welcome aside. Links to the localized `upgradeLink`
- * (with `proPurchaseUrl` as a fallback).
+ * Lives in the Welcome aside. Free-licensed users still see the upsell
+ * until the paid Pro plugin is installed and activated. Links to the
+ * localized `upgradeLink` (with `proPurchaseUrl` as a fallback).
  */
 export default function ProUpgradeCard() {
-	const licenseStatus = useSelector( ( state ) => state.license_status ) || 'unlicensed';
+	const proAvailable = useSelector( ( state ) => Boolean( state.proAvailable ) );
 	const upgradeLink = useSelector(
 		( state ) => state.upgradeLink || state.proPurchaseUrl || 'https://wpaiblogger.com/#pricing'
 	);
 
-	if ( licenseStatus === 'licensed' ) {
+	if ( proAvailable ) {
 		return null;
 	}
 
