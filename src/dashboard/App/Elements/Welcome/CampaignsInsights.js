@@ -257,9 +257,12 @@ function CampaignsInsights() {
 
 	if ( licenseStatus !== 'licensed' ) {
 		return (
-			<section aria-labelledby="campaigns-insights-heading">
-				<header className="mb-6">
-					<h2 id="campaigns-insights-heading" className="text-2xl font-semibold tracking-tight">
+			<section
+				aria-labelledby="campaigns-insights-heading"
+				className="rounded-xl border border-border bg-card p-6 shadow-sm ring-1 ring-black/[0.02]"
+			>
+				<header className="mb-5">
+					<h2 id="campaigns-insights-heading" className="text-lg font-semibold tracking-tight">
 						{ __( 'Campaigns Insights', 'solvex-ai-blogger' ) }
 					</h2>
 					<p className="mt-1 text-sm text-muted-foreground">
@@ -272,10 +275,13 @@ function CampaignsInsights() {
 	}
 
 	return (
-		<section aria-labelledby="campaigns-insights-heading">
-			<header className="mb-6 flex items-end justify-between">
+		<section
+			aria-labelledby="campaigns-insights-heading"
+			className="rounded-xl border border-border bg-card p-6 shadow-sm ring-1 ring-black/[0.02]"
+		>
+			<header className="mb-5 flex items-end justify-between">
 				<div>
-					<h2 id="campaigns-insights-heading" className="text-2xl font-semibold tracking-tight">
+					<h2 id="campaigns-insights-heading" className="text-lg font-semibold tracking-tight">
 						{ __( 'Campaigns Insights', 'solvex-ai-blogger' ) }
 					</h2>
 					<p className="mt-1 text-sm text-muted-foreground">
@@ -293,15 +299,15 @@ function CampaignsInsights() {
 			</header>
 
 			{ loadingCampaigns && topCampaigns.length === 0 ? (
-				<div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 					{ Array.from( { length: 2 } ).map( ( _, i ) => (
-						<div key={ i } className="h-44 animate-pulse rounded-xl border border-border bg-muted/40" />
+						<div key={ i } className="h-44 animate-pulse rounded-lg border border-border bg-muted/40" />
 					) ) }
 				</div>
 			) : topCampaigns.length === 0 ? (
 				<EmptyState />
 			) : (
-				<div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 					{ topCampaigns.map( ( campaign ) => (
 						<CampaignCard
 							key={ campaign?.id || campaign?.title }

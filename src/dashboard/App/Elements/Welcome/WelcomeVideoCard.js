@@ -9,6 +9,7 @@
  * .welcome_video` when present; otherwise sensible defaults are used.
  */
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { __ } from '@wordpress/i18n';
 import ArrowRight from 'lucide-react/dist/esm/icons/arrow-right';
 import X from 'lucide-react/dist/esm/icons/x';
@@ -46,6 +47,17 @@ export default function WelcomeVideoCard( { className = '' } ) {
 		window.addEventListener( 'keydown', onKey );
 		return () => window.removeEventListener( 'keydown', onKey );
 	}, [] );
+
+	useEffect( () => {
+		if ( ! open ) {
+			return undefined;
+		}
+		const prev = document.body.style.overflow;
+		document.body.style.overflow = 'hidden';
+		return () => {
+			document.body.style.overflow = prev;
+		};
+	}, [ open ] );
 
 	const handleDocs = ( e ) => {
 		e.preventDefault();
@@ -117,38 +129,41 @@ export default function WelcomeVideoCard( { className = '' } ) {
 				</div>
 			</div>
 
-			{ open && (
-				<div className="fixed inset-0 z-[9999] flex items-center justify-center">
-					<button
-						type="button"
-						aria-label={ __( 'Close video', 'solvex-ai-blogger' ) }
-						className="absolute inset-0 size-full cursor-pointer bg-black/70"
-						onClick={ () => setOpen( false ) }
-					/>
-					<button
-						type="button"
-						onClick={ () => setOpen( false ) }
-						className="absolute right-8 top-10 rounded-full p-2 text-white transition-colors hover:bg-white/10"
-						aria-label={ __( 'Close video', 'solvex-ai-blogger' ) }
-					>
-						<X className="size-6" aria-hidden="true" />
-					</button>
-					<div
-						className="relative mx-4 aspect-video w-full max-w-4xl rounded-lg shadow-2xl"
-						role="dialog"
-						aria-modal="true"
-						aria-label={ __( 'Welcome video', 'solvex-ai-blogger' ) }
-					>
-						<iframe
-							className="size-full rounded-lg"
-							src={ url }
-							title={ __( 'Welcome to Solvex AI Blogger', 'solvex-ai-blogger' ) }
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-							allowFullScreen
-						></iframe>
-					</div>
-				</div>
-			) }
+			{ open &&
+				createPortal(
+					<div className="fixed inset-0 z-[100000] flex items-center justify-center">
+						<button
+							type="button"
+							aria-label={ __( 'Close video', 'solvex-ai-blogger' ) }
+							className="absolute inset-0 size-full cursor-pointer bg-black/80"
+							onClick={ () => setOpen( false ) }
+						/>
+						<button
+							type="button"
+							onClick={ () => setOpen( false ) }
+							className="absolute right-6 top-6 z-[1] inline-flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+							aria-label={ __( 'Close video', 'solvex-ai-blogger' ) }
+						>
+							<X className="size-5" aria-hidden="true" />
+						</button>
+						<div
+							className="relative z-[1] mx-4 aspect-video w-full max-w-5xl overflow-hidden rounded-xl bg-black shadow-2xl"
+							role="dialog"
+							aria-modal="true"
+							aria-label={ __( 'Welcome video', 'solvex-ai-blogger' ) }
+						>
+							<iframe
+								className="absolute inset-0 size-full"
+								src={ url }
+								title={ __( 'Welcome to Solvex AI Blogger', 'solvex-ai-blogger' ) }
+								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+								allowFullScreen
+								frameBorder="0"
+							></iframe>
+						</div>
+					</div>,
+					document.body
+				) }
 		</>
 	);
 }

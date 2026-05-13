@@ -366,10 +366,10 @@ function PostIdeas() {
 				: `${ __( 'Refresh', 'solvex-ai-blogger' ) } (${ Math.min( postIdeasArr.length, 5 ) }/5)`;
 
 	return (
-		<div>
-			<header className="mb-5 flex items-end justify-between">
+		<div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm ring-1 ring-black/[0.02]">
+			<header className="flex items-end justify-between border-b border-border px-6 py-5">
 				<div>
-					<h2 className="text-xl font-semibold tracking-tight">
+					<h2 className="text-lg font-semibold tracking-tight">
 						{ __( 'Blog Post Suggestions', 'solvex-ai-blogger' ) }
 					</h2>
 					<p className="mt-1 text-sm text-muted-foreground">
@@ -401,7 +401,7 @@ function PostIdeas() {
 				) }
 			</header>
 
-			<div className="overflow-hidden rounded-xl border border-border bg-card ring-1 ring-black/[0.02]">
+			<div>
 				<div className="grid grid-cols-[1fr_auto] gap-4 border-b border-border bg-muted/40 px-6 py-3 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
 					<span>{ __( 'Title', 'solvex-ai-blogger' ) }</span>
 					<span>{ __( 'Write Post', 'solvex-ai-blogger' ) }</span>

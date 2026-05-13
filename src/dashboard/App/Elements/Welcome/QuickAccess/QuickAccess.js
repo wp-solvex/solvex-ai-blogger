@@ -31,39 +31,42 @@ export default function QuickAccess() {
 	}
 
 	return (
-		<div>
-			<h2 className="text-xl font-semibold tracking-tight">
-				{ __( 'Quick Access', 'solvex-ai-blogger' ) }
-			</h2>
-			<p className="mt-1 text-sm text-muted-foreground">
-				{ __( 'Get help and connect.', 'solvex-ai-blogger' ) }
-			</p>
-			<div className="mt-5 grid gap-2">
+		<div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm ring-1 ring-black/[0.02]">
+			<header className="border-b border-border px-5 py-4">
+				<h2 className="text-base font-semibold tracking-tight">
+					{ __( 'Quick Access', 'solvex-ai-blogger' ) }
+				</h2>
+				<p className="mt-0.5 text-sm text-muted-foreground">
+					{ __( 'Get help and connect.', 'solvex-ai-blogger' ) }
+				</p>
+			</header>
+			<ul className="divide-y divide-border">
 				{ links.map( ( link ) => {
 					const Icon = link.icon;
 					return (
-						<a
-							key={ link.url }
-							href={ link.url }
-							target="_blank"
-							rel="noopener noreferrer"
-							className="group flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3 text-left no-underline transition-all hover:border-brand/30"
-						>
-							<span className="flex items-center gap-3 text-sm font-medium text-foreground">
-								<Icon
-									className="size-4 text-muted-foreground transition-colors group-hover:text-brand"
+						<li key={ link.url } className="m-0">
+							<a
+								href={ link.url }
+								target="_blank"
+								rel="noopener noreferrer"
+								className="group flex items-center justify-between gap-3 px-5 py-3 text-left no-underline transition-colors hover:bg-muted/40"
+							>
+								<span className="flex items-center gap-3 text-sm font-medium text-foreground">
+									<Icon
+										className="size-4 text-muted-foreground transition-colors group-hover:text-brand"
+										aria-hidden="true"
+									/>
+									{ link.label }
+								</span>
+								<ArrowUpRight
+									className="size-3.5 text-muted-foreground/60 transition-colors group-hover:text-brand"
 									aria-hidden="true"
 								/>
-								{ link.label }
-							</span>
-							<ArrowUpRight
-								className="size-3.5 text-muted-foreground/60 transition-colors group-hover:text-brand"
-								aria-hidden="true"
-							/>
-						</a>
+							</a>
+						</li>
 					);
 				} ) }
-			</div>
+			</ul>
 		</div>
 	);
 }
