@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Sparkles from 'lucide-react/dist/esm/icons/sparkles';
 import RefreshCw from 'lucide-react/dist/esm/icons/refresh-cw';
 import { Toaster } from '@Components/ui/sonner';
-import { TooltipProvider } from '@Components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@Components/ui/tooltip';
 import { cn } from '@Utils/cn';
 import { useReducedMotion } from '@Utils/useReducedMotion';
 import { toast } from '@Utils/toast';
@@ -45,6 +45,8 @@ export function AppShell( { children } ) {
 	const tokenTotal = useSelector( ( s ) => s.tokenTotal ) || 0;
 	const tokenRemaining = useSelector( ( s ) => s.tokenRemaining ) || 0;
 	const version = useSelector( ( s ) => s.version ) || '1.0.0';
+	const proAvailable = useSelector( ( s ) => Boolean( s.proAvailable ) );
+	const proVersion = useSelector( ( s ) => s.proVersion ) || '';
 
 	const [ refreshing, setRefreshing ] = useState( false );
 	const abortRef = useRef( {} );
@@ -187,9 +189,26 @@ export function AppShell( { children } ) {
 								</div>
 							</div>
 							<div className="h-8 w-px bg-border" />
-							<span className="rounded-full border border-border bg-card px-2 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
-								v{ version }
-							</span>
+							<div className="flex items-center gap-1.5">
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<span className="cursor-help rounded-full border border-border bg-card px-2 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
+											v{ version }
+										</span>
+									</TooltipTrigger>
+									<TooltipContent>{ __( 'Core', 'solvex-ai-blogger' ) }</TooltipContent>
+								</Tooltip>
+								{ proAvailable && proVersion && (
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<span className="cursor-help rounded-full border border-brand/40 bg-brand-soft px-2 py-0.5 font-mono text-[10px] font-semibold text-brand">
+												v{ proVersion }
+											</span>
+										</TooltipTrigger>
+										<TooltipContent>{ __( 'Premium', 'solvex-ai-blogger' ) }</TooltipContent>
+									</Tooltip>
+								) }
+							</div>
 						</div>
 					</div>
 				</header>

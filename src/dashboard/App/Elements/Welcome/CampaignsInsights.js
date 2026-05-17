@@ -279,7 +279,7 @@ function CampaignsInsights() {
 			aria-labelledby="campaigns-insights-heading"
 			className="rounded-xl border border-border bg-card p-6 shadow-sm ring-1 ring-black/[0.02]"
 		>
-			<header className="mb-5 flex items-end justify-between">
+			<header className="mb-5 flex items-center justify-between">
 				<div>
 					<h2 id="campaigns-insights-heading" className="text-lg font-semibold tracking-tight">
 						{ __( 'Campaigns Insights', 'solvex-ai-blogger' ) }

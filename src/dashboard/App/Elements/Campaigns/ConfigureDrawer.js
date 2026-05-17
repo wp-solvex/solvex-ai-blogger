@@ -1,112 +1,291 @@
-import React, { useRef, useState, useEffect } from 'react';
+/**
+ * Campaign configure drawer — Radix Sheet + Tabs rewrite matching the
+ * Lovable design (brand purple header, pill day toggles, card-style
+ * radios, sticky footer). Form state, validation, and AJAX wiring are
+ * preserved from the legacy HeadlessUI version.
+ */
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { __ } from '@wordpress/i18n';
-import { Dialog, DialogPanel } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
-import { QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
+import { useSelector } from 'react-redux';
 import { updateCampaign } from '@Utils/ApiData';
-import SwitchControl from '@Components/SwitchControl';
 import DateTimeField from '@Components/DateTimeField';
-import { Tooltip } from '@wordpress/components';
-import DynamicCard from '@Components/DynamicCard';
+import HelpCircle from 'lucide-react/dist/esm/icons/help-circle';
+import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down';
+import Loader2 from 'lucide-react/dist/esm/icons/loader-2';
+import AlertCircle from 'lucide-react/dist/esm/icons/alert-circle';
+import {
+	Sheet,
+	SheetContent,
+	SheetHeader,
+	SheetTitle,
+} from '@Components/ui/sheet';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@Components/ui/tabs';
+import { Switch } from '@Components/ui/switch';
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from '@Components/ui/tooltip';
+import { cn } from '@Utils/cn';
+
+const DAYS = [
+	{ key: 'sun', label: __( 'Sun', 'solvex-ai-blogger' ) },
+	{ key: 'mon', label: __( 'Mon', 'solvex-ai-blogger' ) },
+	{ key: 'tue', label: __( 'Tue', 'solvex-ai-blogger' ) },
+	{ key: 'wed', label: __( 'Wed', 'solvex-ai-blogger' ) },
+	{ key: 'thu', label: __( 'Thu', 'solvex-ai-blogger' ) },
+	{ key: 'fri', label: __( 'Fri', 'solvex-ai-blogger' ) },
+	{ key: 'sat', label: __( 'Sat', 'solvex-ai-blogger' ) },
+];
+
+function hasStartDatePassed( startDate ) {
+	if ( ! startDate ) {
+		return false;
+	}
+	try {
+		return new Date( startDate ) < new Date();
+	} catch ( e ) {
+		return false;
+	}
+}
+
+function isCampaignCompleted( data ) {
+	if ( ! data || data.type === 'new' ) {
+		return false;
+	}
+	const postsCreated = parseInt( data.postsCreated, 10 ) || 0;
+	const postsTarget = parseInt( data.postsTarget, 10 ) || 0;
+	const postsRemaining = Math.max( 0, postsTarget - postsCreated );
+	const isTargetMet = postsTarget > 0 && postsCreated >= postsTarget;
+	const allAttemptsCompleted = data.campaignCompleted === true;
+	const completedBase =
+		data.status === 'draft' || isTargetMet || allAttemptsCompleted;
+	const attemptsExhausted =
+		postsTarget > 0 &&
+		postsRemaining > 0 &&
+		completedBase &&
+		postsCreated + postsRemaining >= postsTarget;
+	return completedBase || attemptsExhausted;
+}
+
+function Field( { label, hint, error, htmlFor, children, tooltip } ) {
+	return (
+		<div className="space-y-1.5">
+			<div className="flex items-center gap-1.5">
+				<label
+					htmlFor={ htmlFor }
+					className="text-sm font-medium text-foreground"
+				>
+					{ label }
+				</label>
+				{ tooltip && (
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<button
+								type="button"
+								className="inline-flex size-4 items-center justify-center rounded-full text-muted-foreground/70 hover:text-muted-foreground"
+								aria-label={ __( 'Help', 'solvex-ai-blogger' ) }
+							>
+								<HelpCircle className="size-3.5" aria-hidden="true" />
+							</button>
+						</TooltipTrigger>
+						<TooltipContent className="max-w-xs">{ tooltip }</TooltipContent>
+					</Tooltip>
+				) }
+			</div>
+			{ children }
+			{ error ? (
+				<p className="flex items-center gap-1 text-xs text-destructive">
+					<AlertCircle className="size-3" aria-hidden="true" />
+					{ error }
+				</p>
+			) : hint ? (
+				<p className="text-xs text-muted-foreground">{ hint }</p>
+			) : null }
+		</div>
+	);
+}
+
+const inputBaseClass =
+	'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/15 disabled:cursor-not-allowed disabled:bg-muted/40 disabled:opacity-70';
+
+const selectBaseClass = inputBaseClass + ' appearance-none pr-9';
+
+function SelectField( { value, onChange, disabled, children, id } ) {
+	return (
+		<div className="relative">
+			<select
+				id={ id }
+				value={ value || '' }
+				onChange={ onChange }
+				disabled={ disabled }
+				className={ selectBaseClass }
+			>
+				{ children }
+			</select>
+			<ChevronDown
+				className="pointer-events-none absolute right-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground"
+				aria-hidden="true"
+			/>
+		</div>
+	);
+}
+
+function RadioCard( { id, name, checked, onChange, label, description, disabled } ) {
+	return (
+		<label
+			htmlFor={ id }
+			aria-label={ label }
+			className={ cn(
+				'flex cursor-pointer items-start gap-3 rounded-lg border bg-card p-3 transition-colors',
+				checked
+					? 'border-brand bg-brand-soft/40'
+					: 'border-border hover:border-brand/30',
+				disabled && 'cursor-not-allowed opacity-60 hover:border-border'
+			) }
+		>
+			<input
+				type="radio"
+				id={ id }
+				name={ name }
+				checked={ checked }
+				onChange={ onChange }
+				disabled={ disabled }
+				className="mt-0.5 size-4 accent-brand"
+			/>
+			<span className="flex flex-col gap-0.5">
+				<span className="text-sm font-semibold text-foreground">{ label }</span>
+				<span className="text-xs text-muted-foreground">{ description }</span>
+			</span>
+		</label>
+	);
+}
 
 export default function ConfigureDrawer( props ) {
-	const abortControllerRef = useRef( {} );
 	const { configureData, openDrawer, setOpenDrawer, mode = 'edit' } = props;
+	const abortControllerRef = useRef( {} );
+	const isViewMode = mode === 'view';
 
-	const [ activeTab, setActiveTab ] = useState( 'campaign' );
-	const [ handlingCampaign, setHandlingCampaign ] = useState( false );
-	const [ open, setOpen ] = useState( openDrawer );
-	const [ drawerData, setDrawerData ] = useState( {} );
+	// Localized lookups (still ride on the global window key).
 	const postTypes = wpsolvex_autoaiblogger_localized_data?.post_types || {};
 	const authors = wpsolvex_autoaiblogger_localized_data?.authors || [];
 	const postStatuses = wpsolvex_autoaiblogger_localized_data?.post_statuses || {};
 	const categories = wpsolvex_autoaiblogger_localized_data?.categories || {};
 	const tags = wpsolvex_autoaiblogger_localized_data?.tags || {};
-	const isViewMode = mode === 'view';
+
+	const proAvailable = useSelector( ( s ) => Boolean( s.proAvailable ) );
+	const proPurchaseUrl = useSelector( ( s ) => s.proPurchaseUrl ) || '#';
+
+	const [ activeTab, setActiveTab ] = useState( 'general' );
+	const [ handlingCampaign, setHandlingCampaign ] = useState( false );
+	const [ drawerData, setDrawerData ] = useState( {} );
 	const [ errorMessage, setErrorMessage ] = useState( '' );
 	const [ fieldErrors, setFieldErrors ] = useState( {} );
 
-	// Helper function to check if start date has passed.
-	const hasStartDatePassed = ( startDate ) => {
-		if ( ! startDate ) {
-			return false;
-		}
-
-		try {
-			const start = new Date( startDate );
-			const now = new Date();
-			return start < now;
-		} catch ( e ) {
-			return false;
-		}
-	};
-
 	useEffect( () => {
-		setDrawerData( configureData );
-		setHandlingCampaign( false );
-		setOpen( openDrawer );
-		setFieldErrors( {} );
-		setErrorMessage( '' );
-	}, [ openDrawer ] );
-
-	const closePopup = () => {
-		setOpen( false );
-		setOpenDrawer( false );
-	};
-
-	// Helper function to scroll to and highlight field with error
-	const showFieldError = ( fieldId, fieldErrorMessage, tabName = 'campaign' ) => {
-		// Switch to correct tab if needed
-		if ( activeTab !== tabName ) {
-			setActiveTab( tabName );
-		}
-
-		// Set field error.
-		setFieldErrors( { [ fieldId ]: fieldErrorMessage } );
-		setErrorMessage( fieldErrorMessage );
-
-		// Scroll to field after a small delay to ensure tab switch is complete
-		setTimeout( () => {
-			const field = document.getElementById( fieldId );
-			if ( field ) {
-				field.scrollIntoView( { behavior: 'smooth', block: 'center' } );
-				field.focus();
-			}
-		}, tabName !== activeTab ? 300 : 100 );
-
-		// Clear errors after 4 seconds
-		setTimeout( () => {
+		if ( openDrawer ) {
+			setDrawerData( configureData || {} );
+			setHandlingCampaign( false );
 			setFieldErrors( {} );
 			setErrorMessage( '' );
-		}, 4000 );
-	};
+			setActiveTab( 'general' );
+		}
+	}, [ openDrawer, configureData ] );
 
-	const handleCampaign = ( e ) => {
-		e.preventDefault();
+	const setField = useCallback(
+		( key, value ) => {
+			if ( isViewMode ) {
+				return;
+			}
+			setDrawerData( ( prev ) => ( { ...prev, [ key ]: value } ) );
+		},
+		[ isViewMode ]
+	);
 
-		// Reset errors
+	const closePopup = useCallback( () => {
+		setOpenDrawer( false );
+	}, [ setOpenDrawer ] );
+
+	// Tab-aware error helper. Switches to the offending tab, focuses the
+	// field, and auto-clears after 4s. Uses forceMount on TabsContent so the
+	// target element is always in the DOM.
+	const showFieldError = useCallback(
+		( fieldId, message, tabName = 'general' ) => {
+			if ( activeTab !== tabName ) {
+				setActiveTab( tabName );
+			}
+			setFieldErrors( { [ fieldId ]: message } );
+			setErrorMessage( message );
+
+			setTimeout(
+				() => {
+					const field = document.getElementById( fieldId );
+					if ( field ) {
+						field.scrollIntoView( { behavior: 'smooth', block: 'center' } );
+						field.focus();
+					}
+				},
+				tabName !== activeTab ? 300 : 100
+			);
+
+			setTimeout( () => {
+				setFieldErrors( {} );
+				setErrorMessage( '' );
+			}, 4000 );
+		},
+		[ activeTab ]
+	);
+
+	const handleCampaign = useCallback( () => {
 		setFieldErrors( {} );
 		setErrorMessage( '' );
 
 		if ( ! drawerData.title ) {
-			showFieldError( 'project-name', __( 'Name should not be empty.', 'solvex-ai-blogger' ), 'campaign' );
+			showFieldError(
+				'project-name',
+				__( 'Name should not be empty.', 'solvex-ai-blogger' ),
+				'general'
+			);
 			return;
 		}
 		if ( ! drawerData.keywords ) {
-			showFieldError( 'campaign-keywords', __( 'Keywords should not be empty.', 'solvex-ai-blogger' ), 'campaign' );
+			showFieldError(
+				'campaign-keywords',
+				__( 'Keywords should not be empty.', 'solvex-ai-blogger' ),
+				'general'
+			);
 			return;
 		}
 		if ( ! drawerData.postsTarget ) {
-			showFieldError( 'campaign-target', __( 'Posts Target should not be empty.', 'solvex-ai-blogger' ), 'campaign' );
+			showFieldError(
+				'campaign-target',
+				__( 'Posts Target should not be empty.', 'solvex-ai-blogger' ),
+				'general'
+			);
 			return;
 		}
 		if ( ! drawerData.startDate ) {
-			showFieldError( 'start-date', __( 'Start Date should not be empty.', 'solvex-ai-blogger' ), 'campaign' );
+			showFieldError(
+				'start-date',
+				__( 'Start Date should not be empty.', 'solvex-ai-blogger' ),
+				'general'
+			);
 			return;
 		}
-		if ( 'week' === drawerData.repeatUnit && drawerData.repeatWeeklyOn.length === 0 ) {
-			setErrorMessage( __( 'Week days should not be empty.', 'solvex-ai-blogger' ) );
-			setFieldErrors( { 'weekly-days': __( 'Week days should not be empty.', 'solvex-ai-blogger' ) } );
+		if (
+			'week' === drawerData.repeatUnit &&
+			( drawerData.repeatWeeklyOn || [] ).length === 0
+		) {
+			setErrorMessage(
+				__( 'Week days should not be empty.', 'solvex-ai-blogger' )
+			);
+			setFieldErrors( {
+				'weekly-days': __(
+					'Week days should not be empty.',
+					'solvex-ai-blogger'
+				),
+			} );
 			setTimeout( () => {
 				setFieldErrors( {} );
 				setErrorMessage( '' );
@@ -114,832 +293,593 @@ export default function ConfigureDrawer( props ) {
 			return;
 		}
 		if ( drawerData.overrideSitePersona && ! drawerData.overrideSiteFor ) {
-			showFieldError( 'blog-for', __( 'Campaign For should not be empty when override is enabled.', 'solvex-ai-blogger' ), 'advanced' );
+			showFieldError(
+				'blog-for',
+				__(
+					'Campaign For should not be empty when override is enabled.',
+					'solvex-ai-blogger'
+				),
+				'advanced'
+			);
 			return;
 		}
-		if ( drawerData.overrideSitePersona && ! drawerData.overrideSiteDescription ) {
-			showFieldError( 'more-about-blog', __( 'Campaign Description should not be empty when override is enabled.', 'solvex-ai-blogger' ), 'advanced' );
+		if (
+			drawerData.overrideSitePersona &&
+			! drawerData.overrideSiteDescription
+		) {
+			showFieldError(
+				'more-about-blog',
+				__(
+					'Campaign Description should not be empty when override is enabled.',
+					'solvex-ai-blogger'
+				),
+				'advanced'
+			);
 			return;
 		}
 
-		setErrorMessage( '' );
-		setFieldErrors( {} );
 		setHandlingCampaign( true );
-
 		updateCampaign( drawerData, drawerData.type === 'new', abortControllerRef )
-			.then( ( response ) => {
-				console.log( 'Campaign operation completed successfully:', response );
-				// The ApiData.js handles the reload, so we don't need to do anything here
+			.then( () => {
+				// ApiData.js triggers a window.location.reload() on success.
 			} )
 			.catch( ( error ) => {
-				console.error( 'Campaign operation failed:', error );
 				setHandlingCampaign( false );
-				setErrorMessage( error.message || 'An error occurred while saving the campaign.' );
-				setTimeout( () => {
-					setErrorMessage( '' );
-				}, 5000 );
+				setErrorMessage(
+					error?.message ||
+						__(
+							'An error occurred while saving the campaign.',
+							'solvex-ai-blogger'
+						)
+				);
+				setTimeout( () => setErrorMessage( '' ), 5000 );
 			} );
+	}, [ drawerData, showFieldError ] );
+
+	const completed = isCampaignCompleted( drawerData );
+	const submitDisabled = handlingCampaign || completed;
+	const title = isViewMode
+		? __( 'Campaign Configuration', 'solvex-ai-blogger' )
+		: drawerData.type === 'new'
+			? __( 'New Campaign', 'solvex-ai-blogger' )
+			: __( 'Edit Campaign', 'solvex-ai-blogger' );
+
+	const inputCx = ( fieldId ) =>
+		cn(
+			inputBaseClass,
+			fieldErrors[ fieldId ] && 'border-destructive focus-visible:ring-destructive/20'
+		);
+
+	const toggleDay = ( day ) => {
+		const repeatWeeklyOn = drawerData.repeatWeeklyOn || [];
+		const next = repeatWeeklyOn.includes( day )
+			? repeatWeeklyOn.filter( ( d ) => d !== day )
+			: [ ...repeatWeeklyOn, day ];
+		setField( 'repeatWeeklyOn', next );
 	};
 
+	const maxWordsLimit = proAvailable ? 5000 : 1000;
+	const imagesLimit = proAvailable ? 5 : 1;
+
 	return (
-		<Dialog open={ open } onClose={ closePopup } className="relative z-10 ai-blogger-container">
-			<div className="fixed inset-0 bg-black opacity-75" />
+		<TooltipProvider delayDuration={ 200 }>
+			<Sheet open={ openDrawer } onOpenChange={ ( o ) => ! o && closePopup() }>
+				<SheetContent
+					side="right"
+					className="flex w-full flex-col gap-0 p-0 sm:max-w-lg"
+				>
+					<SheetHeader className="border-b border-brand/20 bg-brand px-6 py-5">
+						<SheetTitle className="text-base font-semibold text-white">
+							{ title }
+						</SheetTitle>
+					</SheetHeader>
 
-			<div className="fixed inset-0 overflow-hidden">
-				<div className="absolute inset-0 overflow-hidden">
-					<div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
-						<DialogPanel
-							transition
-							className="pointer-events-auto w-screen max-w-md transform transition duration-500 ease-in-out data-[closed]:translate-x-full sm:duration-700"
-						>
-							<form className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
-								<div className="h-0 flex-1 overflow-y-auto">
-									<div className="bg-brand px-4 py-4 sm:px-6 mt-8">
-										<div className="flex items-center justify-between">
-											<h2 className="text-base font-semibold text-white m-0 p-0">
-												{
-													isViewMode
-														? __( 'Campaign Configuration', 'solvex-ai-blogger' )
-														: ( drawerData.type === 'new' )
-															? __( 'New Campaign', 'solvex-ai-blogger' )
-															: __( 'Edit Campaign', 'solvex-ai-blogger' )
+					<Tabs
+						value={ activeTab }
+						onValueChange={ setActiveTab }
+						className="flex flex-1 flex-col overflow-hidden"
+					>
+						<TabsList className="grid h-auto w-full grid-cols-3 rounded-none border-b border-border bg-transparent p-0">
+							{ [
+								{ value: 'general', label: __( 'General', 'solvex-ai-blogger' ) },
+								{ value: 'filters', label: __( 'Filters', 'solvex-ai-blogger' ) },
+								{ value: 'advanced', label: __( 'Advanced', 'solvex-ai-blogger' ) },
+							].map( ( tab ) => (
+								<TabsTrigger
+									key={ tab.value }
+									value={ tab.value }
+									className="rounded-none border-b-2 border-transparent pb-3 pt-4 text-sm font-medium text-muted-foreground data-[state=active]:border-brand data-[state=active]:bg-transparent data-[state=active]:text-brand data-[state=active]:shadow-none"
+								>
+									{ tab.label }
+								</TabsTrigger>
+							) ) }
+						</TabsList>
+
+						<div className="flex-1 overflow-y-auto px-6 pb-28 pt-6">
+							<TabsContent forceMount value="general" className="m-0 space-y-5">
+								<Field
+									label={ __( 'Name', 'solvex-ai-blogger' ) }
+									htmlFor="project-name"
+									error={ fieldErrors[ 'project-name' ] }
+								>
+									<input
+										id="project-name"
+										type="text"
+										value={ drawerData.title || '' }
+										onChange={ ( e ) => setField( 'title', e.target.value ) }
+										readOnly={ isViewMode }
+										placeholder={ __( '21 Week Fitness Plan', 'solvex-ai-blogger' ) }
+										className={ inputCx( 'project-name' ) }
+									/>
+								</Field>
+
+								<Field
+									label={ __( 'Keywords', 'solvex-ai-blogger' ) }
+									htmlFor="campaign-keywords"
+									error={ fieldErrors[ 'campaign-keywords' ] }
+								>
+									<textarea
+										id="campaign-keywords"
+										rows={ 3 }
+										value={ drawerData.keywords || '' }
+										onChange={ ( e ) => setField( 'keywords', e.target.value ) }
+										readOnly={ isViewMode }
+										placeholder={ __( 'Yoga, Fitness, Health', 'solvex-ai-blogger' ) }
+										className={ cn( inputCx( 'campaign-keywords' ), 'h-auto py-2' ) }
+									/>
+								</Field>
+
+								<div className="grid grid-cols-2 gap-4">
+									<Field
+										label={ __( 'Posts Target', 'solvex-ai-blogger' ) }
+										htmlFor="campaign-target"
+										tooltip={
+											drawerData.type === 'edit'
+												? __( 'Post Target can not be updated.', 'solvex-ai-blogger' )
+												: __( 'How many posts you expect from this campaign?', 'solvex-ai-blogger' )
+										}
+										error={ fieldErrors[ 'campaign-target' ] }
+										hint={
+											drawerData.type === 'new'
+												? __( 'Once set, the target is final.', 'solvex-ai-blogger' )
+												: undefined
+										}
+									>
+										<input
+											id="campaign-target"
+											type="number"
+											min="1"
+											value={ drawerData.postsTarget || '' }
+											onChange={ ( e ) => setField( 'postsTarget', e.target.value ) }
+											onWheel={ ( e ) => e.target.blur() }
+											readOnly={ isViewMode }
+											disabled={ drawerData.type === 'edit' }
+											className={ inputCx( 'campaign-target' ) }
+										/>
+									</Field>
+
+									<Field
+										label={ __( 'Repeat Every', 'solvex-ai-blogger' ) }
+										htmlFor="campaign-repeat-after"
+										tooltip={ __( 'Set how often the campaign should run automatically.', 'solvex-ai-blogger' ) }
+									>
+										<div className="flex gap-2">
+											<input
+												id="campaign-repeat-after"
+												type="number"
+												min="1"
+												max="365"
+												value={ drawerData.repeatInterval || 1 }
+												onChange={ ( e ) =>
+													setField(
+														'repeatInterval',
+														parseInt( e.target.value, 10 ) || 1
+													)
 												}
-											</h2>
-											<div className="ml-3 flex h-7 items-center">
-												<button
-													type="button"
-													onClick={ closePopup }
-													className="relative rounded-md bg-brand text-brand-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white border-none"
-												>
-													<span className="absolute -inset-2.5" />
-													<span className="sr-only">Close panel</span>
-													<XMarkIcon aria-hidden="true" className="size-6" />
-												</button>
-											</div>
+												onWheel={ ( e ) => e.target.blur() }
+												readOnly={ isViewMode }
+												className={ cn( inputBaseClass, 'w-20' ) }
+											/>
+											<SelectField
+												id="repeat-unit"
+												value={ drawerData.repeatUnit || 'day' }
+												onChange={ ( e ) => setField( 'repeatUnit', e.target.value ) }
+												disabled={ isViewMode }
+											>
+												<option value="day">{ __( 'Day(s)', 'solvex-ai-blogger' ) }</option>
+												<option value="week">{ __( 'Week(s)', 'solvex-ai-blogger' ) }</option>
+											</SelectField>
 										</div>
-									</div>
+									</Field>
+								</div>
 
-									<div className="bg-white px-4 sm:px-6 wpsolvex-autoaiblogger-campaign-nav">
-										<nav className="justify-between flex" aria-label="Tabs">
-											<a
-												onClick={ () => setActiveTab( 'campaign' ) }
-												className={ `w-full campaign-settings-tab text-left text-sm/6 cursor-pointer whitespace-nowrap py-4 border-b-2 bg-transparent ${ 'campaign' === activeTab ? 'font-medium border-brand text-brand hover:text-brand hover:border-brand' : 'text-slate-600 border-gray-200 hover:text-slate-500 hover:border-slate-500 font-normal' }` }
-											>
-												{ __( 'General', 'solvex-ai-blogger' ) }
-											</a>
-											<a
-												onClick={ () => setActiveTab( 'filters' ) }
-												className={ `w-full campaign-settings-tab text-center text-sm/6 cursor-pointer whitespace-nowrap py-4 border-b-2 bg-transparent ${ 'filters' === activeTab ? 'font-medium border-brand text-brand hover:text-brand hover:border-brand' : 'text-slate-600 border-gray-200 hover:text-slate-500 hover:border-slate-500 font-normal' }` }
-											>
-												{ __( 'Filters', 'solvex-ai-blogger' ) }
-											</a>
-											<a
-												onClick={ () => setActiveTab( 'advanced' ) }
-												className={ `w-full campaign-settings-tab text-right text-sm/6 cursor-pointer whitespace-nowrap py-4 border-b-2 bg-transparent ${ 'advanced' === activeTab ? 'font-medium border-brand text-brand hover:text-brand hover:border-brand' : 'text-slate-600 border-gray-200 hover:text-slate-500 hover:border-slate-500 font-normal' }` }
-											>
-												{ __( 'Advanced', 'solvex-ai-blogger' ) }
-											</a>
-										</nav>
-									</div>
-
-									{
-										'campaign' === activeTab && (
-											<div className="flex flex-1 flex-col justify-between">
-												<div className="divide-y divide-gray-200 px-4 sm:px-6">
-													<div className="space-y-6 pb-5 pt-6">
-														<div>
-															<label htmlFor="project-name" className="block text-sm/6 font-medium text-gray-900">
-																{ __( 'Name', 'solvex-ai-blogger' ) }
-															</label>
-															<div className="mt-2">
-																<input
-																	id="project-name"
-																	name="project-name"
-																	defaultValue={ drawerData.title }
-																	onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, title: e.target.value } ) }
-																	type="text"
-																	readOnly={ isViewMode }
-																	className={ `block w-full rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 transition-colors duration-200 ${
-																		fieldErrors[ 'project-name' ]
-																			? 'bg-red-50 outline-red-300 focus:outline-red-500 text-red-900'
-																			: isViewMode
-																				? 'bg-gray-50 outline-gray-200'
-																				: 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand'
-																	}` }
-																	placeholder={ __( '21 Week Fitness Plan', 'solvex-ai-blogger' ) }
-																/>
-																{ fieldErrors[ 'project-name' ] && (
-																	<p className="mt-1 text-sm text-red-600">
-																		{ fieldErrors[ 'project-name' ] }
-																	</p>
-																) }
-															</div>
-														</div>
-
-														<div>
-															<label htmlFor="campaign-keywords" className="block text-sm/6 font-medium text-gray-900">
-																{ __( 'Keywords', 'solvex-ai-blogger' ) }
-															</label>
-															<div className="mt-2">
-																<textarea
-																	id="campaign-keywords"
-																	name="campaign-keywords"
-																	rows={ 3 }
-																	className={ `block w-full rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 transition-colors duration-200 ${
-																		fieldErrors[ 'campaign-keywords' ]
-																			? 'bg-red-50 outline-red-300 focus:outline-red-500 text-red-900'
-																			: isViewMode
-																				? 'bg-gray-50 outline-gray-200'
-																				: 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand'
-																	}` }
-																	defaultValue={ drawerData.keywords }
-																	onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, keywords: e.target.value } ) }
-																	readOnly={ isViewMode }
-																	placeholder={ __( 'Yoga, Fitness, Health', 'solvex-ai-blogger' ) }
-																/>
-																{ fieldErrors[ 'campaign-keywords' ] && (
-																	<p className="mt-1 text-sm text-red-600">
-																		{ fieldErrors[ 'campaign-keywords' ] }
-																	</p>
-																) }
-															</div>
-														</div>
-
-														<div className="grid grid-cols-1 gap-2">
-															<div className="flex items-center justify-between">
-																<label htmlFor="campaign-target" className="flex items-center text-sm/6 font-medium text-gray-900">
-																	{ __( 'Posts Target', 'solvex-ai-blogger' ) }
-																	<Tooltip
-																		text={ drawerData.type === 'edit'
-																			? __( 'Post Target can not be updated.', 'solvex-ai-blogger' )
-																			: __( 'How many posts you expect from this campaign?', 'solvex-ai-blogger' )
-																		}
-																		delay={ 100 }
-																		className="z-[99999] bg-black text-white shadow-md p-2 rounded-md"
-																	>
-																		<QuestionMarkCircleIcon
-																			aria-hidden="true"
-																			className="size-4 ml-1 text-gray-400 group-hover:text-gray-500"
-																		/>
-																	</Tooltip>
-																</label>
-																<div className="mt-2">
-																	<div className="flex items-center gap-1">
-																		<input
-																			id="campaign-target"
-																			name="campaign-target"
-																			defaultValue={ drawerData.postsTarget }
-																			onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, postsTarget: e.target.value } ) }
-																			onWheel={ ( e ) => e.target.blur() }
-																			type="number"
-																			min="1"
-																			readOnly={ isViewMode }
-																			disabled={ drawerData.type === 'edit' }
-																			className={ `block w-full rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 transition-colors duration-200 ${
-																				fieldErrors[ 'campaign-target' ]
-																					? 'bg-red-50 outline-red-300 focus:outline-red-500 text-red-900'
-																					: isViewMode
-																						? 'bg-gray-50 outline-gray-200'
-																						: 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand'
-																			}` }
-																		/>
-																	</div>
-																	{ fieldErrors[ 'campaign-target' ] && (
-																		<p className="mt-1 text-sm text-red-600">
-																			{ fieldErrors[ 'campaign-target' ] }
-																		</p>
-																	) }
-																</div>
-															</div>
-															{ drawerData.type === 'new' && (
-																<div className="text-xs text-gray-500">
-																	{ __( 'Once set, campaign targets are unchangeable.', 'solvex-ai-blogger' ) }
-																</div>
-															) }
-														</div>
-
-														<div className="flex items-center justify-between">
-															<label htmlFor="campaign-repeat-after" className="flex items-center text-sm/6 font-medium text-gray-900">
-																{ __( 'Repeat Every', 'solvex-ai-blogger' ) }
-																<Tooltip
-																	text={ __( 'Set how often the campaign should run automatically.', 'solvex-ai-blogger' ) }
-																	delay={ 100 }
-																	className="z-[99999] bg-black text-white shadow-md p-2 rounded-md"
-																>
-																	<QuestionMarkCircleIcon
-																		aria-hidden="true"
-																		className="size-4 ml-1 text-gray-400 group-hover:text-gray-500"
-																	/>
-																</Tooltip>
-															</label>
-
-															<div className="mt-2 flex gap-2">
-																<input
-																	id="campaign-repeat-after"
-																	name="campaign-repeat-after"
-																	defaultValue={ drawerData.repeatInterval || 1 }
-																	onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, repeatInterval: parseInt( e.target.value ) || 1 } ) }
-																	onWheel={ ( e ) => e.target.blur() }
-																	type="number"
-																	min="1"
-																	max="365"
-																	readOnly={ isViewMode }
-																	className={ `block w-20 rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 ${ isViewMode ? 'bg-gray-50 outline-gray-200' : 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand' }` }
-																/>
-																<select
-																	className={ `min-w-[100px] ${ isViewMode ? 'wpsolvex-autoaiblogger-select-control-readonly' : 'wpsolvex-autoaiblogger-select-control' }` }
-																	value={ drawerData.repeatUnit || 'day' }
-																	onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, repeatUnit: e.target.value } ) }
-																	disabled={ isViewMode }
-																>
-																	<option value="day">{ __( 'Day(s)', 'solvex-ai-blogger' ) }</option>
-																	<option value="week">{ __( 'Week(s)', 'solvex-ai-blogger' ) }</option>
-																</select>
-															</div>
-														</div>
-														{ 'week' === drawerData.repeatUnit && (
-															<div className="flex items-center justify-between">
-																<label className={ `text-sm/6 font-medium ${ fieldErrors[ 'weekly-days' ] ? 'text-red-700' : 'text-gray-900' }` }> {/* eslint-disable-line */}
-																	{ __( 'On Days', 'solvex-ai-blogger' ) }
-																</label>
-																<div>
-																	<div className="flex flex-wrap gap-2 justify-end">
-																		{ [ 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat' ].map( ( day ) => (
-																			<button
-																				key={ day }
-																				type="button"
-																				onClick={ () => {
-																					if ( isViewMode ) {
-																						return;
-																					}
-																					const repeatWeeklyOn = drawerData.repeatWeeklyOn || [];
-																					const newRepeatOn = repeatWeeklyOn.includes( day )
-																						? repeatWeeklyOn.filter( ( d ) => d !== day )
-																						: [ ...repeatWeeklyOn, day ];
-																					setDrawerData( { ...drawerData, repeatWeeklyOn: newRepeatOn } );
-																				} }
-																				className={ `capitalize text-xs p-2 rounded-full border transition-colors duration-200 ${
-																					( drawerData.repeatWeeklyOn || [] ).includes( day )
-																						? fieldErrors[ 'weekly-days' ]
-																							? 'bg-red-600 text-white border-red-600'
-																							: 'bg-brand text-white border-brand'
-																						: fieldErrors[ 'weekly-days' ]
-																							? 'bg-red-50 text-red-900 border-red-300'
-																							: 'bg-white text-gray-900 border-gray-300'
-																				} ${ isViewMode ? 'cursor-not-allowed' : 'hover:bg-brand-600 hover:text-white hover:border-brand-600' }` }
-																				disabled={ isViewMode }
-																			>
-																				{ day }
-																			</button>
-																		) ) }
-																	</div>
-																	{ fieldErrors[ 'weekly-days' ] && (
-																		<p className="mt-1 text-sm text-red-600 text-right">
-																			{ fieldErrors[ 'weekly-days' ] }
-																		</p>
-																	) }
-																</div>
-															</div>
+								{ 'week' === drawerData.repeatUnit && (
+									<Field
+										label={ __( 'On Days', 'solvex-ai-blogger' ) }
+										error={ fieldErrors[ 'weekly-days' ] }
+									>
+										<div className="flex flex-wrap gap-1.5">
+											{ DAYS.map( ( day ) => {
+												const active = ( drawerData.repeatWeeklyOn || [] ).includes( day.key );
+												return (
+													<button
+														key={ day.key }
+														type="button"
+														onClick={ () => toggleDay( day.key ) }
+														disabled={ isViewMode }
+														className={ cn(
+															'inline-flex size-10 items-center justify-center rounded-full border text-[11px] font-semibold transition-colors',
+															active
+																? 'border-brand bg-brand text-white'
+																: 'border-border bg-card text-muted-foreground hover:border-brand/40 hover:text-foreground',
+															isViewMode && 'cursor-not-allowed opacity-60'
 														) }
-
-														<div>
-															<label htmlFor="start-date" className={ `flex items-center text-sm/6 font-medium mb-2 ${
-																fieldErrors[ 'start-date' ] ? 'text-red-700' : 'text-gray-900'
-															}` }>
-																{ __( 'Start Date', 'solvex-ai-blogger' ) }
-																<Tooltip
-																	text={ __( 'Start Date can not be updated later.', 'solvex-ai-blogger' ) }
-																	delay={ 100 }
-																	className="z-[99999] bg-black text-white shadow-md p-2 rounded-md"
-																>
-																	<QuestionMarkCircleIcon
-																		aria-hidden="true"
-																		className="size-4 ml-1 text-gray-400 group-hover:text-gray-500"
-																	/>
-																</Tooltip>
-															</label>
-															<DateTimeField
-																id="start-date"
-																name="start-date"
-																value={ drawerData.startDate }
-																onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, startDate: e.target.value } ) }
-																readOnly={ isViewMode }
-																disabled={ drawerData.type === 'edit' && hasStartDatePassed( drawerData.startDate ) }
-																placeholder={ __( 'Select campaign start date', 'solvex-ai-blogger' ) }
-																error={ fieldErrors[ 'start-date' ] }
-															/>
-														</div>
-
-														<div className="flex items-center justify-between">
-															<label htmlFor="use-summary-as-excerpt" className="block text-sm/6 font-medium text-gray-900">
-																{ __( 'Use Summary as Excerpt?', 'solvex-ai-blogger' ) }
-															</label>
-															<div className="mt-2">
-																<SwitchControl
-																	checked={ drawerData.summaryAsExcerpt }
-																	onChange={ () => ! isViewMode && setDrawerData( { ...drawerData, summaryAsExcerpt: ! drawerData.summaryAsExcerpt } ) }
-																	id="use-summary-as-excerpt"
-																	disabled={ isViewMode }
-																/>
-															</div>
-														</div>
-
-														<fieldset>
-															<legend className="text-sm/6 font-medium text-gray-900"> { __( 'Campaign Status', 'solvex-ai-blogger' ) } </legend>
-
-															<div className="mt-2 space-y-4">
-																<div className="relative flex items-start">
-																	<div className="absolute flex h-6 mt-1 items-center">
-																		<input
-																			defaultValue="public"
-																			id="privacy-public"
-																			name="privacy"
-																			type="radio"
-																			checked={ drawerData.status === 'publish' }
-																			aria-describedby="privacy-public-description"
-																			className="relative size-4 appearance-none rounded-full border border-gray-300 before:absolute before:inset-1 before:rounded-full before:bg-white checked:border-brand-600 checked:bg-brand-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden [&:not(:checked)]:before:hidden"
-																			onChange={ () => ! isViewMode && setDrawerData( { ...drawerData, status: 'publish' } ) }
-																			disabled={ isViewMode }
-																		/>
-																	</div>
-																	<div className="pl-7 text-sm/6">
-																		<label htmlFor="privacy-public" className="font-medium text-gray-900">
-																			{ __( 'On', 'solvex-ai-blogger' ) }
-																			{ ' ' }
-																			<span id="privacy-public-description" className="text-gray-500 text-normal">
-																				{ __( 'The campaign will be activated immediately and start running.', 'solvex-ai-blogger' ) }
-																			</span>
-																		</label>
-																	</div>
-																</div>
-
-																<div>
-																	<div className="relative flex items-start">
-																		<div className="absolute flex h-6 mt-1 items-center">
-																			<input
-																				defaultValue="private-to-project"
-																				id="privacy-private-to-project"
-																				name="privacy"
-																				type="radio"
-																				checked={ drawerData.status === 'draft' }
-																				aria-describedby="privacy-private-to-project-description"
-																				className="relative size-4 appearance-none rounded-full border border-gray-300 before:absolute before:inset-1 before:rounded-full before:bg-white checked:border-brand-600 checked:bg-brand-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 forced-colors:appearance-auto forced-colors:before:hidden [&:not(:checked)]:before:hidden"
-																				onChange={ () => ! isViewMode && setDrawerData( { ...drawerData, status: 'draft' } ) }
-																				disabled={ isViewMode }
-																			/>
-																		</div>
-																		<div className="pl-7 text-sm/6">
-																			<label htmlFor="privacy-private-to-project" className="font-medium text-gray-900">
-																				{ __( 'Off', 'solvex-ai-blogger' ) }
-																				{ ' ' }
-																				<span id="privacy-private-to-project-description" className="text-gray-500 text-normal">
-																					{ __( 'The campaign setup will be saved, but it won\'t run until you switch it ON.', 'solvex-ai-blogger' ) }
-																				</span>
-																			</label>
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</fieldset>
-													</div>
-												</div>
-											</div>
-										)
-									}
-
-									{
-										'filters' === activeTab && (
-											<div className="flex flex-1 flex-col justify-between">
-												<div className="divide-y divide-gray-200 px-4 sm:px-6">
-													<div className="space-y-6 pb-5 pt-6">
-														<div className="flex items-center justify-between post-filters-option">
-															<label htmlFor="post-type" className="block text-sm/6 font-medium text-gray-900">
-																{ __( 'Post Type', 'solvex-ai-blogger' ) }
-															</label>
-															<div>
-																<select
-																	className={ isViewMode ? 'wpsolvex-autoaiblogger-select-control-readonly' : 'wpsolvex-autoaiblogger-select-control' }
-																	id="post-type"
-																	value={ drawerData.postType }
-																	onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, postType: e.target.value } ) }
-																	disabled={ isViewMode }
-																>
-																	{ Object.entries( postTypes ).map( ( [ type, label ] ) => (
-																		<option key={ type } value={ type }>
-																			{ label }
-																		</option>
-																	) ) }
-																</select>
-															</div>
-														</div>
-
-														<div className="flex items-center justify-between post-filters-option">
-															<label htmlFor="post-author" className="block text-sm/6 font-medium text-gray-900">
-																{ __( 'Post Author', 'solvex-ai-blogger' ) }
-															</label>
-															<div>
-																<select
-																	className={ isViewMode ? 'wpsolvex-autoaiblogger-select-control-readonly' : 'wpsolvex-autoaiblogger-select-control' }
-																	id="post-author"
-																	value={ drawerData.author }
-																	onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, author: e.target.value } ) }
-																	disabled={ isViewMode }
-																>
-																	{ authors.map( ( author ) => (
-																		<option key={ author.id } value={ author.id }>
-																			{ author.name }
-																		</option>
-																	) ) }
-																</select>
-															</div>
-														</div>
-
-														<div className="flex items-center justify-between post-filters-option">
-															<label htmlFor="post-status" className="block text-sm/6 font-medium text-gray-900">
-																{ __( 'Post Status', 'solvex-ai-blogger' ) }
-															</label>
-															<div>
-																<select
-																	className={ isViewMode ? 'wpsolvex-autoaiblogger-select-control-readonly' : 'wpsolvex-autoaiblogger-select-control' }
-																	id="post-status"
-																	value={ drawerData.postStatus }
-																	onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, postStatus: e.target.value } ) }
-																	disabled={ isViewMode }
-																>
-																	{ Object.entries( postStatuses ).map( ( [ key, label ] ) => (
-																		<option key={ key } value={ key }>
-																			{ label }
-																		</option>
-																	) ) }
-																</select>
-															</div>
-														</div>
-
-														{
-															'post' === drawerData.postType && (
-																<>
-																	<div className="flex items-center justify-between post-filters-option">
-																		<label htmlFor="post-category" className="block text-sm/6 font-medium text-gray-900">
-																			{ __( 'Post Category', 'solvex-ai-blogger' ) }
-																		</label>
-																		<div>
-																			<select
-																				className={ isViewMode ? 'wpsolvex-autoaiblogger-select-control-readonly' : 'wpsolvex-autoaiblogger-select-control' }
-																				id="post-category"
-																				value={ drawerData.category || '' }
-																				onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, category: e.target.value } ) }
-																				disabled={ isViewMode }
-																			>
-																				<option value=""> { __( '-- Select --', 'solvex-ai-blogger' ) } </option>
-																				{ categories.map( ( category ) => (
-																					<option key={ category.id } value={ category.id }>
-																						{ category.name }
-																					</option>
-																				) ) }
-																			</select>
-																		</div>
-																	</div>
-
-																	<div className="flex items-center justify-between post-filters-option">
-																		<label htmlFor="post-tag" className="block text-sm/6 font-medium text-gray-900">
-																			{ __( 'Post Tag', 'solvex-ai-blogger' ) }
-																		</label>
-																		<div>
-																			<select
-																				className={ isViewMode ? 'wpsolvex-autoaiblogger-select-control-readonly' : 'wpsolvex-autoaiblogger-select-control' }
-																				id="post-tag"
-																				value={ drawerData.tag || '' }
-																				onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, tag: e.target.value } ) }
-																				disabled={ isViewMode }
-																			>
-																				<option value=""> { __( '-- Select --', 'solvex-ai-blogger' ) } </option>
-																				{ tags.map( ( tag ) => (
-																					<option key={ tag.id } value={ tag.id }>
-																						{ tag.name }
-																					</option>
-																				) ) }
-																			</select>
-																		</div>
-																	</div>
-																</>
-															)
-														}
-													</div>
-												</div>
-											</div>
-										)
-									}
-
-									{
-										'advanced' === activeTab && (
-											<div className="flex flex-1 flex-col justify-between">
-												<div className="divide-y divide-gray-200 px-4 sm:px-6">
-													<div className="space-y-6 pb-5 pt-6">
-														<div className="flex items-center justify-between">
-															<label htmlFor="maximum-words" className="flex items-center text-sm/6 font-medium text-gray-900">
-																{ __( 'Maximum Content Words', 'solvex-ai-blogger' ) }
-																<Tooltip
-																	text={ wpsolvex_autoaiblogger_localized_data.pro_available
-																		? __( 'Set the maximum number of words for generated content (100-5000 words).', 'solvex-ai-blogger' )
-																		: __( 'Free users are limited to 1000 words. Upgrade to Pro to customize up to 5000 words.', 'solvex-ai-blogger' )
-																	}
-																	delay={ 100 }
-																	className="z-[99999] bg-black text-white shadow-md p-2 rounded-md"
-																>
-																	<QuestionMarkCircleIcon
-																		aria-hidden="true"
-																		className="size-4 ml-1 text-gray-400 group-hover:text-gray-500"
-																	/>
-																</Tooltip>
-															</label>
-
-															<div className="mt-2">
-																<input
-																	id="maximum-words"
-																	name="maximum-words"
-																	value={ drawerData.maxWords || '' }
-																	onChange={ ( e ) => {
-																		if ( isViewMode ) {
-																			return;
-																		}
-																		let value = parseInt( e.target.value ) || 0;
-																		const maxLimit = wpsolvex_autoaiblogger_localized_data.pro_available ? 5000 : 1000;
-
-																		// Enforce limits
-																		if ( value > maxLimit ) {
-																			value = maxLimit;
-																		} else if ( value < 0 ) {
-																			value = 0;
-																		}
-
-																		setDrawerData( { ...drawerData, maxWords: value } );
-																	} }
-																	onWheel={ ( e ) => e.target.blur() }
-																	type="number"
-																	min="100"
-																	max={ wpsolvex_autoaiblogger_localized_data.pro_available ? 5000 : 1000 }
-																	readOnly={ isViewMode }
-																	disabled={ wpsolvex_autoaiblogger_localized_data.pro_available ? false : true }
-																	placeholder={ wpsolvex_autoaiblogger_localized_data.pro_available ? __( 'e.g., 1500', 'solvex-ai-blogger' ) : __( '1000 (Free limit)', 'solvex-ai-blogger' ) }
-																	className={ `block w-full rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 ${ isViewMode ? 'bg-gray-50 outline-gray-200' : 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand' }` }
-																/>
-															</div>
-														</div>
-
-														<div className="flex items-center justify-between">
-															<label htmlFor="number-of-images" className="flex items-center text-sm/6 font-medium text-gray-900">
-																{ __( 'Number of Content Images', 'solvex-ai-blogger' ) }
-																<Tooltip
-																	text={ wpsolvex_autoaiblogger_localized_data.pro_available
-																		? __( 'Number of images in post content (1-5). A featured image is automatically included.', 'solvex-ai-blogger' )
-																		: __( 'Free users are limited to 1 content image. Upgrade to Pro for up to 5. Featured image is always included.', 'solvex-ai-blogger' )
-																	}
-																	delay={ 100 }
-																	className="z-[99999] bg-black text-white shadow-md p-2 rounded-md"
-																>
-																	<QuestionMarkCircleIcon
-																		aria-hidden="true"
-																		className="size-4 ml-1 text-gray-400 group-hover:text-gray-500"
-																	/>
-																</Tooltip>
-															</label>
-
-															<div className="mt-2">
-																<input
-																	id="number-of-images"
-																	name="number-of-images"
-																	value={ drawerData.numberOfImages || '' }
-																	onChange={ ( e ) => {
-																		if ( isViewMode ) {
-																			return;
-																		}
-																		let value = parseInt( e.target.value ) || 0;
-																		const maxLimit = wpsolvex_autoaiblogger_localized_data.pro_available ? 5 : 1;
-
-																		// Enforce limits
-																		if ( value > maxLimit ) {
-																			value = maxLimit;
-																		} else if ( value < 0 ) {
-																			value = 0;
-																		}
-
-																		setDrawerData( { ...drawerData, numberOfImages: value } );
-																	} }
-																	onWheel={ ( e ) => e.target.blur() }
-																	type="number"
-																	min="1"
-																	max={ wpsolvex_autoaiblogger_localized_data.pro_available ? 5 : 1 }
-																	readOnly={ isViewMode }
-																	disabled={ wpsolvex_autoaiblogger_localized_data.pro_available ? false : true }
-																	placeholder={ wpsolvex_autoaiblogger_localized_data.pro_available ? __( 'e.g., 3', 'solvex-ai-blogger' ) : __( '1 (Free limit)', 'solvex-ai-blogger' ) }
-																	className={ `block w-full rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 ${ isViewMode ? 'bg-gray-50 outline-gray-200' : 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand' }` }
-																/>
-															</div>
-														</div>
-
-														<div className="flex items-center justify-between">
-															<label htmlFor="override-site-persona" className="flex items-center text-sm/6 font-medium text-gray-900">
-																{ __( 'Override Site Persona for this Campaign?', 'solvex-ai-blogger' ) }
-																<Tooltip
-																	text={ wpsolvex_autoaiblogger_localized_data.pro_available
-																		? __( 'Customize site persona specifically for this campaign. This overrides your global site settings.', 'solvex-ai-blogger' )
-																		: __( 'Pro feature: Customize site persona per campaign. Upgrade to unlock.', 'solvex-ai-blogger' )
-																	}
-																	delay={ 100 }
-																	className="z-[99999] bg-black text-white shadow-md p-2 rounded-md"
-																>
-																	<QuestionMarkCircleIcon
-																		aria-hidden="true"
-																		className="size-4 ml-1 text-gray-400 group-hover:text-gray-500"
-																	/>
-																</Tooltip>
-															</label>
-															<div className="mt-2">
-																<SwitchControl
-																	checked={ drawerData.overrideSitePersona }
-																	onChange={ () => ! isViewMode && setDrawerData( { ...drawerData, overrideSitePersona: ! drawerData.overrideSitePersona } ) }
-																	id="override-site-persona"
-																	disabled={ isViewMode || ! wpsolvex_autoaiblogger_localized_data.pro_available }
-																/>
-															</div>
-														</div>
-
-														{
-															drawerData.overrideSitePersona && (
-																<>
-																	<div>
-																		<label htmlFor="blog-for" className="block text-sm/6 font-medium text-gray-900">
-																			{ __( 'Campaign For', 'solvex-ai-blogger' ) }
-																		</label>
-																		<div className="mt-2">
-																			<input
-																				id="blog-for"
-																				name="blog-for"
-																				type="text"
-																				defaultValue={ drawerData.overrideSiteFor }
-																				onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, overrideSiteFor: e.target.value } ) }
-																				readOnly={ isViewMode }
-																				className={ `block w-full rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 transition-colors duration-200 ${
-																					fieldErrors[ 'blog-for' ]
-																						? 'bg-red-50 outline-red-300 focus:outline-red-500 text-red-900'
-																						: isViewMode
-																							? 'bg-gray-50 outline-gray-200'
-																							: 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand'
-																				}` }
-																				placeholder={ __( 'e.g., Fitness enthusiasts and health-conscious individuals', 'solvex-ai-blogger' ) }
-																			/>
-																			{ fieldErrors[ 'blog-for' ] && (
-																				<p className="mt-1 text-sm text-red-600">
-																					{ fieldErrors[ 'blog-for' ] }
-																				</p>
-																			) }
-																		</div>
-																	</div>
-
-																	<div>
-																		<label htmlFor="more-about-blog" className="block text-sm/6 font-medium text-gray-900">
-																			{ __( 'Campaign Description', 'solvex-ai-blogger' ) }
-																		</label>
-																		<div className="mt-2">
-																			<textarea
-																				id="more-about-blog"
-																				name="more-about-blog"
-																				rows={ 3 }
-																				className={ `block w-full rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 transition-colors duration-200 ${
-																					fieldErrors[ 'more-about-blog' ]
-																						? 'bg-red-50 outline-red-300 focus:outline-red-500 text-red-900'
-																						: isViewMode
-																							? 'bg-gray-50 outline-gray-200'
-																							: 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand'
-																				}` }
-																				value={ drawerData.overrideSiteDescription }
-																				onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, overrideSiteDescription: e.target.value } ) }
-																				readOnly={ isViewMode }
-																				placeholder={ __( 'e.g., A comprehensive guide to yoga and wellness practices', 'solvex-ai-blogger' ) }
-																			/>
-																			{ fieldErrors[ 'more-about-blog' ] && (
-																				<p className="mt-1 text-sm text-red-600">
-																					{ fieldErrors[ 'more-about-blog' ] }
-																				</p>
-																			) }
-																		</div>
-																	</div>
-																</>
-															)
-														}														<div>
-															<div className="mt-4 flex text-sm">
-																<a href="#" className="group inline-flex items-center text-gray-500 hover:text-gray-900">
-																	<QuestionMarkCircleIcon
-																		aria-hidden="true"
-																		className="size-5 text-gray-400 group-hover:text-gray-500"
-																	/>
-																	<span className="ml-2">
-																		{ __( 'Learn more about how to configure your campaign.', 'solvex-ai-blogger' ) }
-																	</span>
-																</a>
-															</div>
-														</div>
-
-														{ ! wpsolvex_autoaiblogger_localized_data.pro_available &&
-															<DynamicCard
-																heading={ __( 'Unlock Premium Features', 'solvex-ai-blogger' ) }
-																subHeading={ __( 'Upgrade to Pro for more features and benefits.', 'solvex-ai-blogger' ) }
-																linkText={ __( 'Upgrade Now', 'solvex-ai-blogger' ) }
-																linkUrl={ wpsolvex_autoaiblogger_localized_data.pro_purchase_url }
-																colorScheme="brand"
-																size="medium"
-																ariaLabel={ __( 'Upgrade Now', 'solvex-ai-blogger' ) }
-															/>
-														}
-													</div>
-												</div>
-											</div>
-										)
-									}
-								</div>
-
-								<div className="flex shrink-0 justify-between items-center px-4 py-4">
-									{ errorMessage && (
-										<div className="flex items-center px-2 py-1 rounded bg-red-50 border border-red-200">
-											<svg className="w-3 h-3 text-red-500 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-												<path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-											</svg>
-											<span className="text-xs text-red-700 font-medium">
-												{ errorMessage }
-											</span>
+													>
+														{ day.label }
+													</button>
+												);
+											} ) }
 										</div>
-									) }
+									</Field>
+								) }
 
-									<div className={ `flex items-center space-x-2 ${ ! errorMessage ? 'ml-auto' : '' }` }>
-										<button
-											type="button"
-											onClick={ closePopup }
-											className="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-										>
-											{ isViewMode ? __( 'Close', 'solvex-ai-blogger' ) : __( 'Cancel', 'solvex-ai-blogger' ) }
-										</button>
+								<Field
+									label={ __( 'Start Date', 'solvex-ai-blogger' ) }
+									htmlFor="start-date"
+									tooltip={ __( 'Start Date can not be updated later.', 'solvex-ai-blogger' ) }
+									error={ fieldErrors[ 'start-date' ] }
+								>
+									<DateTimeField
+										id="start-date"
+										name="start-date"
+										value={ drawerData.startDate }
+										onChange={ ( e ) => setField( 'startDate', e.target.value ) }
+										readOnly={ isViewMode }
+										disabled={
+											drawerData.type === 'edit' &&
+											hasStartDatePassed( drawerData.startDate )
+										}
+										placeholder={ __( 'Select campaign start date', 'solvex-ai-blogger' ) }
+										error={ fieldErrors[ 'start-date' ] }
+									/>
+								</Field>
 
-										{ ! isViewMode && (
-											<button
-												onClick={ handleCampaign }
-												disabled={ handlingCampaign || ( () => {
-												// Check if campaign is completed to disable update button
-													if ( drawerData.type === 'new' ) {
-														return false;
-													} // Allow creation of new campaigns
-
-													const postsCreated = parseInt( drawerData.postsCreated ) || 0;
-													const postsTarget = parseInt( drawerData.postsTarget ) || 0;
-													const postsRemaining = Math.max( 0, postsTarget - postsCreated );
-
-													// Campaign is completed if:
-													// 1. Status is draft (inactive), OR
-													// 2. Target is met (created >= target), OR
-													// 3. All attempts completed (campaignCompleted flag is true), OR
-													// 4. All attempts have been made AND undelivered posts are showing
-													const isTargetMet = postsTarget > 0 && postsCreated >= postsTarget;
-													const isAllAttemptsCompleted = drawerData.campaignCompleted === true;
-													const isCompletedBase = drawerData.status === 'draft' || isTargetMet || isAllAttemptsCompleted;
-													const isAllAttemptsMadeWithFailures = postsTarget > 0 && postsRemaining > 0 && isCompletedBase && ( postsCreated + postsRemaining ) >= postsTarget;
-
-													return isCompletedBase || isAllAttemptsMadeWithFailures;
-												} )() }
-												className={ `ml-4 inline-flex justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
-													handlingCampaign || ( drawerData.type === 'edit' && ( () => {
-														const postsCreated = parseInt( drawerData.postsCreated ) || 0;
-														const postsTarget = parseInt( drawerData.postsTarget ) || 0;
-														const postsRemaining = Math.max( 0, postsTarget - postsCreated );
-														const isTargetMet = postsTarget > 0 && postsCreated >= postsTarget;
-														const isAllAttemptsCompleted = drawerData.campaignCompleted === true;
-														const isCompletedBase = drawerData.status === 'draft' || isTargetMet || isAllAttemptsCompleted;
-														const isAllAttemptsMadeWithFailures = postsTarget > 0 && postsRemaining > 0 && isCompletedBase && ( postsCreated + postsRemaining ) >= postsTarget;
-														return isCompletedBase || isAllAttemptsMadeWithFailures;
-													} )() )
-														? 'cursor-not-allowed opacity-50 bg-gray-400 text-gray-200 focus-visible:outline-gray-400'
-														: 'bg-brand text-white hover:bg-brand-700 focus-visible:outline-brand'
-												}` }
-												title={ drawerData.type === 'edit' && ( () => {
-													const postsCreated = parseInt( drawerData.postsCreated ) || 0;
-													const postsTarget = parseInt( drawerData.postsTarget ) || 0;
-													const postsRemaining = Math.max( 0, postsTarget - postsCreated );
-													const isTargetMet = postsTarget > 0 && postsCreated >= postsTarget;
-													const isAllAttemptsCompleted = drawerData.campaignCompleted === true;
-													const isCompletedBase = drawerData.status === 'draft' || isTargetMet || isAllAttemptsCompleted;
-													const isAllAttemptsMadeWithFailures = postsTarget > 0 && postsRemaining > 0 && isCompletedBase && ( postsCreated + postsRemaining ) >= postsTarget;
-													return isCompletedBase || isAllAttemptsMadeWithFailures;
-												} )() ? __( 'Campaign completed - Updates disabled', 'solvex-ai-blogger' ) : '' }
-											>
-												{ ( drawerData.type === 'new' ) ? __( 'Create', 'solvex-ai-blogger' ) : __( 'Update', 'solvex-ai-blogger' ) }
-											</button>
-										) }
+								<div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 px-4 py-3">
+									<div>
+										<div className="text-sm font-medium">
+											{ __( 'Use Summary as Excerpt', 'solvex-ai-blogger' ) }
+										</div>
+										<div className="text-xs text-muted-foreground">
+											{ __( 'Shorten descriptions automatically.', 'solvex-ai-blogger' ) }
+										</div>
 									</div>
-
+									<Switch
+										checked={ Boolean( drawerData.summaryAsExcerpt ) }
+										onCheckedChange={ ( v ) => setField( 'summaryAsExcerpt', v ) }
+										disabled={ isViewMode }
+										aria-label={ __( 'Use summary as excerpt', 'solvex-ai-blogger' ) }
+									/>
 								</div>
-							</form>
-						</DialogPanel>
+
+								<div>
+									<div className="mb-3 text-sm font-semibold text-foreground">
+										{ __( 'Campaign Status', 'solvex-ai-blogger' ) }
+									</div>
+									<div className="space-y-2">
+										<RadioCard
+											id="status-on"
+											name="campaign-status"
+											checked={ drawerData.status === 'publish' }
+											onChange={ () => setField( 'status', 'publish' ) }
+											disabled={ isViewMode }
+											label={ __( 'On', 'solvex-ai-blogger' ) }
+											description={ __(
+												'The campaign will be activated immediately and start running.',
+												'solvex-ai-blogger'
+											) }
+										/>
+										<RadioCard
+											id="status-off"
+											name="campaign-status"
+											checked={ drawerData.status === 'draft' }
+											onChange={ () => setField( 'status', 'draft' ) }
+											disabled={ isViewMode }
+											label={ __( 'Off', 'solvex-ai-blogger' ) }
+											description={ __(
+												"Setup saved, won't run until switched ON.",
+												'solvex-ai-blogger'
+											) }
+										/>
+									</div>
+								</div>
+							</TabsContent>
+
+							<TabsContent forceMount value="filters" className="m-0 space-y-5">
+								<Field
+									label={ __( 'Post Type', 'solvex-ai-blogger' ) }
+									htmlFor="post-type"
+								>
+									<SelectField
+										id="post-type"
+										value={ drawerData.postType }
+										onChange={ ( e ) => setField( 'postType', e.target.value ) }
+										disabled={ isViewMode }
+									>
+										{ Object.entries( postTypes ).map( ( [ type, label ] ) => (
+											<option key={ type } value={ type }>
+												{ label }
+											</option>
+										) ) }
+									</SelectField>
+								</Field>
+
+								<Field
+									label={ __( 'Post Author', 'solvex-ai-blogger' ) }
+									htmlFor="post-author"
+								>
+									<SelectField
+										id="post-author"
+										value={ drawerData.author }
+										onChange={ ( e ) => setField( 'author', e.target.value ) }
+										disabled={ isViewMode }
+									>
+										{ authors.map( ( author ) => (
+											<option key={ author.id } value={ author.id }>
+												{ author.name }
+											</option>
+										) ) }
+									</SelectField>
+								</Field>
+
+								<Field
+									label={ __( 'Post Status', 'solvex-ai-blogger' ) }
+									htmlFor="post-status"
+								>
+									<SelectField
+										id="post-status"
+										value={ drawerData.postStatus }
+										onChange={ ( e ) => setField( 'postStatus', e.target.value ) }
+										disabled={ isViewMode }
+									>
+										{ Object.entries( postStatuses ).map( ( [ key, label ] ) => (
+											<option key={ key } value={ key }>
+												{ label }
+											</option>
+										) ) }
+									</SelectField>
+								</Field>
+
+								{ 'post' === drawerData.postType && (
+									<>
+										<Field
+											label={ __( 'Post Category', 'solvex-ai-blogger' ) }
+											htmlFor="post-category"
+										>
+											<SelectField
+												id="post-category"
+												value={ drawerData.category }
+												onChange={ ( e ) => setField( 'category', e.target.value ) }
+												disabled={ isViewMode }
+											>
+												<option value="">{ __( '— Select —', 'solvex-ai-blogger' ) }</option>
+												{ categories.map( ( cat ) => (
+													<option key={ cat.id } value={ cat.id }>
+														{ cat.name }
+													</option>
+												) ) }
+											</SelectField>
+										</Field>
+										<Field
+											label={ __( 'Post Tag', 'solvex-ai-blogger' ) }
+											htmlFor="post-tag"
+										>
+											<SelectField
+												id="post-tag"
+												value={ drawerData.tag }
+												onChange={ ( e ) => setField( 'tag', e.target.value ) }
+												disabled={ isViewMode }
+											>
+												<option value="">{ __( '— Select —', 'solvex-ai-blogger' ) }</option>
+												{ tags.map( ( tag ) => (
+													<option key={ tag.id } value={ tag.id }>
+														{ tag.name }
+													</option>
+												) ) }
+											</SelectField>
+										</Field>
+									</>
+								) }
+							</TabsContent>
+
+							<TabsContent forceMount value="advanced" className="m-0 space-y-5">
+								<Field
+									label={ __( 'Maximum Content Words', 'solvex-ai-blogger' ) }
+									htmlFor="maximum-words"
+									tooltip={
+										proAvailable
+											? __( 'Set the maximum number of words (100–5000).', 'solvex-ai-blogger' )
+											: __( 'Free users are limited to 1000 words. Upgrade to Pro for up to 5000.', 'solvex-ai-blogger' )
+									}
+								>
+									<input
+										id="maximum-words"
+										type="number"
+										min="100"
+										max={ maxWordsLimit }
+										value={ drawerData.maxWords || '' }
+										onChange={ ( e ) => {
+											const raw = parseInt( e.target.value, 10 ) || 0;
+											const clamped = Math.max( 0, Math.min( maxWordsLimit, raw ) );
+											setField( 'maxWords', clamped );
+										} }
+										onWheel={ ( e ) => e.target.blur() }
+										readOnly={ isViewMode }
+										disabled={ ! proAvailable }
+										placeholder={
+											proAvailable
+												? __( 'e.g., 1500', 'solvex-ai-blogger' )
+												: __( '1000 (free limit)', 'solvex-ai-blogger' )
+										}
+										className={ inputBaseClass }
+									/>
+								</Field>
+
+								<Field
+									label={ __( 'Number of Content Images', 'solvex-ai-blogger' ) }
+									htmlFor="number-of-images"
+									tooltip={
+										proAvailable
+											? __( '1–5 in-content images. Featured image is always included.', 'solvex-ai-blogger' )
+											: __( 'Free users are limited to 1 content image. Upgrade to Pro for up to 5.', 'solvex-ai-blogger' )
+									}
+								>
+									<input
+										id="number-of-images"
+										type="number"
+										min="1"
+										max={ imagesLimit }
+										value={ drawerData.numberOfImages || '' }
+										onChange={ ( e ) => {
+											const raw = parseInt( e.target.value, 10 ) || 0;
+											const clamped = Math.max( 0, Math.min( imagesLimit, raw ) );
+											setField( 'numberOfImages', clamped );
+										} }
+										onWheel={ ( e ) => e.target.blur() }
+										readOnly={ isViewMode }
+										disabled={ ! proAvailable }
+										placeholder={
+											proAvailable
+												? __( 'e.g., 3', 'solvex-ai-blogger' )
+												: __( '1 (free limit)', 'solvex-ai-blogger' )
+										}
+										className={ inputBaseClass }
+									/>
+								</Field>
+
+								<div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 px-4 py-3">
+									<div>
+										<div className="text-sm font-medium">
+											{ __( 'Override Site Persona', 'solvex-ai-blogger' ) }
+										</div>
+										<div className="text-xs text-muted-foreground">
+											{ proAvailable
+												? __( 'Use campaign-specific persona instead of the global one.', 'solvex-ai-blogger' )
+												: __( 'Pro feature — upgrade to unlock.', 'solvex-ai-blogger' ) }
+										</div>
+									</div>
+									<Switch
+										checked={ Boolean( drawerData.overrideSitePersona ) }
+										onCheckedChange={ ( v ) => setField( 'overrideSitePersona', v ) }
+										disabled={ isViewMode || ! proAvailable }
+										aria-label={ __( 'Override site persona', 'solvex-ai-blogger' ) }
+									/>
+								</div>
+
+								{ drawerData.overrideSitePersona && (
+									<>
+										<Field
+											label={ __( 'Campaign For', 'solvex-ai-blogger' ) }
+											htmlFor="blog-for"
+											error={ fieldErrors[ 'blog-for' ] }
+										>
+											<input
+												id="blog-for"
+												type="text"
+												value={ drawerData.overrideSiteFor || '' }
+												onChange={ ( e ) => setField( 'overrideSiteFor', e.target.value ) }
+												readOnly={ isViewMode }
+												placeholder={ __( 'e.g., Fitness enthusiasts', 'solvex-ai-blogger' ) }
+												className={ inputCx( 'blog-for' ) }
+											/>
+										</Field>
+										<Field
+											label={ __( 'Campaign Description', 'solvex-ai-blogger' ) }
+											htmlFor="more-about-blog"
+											error={ fieldErrors[ 'more-about-blog' ] }
+										>
+											<textarea
+												id="more-about-blog"
+												rows={ 3 }
+												value={ drawerData.overrideSiteDescription || '' }
+												onChange={ ( e ) =>
+													setField( 'overrideSiteDescription', e.target.value )
+												}
+												readOnly={ isViewMode }
+												placeholder={ __( 'A comprehensive guide to…', 'solvex-ai-blogger' ) }
+												className={ cn( inputCx( 'more-about-blog' ), 'h-auto py-2' ) }
+											/>
+										</Field>
+									</>
+								) }
+
+								{ ! proAvailable && (
+									<a
+										href={ proPurchaseUrl }
+										target="_blank"
+										rel="noopener noreferrer"
+										className="block rounded-xl bg-brand p-5 text-white no-underline shadow-lg shadow-brand/15 transition-transform hover:scale-[1.01]"
+									>
+										<span className="text-[10px] font-bold uppercase tracking-widest text-white/70">
+											{ __( 'Premium', 'solvex-ai-blogger' ) }
+										</span>
+										<h4 className="mt-1.5 text-base font-semibold">
+											{ __( 'Unlock more campaign controls', 'solvex-ai-blogger' ) }
+										</h4>
+										<p className="mt-1 text-xs text-white/80">
+											{ __( 'Per-campaign persona, up to 5,000 words and 5 images.', 'solvex-ai-blogger' ) }
+										</p>
+									</a>
+								) }
+							</TabsContent>
+						</div>
+					</Tabs>
+
+					<div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 border-t border-border bg-card px-6 py-4">
+						{ errorMessage ? (
+							<p className="flex items-center gap-1.5 text-xs font-medium text-destructive">
+								<AlertCircle className="size-3.5" aria-hidden="true" />
+								{ errorMessage }
+							</p>
+						) : (
+							<span />
+						) }
+						<div className="flex items-center gap-2">
+							<button
+								type="button"
+								onClick={ closePopup }
+								className="inline-flex items-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+							>
+								{ isViewMode
+									? __( 'Close', 'solvex-ai-blogger' )
+									: __( 'Cancel', 'solvex-ai-blogger' ) }
+							</button>
+							{ ! isViewMode && (
+								<button
+									type="button"
+									onClick={ handleCampaign }
+									disabled={ submitDisabled }
+									title={
+										completed
+											? __( 'Campaign completed — Updates disabled', 'solvex-ai-blogger' )
+											: ''
+									}
+									className={ cn(
+										'inline-flex items-center gap-2 rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white transition-all hover:brightness-110',
+										submitDisabled && 'cursor-not-allowed opacity-50 hover:brightness-100'
+									) }
+								>
+									{ handlingCampaign && (
+										<Loader2 className="size-4 animate-spin" aria-hidden="true" />
+									) }
+									{ drawerData.type === 'new'
+										? __( 'Create', 'solvex-ai-blogger' )
+										: __( 'Update', 'solvex-ai-blogger' ) }
+								</button>
+							) }
+						</div>
 					</div>
-				</div>
-			</div>
-		</Dialog>
+				</SheetContent>
+			</Sheet>
+		</TooltipProvider>
 	);
 }

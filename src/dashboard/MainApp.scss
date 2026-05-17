@@ -360,7 +360,7 @@
 .solvex-ai-blogger-dashboard h5,
 .solvex-ai-blogger-dashboard h6 {
     margin-top: 0;
-    margin-bottom: 0.3em;
+    margin-bottom: 0.2em;
 }
 
 label + input,
@@ -370,6 +370,9 @@ label + textarea {
 input + p {
     margin-top: 5px !important;
 }
-ul li {
+.force-m-0, ul li {
 	margin: 0 !important;
+}
+.force-p-0 {
+	padding: 0 !important;
 }
