@@ -66,8 +66,19 @@ class Menu {
 		}
 
 		// Add Content Security Policy.
+		// Allow Google Fonts (stylesheet on fonts.googleapis.com, font files
+		// on fonts.gstatic.com) and YouTube embeds in the welcome video
+		// popup. Also keep the upstream API endpoint reachable.
 		if ( ! headers_sent() ) {
-			header( "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://wpaiblogger.com;" );
+			header(
+				"Content-Security-Policy: default-src 'self'; "
+				. "script-src 'self' 'unsafe-inline' 'unsafe-eval'; "
+				. "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+				. "img-src 'self' data: https:; "
+				. "font-src 'self' data: https://fonts.gstatic.com; "
+				. "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; "
+				. "connect-src 'self' https://wpaiblogger.com;"
+			);
 			header( 'X-Content-Type-Options: nosniff' );
 			header( 'X-Frame-Options: SAMEORIGIN' );
 			header( 'X-XSS-Protection: 1; mode=block' );
@@ -296,6 +307,7 @@ class Menu {
 		}
 
 		wp_dequeue_style( 'forms' );
+		wp_dequeue_style( 'common' );
 
 		wp_enqueue_script(
 			$handle,
