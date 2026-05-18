@@ -6,7 +6,14 @@
 /* Tailwind v4 design tokens — must precede the legacy SCSS overrides below. */
 @import "./Styles/theme.css";
 
-@import url( "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" );
+/*
+ * Google Fonts (Inter + JetBrains Mono) are enqueued from PHP — see
+ * `Admin\Menu::app_build_scripts()`. Loading them via wp_enqueue_style
+ * lets the browser fetch the fonts in parallel with our app CSS, and
+ * keeps this stylesheet free of an `@import url()` rule (which CSS
+ * requires to precede every other rule — impossible here because @use
+ * inlines content first).
+ */
 
 .ai-blogger-container * {
 	box-sizing: border-box;
@@ -214,16 +221,12 @@
 	}
 }
 
-.posts_page_solvex-ai-blogger ::scrollbar {
-	width: 4px;
-	height: 4px;
-}
-.posts_page_solvex-ai-blogger ::scrollbar-thumb {
-	background: #d5d6d7;
-}
-.posts_page_solvex-ai-blogger ::scrollbar-track {
-	background: #f1f1f1;
-}
+/*
+ * Note: previously this block used `::scrollbar`, `::scrollbar-thumb`,
+ * `::scrollbar-track` — those are not valid pseudo-elements and never
+ * matched anything. The working `::-webkit-scrollbar*` rules below
+ * already cover Chromium/Safari styling, so the dead block was removed.
+ */
 
 .posts_page_solvex-ai-blogger #wpbody,
 .posts_page_solvex-ai-blogger #wpwrap {
@@ -308,7 +311,12 @@
 	@apply text-center text-4xl font-semibold text-slate-800;
 }
 
-@screen sm {
+/*
+ * Tailwind v3's `@screen <breakpoint>` directive was removed in v4 —
+ * use plain `@media (min-width: ...)` queries with Tailwind's default
+ * breakpoint pixel values (sm: 640px, lg: 1024px).
+ */
+@media ( min-width: 640px ) {
 	.wpsolvex-autoaiblogger-container {
 		@apply p-4;
 
@@ -322,7 +330,7 @@
 	}
 }
 
-@screen lg {
+@media ( min-width: 1024px ) {
 	.wpsolvex-autoaiblogger-row {
 		@apply max-w-4xl;
 	}
@@ -359,20 +367,25 @@
 .solvex-ai-blogger-dashboard h4,
 .solvex-ai-blogger-dashboard h5,
 .solvex-ai-blogger-dashboard h6 {
-    margin-top: 0;
-    margin-bottom: 0.2em;
+	margin-top: 0;
+	margin-bottom: 0.2em;
 }
 
 label + input,
 label + textarea {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 input + p {
-    margin-top: 5px !important;
+	margin-top: 5px !important;
 }
-.force-m-0, ul li {
+.force-m-0,
+ul li {
 	margin: 0 !important;
 }
 .force-p-0 {
+	padding: 0 !important;
+}
+.force-space-0 {
+	margin: 0 !important;
 	padding: 0 !important;
 }

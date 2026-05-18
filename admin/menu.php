@@ -306,9 +306,6 @@ class Menu {
 			return;
 		}
 
-		wp_dequeue_style( 'forms' );
-		wp_dequeue_style( 'common' );
-
 		wp_enqueue_script(
 			$handle,
 			$script_file,
@@ -320,6 +317,19 @@ class Menu {
 		wp_localize_script( $handle, 'wpsolvex_autoaiblogger_localized_data', $localized_data );
 
 		wp_set_script_translations( $handle, 'solvex-ai-blogger', WPSOLVEX_AUTOAIBLOGGER_DIR . 'languages' );
+
+		// Enqueue Google Fonts (Inter + JetBrains Mono) used by the dashboard.
+		// Done from PHP rather than via CSS `@import url(...)` so that the
+		// browser fetches font CSS in parallel with our app CSS (no waterfall),
+		// and to avoid the CSS-spec rule that `@import` must precede every
+		// other rule — which is impossible to satisfy in our SCSS pipeline
+		// where `@use` inlines content before any `@import` can appear.
+		wp_enqueue_style(
+			'wpsolvex-autoaiblogger-fonts',
+			'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap',
+			[],
+			null
+		);
 
 		// Validate and enqueue styles.
 		$style_file = is_rtl() ? $build_path . 'blog-app-rtl.css' : $build_path . 'blog-app.css';
