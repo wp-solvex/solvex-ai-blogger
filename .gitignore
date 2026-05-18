@@ -25,3 +25,4 @@ copilot_readme/
 .DS_Store
 package-lock.json
 src/utils/.DS_Store
+config.bat

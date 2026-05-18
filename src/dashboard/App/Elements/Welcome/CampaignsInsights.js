@@ -92,8 +92,8 @@ const CampaignCard = memo( ( { campaign, onOpenAnalytics, onOpenConfigure, onOpe
 	const name = campaign?.title || __( 'Unnamed Campaign', 'solvex-ai-blogger' );
 
 	return (
-		<article className="group rounded-xl border border-border bg-card p-6 ring-1 ring-black/[0.02] transition-colors hover:border-brand/25">
-			<dl className="space-y-3 text-sm">
+		<article className="group rounded-xl border border-border bg-card p-6 ring-1 ring-black/2 transition-colors hover:border-brand/25">
+			<dl className="space-y-3 text-sm. m-0 p-0">
 				<Row label={ __( 'Posts', 'solvex-ai-blogger' ) } value={ campaign?.postsCreated || 0 } />
 				<Row label={ __( 'Visits', 'solvex-ai-blogger' ) } value={ campaign?.postsVisit || 0 } />
 				<Row

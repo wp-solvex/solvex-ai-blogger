@@ -243,7 +243,7 @@ function Settings() {
 						type="button"
 						onClick={ handleSave }
 						disabled={ saving || ! SAVE_KEYS[ activeId ]?.length }
-						className="inline-flex items-center gap-2 rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+						className="inline-flex items-center gap-2 rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60 border-none outline-none shadow-none"
 					>
 						{ saving && <Loader2 className="size-4 animate-spin" aria-hidden="true" /> }
 						{ __( 'Save', 'solvex-ai-blogger' ) }

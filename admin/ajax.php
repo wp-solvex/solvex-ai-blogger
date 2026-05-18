@@ -191,7 +191,10 @@ class Ajax {
 
 			$sub_option_value = '';
 			if ( isset( $_POST['value'] ) ) {
-				$raw_value = sanitize_text_field( wp_unslash( $_POST['value'] ) );
+				// Do NOT pre-sanitize with sanitize_text_field — it strips newlines and tabs,
+				// which corrupts multiline values like the post-ideas list. Settings::sanitize_data()
+				// dispatches to the correct sanitizer per type (e.g. sanitize_textarea_field for 'string').
+				$raw_value = wp_unslash( $_POST['value'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized below via Settings::sanitize_data().
 				if ( ! empty( $type_settings[ $sub_option_key ] ) ) {
 					$sub_option_value = Settings::sanitize_data( $raw_value, $type_settings[ $sub_option_key ] );
 				} else {

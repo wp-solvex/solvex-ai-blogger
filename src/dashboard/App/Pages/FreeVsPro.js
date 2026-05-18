@@ -86,7 +86,7 @@ const CallToActionSection = memo( () => {
 				</div>
 
 				<h2 id="cta-heading" className="mt-6 max-w-2xl text-3xl font-semibold tracking-tight text-foreground">
-					{ __( 'Let AI run your blog — you focus on growth', 'solvex-ai-blogger' ) }
+					{ __( 'Let AI run your blog - you focus on growth', 'solvex-ai-blogger' ) }
 				</h2>
 				<p className="mt-3 max-w-2xl text-base text-muted-foreground">
 					{ __( 'Unlock every feature and take your blog to the next level with AI Blogger Pro.', 'solvex-ai-blogger' ) }

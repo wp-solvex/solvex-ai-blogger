@@ -380,7 +380,7 @@ function PostIdeas() {
 					<button
 						type="button"
 						onClick={ handleRefresh }
-						className="inline-flex items-center gap-1.5 rounded-md border border-border bg-brand px-3 py-1.5 text-xs text-white font-medium transition-colors hover::brightness-110 hover:border-brand/30 disabled:cursor-not-allowed disabled:opacity-60"
+						className="inline-flex items-center gap-1.5 rounded-md border border-border bg-brand px-3 py-1.5 text-xs text-white font-medium transition-colors hover::brightness-110 hover:border-brand/30 disabled:cursor-not-allowed disabled:opacity-60 border-none outline-none shadow-none"
 						title={ __( 'Refresh post ideas', 'solvex-ai-blogger' ) }
 					>
 						<WandSparkles className="size-3" aria-hidden="true" />

@@ -56,14 +56,23 @@ export function AppShell( { children } ) {
 		return q.get( 'path' ) || '';
 	}, [ location.search ] );
 
-	const tabs = useMemo(
-		() => [
+	// Free vs Pro tab is only shown when the Pro plugin isn't active — once
+	// the user has Pro installed there's nothing to upsell, so hide it.
+	const tabs = useMemo( () => {
+		const base = [
 			{ to: '', label: __( 'Welcome', 'solvex-ai-blogger' ) },
 			{ to: 'campaigns', label: __( 'Campaigns', 'solvex-ai-blogger' ) },
 			{ to: 'settings', label: __( 'Settings', 'solvex-ai-blogger' ) },
-		],
-		[]
-	);
+		];
+		if ( ! proAvailable ) {
+			base.push( {
+				to: 'free-vs-pro',
+				label: __( 'Free vs Pro', 'solvex-ai-blogger' ),
+				highlight: true,
+			} );
+		}
+		return base;
+	}, [ proAvailable ] );
 
 	const isLicensed = licenseStatus === 'licensed';
 	const tokensUsed = isLicensed ? tokenTotal - tokenRemaining : 0;
@@ -140,7 +149,9 @@ export function AppShell( { children } ) {
 											'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
 											isActive
 												? 'bg-brand/10 text-brand'
-												: 'text-muted-foreground hover:text-foreground'
+												: tab.highlight
+													? 'text-brand hover:bg-brand/5'
+													: 'text-muted-foreground hover:text-foreground'
 										) }
 										aria-current={ isActive ? 'page' : undefined }
 									>
@@ -196,7 +207,7 @@ export function AppShell( { children } ) {
 											v{ version }
 										</span>
 									</TooltipTrigger>
-									<TooltipContent>{ __( 'Core', 'solvex-ai-blogger' ) }</TooltipContent>
+									<TooltipContent side="bottom">{ __( 'Core', 'solvex-ai-blogger' ) }</TooltipContent>
 								</Tooltip>
 								{ proAvailable && proVersion && (
 									<Tooltip>
@@ -205,7 +216,7 @@ export function AppShell( { children } ) {
 												v{ proVersion }
 											</span>
 										</TooltipTrigger>
-										<TooltipContent>{ __( 'Premium', 'solvex-ai-blogger' ) }</TooltipContent>
+										<TooltipContent side="bottom">{ __( 'Premium', 'solvex-ai-blogger' ) }</TooltipContent>
 									</Tooltip>
 								) }
 							</div>
