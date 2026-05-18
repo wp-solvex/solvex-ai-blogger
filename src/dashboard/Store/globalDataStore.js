@@ -1,5 +1,36 @@
 import { legacy_createStore as createStore, compose } from 'redux';
 import globalDataReducer from './globalDataReducer';
+import { toast } from '@Utils/toast';
+
+/**
+ * Compat bridge — turns legacy `UPDATE_SETTINGS_SAVED_NOTIFICATION` dispatches
+ * into Sonner toast calls so the old emit sites keep working while pages are
+ * migrated to call toast.* directly. Remove once all emit sites are migrated.
+ *
+ * @param {Object} store Redux store instance.
+ */
+const attachLegacyToastBridge = ( store ) => {
+	let last;
+	store.subscribe( () => {
+		const next = store.getState().settingsSavedNotification;
+		if ( next === last ) {
+			return;
+		}
+		last = next;
+		if ( ! next ) {
+			return;
+		}
+		const payload =
+			typeof next === 'string' ? { message: next, type: 'success' } : next;
+		if ( ! payload?.message ) {
+			return;
+		}
+		const fn = toast[ payload.type ] || toast.success;
+		fn( payload.message, payload.duration ? { duration: payload.duration } : undefined );
+		// Clear the slot so a re-fire of the same message still toasts.
+		store.dispatch( { type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION', payload: false } );
+	} );
+};
 
 /**
  * Safely parse localized data with type conversion and fallbacks
@@ -98,7 +129,16 @@ const getInitialState = () => {
 		adminNonce: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.admin_nonce, 'string', '' ),
 		ajaxUrl: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.ajax_url, 'string', '' ),
 		editPostLink: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.edit_post_link, 'string', '/wp-admin/post.php?post={{POST_ID}}&action=edit' ),
-		allCampaigns: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.all_campaigns, 'object', {} ),
+		// `allCampaigns` is no longer hydrated server-side — campaigns are
+		// fetched on demand via CampaignsApi.fetchCampaigns. The slot is kept
+		// for backward-compat selectors while pages migrate.
+		allCampaigns: {},
+		campaignsList: {},
+		campaignsPagination: { page: 1, perPage: 20, total: 0, totalPages: 0 },
+		// Start in the loading state so Campaigns renders its skeleton on
+		// first mount rather than briefly flashing the empty state.
+		campaignsListLoading: true,
+		campaignsListError: null,
 		postmetaDefaults: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.postmeta_defaults, 'object', {} ),
 		licensingNonce: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.licensing_nonce, 'string', '' ),
 		upgradeLink: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.upgrade_link, 'string', '#' ),
@@ -191,6 +231,8 @@ const createEnhancedStore = () => {
 				} );
 			}
 		};
+
+		attachLegacyToastBridge( store );
 
 		// Log store creation in development with state summary
 		if ( process.env.NODE_ENV === 'development' ) {

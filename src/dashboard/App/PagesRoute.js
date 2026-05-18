@@ -163,8 +163,13 @@ const PagesRoute = () => {
 		return <RouteError type="invalid-page" />;
 	}
 
-	// Get route configuration safely
-	const routeConfig = ROUTE_MAP[ path ] || ROUTE_MAP[ '' ];
+	// Get route configuration safely. Sub-paths like `settings/license`
+	// resolve to their parent route, and the parent owns the nested IA.
+	const matchKey =
+		Object.keys( ROUTE_MAP ).find(
+			( key ) => key !== '' && ( path === key || path.startsWith( key + '/' ) )
+		) || '';
+	const routeConfig = ROUTE_MAP[ matchKey ] || ROUTE_MAP[ '' ];
 
 	const { component: Component, title } = routeConfig;
 

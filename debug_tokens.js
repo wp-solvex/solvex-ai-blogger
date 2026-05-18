@@ -1,1 +1,0 @@
-console.log( 'Checking current values...' ); console.log( 'tokenTotal:', JSON.stringify( wpsolvex_autoaiblogger_localized_data?.token_total ) ); console.log( 'tokenRemaining:', JSON.stringify( wpsolvex_autoaiblogger_localized_data?.token_remaining ) ); console.log( 'license_status:', JSON.stringify( wpsolvex_autoaiblogger_localized_data?.license_status ) );
