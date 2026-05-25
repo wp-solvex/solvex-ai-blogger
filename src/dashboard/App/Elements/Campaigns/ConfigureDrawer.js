@@ -187,9 +187,8 @@ export default function ConfigureDrawer( props ) {
 					/>
 				</div>
 				<div className="flex items-center justify-between mt-1">
-					<p className={ `text-xs ${ atLimit ? 'text-red-500 font-medium' : 'text-gray-500' }` }>
+					<p className={ `text-xs ${ atLimit ? 'text-green-600 font-medium' : 'text-gray-500' }` }>
 						{ nonEmptyCount }/{ limit } { __( 'topics', 'solvex-ai-blogger' ) }
-						{ atLimit && ' — ' + __( 'limit reached', 'solvex-ai-blogger' ) }
 					</p>
 					{ ! isDialog && ! isViewMode && (
 						<button
