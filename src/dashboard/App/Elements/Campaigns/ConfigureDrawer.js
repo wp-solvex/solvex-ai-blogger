@@ -191,9 +191,18 @@ export default function ConfigureDrawer( props ) {
 						{ nonEmptyCount }/{ limit } { __( 'topics', 'solvex-ai-blogger' ) }
 						{ atLimit && ' — ' + __( 'limit reached', 'solvex-ai-blogger' ) }
 					</p>
-					<p className="text-xs text-gray-400">
-						{ __( 'Each line = 1 blog post', 'solvex-ai-blogger' ) }
-					</p>
+					{ ! isDialog && ! isViewMode && (
+						<button
+							type="button"
+							onClick={ () => setTopicsDialogOpen( true ) }
+							className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-brand border-none bg-transparent cursor-pointer"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="size-3.5">
+								<path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9m11.25-5.25v4.5m0-4.5h-4.5m4.5 0L15 9m-11.25 11.25v-4.5m0 4.5h4.5m-4.5 0L9 15m11.25 5.25v-4.5m0 4.5h-4.5m4.5 0L15 15" />
+							</svg>
+							{ __( 'Expand Editor', 'solvex-ai-blogger' ) }
+						</button>
+					) }
 				</div>
 			</>
 		);
@@ -749,19 +758,6 @@ export default function ConfigureDrawer( props ) {
 																	} )() }
 																</div>
 																{ renderTopicsEditor( false ) }
-																{ /* Expand to dialog button */ }
-																{ ! isViewMode && (
-																	<button
-																		type="button"
-																		onClick={ () => setTopicsDialogOpen( true ) }
-																		className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-brand border-none bg-transparent cursor-pointer"
-																	>
-																		<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="size-3.5">
-																			<path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9m11.25-5.25v4.5m0-4.5h-4.5m4.5 0L15 9m-11.25 11.25v-4.5m0 4.5h4.5m-4.5 0L9 15m11.25 5.25v-4.5m0 4.5h-4.5m4.5 0L15 15" />
-																		</svg>
-																		{ __( 'Expand Editor', 'solvex-ai-blogger' ) }
-																	</button>
-																) }
 
 																{ /* Topics Dialog */ }
 																<Dialog open={ topicsDialogOpen } onClose={ () => setTopicsDialogOpen( false ) } className="relative z-[99999]">
