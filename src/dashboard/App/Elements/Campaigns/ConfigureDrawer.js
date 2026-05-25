@@ -28,6 +28,176 @@ export default function ConfigureDrawer( props ) {
 	const [ fieldErrors, setFieldErrors ] = useState( {} );
 	const [ isGeneratingTopics, setIsGeneratingTopics ] = useState( false );
 	const [ errorDialogOpen, setErrorDialogOpen ] = useState( false );
+	const [ topicsDialogOpen, setTopicsDialogOpen ] = useState( false );
+	const topicsTextareaRef = useRef( null );
+	const topicsGutterRef = useRef( null );
+	const dialogTextareaRef = useRef( null );
+	const dialogGutterRef = useRef( null );
+
+	// Get the effective topic limit from postsTarget.
+	const getTopicLimit = () => parseInt( drawerData.postsTarget ) || 5;
+
+	// Count non-empty topics.
+	const getNonEmptyTopicCount = () => getTopics().filter( ( t ) => t.trim() !== '' ).length;
+
+	// Sync line numbers gutter scroll with textarea.
+	const syncGutterScroll = ( textarea, gutter ) => {
+		if ( textarea && gutter ) {
+			gutter.scrollTop = textarea.scrollTop;
+		}
+	};
+
+	// Build line numbers for the gutter based on actual topic lines.
+	const renderLineNumbers = ( topics, limit ) => {
+		if ( ! topics.length ) {
+			return <div className="text-right pr-2 text-xs leading-[21px] text-gray-400 select-none">1</div>;
+		}
+		let lineNum = 0;
+		return topics.map( ( topic, i ) => {
+			// Each newline-separated entry gets a number; only increment for actual lines.
+			lineNum = i + 1;
+			const isOverLimit = lineNum > limit;
+			return (
+				<div
+					key={ i }
+					className={ `text-right pr-2 text-xs leading-[21px] select-none ${ isOverLimit ? 'text-red-400' : 'text-gray-400' }` }
+				>
+					{ lineNum }
+				</div>
+			);
+		} );
+	};
+
+	// Handle topic textarea change with limit enforcement.
+	const handleTopicsChange = ( value ) => {
+		if ( isViewMode ) return;
+		const limit = getTopicLimit();
+		let lines = value.split( '\n' );
+
+		// Count non-empty lines.
+		const nonEmptyCount = lines.filter( ( l ) => l.trim() !== '' ).length;
+
+		// If non-empty lines exceed limit, trim from the end.
+		if ( nonEmptyCount > limit ) {
+			let kept = 0;
+			lines = lines.filter( ( l ) => {
+				if ( l.trim() === '' ) return true;
+				kept++;
+				return kept <= limit;
+			} );
+		}
+
+		setDrawerData( { ...drawerData, campaignTopics: lines } );
+	};
+
+	// Block Enter key when at topic limit.
+	const handleTopicsKeyDown = ( e ) => {
+		if ( isViewMode ) return;
+		if ( e.key === 'Enter' ) {
+			const limit = getTopicLimit();
+			if ( getNonEmptyTopicCount() >= limit ) {
+				e.preventDefault();
+			}
+		}
+	};
+
+	// Handle paste with limit enforcement.
+	const handleTopicsPaste = ( e ) => {
+		if ( isViewMode ) return;
+		e.preventDefault();
+		const limit = getTopicLimit();
+		const pastedText = e.clipboardData.getData( 'text' );
+		const textarea = e.target;
+		const currentValue = textarea.value;
+		const start = textarea.selectionStart;
+		const end = textarea.selectionEnd;
+		const newValue = currentValue.substring( 0, start ) + pastedText + currentValue.substring( end );
+		let lines = newValue.split( '\n' );
+
+		const nonEmptyCount = lines.filter( ( l ) => l.trim() !== '' ).length;
+		if ( nonEmptyCount > limit ) {
+			let kept = 0;
+			lines = lines.filter( ( l ) => {
+				if ( l.trim() === '' ) return true;
+				kept++;
+				return kept <= limit;
+			} );
+		}
+
+		setDrawerData( { ...drawerData, campaignTopics: lines } );
+	};
+
+	// Auto-trim topics when postsTarget decreases.
+	useEffect( () => {
+		const limit = getTopicLimit();
+		const topics = getTopics();
+		const nonEmpty = topics.filter( ( t ) => t.trim() !== '' );
+		if ( nonEmpty.length > limit ) {
+			let kept = 0;
+			const trimmed = topics.filter( ( t ) => {
+				if ( t.trim() === '' ) return true;
+				kept++;
+				return kept <= limit;
+			} );
+			setDrawerData( ( prev ) => ( { ...prev, campaignTopics: trimmed } ) );
+		}
+	}, [ drawerData.postsTarget ] ); // eslint-disable-line react-hooks/exhaustive-deps
+
+	// Render the line-numbered textarea component.
+	const renderTopicsEditor = ( isDialog = false ) => {
+		const topics = getTopics();
+		const limit = getTopicLimit();
+		const nonEmptyCount = getNonEmptyTopicCount();
+		const atLimit = nonEmptyCount >= limit;
+		const textareaRefToUse = isDialog ? dialogTextareaRef : topicsTextareaRef;
+		const gutterRefToUse = isDialog ? dialogGutterRef : topicsGutterRef;
+		const rowCount = isDialog ? Math.max( 10, Math.min( 25, topics.length + 1 ) ) : Math.max( 3, Math.min( 8, topics.length + 1 ) );
+
+		return (
+			<>
+				<div className="flex rounded-md outline outline-1 -outline-offset-1 outline-gray-300 overflow-hidden focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-brand transition-colors duration-200">
+					{ /* Line numbers gutter */ }
+					<div
+						ref={ gutterRefToUse }
+						className="bg-gray-50 border-r border-gray-200 py-1.5 min-w-[32px] overflow-hidden select-none"
+						style={ { overflowY: 'hidden' } }
+					>
+						{ renderLineNumbers( topics.length ? topics : [ '' ], limit ) }
+					</div>
+					{ /* Textarea */ }
+					<textarea
+						ref={ textareaRefToUse }
+						rows={ rowCount }
+						className={ `block w-full px-3 py-1.5 text-base text-gray-900 outline-none placeholder:text-gray-400 sm:text-sm/6 resize-none ${
+							isViewMode ? 'bg-gray-50' : 'bg-white'
+						}` }
+						style={ { lineHeight: '21px' } }
+						placeholder={ {
+							listicle: __( 'One topic per line. E.g.:\nTop 10 Budget Smartphones in 2026\n7 Must-Have Kitchen Gadgets Under $50\n5 Free Project Management Tools for Teams', 'solvex-ai-blogger' ),
+							step_by_step: __( 'One topic per line. E.g.:\nHow to Start a Vegetable Garden at Home\nHow to Set Up a Home Office on a Budget\nHow to Create a Monthly Budget in 5 Steps', 'solvex-ai-blogger' ),
+							comparison: __( 'One topic per line. E.g.:\niPhone 16 vs Samsung Galaxy S26: Which to Buy?\nShopify vs WooCommerce for Small Business\nNotion vs Obsidian: Best Note-Taking App', 'solvex-ai-blogger' ),
+							glossary: __( 'One topic per line. E.g.:\nDigital Marketing Terms Every Beginner Should Know\nA-Z Guide to Cloud Computing Terminology\nEssential Crypto & Blockchain Terms Explained', 'solvex-ai-blogger' ),
+						}[ drawerData.campaignFormat ] || __( 'One topic per line. E.g.:\nThe Future of Remote Work in 2026\nBeginner\'s Guide to Personal Finance\n10 Tips for Better Sleep Quality', 'solvex-ai-blogger' ) }
+						value={ topics.join( '\n' ) }
+						onChange={ ( e ) => handleTopicsChange( e.target.value ) }
+						onKeyDown={ handleTopicsKeyDown }
+						onPaste={ handleTopicsPaste }
+						onScroll={ ( e ) => syncGutterScroll( e.target, gutterRefToUse.current ) }
+						readOnly={ isViewMode }
+					/>
+				</div>
+				<div className="flex items-center justify-between mt-1">
+					<p className={ `text-xs ${ atLimit ? 'text-red-500 font-medium' : 'text-gray-500' }` }>
+						{ nonEmptyCount }/{ limit } { __( 'topics', 'solvex-ai-blogger' ) }
+						{ atLimit && ' — ' + __( 'limit reached', 'solvex-ai-blogger' ) }
+					</p>
+					<p className="text-xs text-gray-400">
+						{ __( 'Each line = 1 blog post', 'solvex-ai-blogger' ) }
+					</p>
+				</div>
+			</>
+		);
+	};
 
 	// Helper to safely parse campaignTopics (may be JSON string or array).
 	const getTopics = () => {
@@ -578,31 +748,58 @@ export default function ConfigureDrawer( props ) {
 																		) : btn;
 																	} )() }
 																</div>
-																<textarea
-																	rows={ Math.max( 3, Math.min( 8, getTopics().length ) ) }
-																	className={ `block w-full rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 transition-colors duration-200 ${
-																		isViewMode
-																			? 'bg-gray-50 outline-gray-200'
-																			: 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand'
-																	}` }
-																	placeholder={ {
-																		listicle: __( 'One topic per line. E.g.:\nTop 10 Budget Smartphones in 2026\n7 Must-Have Kitchen Gadgets Under $50\n5 Free Project Management Tools for Teams', 'solvex-ai-blogger' ),
-																		step_by_step: __( 'One topic per line. E.g.:\nHow to Start a Vegetable Garden at Home\nHow to Set Up a Home Office on a Budget\nHow to Create a Monthly Budget in 5 Steps', 'solvex-ai-blogger' ),
-																		comparison: __( 'One topic per line. E.g.:\niPhone 16 vs Samsung Galaxy S26: Which to Buy?\nShopify vs WooCommerce for Small Business\nNotion vs Obsidian: Best Note-Taking App', 'solvex-ai-blogger' ),
-																		glossary: __( 'One topic per line. E.g.:\nDigital Marketing Terms Every Beginner Should Know\nA-Z Guide to Cloud Computing Terminology\nEssential Crypto & Blockchain Terms Explained', 'solvex-ai-blogger' ),
-																	}[ drawerData.campaignFormat ] || __( 'One topic per line. E.g.:\nThe Future of Remote Work in 2026\nBeginner\'s Guide to Personal Finance\n10 Tips for Better Sleep Quality', 'solvex-ai-blogger' ) }
-																	value={ getTopics().join( '\n' ) }
-																	onChange={ ( e ) => {
-																		if ( ! isViewMode ) {
-																			const topics = e.target.value.split( '\n' );
-																			setDrawerData( { ...drawerData, campaignTopics: topics } );
-																		}
-																	} }
-																	readOnly={ isViewMode }
-																/>
-																<p className="mt-1 text-xs text-gray-500">
-																	{ __( 'Each line becomes a separate blog post. Leave empty to let AI choose topics automatically.', 'solvex-ai-blogger' ) }
-																</p>
+																{ renderTopicsEditor( false ) }
+																{ /* Expand to dialog button */ }
+																{ ! isViewMode && (
+																	<button
+																		type="button"
+																		onClick={ () => setTopicsDialogOpen( true ) }
+																		className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-brand border-none bg-transparent cursor-pointer"
+																	>
+																		<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="size-3.5">
+																			<path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9m11.25-5.25v4.5m0-4.5h-4.5m4.5 0L15 9m-11.25 11.25v-4.5m0 4.5h4.5m-4.5 0L9 15m11.25 5.25v-4.5m0 4.5h-4.5m4.5 0L15 15" />
+																		</svg>
+																		{ __( 'Expand Editor', 'solvex-ai-blogger' ) }
+																	</button>
+																) }
+
+																{ /* Topics Dialog */ }
+																<Dialog open={ topicsDialogOpen } onClose={ () => setTopicsDialogOpen( false ) } className="relative z-[99999]">
+																	<div className="fixed inset-0 bg-gray-500/75 transition-opacity" />
+																	<div className="fixed inset-0 z-10 overflow-y-auto">
+																		<div className="flex min-h-full items-center justify-center p-4">
+																			<DialogPanel className="relative w-full max-w-2xl transform rounded-xl bg-white shadow-2xl transition-all">
+																				<div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+																					<h3 className="text-base font-semibold text-gray-900">
+																						{ __( 'Edit Campaign Topics', 'solvex-ai-blogger' ) }
+																						<span className={ `ml-2 text-sm font-normal ${ getNonEmptyTopicCount() >= getTopicLimit() ? 'text-red-500' : 'text-gray-500' }` }>
+																							({ getNonEmptyTopicCount() }/{ getTopicLimit() })
+																						</span>
+																					</h3>
+																					<button
+																						type="button"
+																						onClick={ () => setTopicsDialogOpen( false ) }
+																						className="rounded-md bg-white text-gray-400 hover:text-gray-500 border-none cursor-pointer"
+																					>
+																						<XMarkIcon className="size-5" />
+																					</button>
+																				</div>
+																				<div className="px-6 py-4">
+																					{ renderTopicsEditor( true ) }
+																				</div>
+																				<div className="flex justify-end px-6 py-3 border-t border-gray-200 bg-gray-50 rounded-b-xl">
+																					<button
+																						type="button"
+																						onClick={ () => setTopicsDialogOpen( false ) }
+																						className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 border-none cursor-pointer"
+																					>
+																						{ __( 'Done', 'solvex-ai-blogger' ) }
+																					</button>
+																				</div>
+																			</DialogPanel>
+																		</div>
+																	</div>
+																</Dialog>
 															</div>
 														) }
 
