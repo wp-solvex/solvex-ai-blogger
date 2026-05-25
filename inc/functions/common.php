@@ -1303,6 +1303,16 @@ function wpsolvex_autoaiblogger_replace_internal_link_placeholders( $content, $p
 		$home_url = home_url();
 		$content  = str_replace( '__HOMELINK__', esc_url( $home_url ), $content );
 
+		// Replace {{INTERNAL_LINK}} placeholder with a real internal URL.
+		if ( ! empty( $previous_posts ) && is_array( $previous_posts ) ) {
+			// Use the first previous post as the internal link target.
+			$link_url = esc_url( $previous_posts[0]['url'] ?? $home_url );
+		} else {
+			// First post in campaign — fallback to homepage.
+			$link_url = esc_url( $home_url );
+		}
+		$content = str_replace( '{{INTERNAL_LINK}}', $link_url, $content );
+
 		// Replace post ID placeholders.
 		if ( ! empty( $previous_posts ) && is_array( $previous_posts ) ) {
 			foreach ( $previous_posts as $post ) {
@@ -1324,6 +1334,7 @@ function wpsolvex_autoaiblogger_replace_internal_link_placeholders( $content, $p
 		// Also clean up old format if it exists.
 		$content = preg_replace( '/\{\{INTERNAL_LINK:\d+\}\}/', '', $content );
 		$content = preg_replace( '/\{\{INTERNAL_LINK:home\}\}/', '', $content );
+		$content = preg_replace( '/\{\{INTERNAL_LINK\}\}/', esc_url( $home_url ), $content );
 
 		return $content;
 
