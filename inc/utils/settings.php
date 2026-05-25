@@ -116,6 +116,16 @@ class Settings {
 					'default' => wpsolvex_autoaiblogger_get_user_detail( 'email' ),
 					'type'    => 'email',
 				],
+
+				// Phase 2: Global content modifiers.
+				'contentTone'              => [
+					'default' => 'Professional',
+					'type'    => 'string',
+				],
+				'targetDemographic'        => [
+					'default' => 'General Public',
+					'type'    => 'string',
+				],
 			]
 		);
 	}
@@ -170,9 +180,23 @@ class Settings {
 
 		$db_option = get_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, [] );
 
+		// Normalize lowercase DB keys back to camelCase to match settings dataset keys.
+		// DB stores keys via sanitize_key() which lowercases them.
+		$settings_dataset = self::get_settings_dataset();
+		$key_map          = [];
+		foreach ( array_keys( $settings_dataset ) as $camel_key ) {
+			$key_map[ strtolower( $camel_key ) ] = $camel_key;
+		}
+
+		$normalized = [];
+		foreach ( $db_option as $key => $value ) {
+			$normalized_key              = $key_map[ $key ] ?? $key;
+			$normalized[ $normalized_key ] = $value;
+		}
+
 		$defaults = apply_filters( 'wpsolvex_autoaiblogger_dashboard_rest_options', self::get_default_settings() );
 
-		self::$dashboard_options = wp_parse_args( $db_option, $defaults );
+		self::$dashboard_options = wp_parse_args( $normalized, $defaults );
 		return self::$dashboard_options;
 	}
 

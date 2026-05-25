@@ -501,6 +501,18 @@ export default function Campaigns() {
 															) : (
 																<span className="text-gray-500">{ __( 'Untitled Campaign', 'solvex-ai-blogger' ) }</span>
 															) }
+															{ /* Phase 2: Format badge */ }
+															{ campaign.campaignFormat && campaign.campaignFormat !== 'standard' && (
+																<span className="inline-flex items-center rounded-full bg-indigo-50 px-1.5 py-0.5 text-xs font-medium text-indigo-700 mt-0.5">
+																	{ {
+																		listicle: '📋 Listicle',
+																		step_by_step: '📝 Guide',
+																		comparison: '⚖️ Comparison',
+																		glossary: '📖 Glossary',
+																		series: '📚 Series',
+																	}[ campaign.campaignFormat ] || campaign.campaignFormat }
+																</span>
+															) }
 														</div>
 													</td>
 

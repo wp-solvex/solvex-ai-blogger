@@ -166,6 +166,10 @@ const globalDataReducer = ( state = {}, action ) => {
 		UPDATE_EMAIL_NOTIFICATION_ENABLED: () => ( { ...state, emailNotificationEnabled: Boolean( action.payload ) } ),
 		UPDATE_EMAIL_NOTIFICATION_VALUE: () => ( { ...state, emailNotificationValue: String( action.payload || '' ) } ),
 
+		// Phase 2: Content modifiers
+		UPDATE_CONTENT_TONE: () => ( { ...state, contentTone: String( action.payload || 'Professional' ) } ),
+		UPDATE_TARGET_DEMOGRAPHIC: () => ( { ...state, targetDemographic: String( action.payload || 'General Public' ) } ),
+
 		CLEAR_ERROR: () => ( { ...state, error: null } ),
 		STORE_ERROR: () => ( { ...state, error: action.payload?.message || 'Store error occurred', isLoading: false } ),
 		RESET_STATE: () => {

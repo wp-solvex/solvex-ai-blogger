@@ -27,6 +27,7 @@ tailwind.config.js
 wizard-webpack-config.js
 Thumbs.db
 bin
+docs
 composer.json
 composer.lock
 Gruntfile.js

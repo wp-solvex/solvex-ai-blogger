@@ -89,7 +89,7 @@ class CPT {
 				'show_in_rest'        => true,
 				'rewrite'             => true,
 				'map_meta_cap'        => true,
-				'supports'            => [ 'title', 'slug' ],
+				'supports'            => [ 'title', 'slug', 'custom-fields' ],
 				'capability_type'     => 'post',
 			]
 		);
@@ -105,6 +105,7 @@ class CPT {
 	 */
 	public function create_cpt(): void {
 		add_action( 'init', [ $this, 'register_post_type' ], 5 );
+		add_action( 'init', [ $this, 'register_campaign_meta' ], 10 );
 	}
 
 	/**
@@ -121,5 +122,68 @@ class CPT {
 		register_post_type( $this->post_type, $args ); // @phpstan-ignore-line
 
 		do_action( 'wpsolvex_autoaiblogger_after_register_' . $this->post_type . '_post_type' );
+	}
+
+	/**
+	 * Register Phase 2 campaign meta keys for REST API visibility.
+	 *
+	 * @since 1.1.0
+	 * @return void
+	 */
+	public function register_campaign_meta(): void {
+		$meta_keys = [
+			'campaignFormat'       => [ 'type' => 'string', 'default' => 'standard' ],
+			'targetDemographic'    => [ 'type' => 'string', 'default' => 'General Public' ],
+			'contentTone'          => [ 'type' => 'string', 'default' => 'Professional' ],
+			'seriesTotalParts'     => [ 'type' => 'integer', 'default' => 5 ],
+			'seriesCurrentIndex'   => [ 'type' => 'integer', 'default' => 0 ],
+			'seriesHubPostId'      => [ 'type' => 'integer', 'default' => 0 ],
+			'seriesPreviousPostId' => [ 'type' => 'integer', 'default' => 0 ],
+			'seriesTaxonomyTermId' => [ 'type' => 'integer', 'default' => 0 ],
+			'listicleItemCount'    => [ 'type' => 'integer', 'default' => 10 ],
+		];
+
+		foreach ( $meta_keys as $key => $schema ) {
+			register_post_meta(
+				$this->post_type,
+				$key,
+				[
+					'show_in_rest'  => true,
+					'single'        => true,
+					'type'          => $schema['type'],
+					'default'       => $schema['default'],
+					'auth_callback' => function () {
+						return current_user_can( 'edit_posts' );
+					},
+				]
+			);
+		}
+
+		// JSON-stored meta (arrays serialized as strings).
+		$json_meta_keys = [
+			'seriesSyllabus'     => '[]',
+			'comparisonEntities' => '[]',
+		];
+
+		foreach ( $json_meta_keys as $key => $default ) {
+			register_post_meta(
+				$this->post_type,
+				$key,
+				[
+					'show_in_rest'  => [
+						'schema' => [
+							'type'  => 'array',
+							'items' => [ 'type' => 'string' ],
+						],
+					],
+					'single'        => true,
+					'type'          => 'string',
+					'default'       => $default,
+					'auth_callback' => function () {
+						return current_user_can( 'edit_posts' );
+					},
+				]
+			);
+		}
 	}
 }

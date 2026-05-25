@@ -39,6 +39,8 @@ const ContentHeader = ( {
 	hate = 2,
 	sexuallyExplicit = 2,
 	dangerousContent = 2,
+	contentTone = 'Professional',
+	targetDemographic = 'General Public',
 	emailNotificationEnabled = false,
 	emailNotificationValue = '',
 	className = '', // eslint-disable-line no-unused-vars
@@ -62,6 +64,8 @@ const ContentHeader = ( {
 			hate,
 			sexuallyExplicit,
 			dangerousContent,
+			contentTone,
+			targetDemographic,
 			emailNotificationEnabled,
 			emailNotificationValue: emailNotificationEnabled ? emailNotificationValue : '',
 		};
@@ -79,6 +83,8 @@ const ContentHeader = ( {
 		hate,
 		sexuallyExplicit,
 		dangerousContent,
+		contentTone,
+		targetDemographic,
 		emailNotificationEnabled,
 		emailNotificationValue,
 	] );

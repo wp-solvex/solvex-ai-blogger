@@ -63,6 +63,7 @@ class Ajax {
 		'wpsolvex_autoaiblogger_pause_campaign',
 		'wpsolvex_autoaiblogger_resume_campaign',
 		'wpsolvex_autoaiblogger_reschedule_campaign',
+		'wpsolvex_autoaiblogger_generate_campaign_topics',
 	];
 
 	/**
@@ -1246,6 +1247,130 @@ class Ajax {
 
 		} catch ( \Exception $e ) {
 			wp_send_json_error( [ 'message' => __( 'Failed to reschedule campaign', 'solvex-ai-blogger' ) ] );
+		}
+	}
+
+	/**
+	 * Generate unique blog topics for a campaign based on SEO keywords.
+	 *
+	 * Calls the server's generate-post-ideas endpoint with campaign-specific context
+	 * to generate unique, diverse topic titles for multi-post campaigns.
+	 *
+	 * @since 1.1.1
+	 * @return void
+	 */
+	public function wpsolvex_autoaiblogger_generate_campaign_topics(): void {
+		try {
+			// Security validation.
+			$security_check = $this->validate_ajax_security( 'generate_campaign_topics' );
+			if ( is_wp_error( $security_check ) ) {
+				wp_send_json_error( [ 'message' => $security_check->get_error_message() ] );
+				return;
+			}
+
+			// Nonce validation.
+			if ( ! check_ajax_referer( 'wpsolvex_autoaiblogger_admin_nonce', 'security', false ) ) {
+				wp_send_json_error( [ 'message' => $this->get_error_msg( 'nonce' ) ] );
+				return;
+			}
+
+			$keywords = isset( $_POST['keywords'] ) ? sanitize_text_field( wp_unslash( $_POST['keywords'] ) ) : '';
+			$count    = isset( $_POST['count'] ) ? absint( $_POST['count'] ) : 5;
+			$format   = isset( $_POST['format'] ) ? sanitize_text_field( wp_unslash( $_POST['format'] ) ) : 'standard';
+
+			if ( empty( $keywords ) ) {
+				wp_send_json_error( [ 'message' => __( 'Keywords are required to generate topics.', 'solvex-ai-blogger' ) ] );
+				return;
+			}
+
+			$count = max( 1, min( 20, $count ) );
+
+			// Get license and site persona.
+			$license = Helper::get_option( 'license', '' );
+			if ( empty( $license ) ) {
+				wp_send_json_error( [ 'message' => __( 'License is required. Please activate your license first.', 'solvex-ai-blogger' ) ] );
+				return;
+			}
+
+			$settings     = Settings::get_ai_blogger_settings();
+			$site_title   = $settings['siteTitle'] ?? get_bloginfo( 'name' );
+			$site_purpose = $settings['siteFor'] ?? '';
+			$site_desc    = $settings['siteDescription'] ?? get_bloginfo( 'description' );
+
+			// Format-specific context for better topic generation.
+			$format_labels = [
+				'listicle'    => 'listicle/top-list',
+				'step_by_step' => 'how-to guide',
+				'comparison'  => 'comparison article',
+				'glossary'    => 'glossary/terms reference',
+				'standard'    => 'blog post',
+			];
+			$format_label = $format_labels[ $format ] ?? 'blog post';
+
+			// Call the server generate-post-ideas endpoint.
+			$api_url  = 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-post-ideas';
+			$response = wp_remote_post(
+				$api_url,
+				[
+					'headers' => [
+						'Content-Type' => 'application/json',
+						'User-Agent'   => 'Solvex-AI-Blogger/' . WPSOLVEX_AUTOAIBLOGGER_VERSION,
+					],
+					'body'    => wp_json_encode(
+						[
+							'license'            => $license,
+							'site_title'         => $site_title,
+							'site_purpose'       => "Generate {$count} unique {$format_label} topics about: {$keywords}. " . $site_purpose,
+							'site_description'   => $site_desc,
+							'temperature'        => floatval( $settings['temperature'] ?? 1 ),
+							'harassment'         => absint( $settings['harassment'] ?? 2 ),
+							'hate'               => absint( $settings['hate'] ?? 2 ),
+							'sexually_explicit'  => absint( $settings['sexuallyExplicit'] ?? 2 ),
+							'dangerous_content'  => absint( $settings['dangerousContent'] ?? 2 ),
+						]
+					),
+					'timeout' => 30,
+				]
+			);
+
+			if ( is_wp_error( $response ) ) {
+				wp_send_json_error( [ 'message' => __( 'Failed to connect to the server. Please try again.', 'solvex-ai-blogger' ) ] );
+				return;
+			}
+
+			$response_code = wp_remote_retrieve_response_code( $response );
+			$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
+
+			if ( $response_code !== 200 || empty( $response_body ) ) {
+				$error_msg = $response_body['message'] ?? __( 'Server returned an error. Please try again.', 'solvex-ai-blogger' );
+				wp_send_json_error( [ 'message' => $error_msg ] );
+				return;
+			}
+
+			// Extract topics from response.
+			$topics = $response_body['data']['post_ideas'] ?? $response_body['post_ideas'] ?? [];
+
+			if ( empty( $topics ) || ! is_array( $topics ) ) {
+				wp_send_json_error( [ 'message' => __( 'No topics were generated. Please try again.', 'solvex-ai-blogger' ) ] );
+				return;
+			}
+
+			// Trim to requested count.
+			$topics = array_slice( array_values( $topics ), 0, $count );
+
+			wp_send_json_success(
+				[
+					'topics'  => $topics,
+					'message' => sprintf(
+						/* translators: %d: number of topics generated */
+						__( '%d topics generated successfully!', 'solvex-ai-blogger' ),
+						count( $topics )
+					),
+				]
+			);
+
+		} catch ( \Exception $e ) {
+			wp_send_json_error( [ 'message' => __( 'Failed to generate topics. Please try again.', 'solvex-ai-blogger' ) ] );
 		}
 	}
 

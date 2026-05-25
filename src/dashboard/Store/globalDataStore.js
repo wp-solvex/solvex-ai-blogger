@@ -116,6 +116,10 @@ const getInitialState = () => {
 		emailNotificationEnabled: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.email_notification_enabled, 'boolean', false ),
 		emailNotificationValue: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.email_notification_value, 'string', wpsolvex_autoaiblogger_localized_data.admin_email || '' ),
 
+		// Phase 2: Content generation preferences.
+		contentTone: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.contentTone, 'string', 'Professional' ),
+		targetDemographic: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.targetDemographic, 'string', 'General Public' ),
+
 		isLoading: false,
 		error: null,
 	};

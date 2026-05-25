@@ -17,6 +17,8 @@ const Persona = memo( () => {
 	const siteTitle = useSelector( ( state ) => state.siteTitle );
 	const siteFor = useSelector( ( state ) => state.siteFor );
 	const siteDescription = useSelector( ( state ) => state.siteDescription );
+	const contentTone = useSelector( ( state ) => state.contentTone ) || 'Professional';
+	const targetDemographic = useSelector( ( state ) => state.targetDemographic ) || 'General Public';
 
 	// Enhanced validation with better UX
 	const validateSiteTitle = useCallback( ( value ) => {
@@ -227,6 +229,57 @@ const Persona = memo( () => {
 
 			{ /* Advanced AI Settings Component */ }
 			<AdvancedSettings />
+
+			{ /* Phase 2: Content Tone & Target Demographic */ }
+			<div className="space-y-4">
+				<h3 className="text-sm font-semibold text-gray-900 mb-2">
+					{ __( 'Content Generation Preferences', 'solvex-ai-blogger' ) }
+				</h3>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<SettingField>
+						<SettingLabel
+							forId="content-tone"
+							title={ __( 'Content Tone', 'solvex-ai-blogger' ) }
+						/>
+						<select
+							id="content-tone"
+							value={ contentTone }
+							onChange={ ( e ) => dispatch( { type: 'UPDATE_CONTENT_TONE', payload: e.target.value } ) }
+							className="wpsolvex-autoaiblogger-select-control w-full"
+						>
+							<option value="Professional">{ __( 'Professional', 'solvex-ai-blogger' ) }</option>
+							<option value="Conversational">{ __( 'Conversational', 'solvex-ai-blogger' ) }</option>
+							<option value="Academic">{ __( 'Academic', 'solvex-ai-blogger' ) }</option>
+							<option value="Humorous">{ __( 'Humorous', 'solvex-ai-blogger' ) }</option>
+							<option value="Urgent">{ __( 'Urgent', 'solvex-ai-blogger' ) }</option>
+						</select>
+						<p className="text-xs text-gray-500 mt-1">
+							{ __( 'Sets the default writing tone for generated content.', 'solvex-ai-blogger' ) }
+						</p>
+					</SettingField>
+
+					<SettingField>
+						<SettingLabel
+							forId="target-demographic"
+							title={ __( 'Target Demographic', 'solvex-ai-blogger' ) }
+						/>
+						<select
+							id="target-demographic"
+							value={ targetDemographic }
+							onChange={ ( e ) => dispatch( { type: 'UPDATE_TARGET_DEMOGRAPHIC', payload: e.target.value } ) }
+							className="wpsolvex-autoaiblogger-select-control w-full"
+						>
+							<option value="General Public">{ __( 'General Public', 'solvex-ai-blogger' ) }</option>
+							<option value="Beginners">{ __( 'Beginners', 'solvex-ai-blogger' ) }</option>
+							<option value="Intermediate">{ __( 'Intermediate', 'solvex-ai-blogger' ) }</option>
+							<option value="Experts/Professionals">{ __( 'Experts / Professionals', 'solvex-ai-blogger' ) }</option>
+						</select>
+						<p className="text-xs text-gray-500 mt-1">
+							{ __( 'Sets the default audience level for generated content.', 'solvex-ai-blogger' ) }
+						</p>
+					</SettingField>
+				</div>
+			</div>
 
 			{ /* Pro Tips section */ }
 			<InfoCard

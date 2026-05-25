@@ -260,6 +260,13 @@ class Cron_Handler {
 				wpsolvex_autoaiblogger_update_token_data( $api_data['token_data'] );
 			}
 
+			// Handle Phase 2 format_state (e.g., save syllabus for series).
+			if ( ! empty( $api_data['format_state'] ) && is_array( $api_data['format_state'] ) ) {
+				foreach ( $api_data['format_state'] as $state_key => $state_value ) {
+					Metadata::update_campaign_meta( $campaign_id, $state_key, is_array( $state_value ) ? wp_json_encode( $state_value ) : $state_value );
+				}
+			}
+
 			// Process images if they exist in the API response.
 			$featured_image_id = null;
 			// Don't sanitize - content contains Gutenberg blocks with HTML comments.
@@ -320,6 +327,13 @@ class Cron_Handler {
 			// Add campaign reference meta to the post.
 			add_post_meta( $post_id, 'wpsolvex_autoaiblogger_reference', 1 );
 			add_post_meta( $post_id, 'wpsolvex_autoaiblogger_campaign_id', $campaign_id );
+
+			// Phase 2: Hub-and-Spoke linking for series campaigns.
+			$campaign_format = Metadata::get_campaign_meta( $campaign_id, 'campaignFormat' );
+			if ( $campaign_format === 'series' ) {
+				$this->handle_series_post_linking( $campaign_id, $post_id, $post_content );
+			}
+
 			$posts_created     = Metadata::get_campaign_meta( $campaign_id, 'postsCreated' );
 			$new_posts_created = intval( $posts_created ) + 1;
 			Metadata::update_campaign_meta( $campaign_id, 'postsCreated', $new_posts_created );
@@ -377,6 +391,8 @@ class Cron_Handler {
 	/**
 	 * Call the post creation API with retry logic.
 	 *
+	 * Routes to the Phase 2 v2 API for structured formats, or the legacy API for standard format.
+	 *
 	 * @param int    $campaign_id The ID of the campaign.
 	 * @param string $keywords The keywords for the post.
 	 * @param int    $max_words The maximum number of words for the post.
@@ -387,87 +403,21 @@ class Cron_Handler {
 		try {
 			$max_words = $max_words ? $max_words : 1000;
 
-			$site_persona_details = wpsolvex_autoaiblogger_get_site_persona_details( $campaign_id );
-
-			// Get campaign name for better context.
-			$campaign_post = get_post( $campaign_id );
-			$campaign_name = $campaign_post ? $campaign_post->post_title : 'Campaign Post';
-
-			// Get number of images from campaign metadata (represents content images only).
-			$image_count = Metadata::get_campaign_meta( $campaign_id, 'numberOfImages' ) ?? 1;
-
-			// Apply filter to allow Pro plugin to modify image count.
-			// Free users are limited to 1 image, Pro users can customize 1-4.
-			$image_count = apply_filters( 'wpsolvex_autoaiblogger_campaign_image_count', $image_count, $campaign_id );
-			$image_count = max( 1, min( 4, absint( $image_count ) ) ); // Limit: 1-4 content images.
-
-			// Add 1 for featured image (first image is always featured, rest go in content).
-			// Total will be 2-5 images (API limit is 0-5, we use 2-5 range).
-			$total_image_count = $image_count + 1;
-
-			$max_retries = 2;
-			$retry_delay = 3;
-			$response    = null;
-
-			for ( $attempt = 1; $attempt <= $max_retries; $attempt++ ) {
-				$response = wpsolvex_autoaiblogger_get_post_creation_api_response( $keywords, $max_words, $site_persona_details, $campaign_id, $campaign_name, $total_image_count );
-
-				if ( ! is_wp_error( $response ) ) {
-					break;
-				}
-
-				$error_code    = $response->get_error_code();
-				$error_message = $response->get_error_message();
-
-				if ( in_array( $error_code, [ 'api_error' ], true ) &&
-					(
-						strpos( $error_message, '502' ) !== false ||
-						strpos( $error_message, '503' ) !== false ||
-						strpos( $error_message, '504' ) !== false )
-					) {
-
-					if ( $attempt < $max_retries ) {
-						sleep( $retry_delay );
-						$retry_delay *= 2;
-					}
-				} else {
-					break;
-				}
+			// Check if this is a Phase 2 campaign format.
+			$campaign_format = Metadata::get_campaign_meta( $campaign_id, 'campaignFormat' );
+			if ( empty( $campaign_format ) || $campaign_format === 'standard' ) {
+				$campaign_format = 'standard';
 			}
 
-			if ( is_wp_error( $response ) ) {
-				$error_code    = $response->get_error_code();
-				$error_message = $response->get_error_message();
-
-				// Enhance error message with more context.
-				$detailed_message = sprintf(
-					/* translators: 1: error code, 2: error message */
-					__( 'API Error (%1$s): %2$s', 'solvex-ai-blogger' ),
-					$error_code,
-					$error_message
-				);
-
-				// Add retry attempt information.
-				if ( $attempt > 1 ) {
-					$detailed_message .= sprintf(
-						/* translators: %d: Attempt number. */
-						__( ' (Failed after %d attempts)', 'solvex-ai-blogger' ),
-						$attempt
-					);
-				}
-
-				return [
-					'success'    => false,
-					'message'    => $detailed_message,
-					'error_code' => $error_code,
-					'attempts'   => $attempt,
-				];
+			// For standard format, use legacy Phase 1 API for backward compatibility.
+			// This ensures existing campaigns keep working even if the server
+			// hasn't been updated to Phase 2 yet.
+			if ( $campaign_format === 'standard' ) {
+				return $this->call_post_creation_api_v1( $campaign_id, $keywords, $max_words );
 			}
 
-			return [
-				'success' => true,
-				'data'    => $response,
-			];
+			// Phase 2 formats use the new v2 API.
+			return $this->call_post_creation_api_v2( $campaign_id, $keywords, $max_words, $campaign_format );
 
 		} catch ( \Exception $e ) {
 			return [
@@ -475,6 +425,305 @@ class Cron_Handler {
 				'message' => 'API Exception: ' . $e->getMessage(),
 			];
 		}
+	}
+
+	/**
+	 * Legacy Phase 1 API call for standard campaigns (backward compatible).
+	 *
+	 * @param int    $campaign_id Campaign ID.
+	 * @param string $keywords    Keywords.
+	 * @param int    $max_words   Max words.
+	 * @return array API response.
+	 * @since 1.1.0
+	 */
+	private function call_post_creation_api_v1( $campaign_id, $keywords, $max_words ): array {
+		$site_persona_details = wpsolvex_autoaiblogger_get_site_persona_details( $campaign_id );
+		$campaign_post        = get_post( $campaign_id );
+		$campaign_name        = $campaign_post ? $campaign_post->post_title : 'Campaign Post';
+
+		$image_count = Metadata::get_campaign_meta( $campaign_id, 'numberOfImages' ) ?? 1;
+		$image_count = apply_filters( 'wpsolvex_autoaiblogger_campaign_image_count', $image_count, $campaign_id );
+		$image_count = max( 1, min( 4, absint( $image_count ) ) );
+		$total_image_count = $image_count + 1;
+
+		$max_retries = 2;
+		$retry_delay = 3;
+		$response    = null;
+
+		for ( $attempt = 1; $attempt <= $max_retries; $attempt++ ) {
+			$response = wpsolvex_autoaiblogger_get_post_creation_api_response( $keywords, $max_words, $site_persona_details, $campaign_id, $campaign_name, $total_image_count );
+
+			if ( ! is_wp_error( $response ) ) {
+				break;
+			}
+
+			$error_code    = $response->get_error_code();
+			$error_message = $response->get_error_message();
+
+			if ( $error_code === 'api_error' &&
+				( strpos( $error_message, '502' ) !== false ||
+				  strpos( $error_message, '503' ) !== false ||
+				  strpos( $error_message, '504' ) !== false ) ) {
+				if ( $attempt < $max_retries ) {
+					sleep( $retry_delay );
+					$retry_delay *= 2;
+				}
+			} else {
+				break;
+			}
+		}
+
+		if ( is_wp_error( $response ) ) {
+			return [
+				'success'  => false,
+				'message'  => sprintf(
+					/* translators: 1: error code, 2: error message */
+					__( 'API Error (%1$s): %2$s', 'solvex-ai-blogger' ),
+					$response->get_error_code(),
+					$response->get_error_message()
+				),
+				'attempts' => $attempt,
+			];
+		}
+
+		return [
+			'success' => true,
+			'data'    => $response,
+		];
+	}
+
+	/**
+	 * Call the Phase 2 v2 post creation API with structured payload.
+	 *
+	 * @param int    $campaign_id    Campaign ID.
+	 * @param string $keywords       Keywords for content generation.
+	 * @param int    $max_words      Max word count.
+	 * @param string $campaign_format Campaign format type.
+	 * @return array API response data.
+	 * @since 1.1.0
+	 */
+	private function call_post_creation_api_v2( $campaign_id, $keywords, $max_words, $campaign_format ): array {
+		$site_persona_details = wpsolvex_autoaiblogger_get_site_persona_details( $campaign_id );
+		$settings             = \WPSolvex\AutoAIBlogger\Inc\Utils\Settings::get_ai_blogger_settings();
+		$license              = \WPSolvex\AutoAIBlogger\Inc\Utils\Helper::get_option( 'license', '' );
+
+		if ( empty( $license ) ) {
+			return [
+				'success' => false,
+				'message' => __( 'License token is required.', 'solvex-ai-blogger' ),
+			];
+		}
+
+		// Get number of images.
+		$image_count = Metadata::get_campaign_meta( $campaign_id, 'numberOfImages' ) ?? 1;
+		$image_count = apply_filters( 'wpsolvex_autoaiblogger_campaign_image_count', $image_count, $campaign_id );
+		$image_count = max( 1, min( 4, absint( $image_count ) ) );
+
+		// Read Phase 2 campaign meta.
+		$content_tone        = Metadata::get_campaign_meta( $campaign_id, 'contentTone' );
+		$target_demographic  = Metadata::get_campaign_meta( $campaign_id, 'targetDemographic' );
+
+		// Use campaign-level settings, fallback to global settings.
+		if ( empty( $content_tone ) ) {
+			$content_tone = $settings['contentTone'] ?? 'Professional';
+		}
+		if ( empty( $target_demographic ) ) {
+			$target_demographic = $settings['targetDemographic'] ?? 'General Public';
+		}
+
+		// Collect existing post titles from this campaign for deduplication.
+		$existing_titles = [];
+		$existing_posts  = get_posts(
+			[
+				'post_type'              => 'post',
+				'posts_per_page'         => -1,
+				'fields'                 => 'ids',
+				'post_status'            => [ 'publish', 'draft', 'pending', 'future' ],
+				'meta_key'               => 'wpsolvex_autoaiblogger_campaign_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value'             => $campaign_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			]
+		);
+
+		if ( ! empty( $existing_posts ) ) {
+			foreach ( $existing_posts as $post_id ) {
+				$post_title = get_the_title( $post_id );
+				if ( ! empty( $post_title ) ) {
+					$existing_titles[] = $post_title;
+				}
+			}
+		}
+
+		// Check for pre-generated campaign topics (Phase 2.1).
+		$topic          = '';
+		$campaign_topics = Metadata::get_campaign_meta( $campaign_id, 'campaignTopics' );
+		if ( ! empty( $campaign_topics ) && is_array( $campaign_topics ) ) {
+			$posts_created = intval( Metadata::get_campaign_meta( $campaign_id, 'postsCreated' ) );
+			if ( isset( $campaign_topics[ $posts_created ] ) ) {
+				$topic = $campaign_topics[ $posts_created ];
+			}
+		}
+
+		// Build format-specific data.
+		$format_data = [];
+		$state_data  = [];
+
+		switch ( $campaign_format ) {
+			case 'listicle':
+				$format_data['item_count'] = intval( Metadata::get_campaign_meta( $campaign_id, 'listicleItemCount' ) ) ?: 10;
+				break;
+
+			case 'comparison':
+				$entities = Metadata::get_campaign_meta( $campaign_id, 'comparisonEntities' );
+				$format_data['entities'] = is_array( $entities ) ? $entities : [];
+				break;
+
+			case 'series':
+				$format_data['total_parts'] = intval( Metadata::get_campaign_meta( $campaign_id, 'seriesTotalParts' ) ) ?: 5;
+				$state_data['seriesCurrentIndex'] = intval( Metadata::get_campaign_meta( $campaign_id, 'seriesCurrentIndex' ) );
+				$syllabus = Metadata::get_campaign_meta( $campaign_id, 'seriesSyllabus' );
+				$state_data['seriesSyllabus'] = is_array( $syllabus ) ? $syllabus : [];
+
+				// Get previous post summary for continuity.
+				$prev_post_id = intval( Metadata::get_campaign_meta( $campaign_id, 'seriesPreviousPostId' ) );
+				if ( $prev_post_id > 0 ) {
+					$prev_post = get_post( $prev_post_id );
+					if ( $prev_post ) {
+						$state_data['previous_post_summary'] = wp_trim_words( $prev_post->post_content, 50, '...' );
+					}
+				}
+				break;
+		}
+
+		// Build the Phase 2 structured payload.
+		$body_args = [
+			'license_key'       => $license,
+			'site_url'          => home_url(),
+			'generation_params' => [
+				'format'           => $campaign_format,
+				'keywords'         => $keywords,
+				'tone'             => $content_tone,
+				'demographic'      => $target_demographic,
+				'max_words'        => $max_words,
+				'images_per_post'  => $image_count,
+				'temperature'      => floatval( $settings['temperature'] ?? 1 ),
+				'harassment'       => absint( $settings['harassment'] ?? 2 ),
+				'hate'             => absint( $settings['hate'] ?? 2 ),
+				'sexually_explicit' => absint( $settings['sexuallyExplicit'] ?? 2 ),
+				'dangerous_content' => absint( $settings['dangerousContent'] ?? 2 ),
+				'format_data'      => $format_data,
+				'existing_titles'  => $existing_titles,
+				'topic'            => $topic,
+			],
+			'state_data'        => $state_data,
+			'site_persona'      => [
+				'site_title'       => $site_persona_details['site_title'] ?? '',
+				'site_description' => $site_persona_details['site_description'] ?? '',
+				'site_for'         => $site_persona_details['site_purpose'] ?? '',
+			],
+		];
+
+		$api_url = WPSOLVEX_AUTOAIBLOGGER_V2_POST_API;
+		if ( ! filter_var( $api_url, FILTER_VALIDATE_URL ) ) {
+			return [
+				'success' => false,
+				'message' => __( 'Invalid API endpoint.', 'solvex-ai-blogger' ),
+			];
+		}
+
+		$max_retries = 2;
+		$retry_delay = 3;
+		$response    = null;
+
+		for ( $attempt = 1; $attempt <= $max_retries; $attempt++ ) {
+			$response = wp_remote_post(
+				$api_url,
+				[
+					'headers'     => [
+						'Content-Type' => 'application/json',
+						'User-Agent'   => 'Solvex-AI-Blogger/' . WPSOLVEX_AUTOAIBLOGGER_VERSION,
+					],
+					'body'        => wp_json_encode( $body_args ),
+					'timeout'     => 150,
+					'sslverify'   => true,
+				]
+			);
+
+			if ( ! is_wp_error( $response ) ) {
+				$response_code = wp_remote_retrieve_response_code( $response );
+				if ( $response_code === 200 ) {
+					break;
+				}
+
+				// Retry on server errors.
+				if ( in_array( $response_code, [ 502, 503, 504 ], true ) && $attempt < $max_retries ) {
+					sleep( $retry_delay );
+					$retry_delay *= 2;
+					continue;
+				}
+
+				// Non-retryable error.
+				$error_body = wp_remote_retrieve_body( $response );
+				$error_data = json_decode( $error_body, true );
+				$error_msg  = isset( $error_data['message'] ) ? $error_data['message'] : "API returned status code: {$response_code}";
+
+				return [
+					'success'  => false,
+					'message'  => $error_msg,
+					'attempts' => $attempt,
+				];
+			}
+
+			// WP_Error — retry on timeout.
+			if ( $attempt < $max_retries ) {
+				sleep( $retry_delay );
+				$retry_delay *= 2;
+			}
+		}
+
+		if ( is_wp_error( $response ) ) {
+			return [
+				'success'  => false,
+				'message'  => 'API Error: ' . $response->get_error_message(),
+				'attempts' => $attempt,
+			];
+		}
+
+		$body = wp_remote_retrieve_body( $response );
+		$data = json_decode( $body, true );
+
+		if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $data ) ) {
+			return [
+				'success' => false,
+				'message' => __( 'Invalid JSON response from API.', 'solvex-ai-blogger' ),
+			];
+		}
+
+		if ( empty( $data['success'] ) || empty( $data['data'] ) ) {
+			return [
+				'success' => false,
+				'message' => $data['message'] ?? __( 'API returned unsuccessful response.', 'solvex-ai-blogger' ),
+			];
+		}
+
+		$api_data = $data['data'];
+
+		// Convert Phase 2 v2 response to the format expected by generate_post_from_campaign().
+		$blocks       = $api_data['blocks'] ?? [];
+		$post_content = implode( "\n\n", $blocks );
+
+		return [
+			'success' => true,
+			'data'    => [
+				'post_title'   => $api_data['title'] ?? 'Generated Post',
+				'post_content' => $post_content,
+				'summary'      => $api_data['summary'] ?? '',
+				'images'       => $api_data['images'] ?? [],
+				'token_data'   => $api_data['meta_updates']['tokens_used'] ?? null,
+				'format_state' => $api_data['meta_updates']['format_state'] ?? [],
+			],
+		];
 	}
 
 	/**
@@ -810,7 +1059,7 @@ class Cron_Handler {
 				continue;
 			}
 
-			$alt_text      = $image['alt'] ?? '';
+			$alt_text      = $image['alt'] ?? $image['alt_text'] ?? '';
 			$attachment_id = $this->upload_image_to_media_library( $image['url'], $alt_text );
 
 			if ( is_wp_error( $attachment_id ) ) {
@@ -876,6 +1125,115 @@ class Cron_Handler {
 			'content'           => $content,
 			'featured_image_id' => null,
 		];
+	}
+
+	/**
+	 * Handle series campaign hub-and-spoke linking.
+	 *
+	 * On index 0: Creates taxonomy term, saves hub post ID.
+	 * On index > 0: Assigns taxonomy, adds forward/backward links.
+	 *
+	 * @param int    $campaign_id Campaign ID.
+	 * @param int    $post_id     Newly created post ID.
+	 * @param string $post_content Post content (for reference).
+	 * @since 1.1.0
+	 */
+	private function handle_series_post_linking( $campaign_id, $post_id, $post_content ): void {
+		$current_index = intval( Metadata::get_campaign_meta( $campaign_id, 'seriesCurrentIndex' ) );
+
+		if ( $current_index === 0 ) {
+			// Index 0: This is the hub/pillar page.
+			$campaign_post = get_post( $campaign_id );
+			$term_name     = $campaign_post ? $campaign_post->post_title : 'Series ' . $campaign_id;
+			$term_result   = wp_insert_term( $term_name, 'category' );
+
+			if ( ! is_wp_error( $term_result ) ) {
+				$term_id = $term_result['term_id'];
+				Metadata::update_campaign_meta( $campaign_id, 'seriesTaxonomyTermId', $term_id );
+				wp_set_post_terms( $post_id, [ $term_id ], 'category' );
+			}
+
+			Metadata::update_campaign_meta( $campaign_id, 'seriesHubPostId', $post_id );
+			Metadata::update_campaign_meta( $campaign_id, 'seriesPreviousPostId', $post_id );
+			Metadata::update_campaign_meta( $campaign_id, 'seriesCurrentIndex', 1 );
+
+		} else {
+			// Index > 0: This is a spoke page.
+			$hub_post_id  = intval( Metadata::get_campaign_meta( $campaign_id, 'seriesHubPostId' ) );
+			$prev_post_id = intval( Metadata::get_campaign_meta( $campaign_id, 'seriesPreviousPostId' ) );
+			$term_id      = intval( Metadata::get_campaign_meta( $campaign_id, 'seriesTaxonomyTermId' ) );
+
+			// Assign taxonomy term.
+			if ( $term_id > 0 ) {
+				wp_set_post_terms( $post_id, [ $term_id ], 'category', true );
+			}
+
+			// Build and append navigation to the new spoke post.
+			$nav_block       = $this->build_series_navigation_block( $hub_post_id, $prev_post_id, 0 );
+			$current_content = get_post_field( 'post_content', $post_id );
+			wp_update_post( [
+				'ID'           => $post_id,
+				'post_content' => $current_content . "\n\n" . $nav_block,
+			] );
+
+			// Append "Next Chapter" link to the previous post.
+			if ( $prev_post_id > 0 ) {
+				$prev_content     = get_post_field( 'post_content', $prev_post_id );
+				$next_chapter_url = get_permalink( $post_id );
+				$next_title       = get_the_title( $post_id );
+				$next_link_block  = "<!-- wp:paragraph {\"className\":\"series-navigation\"} -->\n"
+					. '<p class="series-navigation"><strong>Next Chapter:</strong> '
+					. '<a href="' . esc_url( $next_chapter_url ) . '">' . esc_html( $next_title ) . ' →</a></p>'
+					. "\n<!-- /wp:paragraph -->";
+
+				wp_update_post( [
+					'ID'           => $prev_post_id,
+					'post_content' => $prev_content . "\n\n" . $next_link_block,
+				] );
+			}
+
+			Metadata::update_campaign_meta( $campaign_id, 'seriesPreviousPostId', $post_id );
+			Metadata::update_campaign_meta( $campaign_id, 'seriesCurrentIndex', $current_index + 1 );
+		}
+	}
+
+	/**
+	 * Build a series navigation Gutenberg block.
+	 *
+	 * @param int $hub_post_id  Hub/pillar post ID.
+	 * @param int $prev_post_id Previous post ID.
+	 * @param int $next_post_id Next post ID (0 if none yet).
+	 * @return string Gutenberg block markup.
+	 * @since 1.1.0
+	 */
+	private function build_series_navigation_block( $hub_post_id, $prev_post_id, $next_post_id ): string {
+		$links = [];
+
+		if ( $hub_post_id > 0 ) {
+			$hub_url = get_permalink( $hub_post_id );
+			$links[] = '<a href="' . esc_url( $hub_url ) . '">📚 Back to Series Hub</a>';
+		}
+
+		if ( $prev_post_id > 0 && $prev_post_id !== $hub_post_id ) {
+			$prev_url   = get_permalink( $prev_post_id );
+			$prev_title = get_the_title( $prev_post_id );
+			$links[]    = '<a href="' . esc_url( $prev_url ) . '">← Previous: ' . esc_html( $prev_title ) . '</a>';
+		}
+
+		if ( $next_post_id > 0 ) {
+			$next_url   = get_permalink( $next_post_id );
+			$next_title = get_the_title( $next_post_id );
+			$links[]    = '<a href="' . esc_url( $next_url ) . '">Next: ' . esc_html( $next_title ) . ' →</a>';
+		}
+
+		if ( empty( $links ) ) {
+			return '';
+		}
+
+		$links_html = implode( ' | ', $links );
+		return "<!-- wp:paragraph {\"className\":\"series-navigation\",\"align\":\"center\"} -->\n"
+			. '<p class="series-navigation has-text-align-center">' . $links_html . '</p>'
+			. "\n<!-- /wp:paragraph -->";
 	}
 
 	/**

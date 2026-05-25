@@ -55,7 +55,30 @@ class Helper {
 		'adminEmail',
 		'emailNotificationEnabled',
 		'emailNotificationValue',
+		'contentTone',
+		'targetDemographic',
 	];
+
+	/**
+	 * Resolve any key format (camelCase or lowercase) to the original camelCase key.
+	 *
+	 * @param string $key The key to resolve.
+	 * @return string|false The original camelCase key, or false if not allowed.
+	 * @since 1.1.0
+	 */
+	private static function resolve_key( $key ) {
+		if ( ! is_string( $key ) || empty( $key ) ) {
+			return false;
+		}
+
+		$lower_key = strtolower( $key );
+		foreach ( self::$allowed_keys as $allowed ) {
+			if ( strtolower( $allowed ) === $lower_key ) {
+				return $allowed;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Returns an option from the database for the admin settings.
@@ -67,21 +90,8 @@ class Helper {
 	 * @since 1.0.0
 	 */
 	public static function get_option( $key, $default = false ) {
-		// Validate key parameter.
-		if ( ! is_string( $key ) || empty( $key ) ) {
-			return $default;
-		}
-
-		// Sanitize key.
-		$key = sanitize_key( $key );
-
-		if ( empty( $key ) ) {
-			return $default;
-		}
-
-		// Check if key is in allowed list (compare sanitized versions).
-		$sanitized_allowed_keys = array_map( 'sanitize_key', self::$allowed_keys );
-		if ( ! in_array( $key, $sanitized_allowed_keys, true ) ) {
+		$original_key = self::resolve_key( $key );
+		if ( ! $original_key ) {
 			return $default;
 		}
 
@@ -91,12 +101,11 @@ class Helper {
 			return $default;
 		}
 
-		// Validate settings array.
-		if ( ! array_key_exists( $key, $settings ) ) {
-			$settings[ $key ] = '';
+		if ( ! array_key_exists( $original_key, $settings ) ) {
+			return $default;
 		}
 
-		$value = $settings[ $key ];
+		$value = $settings[ $original_key ];
 
 		// Return default if value is empty and default is provided.
 		if ( $value === '' && $default !== false ) {
@@ -116,8 +125,8 @@ class Helper {
 	 * @since 1.0.0
 	 */
 	public static function update_option( $key, $value = true ) {
-		// Validate key parameter.
-		if ( ! is_string( $key ) || empty( $key ) ) {
+		$original_key = self::resolve_key( $key );
+		if ( ! $original_key ) {
 			return [
 				'success' => false,
 				'error'   => __( 'Invalid key parameter', 'solvex-ai-blogger' ),
@@ -132,30 +141,7 @@ class Helper {
 			];
 		}
 
-		// Sanitize key.
-		$key = sanitize_key( $key );
-
-		if ( empty( $key ) ) {
-			return [
-				'success' => false,
-				'error'   => 'Invalid key after sanitization',
-			];
-		}
-
-		// Check if key is in allowed list (compare sanitized versions).
-		$sanitized_allowed_keys = array_map( 'sanitize_key', self::$allowed_keys );
-		if ( ! in_array( $key, $sanitized_allowed_keys, true ) ) {
-			return [
-				'success' => false,
-				'error'   => 'Key not in allowed list',
-			];
-		}
-
-		// Get the original camelCase key for switch statements.
-		$original_key_index = array_search( $key, $sanitized_allowed_keys );
-		$original_key       = self::$allowed_keys[ $original_key_index ];
-
-		// Sanitize value based on key type (use original camelCase key for switch).
+		// Sanitize value based on key type.
 		$sanitized_value = self::sanitize_input( $original_key, $value );
 
 		// Check if sanitization failed (false can be a valid value for boolean fields).
@@ -169,31 +155,26 @@ class Helper {
 
 		$settings = get_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, [] );
 
-		// Validate settings is array.
 		if ( ! is_array( $settings ) ) {
 			$settings = [];
 		}
 
 		// If the value is same as default then remove it from the DB.
 		$default_value = Settings::get_default_option( $original_key );
-		$is_default    = false;
-
-		// For all types, use direct comparison.
-		// For postIdeas, empty string is the default.
-		$is_default = ( $default_value === $sanitized_value );
-
-		if ( $is_default ) {
-			unset( $settings[ $key ] );
+		if ( $default_value === $sanitized_value ) {
+			unset( $settings[ $original_key ] );
 		} else {
-			$settings[ $key ] = $sanitized_value;
+			$settings[ $original_key ] = $sanitized_value;
 		}
 
-		// Validate final settings array.
+		// Validate and normalize keys, then save.
 		$validated_settings = self::validate_settings_array( $settings );
 
 		update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $validated_settings );
 
-		// Return success with the sanitized value.
+		// Clear settings cache.
+		Settings::$dashboard_options = [];
+
 		return [
 			'success' => true,
 			'value'   => $sanitized_value,
@@ -209,43 +190,30 @@ class Helper {
 	 * @since 1.0.0
 	 */
 	public static function delete_option( $key ): bool {
-		// Validate key parameter.
 		if ( ! is_string( $key ) || empty( $key ) ) {
 			return false;
 		}
 
-		// Capability check.
 		if ( ! current_user_can( 'manage_options' ) && ! wp_doing_cron() ) {
 			return false;
 		}
 
-		// Sanitize key.
-		$key = sanitize_key( $key );
-
-		if ( empty( $key ) ) {
-			return false;
-		}
-
-		// Check if key is in allowed list (compare sanitized versions).
-		$sanitized_allowed_keys = array_map( 'sanitize_key', self::$allowed_keys );
-		if ( ! in_array( $key, $sanitized_allowed_keys, true ) ) {
+		// Resolve to original camelCase key.
+		$original_key = self::resolve_key( $key );
+		if ( ! $original_key ) {
 			return false;
 		}
 
 		$settings = get_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, [] );
 
-		// Validate settings is array.
 		if ( ! is_array( $settings ) ) {
-			return true; // Nothing to delete.
+			return true;
 		}
 
-		if ( ! isset( $settings[ $key ] ) ) {
-			return true; // Key doesn't exist, consider it deleted.
-		}
+		// Remove both possible key formats.
+		unset( $settings[ $original_key ] );
+		unset( $settings[ strtolower( $original_key ) ] );
 
-		unset( $settings[ $key ] );
-
-		// Validate final settings array.
 		$settings = self::validate_settings_array( $settings );
 
 		return update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $settings );
@@ -259,7 +227,6 @@ class Helper {
 	 * @return bool True on success, false on failure.
 	 */
 	public static function bulk_update_options( array $options ): bool {
-		// Capability check.
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return false;
 		}
@@ -272,33 +239,26 @@ class Helper {
 
 		$updated = false;
 
-		$sanitized_allowed_keys = array_map( 'sanitize_key', self::$allowed_keys );
-
 		foreach ( $options as $key => $value ) {
-			$key = sanitize_key( $key );
-
-			if ( ! in_array( $key, $sanitized_allowed_keys, true ) ) {
+			$original_key = self::resolve_key( $key );
+			if ( ! $original_key ) {
 				continue;
 			}
 
-			// Get original camelCase key for sanitization.
-			$original_key_index = array_search( $key, $sanitized_allowed_keys );
-			$original_key       = self::$allowed_keys[ $original_key_index ];
-
 			$sanitized_value = self::sanitize_input( $original_key, $value );
 
-			// Check if sanitization failed (false can be a valid value for boolean fields).
 			$boolean_fields = [ 'userOnboarded', 'enableLogging', 'emailNotificationEnabled' ];
 			$is_valid_value = $sanitized_value !== false || in_array( $original_key, $boolean_fields, true );
 
 			if ( $is_valid_value ) {
-				$settings[ $key ] = $sanitized_value;
-				$updated          = true;
+				$settings[ $original_key ] = $sanitized_value;
+				$updated                   = true;
 			}
 		}
 
 		if ( $updated ) {
 			$settings = self::validate_settings_array( $settings );
+			Settings::$dashboard_options = [];
 			return update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $settings );
 		}
 
@@ -513,22 +473,28 @@ class Helper {
 	 * @return array Validated settings array.
 	 */
 	private static function validate_settings_array( array $settings ): array {
-		$validated              = [];
-		$sanitized_allowed_keys = array_map( 'sanitize_key', self::$allowed_keys );
+		$validated = [];
+
+		// Build a map: lowercase → camelCase for both formats.
+		$key_map = [];
+		foreach ( self::$allowed_keys as $camel_key ) {
+			$key_map[ strtolower( $camel_key ) ] = $camel_key;
+			$key_map[ $camel_key ]               = $camel_key;
+		}
 
 		foreach ( $settings as $key => $value ) {
-			// Only include allowed keys (compare with sanitized versions).
-			if ( in_array( $key, $sanitized_allowed_keys, true ) ) {
-				// Get original camelCase key to check if it's a boolean field.
-				$original_key_index = array_search( $key, $sanitized_allowed_keys );
-				$original_key       = self::$allowed_keys[ $original_key_index ];
+			// Accept both lowercase DB keys and camelCase keys.
+			if ( ! isset( $key_map[ $key ] ) ) {
+				continue;
+			}
 
-				// Boolean fields can have false as a valid value.
-				$boolean_fields   = [ 'userOnboarded', 'enableLogging', 'emailNotificationEnabled' ];
-				$is_boolean_field = in_array( $original_key, $boolean_fields, true );               // Include the value if it's not false, or if it's false but for a boolean field.
-				if ( $value !== false || $is_boolean_field ) {
-					$validated[ $key ] = $value;
-				}
+			$original_key = $key_map[ $key ];
+
+			// Boolean fields can have false as a valid value.
+			$boolean_fields   = [ 'userOnboarded', 'enableLogging', 'emailNotificationEnabled' ];
+			$is_boolean_field = in_array( $original_key, $boolean_fields, true );
+			if ( $value !== false || $is_boolean_field ) {
+				$validated[ $original_key ] = $value;
 			}
 		}
 

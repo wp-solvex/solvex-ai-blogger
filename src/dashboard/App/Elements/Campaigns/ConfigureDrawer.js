@@ -8,6 +8,7 @@ import SwitchControl from '@Components/SwitchControl';
 import DateTimeField from '@Components/DateTimeField';
 import { Tooltip } from '@wordpress/components';
 import DynamicCard from '@Components/DynamicCard';
+import { FileText, List, Footprints, GitCompareArrows, BookOpen, Layers } from 'lucide-react';
 
 export default function ConfigureDrawer( props ) {
 	const abortControllerRef = useRef( {} );
@@ -25,6 +26,65 @@ export default function ConfigureDrawer( props ) {
 	const isViewMode = mode === 'view';
 	const [ errorMessage, setErrorMessage ] = useState( '' );
 	const [ fieldErrors, setFieldErrors ] = useState( {} );
+	const [ isGeneratingTopics, setIsGeneratingTopics ] = useState( false );
+	const [ errorDialogOpen, setErrorDialogOpen ] = useState( false );
+
+	// Helper to safely parse campaignTopics (may be JSON string or array).
+	const getTopics = () => {
+		let topics = drawerData.campaignTopics;
+		if ( typeof topics === 'string' ) {
+			try { topics = JSON.parse( topics ); } catch ( e ) { topics = []; }
+		}
+		return Array.isArray( topics ) ? topics : [];
+	};
+
+	// Helper to safely parse comparisonEntities (may be JSON string or array).
+	const getEntities = ( fallback = [ '', '' ] ) => {
+		let entities = drawerData.comparisonEntities;
+		if ( typeof entities === 'string' ) {
+			try { entities = JSON.parse( entities ); } catch ( e ) { entities = null; }
+		}
+		return Array.isArray( entities ) && entities.length >= 2 ? entities : fallback;
+	};
+
+	// Generate campaign topics via AJAX.
+	const generateCampaignTopics = async () => {
+		const keywords = drawerData.keywords;
+		const count = parseInt( drawerData.postsTarget ) || 5;
+		const format = drawerData.campaignFormat || 'standard';
+
+		if ( ! keywords ) {
+			showFieldError( 'campaign-keywords', __( 'Enter Keywords first.', 'solvex-ai-blogger' ), 'campaign' );
+			return;
+		}
+
+		setIsGeneratingTopics( true );
+		try {
+			const formData = new FormData();
+			formData.append( 'action', 'wpsolvex_autoaiblogger_generate_campaign_topics' );
+			formData.append( 'security', wpsolvex_autoaiblogger_localized_data?.admin_nonce || '' );
+			formData.append( 'keywords', keywords );
+			formData.append( 'count', count );
+			formData.append( 'format', format );
+
+			const response = await fetch( ajaxurl, {
+				method: 'POST',
+				body: formData,
+			} );
+
+			const result = await response.json();
+
+			if ( result.success && result.data?.topics ) {
+				setDrawerData( { ...drawerData, campaignTopics: result.data.topics } );
+			} else {
+				setErrorMessage( result.data?.message || __( 'Failed to generate topics.', 'solvex-ai-blogger' ) );
+			}
+		} catch ( e ) {
+			setErrorMessage( __( 'Network error. Please try again.', 'solvex-ai-blogger' ) );
+		} finally {
+			setIsGeneratingTopics( false );
+		}
+	};
 
 	// Helper function to check if start date has passed.
 	const hasStartDatePassed = ( startDate ) => {
@@ -126,7 +186,20 @@ export default function ConfigureDrawer( props ) {
 		setFieldErrors( {} );
 		setHandlingCampaign( true );
 
-		updateCampaign( drawerData, drawerData.type === 'new', abortControllerRef )
+		// For series campaigns, auto-set seriesTotalParts and add +1 to postsTarget for the hub page.
+		const submitData = { ...drawerData };
+		if ( submitData.campaignFormat === 'series' && submitData.type === 'new' ) {
+			const parts = parseInt( submitData.postsTarget ) || 3;
+			submitData.seriesTotalParts = parts;
+			submitData.postsTarget = parts + 1;
+		}
+
+		// Clean up campaign topics — filter empty lines and convert to JSON array.
+		if ( Array.isArray( submitData.campaignTopics ) ) {
+			submitData.campaignTopics = submitData.campaignTopics.filter( ( t ) => t && t.trim() !== '' );
+		}
+
+		updateCampaign( submitData, submitData.type === 'new', abortControllerRef )
 			.then( ( response ) => {
 				console.log( 'Campaign operation completed successfully:', response );
 				// The ApiData.js handles the reload, so we don't need to do anything here
@@ -265,14 +338,159 @@ export default function ConfigureDrawer( props ) {
 															</div>
 														</div>
 
+														{ /* Phase 2: Campaign Format Cards */ }
+														<div>
+															<label className="flex items-center justify-between text-sm/6 font-medium text-gray-900 mb-2">
+																<span>{ __( 'Campaign Format', 'solvex-ai-blogger' ) }</span>
+																<a
+																	href="https://wpaiblogger.com/campaign-formats/"
+																	target="_blank"
+																	rel="noopener noreferrer"
+																	className="text-xs font-normal text-brand hover:text-brand-700 no-underline hover:underline"
+																>
+																	{ __( 'Learn more ↗', 'solvex-ai-blogger' ) }
+																</a>
+															</label>
+															<div className="grid grid-cols-3 gap-2">
+																{ [
+																	{ value: 'standard', label: __( 'Standard', 'solvex-ai-blogger' ), icon: FileText, desc: __( 'Blog post', 'solvex-ai-blogger' ) },
+																	{ value: 'listicle', label: __( 'Top List', 'solvex-ai-blogger' ), icon: List, desc: __( 'Numbered list', 'solvex-ai-blogger' ) },
+																	{ value: 'step_by_step', label: __( 'Guide', 'solvex-ai-blogger' ), icon: Footprints, desc: __( 'Step-by-step', 'solvex-ai-blogger' ) },
+																	{ value: 'comparison', label: __( 'Compare', 'solvex-ai-blogger' ), icon: GitCompareArrows, desc: __( 'Side by side', 'solvex-ai-blogger' ) },
+																	{ value: 'glossary', label: __( 'Terms A-Z', 'solvex-ai-blogger' ), icon: BookOpen, desc: __( 'Definitions', 'solvex-ai-blogger' ) },
+																	{ value: 'series', label: __( 'Series', 'solvex-ai-blogger' ), icon: Layers, desc: __( 'Multi-part', 'solvex-ai-blogger' ) },
+																].map( ( format ) => {
+																	const isSelected = ( drawerData.campaignFormat || 'standard' ) === format.value;
+																	const isDisabled = isViewMode || drawerData.type === 'edit';
+																	const Icon = format.icon;
+																	return (
+																		<button
+																			key={ format.value }
+																			type="button"
+																			onClick={ () => ! isDisabled && setDrawerData( { ...drawerData, campaignFormat: format.value } ) }
+																			disabled={ isDisabled }
+																			className={ `relative flex flex-col items-center justify-center rounded-lg border-2 p-2.5 text-center transition-all duration-200 cursor-pointer ${
+																				isSelected
+																					? 'border-brand bg-brand-50 shadow-sm'
+																					: isDisabled
+																						? 'border-gray-100 bg-gray-50 opacity-60 cursor-not-allowed'
+																						: 'border-gray-200 bg-white hover:border-brand-300 hover:bg-brand-50/50'
+																			}` }
+																		>
+																			<Icon
+																				className={ `size-5 mb-1 ${ isSelected ? 'text-brand' : 'text-gray-400' }` }
+																				strokeWidth={ isSelected ? 2.5 : 1.5 }
+																			/>
+																			<span className={ `text-xs font-medium leading-tight ${ isSelected ? 'text-brand-700' : 'text-gray-700' }` }>
+																				{ format.label }
+																			</span>
+																			<span className={ `text-[10px] leading-tight mt-0.5 ${ isSelected ? 'text-brand-500' : 'text-gray-400' }` }>
+																				{ format.desc }
+																			</span>
+																			{ isSelected && (
+																				<div className="absolute -top-1 -right-1 size-4 rounded-full bg-brand flex items-center justify-center">
+																					<svg className="size-2.5 text-white" fill="none" viewBox="0 0 24 24" strokeWidth="3" stroke="currentColor">
+																						<path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+																					</svg>
+																				</div>
+																			) }
+																		</button>
+																	);
+																} ) }
+															</div>
+															{ drawerData.type === 'new' && (
+																<p className="mt-3 text-xs text-gray-500">
+																	{ __( 'Format cannot be changed after campaign creation.', 'solvex-ai-blogger' ) }
+																</p>
+															) }
+														</div>
+
+														{ /* Phase 2: Listicle - Item Count */ }
+														{ drawerData.campaignFormat === 'listicle' && (
+															<div className="flex items-center justify-between">
+																<label htmlFor="listicle-item-count" className="block text-sm/6 font-medium text-gray-900">
+																	{ __( 'Number of List Items', 'solvex-ai-blogger' ) }
+																</label>
+																<input
+																	id="listicle-item-count"
+																	type="number"
+																	min="3"
+																	max="50"
+																	value={ drawerData.listicleItemCount || 10 }
+																	onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, listicleItemCount: parseInt( e.target.value ) || 10 } ) }
+																	readOnly={ isViewMode }
+																	onWheel={ ( e ) => e.target.blur() }
+																	className={ `block w-20 rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 sm:text-sm/6 ${ isViewMode ? 'bg-gray-50 outline-gray-200' : 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand' }` }
+																/>
+															</div>
+														) }
+
+														{ /* Phase 2: Comparison - Entities */ }
+														{ drawerData.campaignFormat === 'comparison' && (
+															<div>
+																<label className="block text-sm/6 font-medium text-gray-900 mb-2">
+																	{ __( 'Entities to Compare', 'solvex-ai-blogger' ) }
+																</label>
+																{ getEntities().map( ( entity, index ) => (
+																	<div key={ index } className="flex items-center gap-2 mb-2">
+																		<input
+																			type="text"
+																			value={ entity }
+																			onChange={ ( e ) => {
+																				if ( isViewMode ) return;
+																				const entities = [ ...getEntities() ];
+																				entities[ index ] = e.target.value;
+																				setDrawerData( { ...drawerData, comparisonEntities: entities } );
+																			} }
+																			readOnly={ isViewMode }
+																			placeholder={ [ __( 'e.g., Samsung Galaxy S26 Ultra', 'solvex-ai-blogger' ), __( 'e.g., iPhone 17 Pro Max', 'solvex-ai-blogger' ) ][ index ] || __( 'e.g., Samsung Galaxy S26 Ultra', 'solvex-ai-blogger' ) }
+																			className={ `block w-full rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 sm:text-sm/6 ${ isViewMode ? 'bg-gray-50 outline-gray-200' : 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand' }` }
+																		/>
+																		{ ! isViewMode && getEntities().length > 2 && (
+																			<button
+																				type="button"
+																				onClick={ () => {
+																					const entities = [ ...getEntities() ];
+																					entities.splice( index, 1 );
+																					setDrawerData( { ...drawerData, comparisonEntities: entities } );
+																				} }
+																				className="text-red-500 hover:text-red-700 text-sm border-none bg-transparent cursor-pointer"
+																			>
+																				✕
+																			</button>
+																		) }
+																	</div>
+																) ) }
+																{ ! isViewMode && getEntities().length < 6 && (
+																	<button
+																		type="button"
+																		onClick={ () => {
+																			const entities = [ ...getEntities(), '' ];
+																			setDrawerData( { ...drawerData, comparisonEntities: entities } );
+																		} }
+																		className="text-sm text-brand hover:text-brand-700 border-none bg-transparent cursor-pointer"
+																	>
+																		+ { __( 'Add Entity', 'solvex-ai-blogger' ) }
+																	</button>
+																) }
+															</div>
+														) }
+
+														{ /* Phase 2: Series - Total Parts (removed - now handled via Posts Target) */ }
+
 														<div className="grid grid-cols-1 gap-2">
 															<div className="flex items-center justify-between">
 																<label htmlFor="campaign-target" className="flex items-center text-sm/6 font-medium text-gray-900">
-																	{ __( 'Posts Target', 'solvex-ai-blogger' ) }
+																	{ drawerData.campaignFormat === 'series'
+																		? __( 'Total Parts in Series', 'solvex-ai-blogger' )
+																		: __( 'Posts Target', 'solvex-ai-blogger' )
+																	}
 																	<Tooltip
 																		text={ drawerData.type === 'edit'
 																			? __( 'Post Target can not be updated.', 'solvex-ai-blogger' )
-																			: __( 'How many posts you expect from this campaign?', 'solvex-ai-blogger' )
+																			: drawerData.campaignFormat === 'series'
+																				? __( 'How many content parts in this series? A hub overview page will also be generated.', 'solvex-ai-blogger' )
+																				: __( 'How many posts you expect from this campaign?', 'solvex-ai-blogger' )
 																		}
 																		delay={ 100 }
 																		className="z-[99999] bg-black text-white shadow-md p-2 rounded-md"
@@ -313,10 +531,80 @@ export default function ConfigureDrawer( props ) {
 															</div>
 															{ drawerData.type === 'new' && (
 																<div className="text-xs text-gray-500">
-																	{ __( 'Once set, campaign targets are unchangeable.', 'solvex-ai-blogger' ) }
+																	{ drawerData.campaignFormat === 'series'
+																		? __( '1 additional Series Overview Page will also be generated.', 'solvex-ai-blogger' )
+																		: __( 'Once set, campaign targets are unchangeable.', 'solvex-ai-blogger' )
+																	}
 																</div>
 															) }
 														</div>
+
+														{ /* Phase 2.1: Blog Topics for non-series multi-post campaigns */ }
+														{ drawerData.campaignFormat !== 'series' && (
+															<div>
+																<div className="flex items-center justify-between mb-2">
+																	<label className="block text-sm/6 font-medium text-gray-900">
+																		{ __( 'Blog Topics', 'solvex-ai-blogger' ) }
+																		<span className="text-xs text-gray-400 font-normal ml-1">{ __( '(optional)', 'solvex-ai-blogger' ) }</span>
+																	</label>
+																	{ ! isViewMode && ( () => {
+																		const isDisabled = isGeneratingTopics || ! drawerData.keywords || ! drawerData.title;
+																		const btn = (
+																			<button
+																				type="button"
+																				onClick={ generateCampaignTopics }
+																				disabled={ isDisabled }
+																				className="inline-flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-700 border-none bg-transparent cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+																			>
+																				{ isGeneratingTopics ? (
+																					<>
+																						<svg className="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+																							<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+																							<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+																						</svg>
+																						{ __( 'Generating...', 'solvex-ai-blogger' ) }
+																					</>
+																				) : getTopics().length > 0 ? (
+																					<>🔄 { __( 'Regenerate', 'solvex-ai-blogger' ) }</>
+																				) : (
+																					<>✨ { __( 'Generate Topics', 'solvex-ai-blogger' ) }</>
+																				) }
+																			</button>
+																		);
+																		return isDisabled && ! isGeneratingTopics ? (
+																			<span title={ __( 'Enter Name and Keywords to generate topics.', 'solvex-ai-blogger' ) }>
+																				{ btn }
+																			</span>
+																		) : btn;
+																	} )() }
+																</div>
+																<textarea
+																	rows={ Math.max( 3, Math.min( 8, getTopics().length ) ) }
+																	className={ `block w-full rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 transition-colors duration-200 ${
+																		isViewMode
+																			? 'bg-gray-50 outline-gray-200'
+																			: 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand'
+																	}` }
+																	placeholder={ {
+																		listicle: __( 'One topic per line. E.g.:\nTop 10 Budget Smartphones in 2026\n7 Must-Have Kitchen Gadgets Under $50\n5 Free Project Management Tools for Teams', 'solvex-ai-blogger' ),
+																		step_by_step: __( 'One topic per line. E.g.:\nHow to Start a Vegetable Garden at Home\nHow to Set Up a Home Office on a Budget\nHow to Create a Monthly Budget in 5 Steps', 'solvex-ai-blogger' ),
+																		comparison: __( 'One topic per line. E.g.:\niPhone 16 vs Samsung Galaxy S26: Which to Buy?\nShopify vs WooCommerce for Small Business\nNotion vs Obsidian: Best Note-Taking App', 'solvex-ai-blogger' ),
+																		glossary: __( 'One topic per line. E.g.:\nDigital Marketing Terms Every Beginner Should Know\nA-Z Guide to Cloud Computing Terminology\nEssential Crypto & Blockchain Terms Explained', 'solvex-ai-blogger' ),
+																	}[ drawerData.campaignFormat ] || __( 'One topic per line. E.g.:\nThe Future of Remote Work in 2026\nBeginner\'s Guide to Personal Finance\n10 Tips for Better Sleep Quality', 'solvex-ai-blogger' ) }
+																	value={ getTopics().join( '\n' ) }
+																	onChange={ ( e ) => {
+																		if ( ! isViewMode ) {
+																			const topics = e.target.value.split( '\n' );
+																			setDrawerData( { ...drawerData, campaignTopics: topics } );
+																		}
+																	} }
+																	readOnly={ isViewMode }
+																/>
+																<p className="mt-1 text-xs text-gray-500">
+																	{ __( 'Each line becomes a separate blog post. Leave empty to let AI choose topics automatically.', 'solvex-ai-blogger' ) }
+																</p>
+															</div>
+														) }
 
 														<div className="flex items-center justify-between">
 															<label htmlFor="campaign-repeat-after" className="flex items-center text-sm/6 font-medium text-gray-900">
@@ -737,6 +1025,56 @@ export default function ConfigureDrawer( props ) {
 															</div>
 														</div>
 
+														{ /* Phase 2: Per-campaign Content Tone & Demographic */ }
+														<div>
+															<label htmlFor="campaign-content-tone" className="block text-sm/6 font-medium text-gray-900">
+																{ __( 'Content Tone', 'solvex-ai-blogger' ) }
+															</label>
+															<div className="mt-2">
+																<select
+																	id="campaign-content-tone"
+																	value={ drawerData.contentTone || '' }
+																	onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, contentTone: e.target.value } ) }
+																	disabled={ isViewMode }
+																	className={ `w-full ${ isViewMode ? 'wpsolvex-autoaiblogger-select-control-readonly' : 'wpsolvex-autoaiblogger-select-control' }` }
+																>
+																	<option value="">{ __( 'Use global default', 'solvex-ai-blogger' ) }</option>
+																	<option value="Professional">{ __( 'Professional', 'solvex-ai-blogger' ) }</option>
+																	<option value="Conversational">{ __( 'Conversational', 'solvex-ai-blogger' ) }</option>
+																	<option value="Academic">{ __( 'Academic', 'solvex-ai-blogger' ) }</option>
+																	<option value="Humorous">{ __( 'Humorous', 'solvex-ai-blogger' ) }</option>
+																	<option value="Urgent">{ __( 'Urgent', 'solvex-ai-blogger' ) }</option>
+																</select>
+																<p className="mt-1 text-xs text-gray-500">
+																	{ __( 'Leave empty to use your global setting.', 'solvex-ai-blogger' ) }
+																</p>
+															</div>
+														</div>
+
+														<div>
+															<label htmlFor="campaign-target-demographic" className="block text-sm/6 font-medium text-gray-900">
+																{ __( 'Target Demographic', 'solvex-ai-blogger' ) }
+															</label>
+															<div className="mt-2">
+																<select
+																	id="campaign-target-demographic"
+																	value={ drawerData.targetDemographic || '' }
+																	onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, targetDemographic: e.target.value } ) }
+																	disabled={ isViewMode }
+																	className={ `w-full ${ isViewMode ? 'wpsolvex-autoaiblogger-select-control-readonly' : 'wpsolvex-autoaiblogger-select-control' }` }
+																>
+																	<option value="">{ __( 'Use global default', 'solvex-ai-blogger' ) }</option>
+																	<option value="General Public">{ __( 'General Public', 'solvex-ai-blogger' ) }</option>
+																	<option value="Beginners">{ __( 'Beginners', 'solvex-ai-blogger' ) }</option>
+																	<option value="Intermediate">{ __( 'Intermediate', 'solvex-ai-blogger' ) }</option>
+																	<option value="Experts/Professionals">{ __( 'Experts / Professionals', 'solvex-ai-blogger' ) }</option>
+																</select>
+																<p className="mt-1 text-xs text-gray-500">
+																	{ __( 'Leave empty to use your global setting.', 'solvex-ai-blogger' ) }
+																</p>
+															</div>
+														</div>
+
 														<div className="flex items-center justify-between">
 															<label htmlFor="override-site-persona" className="flex items-center text-sm/6 font-medium text-gray-900">
 																{ __( 'Override Site Persona for this Campaign?', 'solvex-ai-blogger' ) }
@@ -860,13 +1198,73 @@ export default function ConfigureDrawer( props ) {
 
 								<div className="flex shrink-0 justify-between items-center px-4 py-4">
 									{ errorMessage && (
-										<div className="flex items-center px-2 py-1 rounded bg-red-50 border border-red-200">
+										<div className="flex items-center px-2 py-1 rounded bg-red-50 border border-red-200 max-w-[60%]">
 											<svg className="w-3 h-3 text-red-500 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
 												<path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
 											</svg>
-											<span className="text-xs text-red-700 font-medium">
-												{ errorMessage }
-											</span>
+											{ errorMessage.length > 80 ? (
+												<span className="text-xs text-red-700 font-medium">
+													{ __( 'An error occurred.', 'solvex-ai-blogger' ) }
+													{ ' ' }
+													<button
+														type="button"
+														onClick={ () => setErrorDialogOpen( true ) }
+														className="text-red-600 underline hover:text-red-800 bg-transparent border-none cursor-pointer text-xs font-medium p-0"
+													>
+														{ __( 'View Details', 'solvex-ai-blogger' ) }
+													</button>
+												</span>
+											) : (
+												<span className="text-xs text-red-700 font-medium">
+													{ errorMessage }
+												</span>
+											) }
+										</div>
+									) }
+
+									{ /* Error Details Dialog */ }
+									{ errorDialogOpen && (
+										<div className="fixed inset-0 z-[100000] flex items-center justify-center bg-black/50" onClick={ () => setErrorDialogOpen( false ) }>
+											<div className="bg-white rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[80vh] flex flex-col" onClick={ ( e ) => e.stopPropagation() }>
+												<div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+													<h3 className="text-sm font-semibold text-red-700 flex items-center gap-1.5">
+														<svg className="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+															<path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+														</svg>
+														{ __( 'Error Details', 'solvex-ai-blogger' ) }
+													</h3>
+													<button
+														type="button"
+														onClick={ () => setErrorDialogOpen( false ) }
+														className="text-gray-400 hover:text-gray-600 bg-transparent border-none cursor-pointer p-1"
+													>
+														<svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+															<path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+														</svg>
+													</button>
+												</div>
+												<div className="px-4 py-3 overflow-y-auto">
+													<pre className="text-xs text-gray-700 whitespace-pre-wrap break-words font-mono bg-gray-50 rounded p-3 m-0">{ errorMessage }</pre>
+												</div>
+												<div className="flex justify-end gap-2 px-4 py-3 border-t border-gray-200">
+													<button
+														type="button"
+														onClick={ () => {
+															navigator.clipboard.writeText( errorMessage );
+														} }
+														className="rounded-md bg-white px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 cursor-pointer"
+													>
+														{ __( '📋 Copy', 'solvex-ai-blogger' ) }
+													</button>
+													<button
+														type="button"
+														onClick={ () => setErrorDialogOpen( false ) }
+														className="rounded-md bg-brand px-3 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-brand-700 cursor-pointer border-none"
+													>
+														{ __( 'Close', 'solvex-ai-blogger' ) }
+													</button>
+												</div>
+											</div>
 										</div>
 									) }
 

@@ -187,6 +187,64 @@ class Metadata {
 					'default' => '',
 					'type'    => 'string',
 				],
+
+				// Phase 2: Campaign format and content modifiers.
+				'campaignFormat'          => [
+					'default' => 'standard',
+					'type'    => 'string',
+				],
+				'targetDemographic'       => [
+					'default' => 'General Public',
+					'type'    => 'string',
+				],
+				'contentTone'             => [
+					'default' => 'Professional',
+					'type'    => 'string',
+				],
+
+				// Phase 2: Series campaign state.
+				'seriesTotalParts'        => [
+					'default' => 5,
+					'type'    => 'number',
+				],
+				'seriesSyllabus'          => [
+					'default' => '[]',
+					'type'    => 'json',
+				],
+				'seriesCurrentIndex'      => [
+					'default' => 0,
+					'type'    => 'number',
+				],
+				'seriesHubPostId'         => [
+					'default' => 0,
+					'type'    => 'number',
+				],
+				'seriesPreviousPostId'    => [
+					'default' => 0,
+					'type'    => 'number',
+				],
+				'seriesTaxonomyTermId'    => [
+					'default' => 0,
+					'type'    => 'number',
+				],
+
+				// Phase 2: Listicle campaign.
+				'listicleItemCount'       => [
+					'default' => 10,
+					'type'    => 'number',
+				],
+
+				// Phase 2: Comparison campaign.
+				'comparisonEntities'      => [
+					'default' => '[]',
+					'type'    => 'json',
+				],
+
+				// Phase 2.1: Auto-generated blog topics for multi-post campaigns.
+				'campaignTopics'          => [
+					'default' => '[]',
+					'type'    => 'json',
+				],
 			]
 		);
 	}
@@ -365,6 +423,13 @@ class Metadata {
 			case 'array':
 				return is_array( $value ) ? wpsolvex_autoaiblogger_clean_data( $value ) : [];
 
+			case 'json':
+				if ( is_string( $value ) ) {
+					$decoded = json_decode( $value, true );
+					return is_array( $decoded ) ? $decoded : [];
+				}
+				return is_array( $value ) ? $value : [];
+
 			case 'html':
 				return wp_kses_post( $value );
 
@@ -405,6 +470,17 @@ class Metadata {
 
 			case 'array':
 				$output = ! empty( $value ) ? wpsolvex_autoaiblogger_clean_data( $value ) : '';
+				break;
+
+			case 'json':
+				if ( is_string( $value ) ) {
+					$decoded = json_decode( $value, true );
+					$output  = is_array( $decoded ) ? wp_json_encode( $decoded ) : '[]';
+				} elseif ( is_array( $value ) ) {
+					$output = wp_json_encode( $value );
+				} else {
+					$output = '[]';
+				}
 				break;
 
 			case 'html':

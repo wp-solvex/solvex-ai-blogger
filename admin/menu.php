@@ -251,6 +251,10 @@ class Menu {
 				'email_notification_enabled' => $email_notification_enabled,
 				'email_notification_value'   => $email_notification_value,
 
+				// Phase 2: Content generation preferences.
+				'contentTone'                => Helper::get_option( 'contentTone', 'Professional' ),
+				'targetDemographic'          => Helper::get_option( 'targetDemographic', 'General Public' ),
+
 				// Token and licensing information.
 				'token_total'                => $token_total,
 				'token_remaining'            => $token_remaining,
