@@ -64,6 +64,7 @@ class Ajax {
 		'wpsolvex_autoaiblogger_resume_campaign',
 		'wpsolvex_autoaiblogger_reschedule_campaign',
 		'wpsolvex_autoaiblogger_generate_campaign_topics',
+		'wpsolvex_autoaiblogger_get_all_campaigns_live',
 	];
 
 	/**
@@ -119,6 +120,7 @@ class Ajax {
 		add_action( 'wp_ajax_wpsolvex_autoaiblogger_get_campaign_logs', [ $this, 'add_security_headers' ], 1 );
 		add_action( 'wp_ajax_wpsolvex_autoaiblogger_pause_campaign', [ $this, 'add_security_headers' ], 1 );
 		add_action( 'wp_ajax_wpsolvex_autoaiblogger_resume_campaign', [ $this, 'add_security_headers' ], 1 );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_get_all_campaigns_live', [ $this, 'add_security_headers' ], 1 );
 	}
 
 	/**
@@ -2691,5 +2693,31 @@ class Ajax {
 		}
 
 		return $sample_logs;
+	}
+
+	/**
+	 * AJAX handler: return all campaigns for live polling.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function wpsolvex_autoaiblogger_get_all_campaigns_live(): void {
+		try {
+			if ( ! check_ajax_referer( 'wpsolvex_autoaiblogger_admin_nonce', 'security', false ) ) {
+				wp_send_json_error( [ 'message' => $this->get_error_msg( 'nonce' ) ] );
+				return;
+			}
+
+			if ( ! current_user_can( 'edit_posts' ) ) {
+				wp_send_json_error( [ 'message' => $this->get_error_msg( 'permission' ) ] );
+				return;
+			}
+
+			$campaigns = wpsolvex_autoaiblogger_get_all_campaigns();
+
+			wp_send_json_success( [ 'campaigns' => $campaigns ] );
+		} catch ( \Exception $e ) {
+			wp_send_json_error( [ 'message' => $this->get_error_msg( 'default' ) ] );
+		}
 	}
 }

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { Settings, Trash2, Info, FolderPlus, RotateCw, List, ChartNoAxesColumn, CalendarArrowUp, ScrollText, Search } from 'lucide-react';
 import { Tooltip } from '@wordpress/components';
@@ -60,6 +60,70 @@ export default function Campaigns() {
 			}, 300 );
 		}
 	}, [ campaigns ] );
+
+	// Live polling: refresh campaign list data every 30 seconds.
+	const pollingRef = useRef( null );
+
+	const fetchAllCampaignsLive = useCallback( () => {
+		const formData = new window.FormData();
+		formData.append( 'action', 'wpsolvex_autoaiblogger_get_all_campaigns_live' );
+		formData.append( 'security', wpsolvex_autoaiblogger_localized_data.admin_nonce );
+
+		apiFetch( {
+			url: wpsolvex_autoaiblogger_localized_data.ajax_url,
+			method: 'POST',
+			body: formData,
+		} )
+			.then( ( data ) => {
+				if ( data.success && data.data?.campaigns ) {
+					setCampaigns( ( prev ) => {
+						const next = data.data.campaigns;
+						// Only update if data actually changed to avoid unnecessary re-renders.
+						if ( JSON.stringify( prev ) !== JSON.stringify( next ) ) {
+							return next;
+						}
+						return prev;
+					} );
+				}
+			} )
+			.catch( () => {
+				// Silent fail — polling will retry on next interval.
+			} );
+	}, [] );
+
+	useEffect( () => {
+		// Poll every 30 seconds when page is visible.
+		const startPolling = () => {
+			if ( pollingRef.current ) {
+				clearInterval( pollingRef.current );
+			}
+			pollingRef.current = setInterval( fetchAllCampaignsLive, 30000 );
+		};
+
+		const stopPolling = () => {
+			if ( pollingRef.current ) {
+				clearInterval( pollingRef.current );
+				pollingRef.current = null;
+			}
+		};
+
+		const handleVisibility = () => {
+			if ( document.hidden ) {
+				stopPolling();
+			} else {
+				fetchAllCampaignsLive(); // Immediate refresh when tab becomes visible.
+				startPolling();
+			}
+		};
+
+		startPolling();
+		document.addEventListener( 'visibilitychange', handleVisibility );
+
+		return () => {
+			stopPolling();
+			document.removeEventListener( 'visibilitychange', handleVisibility );
+		};
+	}, [ fetchAllCampaignsLive ] );
 
 	// Sort campaigns based on selected criteria
 	const sortedCampaigns = useMemo( () => {
