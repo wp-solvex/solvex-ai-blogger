@@ -39,6 +39,10 @@ class Settings {
 					'default' => false,
 					'type'    => 'bool',
 				],
+				'tourCompleted'            => [
+					'default' => false,
+					'type'    => 'bool',
+				],
 				'onboardingTab'            => [
 					'default' => 'welcome',
 					'type'    => 'string',

@@ -194,7 +194,7 @@ class Ajax {
 
 			$sub_option_value = '';
 			if ( isset( $_POST['value'] ) ) {
-				$raw_value = sanitize_text_field( wp_unslash( $_POST['value'] ) );
+				$raw_value = wp_unslash( $_POST['value'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized below by sanitize_data().
 				if ( ! empty( $type_settings[ $sub_option_key ] ) ) {
 					$sub_option_value = Settings::sanitize_data( $raw_value, $type_settings[ $sub_option_key ] );
 				} else {

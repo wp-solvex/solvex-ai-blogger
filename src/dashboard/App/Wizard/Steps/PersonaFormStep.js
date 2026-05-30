@@ -236,6 +236,16 @@ const PersonaFormStep = memo( () => {
 
 		setFormData( ( prev ) => ( { ...prev, [ field ]: sanitizedValue } ) );
 
+		// Sync to Redux so FooterNavigationBar can validate
+		const actionMap = {
+			siteTitle: 'UPDATE_SITE_TITLE',
+			siteFor: 'UPDATE_SITE_FOR',
+			siteDescription: 'UPDATE_SITE_DESCRIPTION',
+		};
+		if ( actionMap[ field ] ) {
+			dispatch( { type: actionMap[ field ], payload: sanitizedValue } );
+		}
+
 		// Clear error when user starts typing and provide real-time validation
 		if ( errors[ field ] ) {
 			setErrors( ( prev ) => ( { ...prev, [ field ]: '' } ) );
@@ -251,7 +261,7 @@ const PersonaFormStep = memo( () => {
 		if ( field === 'siteDescription' && sanitizedValue.trim() && sanitizedValue.trim().length >= 10 && sanitizedValue.length <= 1000 ) {
 			setErrors( ( prev ) => ( { ...prev, siteDescription: '' } ) );
 		}
-	}, [ errors ] );
+	}, [ errors, dispatch ] );
 
 	// Enhanced form submission
 	const handleSubmit = useCallback( async ( e ) => {

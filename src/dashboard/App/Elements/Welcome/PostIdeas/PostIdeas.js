@@ -477,7 +477,7 @@ export default function PostIdeas() {
 	};
 
 	return (
-		<div className="px-4 sm:px-6 lg:px-8 pt-4 pb-8">
+		<div className="px-4 sm:px-6 lg:px-8 pt-4 pb-8" data-tour-target="post-ideas">
 			<div className="sm:flex sm:items-center sm:justify-between">
 				<div className="flex flex-col gap-2">
 					<h2 className="text-xl font-semibold text-gray-900 flex items-center gap-4 p-0 m-0">
