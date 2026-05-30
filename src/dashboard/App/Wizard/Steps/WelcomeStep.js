@@ -160,7 +160,7 @@ const WelcomeStep = memo( () => {
 					<h3 className="text-[15px] md:text-[17px] text-gray-700 mx-auto mb-5 leading-relaxed font-medium max-w-2xl">
 						{ __( 'Connect your site now to claim your', 'solvex-ai-blogger' ) }{ ' ' }
 						<strong className="uppercase bg-blue-50 px-1.5 py-0.5 rounded" style={ { color: 'rgb(235, 165, 37)' } }>{ __( '20,000 free monthly tokens', 'solvex-ai-blogger' ) }</strong>
-						{ '. ' }<br />{ __( 'Start free, no payment needed.', 'solvex-ai-blogger' ) }
+						{ '. ' }<br />{ __( 'No credit card required.', 'solvex-ai-blogger' ) }
 					</h3>
 
 					{ /* Enhanced CTA section */ }
