@@ -1,14 +1,13 @@
 import React, { useState, useRef, useCallback, memo } from 'react';
 import { __ } from '@wordpress/i18n';
-import { ArrowRight, Key, CheckCircle2, AlertCircle, Shield, Loader2 } from 'lucide-react';
+import { ArrowRight, Key, CheckCircle2, AlertCircle, Link2, Loader2, ExternalLink, Gift } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { updateApiData } from '@Utils/ApiData';
-import DynamicCard from '@Components/DynamicCard';
 import apiFetch from '@wordpress/api-fetch';
 
-// Enhanced license input component
-const LicenseInput = memo( ( { value, onChange, error, disabled, processing } ) => {
+// API Key input component
+const ApiKeyInput = memo( ( { value, onChange, error, disabled, processing } ) => {
 	const [ isFocused, setIsFocused ] = useState( false );
 
 	const handleFocus = useCallback( () => setIsFocused( true ), [] );
@@ -21,8 +20,7 @@ const LicenseInput = memo( ( { value, onChange, error, disabled, processing } ) 
 				className="flex items-center text-[13px] font-semibold text-gray-900 relative"
 			>
 				<Key className="w-3.5 h-3.5 text-gray-600 mr-1.5" aria-hidden="true" />
-				{ __( 'License Key', 'solvex-ai-blogger' ) }
-				<span className="text-red-500 ml-[2px]" aria-label={ __( 'Required', 'solvex-ai-blogger' ) }>*</span>
+				{ __( 'API Connection Key', 'solvex-ai-blogger' ) }
 			</label>
 
 			<div className="relative">
@@ -34,7 +32,8 @@ const LicenseInput = memo( ( { value, onChange, error, disabled, processing } ) 
 					onFocus={ handleFocus }
 					onBlur={ handleBlur }
 					disabled={ disabled }
-					placeholder={ __( 'Enter your license key here…', 'solvex-ai-blogger' ) }
+					autoComplete="off"
+					placeholder={ __( 'Paste your API connection key here…', 'solvex-ai-blogger' ) }
 					className={ `
 						w-full pl-3.5 pr-9 py-2.5 text-[13px] border rounded-lg transition-all duration-200
 						${ error
@@ -72,46 +71,7 @@ const LicenseInput = memo( ( { value, onChange, error, disabled, processing } ) 
 	);
 } );
 
-LicenseInput.displayName = 'LicenseInput';
-
-// Enhanced submit button
-const SubmitButton = memo( ( { onClick, disabled, loading, children } ) => {
-	const handleClick = useCallback( ( e ) => {
-		e.preventDefault();
-		if ( ! disabled && ! loading ) {
-			onClick();
-		}
-	}, [ onClick, disabled, loading ] );
-
-	return (
-		<button
-			type="submit"
-			onClick={ handleClick }
-			disabled={ disabled || loading }
-			className="
-				group inline-flex items-center gap-2.5 px-7 py-3.5
-				bg-gradient-to-r from-indigo-600 to-purple-600
-				text-white font-semibold rounded-xl shadow-lg text-[13px]
-				hover:from-indigo-700 hover:to-purple-700
-				focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
-				transform transition-all duration-200 hover:scale-105 hover:shadow-xl
-				disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
-			"
-			aria-label={ __( 'Activate license and continue', 'solvex-ai-blogger' ) }
-		>
-			{ loading ? (
-				<Loader2 className="w-4.5 h-4.5 animate-spin" aria-hidden="true" />
-			) : (
-				<span>{ children }</span>
-			) }
-			{ ! loading && (
-				<ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-1 transition-transform duration-200" aria-hidden="true" />
-			) }
-		</button>
-	);
-} );
-
-SubmitButton.displayName = 'LicenseSubmitButton';
+ApiKeyInput.displayName = 'ApiKeyInput';
 
 const LicenseStep = memo( () => {
 	const abortControllerRef = useRef( {} );
@@ -123,11 +83,10 @@ const LicenseStep = memo( () => {
 	const ajaxUrl = useSelector( ( state ) => state.ajaxUrl ) || '';
 	const licensingNonce = useSelector( ( state ) => state.licensingNonce );
 	const licenseStatusFromRedux = useSelector( ( state ) => state.licenseStatus );
-	const noLicenseKeyUrl = useSelector( ( state ) => state.noLicenseKeyUrl ) || '#';
+	const noLicenseKeyUrl = useSelector( ( state ) => state.noLicenseKeyUrl ) || 'https://wpaiblogger.com/register/';
 
 	// Component state
 	const [ license, setLicense ] = useState( () => {
-		// Ensure we always have a string value
 		const initialLicense = reduxLicense || '';
 		return typeof initialLicense === 'string' ? initialLicense : '';
 	} );
@@ -135,64 +94,46 @@ const LicenseStep = memo( () => {
 	const [ processing, setProcessing ] = useState( false );
 	const [ error, setError ] = useState( '' );
 
-	// Enhanced token fetching in background
+	// Token fetching in background
 	const fetchTokenDataInBackground = useCallback( async ( licenseKey ) => {
 		try {
-			console.log( 'Fetching token data in background for license:', licenseKey.substring( 0, 8 ) + '...' );
-
 			const tokenResponse = await fetch( `https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/get-token-data?license=${ licenseKey }`, {
 				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-				},
+				headers: { 'Content-Type': 'application/json' },
 			} );
 
 			if ( tokenResponse.ok ) {
 				const tokenData = await tokenResponse.json();
 
 				if ( tokenData && tokenData.success && tokenData.data ) {
-					// Update Redux store with token data
-					dispatch( {
-						type: 'UPDATE_TOKEN_TOTAL',
-						payload: tokenData.data.total,
-					} );
-					dispatch( {
-						type: 'UPDATE_TOKEN_REMAINING',
-						payload: tokenData.data.remaining,
-					} );
-
-					// Update API data in database
+					dispatch( { type: 'UPDATE_TOKEN_TOTAL', payload: tokenData.data.total } );
+					dispatch( { type: 'UPDATE_TOKEN_REMAINING', payload: tokenData.data.remaining } );
 					await updateApiData( 'tokenTotal', tokenData.data.total, dispatch, abortControllerRef );
 					await updateApiData( 'tokenRemaining', tokenData.data.remaining, dispatch, abortControllerRef );
 
-					console.log( 'Token data fetched and updated:', tokenData.data );
-
-					// Show success notification
 					dispatch( {
 						type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
 						payload: {
-							message: __( 'License activated and token data updated successfully!', 'solvex-ai-blogger' ),
+							message: __( 'Connected successfully! Token data updated.', 'solvex-ai-blogger' ),
 							type: 'success',
 							duration: 4000,
 						},
 					} );
 				} else {
-					console.warn( 'Invalid token data response:', tokenData );
 					dispatch( {
 						type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
 						payload: {
-							message: __( 'License activated but failed to fetch token data', 'solvex-ai-blogger' ),
+							message: __( 'Connected but failed to fetch token data', 'solvex-ai-blogger' ),
 							type: 'warning',
 							duration: 4000,
 						},
 					} );
 				}
 			} else {
-				console.warn( 'Failed to fetch token data, status:', tokenResponse.status );
 				dispatch( {
 					type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
 					payload: {
-						message: __( 'License activated but token fetch failed', 'solvex-ai-blogger' ),
+						message: __( 'Connected but token fetch failed', 'solvex-ai-blogger' ),
 						type: 'warning',
 						duration: 4000,
 					},
@@ -203,7 +144,7 @@ const LicenseStep = memo( () => {
 			dispatch( {
 				type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
 				payload: {
-					message: __( 'License activated but token fetch failed', 'solvex-ai-blogger' ),
+					message: __( 'Connected but token fetch failed', 'solvex-ai-blogger' ),
 					type: 'warning',
 					duration: 4000,
 				},
@@ -211,32 +152,20 @@ const LicenseStep = memo( () => {
 		}
 	}, [ dispatch ] );
 
-	// Enhanced license activation
+	// License activation
 	const activateLicense = useCallback( async () => {
-		// Ensure license is a string and not empty
 		const licenseValue = typeof license === 'string' ? license.trim() : '';
 		if ( ! licenseValue || processing ) {
 			return false;
 		}
 
-		// Validate nonce is available
 		if ( ! licensingNonce ) {
-			console.error( 'LicenseStep: No licensing nonce available', { licensingNonce } );
 			setError( __( 'Security verification failed. Please refresh the page and try again.', 'solvex-ai-blogger' ) );
 			return false;
 		}
 
 		setProcessing( true );
 		setError( '' );
-
-		// Debug logging
-		if ( process.env.NODE_ENV === 'development' ) {
-			console.log( 'LicenseStep: Activating license', {
-				licenseValue: licenseValue.substring( 0, 8 ) + '...',
-				licensingNonce: licensingNonce.substring( 0, 8 ) + '...',
-				ajaxUrl,
-			} );
-		}
 
 		try {
 			const formData = new FormData();
@@ -252,37 +181,25 @@ const LicenseStep = memo( () => {
 			} );
 
 			if ( response.success ) {
-				// Update Redux state
-				dispatch( {
-					type: 'UPDATE_LICENSE_STATUS',
-					payload: 'licensed',
-				} );
+				dispatch( { type: 'UPDATE_LICENSE_STATUS', payload: 'licensed' } );
 				dispatch( { type: 'UPDATE_LICENSE', payload: licenseValue } );
-
 				setLicenseStatus( 'licensed' );
-
-				// Update API data
 				await updateApiData( 'license', licenseValue, dispatch, abortControllerRef );
-
-				// Fetch token data in background after successful activation
 				fetchTokenDataInBackground( licenseValue );
-
 				return true;
 			}
-			// Handle specific error types
-			const errorMessage = response.data?.message || response.message || '';
-			console.error( 'License activation failed:', response );
 
+			const errorMessage = response.data?.message || response.message || '';
 			if ( errorMessage.includes( 'nonce' ) || errorMessage.includes( 'security' ) ) {
 				setError( __( 'Security verification failed. Please refresh the page and try again.', 'solvex-ai-blogger' ) );
 			} else if ( errorMessage.includes( 'license' ) || errorMessage.includes( 'key' ) ) {
-				setError( __( 'Invalid license key. Please check your license key and try again.', 'solvex-ai-blogger' ) );
+				setError( __( 'Invalid API key. Please check your key and try again.', 'solvex-ai-blogger' ) );
 			} else {
-				setError( errorMessage || __( 'License activation failed. Please check your license key.', 'solvex-ai-blogger' ) );
+				setError( errorMessage || __( 'Connection failed. Please check your API key.', 'solvex-ai-blogger' ) );
 			}
 			return false;
 		} catch ( failureError ) {
-			console.error( 'License activation error:', failureError );
+			console.error( 'Connection error:', failureError );
 			setError( __( 'Connection failed. Please check your internet connection and try again.', 'solvex-ai-blogger' ) );
 			return false;
 		} finally {
@@ -290,44 +207,31 @@ const LicenseStep = memo( () => {
 		}
 	}, [ license, processing, licensingNonce, dispatch, ajaxUrl ] );
 
-	// Enhanced form submission
+	// Form submission
 	const handleSubmit = useCallback( async () => {
-		// Ensure license is a string and not empty
 		const licenseValue = typeof license === 'string' ? license.trim() : '';
 		if ( ! licenseValue ) {
-			setError( __( 'License key is required.', 'solvex-ai-blogger' ) );
+			setError( __( 'API connection key is required.', 'solvex-ai-blogger' ) );
 			return;
 		}
 
 		const success = await activateLicense();
 		if ( success ) {
-			// Scroll to top before navigating
 			window.scrollTo( { top: 0, behavior: 'smooth' } );
-
-			// Small delay for better UX
 			setTimeout( () => {
-				navigate( `?step=optin` );
+				navigate( `?step=persona-form` );
 			}, 1000 );
 		}
 	}, [ license, activateLicense, navigate ] );
 
-	// Handle license input change
+	// Handle input change
 	const handleLicenseChange = useCallback( ( value ) => {
-		// Ensure we always set a string value
 		const stringValue = typeof value === 'string' ? value : '';
 		setLicense( stringValue );
 		if ( error ) {
 			setError( '' );
-		} // Clear error when user types
-	}, [ error ] );
-
-	// Button text logic
-	const getButtonText = () => {
-		if ( processing ) {
-			return licenseStatus === 'licensed' ? __( 'Proceeding…', 'solvex-ai-blogger' ) : __( 'Activating…', 'solvex-ai-blogger' );
 		}
-		return __( 'Activate & Continue', 'solvex-ai-blogger' );
-	};
+	}, [ error ] );
 
 	return (
 		<main
@@ -335,84 +239,126 @@ const LicenseStep = memo( () => {
 			role="main"
 			aria-labelledby="license-heading"
 		>
-			<div className="w-full max-w-2xl">
-				<div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-					{ /* Header */ }
-					<div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-5 text-center">
-						<div className="mb-2.5">
-							<span className="inline-flex items-center px-3.5 py-1.5 bg-white bg-opacity-20 text-white text-[13px] font-medium rounded-full tracking-wide uppercase">
-								<Shield className="w-3.5 h-3.5 mr-1.5" aria-hidden="true" />
-								{ __( 'Step 3 of 5', 'solvex-ai-blogger' ) }
-							</span>
-						</div>
-						<h1 id="license-heading" className="text-2xl md:text-[27px] font-bold text-white mb-3.5">
-							{ __( 'Activate Your License', 'solvex-ai-blogger' ) }
-						</h1>
-						<p className="text-indigo-100 text-base mt-3.5">
-							{ __( 'Connect your site to unlock AI-powered content generation with your license key.', 'solvex-ai-blogger' ) }
-						</p>
+			<div className="w-full max-w-4xl">
+				{ /* Header */ }
+				<div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-5 text-center rounded-t-2xl">
+					<div className="mb-2.5">
+						<span className="inline-flex items-center px-3.5 py-1.5 bg-white bg-opacity-20 text-white text-[13px] font-medium rounded-full tracking-wide uppercase">
+							<Link2 className="w-3.5 h-3.5 mr-1.5" aria-hidden="true" />
+							{ __( 'Step 2 of 3', 'solvex-ai-blogger' ) }
+						</span>
 					</div>
+					<h1 id="license-heading" className="text-2xl md:text-[27px] font-bold text-white mb-3.5">
+						{ __( 'Connect Your Account', 'solvex-ai-blogger' ) }
+					</h1>
+					<p className="text-indigo-100 text-base mt-3.5">
+						{ __( 'Link your site to access your free tokens and AI models.', 'solvex-ai-blogger' ) }
+					</p>
+				</div>
 
-					{ /* Form */ }
+				{ /* Two-column layout */ }
+				<div className="bg-white rounded-b-2xl shadow-xl border border-gray-200 border-t-0 overflow-hidden">
 					<div className="p-5 md:p-7">
-						<form className="space-y-5" onSubmit={ ( e ) => {
-							e.preventDefault(); handleSubmit();
-						} }>
-							<LicenseInput
-								value={ license }
-								onChange={ handleLicenseChange }
-								error={ error }
-								disabled={ processing }
-								processing={ processing }
-							/>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-							<DynamicCard
-								heading={ __( 'No License Key?', 'solvex-ai-blogger' ) }
-								subHeading={ __( 'Get started with free credits today..', 'solvex-ai-blogger' ) }
-								linkText={ __( 'Claim Free Credits', 'solvex-ai-blogger' ) }
-								linkUrl={ noLicenseKeyUrl }
-								colorScheme="brand"
-								size="medium"
-								ariaLabel={ __( 'Get free credits - opens in new tab', 'solvex-ai-blogger' ) }
-							/>
-
-							{ /* Success message */ }
-							{ licenseStatus === 'licensed' && ! error && (
-								<div className="p-3.5 bg-green-50 border border-green-200 rounded-lg">
-									<div className="flex items-center gap-1.5">
-										<CheckCircle2 className="w-4.5 h-4.5 text-green-600" aria-hidden="true" />
-										<p className="text-green-800 font-medium text-[13px]">
-											{ __( 'License activated successfully!', 'solvex-ai-blogger' ) }
-										</p>
-									</div>
+							{ /* Left Column — New Users (Primary Path) */ }
+							<div className="p-6 bg-gradient-to-br from-brand-50 to-indigo-50 border-2 border-brand-200 rounded-xl flex flex-col items-center text-center">
+								<div className="p-3 bg-brand-100 rounded-full mb-4">
+									<Gift className="w-8 h-8 text-brand-600" aria-hidden="true" />
 								</div>
-							) }
-
-							{ /* Submit button */ }
-							<div className="flex justify-center pt-5 m-0">
-								<SubmitButton
-									onClick={ handleSubmit }
-									disabled={ ! ( typeof license === 'string' && license.trim() ) }
-									loading={ processing }
-								>
-									{ getButtonText() }
-								</SubmitButton>
-							</div>
-						</form>
-
-						{ /* Additional info */ }
-						<div className="mt-7 text-center">
-							<p className="text-[13px] text-gray-600 leading-relaxed">
-								{ __( 'Your license key connects your site to our AI services and allocates content generation tokens. ', 'solvex-ai-blogger' ) }
+								<h2 className="text-lg font-bold text-gray-900 mb-2">
+									{ __( "Don't have a key?", 'solvex-ai-blogger' ) }
+								</h2>
+								<p className="text-[13px] text-gray-600 mb-6 mt-0 leading-relaxed">
+									{ __( 'Create a free account in 30 seconds to get your API connection key and 20,000 monthly free tokens.', 'solvex-ai-blogger' ) }
+								</p>
 								<a
 									href={ noLicenseKeyUrl }
 									target="_blank"
 									rel="noopener noreferrer"
-									className="text-indigo-600 hover:text-indigo-700 underline"
+									className="
+										group w-full inline-flex items-center justify-center gap-2.5 px-7 py-3
+										bg-gradient-to-r from-indigo-600 to-purple-600
+										!text-white font-semibold rounded-xl shadow-lg text-[13px]
+										hover:from-indigo-700 hover:to-purple-700 hover:!text-white
+										focus:outline-none focus:ring-0
+										transform transition-all duration-200 hover:scale-105 hover:shadow-xl
+										no-underline my-[10px]
+									"
+									style={ { textDecoration: 'none', color: 'white', borderRadius: '0.75rem' } }
+									aria-label={ __( 'Get free API key - opens in new tab', 'solvex-ai-blogger' ) }
 								>
-									{ __( 'Learn more about licensing', 'solvex-ai-blogger' ) }
+									<span>{ __( 'Get Free API Key', 'solvex-ai-blogger' ) }</span>
+									<ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" aria-hidden="true" />
 								</a>
-							</p>
+								<p className="text-[11px] text-gray-500 mt-3">
+									{ __( 'Start free, no payment needed • Free forever', 'solvex-ai-blogger' ) }
+								</p>
+							</div>
+
+							{ /* Right Column — Existing Users */ }
+							<div className="p-6 bg-gray-50 border border-gray-200 rounded-xl flex flex-col">
+								<div className="flex items-center gap-2 mb-4">
+									<Key className="w-5 h-5 text-gray-600" aria-hidden="true" />
+									<h2 className="text-lg font-bold text-gray-900">
+										{ __( 'Already have a key?', 'solvex-ai-blogger' ) }
+									</h2>
+								</div>
+								<p className="text-[13px] text-gray-600 mb-5">
+									{ __( 'Paste your API connection key below to connect your site.', 'solvex-ai-blogger' ) }
+								</p>
+
+								<form className="space-y-4 flex-1 flex flex-col" onSubmit={ ( e ) => {
+									e.preventDefault(); handleSubmit();
+								} }>
+									<ApiKeyInput
+										value={ license }
+										onChange={ handleLicenseChange }
+										error={ error }
+										disabled={ processing }
+										processing={ processing }
+									/>
+
+									{ /* Success message */ }
+									{ licenseStatus === 'licensed' && ! error && (
+										<div className="p-3.5 bg-green-50 border border-green-200 rounded-lg">
+											<div className="flex items-center gap-1.5">
+												<CheckCircle2 className="w-4.5 h-4.5 text-green-600" aria-hidden="true" />
+												<p className="text-green-800 font-medium text-[13px]">
+													{ __( 'Connected successfully!', 'solvex-ai-blogger' ) }
+												</p>
+											</div>
+										</div>
+									) }
+
+									<div className="mt-auto pt-2">
+										<button
+											type="submit"
+											onClick={ ( e ) => { e.preventDefault(); handleSubmit(); } }
+											disabled={ ! ( typeof license === 'string' && license.trim() ) || processing }
+											className="
+												group w-full inline-flex items-center justify-center gap-2.5 px-7 py-3
+												bg-gradient-to-r from-indigo-600 to-purple-600
+												text-white font-semibold rounded-xl shadow-lg text-[13px]
+												hover:from-indigo-700 hover:to-purple-700
+												focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+												transform transition-all duration-200 hover:scale-105 hover:shadow-xl
+												disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
+											"
+											aria-label={ __( 'Connect your site', 'solvex-ai-blogger' ) }
+										>
+											{ processing ? (
+												<Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+											) : (
+												<>
+													<span>{ processing ? __( 'Connecting…', 'solvex-ai-blogger' ) : __( 'Connect Site', 'solvex-ai-blogger' ) }</span>
+													<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" aria-hidden="true" />
+												</>
+											) }
+										</button>
+									</div>
+								</form>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -420,9 +366,9 @@ const LicenseStep = memo( () => {
 
 			{ /* Screen reader announcements */ }
 			<div className="sr-only" aria-live="polite" aria-atomic="true">
-				{ processing && __( 'Activating your license…', 'solvex-ai-blogger' ) }
-				{ licenseStatus === 'licensed' && __( 'License activated successfully. Proceeding to next step.', 'solvex-ai-blogger' ) }
-				{ error && __( 'License activation failed:', 'solvex-ai-blogger' ) + ` ${ error }` }
+				{ processing && __( 'Connecting your site…', 'solvex-ai-blogger' ) }
+				{ licenseStatus === 'licensed' && __( 'Site connected successfully. Proceeding to next step.', 'solvex-ai-blogger' ) }
+				{ error && __( 'Connection failed:', 'solvex-ai-blogger' ) + ` ${ error }` }
 			</div>
 		</main>
 	);

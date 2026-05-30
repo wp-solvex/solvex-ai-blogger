@@ -1,7 +1,7 @@
 import React, { useRef, useCallback, useMemo, memo } from 'react';
 import { __ } from '@wordpress/i18n';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { X, Settings, User, CreditCard, Mail, CheckCircle2 } from 'lucide-react';
+import { X, Settings, User, Link2, CheckCircle2 } from 'lucide-react';
 import BrandIcon from '@AppImages/brand-logo.svg';
 import { updateApiData } from '@Utils/ApiData';
 import { useDispatch } from 'react-redux';
@@ -11,10 +11,8 @@ const StepIndicator = memo( ( { menu, isActive, isCompleted, onClick } ) => {
 	const getStepIcon = ( stepId ) => {
 		const iconMap = {
 			welcome: Settings,
+			license: Link2,
 			'persona-form': User,
-			license: CreditCard,
-			optin: Mail,
-			ready: CheckCircle2,
 		};
 		return iconMap[ stepId ] || Settings;
 	};
@@ -126,20 +124,12 @@ const NavigationBar = memo( () => {
 			id: 'welcome',
 		},
 		{
-			name: __( 'Site Info', 'solvex-ai-blogger' ),
-			id: 'persona-form',
-		},
-		{
-			name: __( 'License', 'solvex-ai-blogger' ),
+			name: __( 'Connect', 'solvex-ai-blogger' ),
 			id: 'license',
 		},
 		{
-			name: __( 'Subscribe', 'solvex-ai-blogger' ),
-			id: 'optin',
-		},
-		{
-			name: __( 'Done', 'solvex-ai-blogger' ),
-			id: 'ready',
+			name: __( 'Site Info', 'solvex-ai-blogger' ),
+			id: 'persona-form',
 		},
 	], [] );
 
@@ -177,10 +167,10 @@ const NavigationBar = memo( () => {
 			role="banner"
 			aria-label={ __( 'Setup wizard navigation', 'solvex-ai-blogger' ) }
 		>
-			<div className="px-4 sm:px-6 lg:px-8">
-				<div className="flex h-16 justify-between items-center">
+			<div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div className="flex h-16 items-center">
 					{ /* Brand section */ }
-					<div className="flex items-center gap-3">
+					<div className="flex-1 flex items-center gap-3">
 						<div className="flex-shrink-0 flex">
 							<img
 								className="h-8 w-auto"
@@ -220,7 +210,7 @@ const NavigationBar = memo( () => {
 					</div>
 
 					{ /* Exit button */ }
-					<div className="flex items-center">
+					<div className="flex-1 flex items-center justify-end">
 						<ExitButton onClick={ handleExit } />
 					</div>
 				</div>

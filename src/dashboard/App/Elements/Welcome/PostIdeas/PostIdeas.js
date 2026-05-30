@@ -266,8 +266,8 @@ export default function PostIdeas() {
 		}
 
 		if ( error === 'License key is not available. Please check your license configuration.' ) {
-			const title = __( 'License key is missing. Please activate your license to use this feature.', 'solvex-ai-blogger' );
-			const buttonText = __( 'Go to License Settings', 'solvex-ai-blogger' );
+			const title = __( 'Connect your free account to use this feature.', 'solvex-ai-blogger' );
+			const buttonText = __( 'Connect Account', 'solvex-ai-blogger' );
 
 			return (
 				<div className="p-4 text-red-500 flex flex-col items-center">

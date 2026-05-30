@@ -4,8 +4,6 @@ import { lazy, Suspense } from 'react';
 const WelcomeStep = lazy( () => import( './WelcomeStep' ) );
 const PersonaFormStep = lazy( () => import( './PersonaFormStep' ) );
 const LicenseStep = lazy( () => import( './LicenseStep' ) );
-const OptinStep = lazy( () => import( './OptinStep' ) );
-const ReadyStep = lazy( () => import( './ReadyStep' ) );
 
 // Enhanced loading component for step transitions
 const StepLoadingFallback = () => (
@@ -28,14 +26,10 @@ const withSuspense = ( Component ) => ( props ) => (
 const WrappedWelcomeStep = withSuspense( WelcomeStep );
 const WrappedPersonaFormStep = withSuspense( PersonaFormStep );
 const WrappedLicenseStep = withSuspense( LicenseStep );
-const WrappedOptinStep = withSuspense( OptinStep );
-const WrappedReadyStep = withSuspense( ReadyStep );
 
 // Export wrapped components
 export {
 	WrappedWelcomeStep as WelcomeStep,
 	WrappedPersonaFormStep as PersonaFormStep,
 	WrappedLicenseStep as LicenseStep,
-	WrappedOptinStep as OptinStep,
-	WrappedReadyStep as ReadyStep,
 };

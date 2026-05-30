@@ -14,7 +14,7 @@ import { __ } from '@wordpress/i18n';
 const RouteError = ( { type = 'not-found', message } ) => {
 	const errorMessages = {
 		'not-found': __( 'Page not found. Please check the URL and try again.', 'solvex-ai-blogger' ),
-		'access-denied': __( 'Access denied. This feature requires a valid license.', 'solvex-ai-blogger' ),
+		'access-denied': __( 'Access denied. This feature requires a connected account.', 'solvex-ai-blogger' ),
 		'invalid-page': __( 'Invalid page parameter. Please navigate from the main menu.', 'solvex-ai-blogger' ),
 		generic: message || __( 'Something went wrong. Please try again.', 'solvex-ai-blogger' ),
 	};
