@@ -121,15 +121,17 @@ const LicenseForm = memo( ( {
 			</div>
 
 			{ ! activated &&
-				<DynamicCard
-					heading={ __( 'No API Key?', 'solvex-ai-blogger' ) }
-					subHeading={ __( 'Get started with free credits today.', 'solvex-ai-blogger' ) }
-					linkText={ __( 'Get Free Credits', 'solvex-ai-blogger' ) }
-					linkUrl={ noLicenseKeyUrl }
-					colorScheme="brand"
-					size="medium"
-					ariaLabel={ __( 'Get free credits - opens in new tab', 'solvex-ai-blogger' ) }
-				/>
+				<div data-tour-target="no-api-key">
+					<DynamicCard
+						heading={ __( 'No API Key?', 'solvex-ai-blogger' ) }
+						subHeading={ __( 'Get started with free credits today.', 'solvex-ai-blogger' ) }
+						linkText={ __( 'Get Free Credits', 'solvex-ai-blogger' ) }
+						linkUrl={ noLicenseKeyUrl }
+						colorScheme="brand"
+						size="medium"
+						ariaLabel={ __( 'Get free credits - opens in new tab', 'solvex-ai-blogger' ) }
+					/>
+				</div>
 			}
 
 			{ /* Token loading indicator */ }

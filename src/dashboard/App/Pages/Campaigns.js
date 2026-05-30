@@ -361,6 +361,7 @@ export default function Campaigns() {
 					<button
 						type="button"
 						className="rounded-md bg-brand-500 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-brand-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 border-none cursor-pointer m-2 flex gap-x-2 items-center"
+						data-tour-target="add-campaign"
 						onClick={ ( e ) => {
 							e.preventDefault();
 							setConfigureData( defaultMetaDefaults );
@@ -440,6 +441,7 @@ export default function Campaigns() {
 							type="button"
 							className="flex items-center justify-center rounded-md bg-brand-500 px-3 text-sm font-semibold text-white shadow-sm hover:bg-brand-600 focus:ring-2 focus:ring-inset focus:ring-brand-600 border-none cursor-pointer outline-none transition-all duration-200"
 							style={ { height: '38px' } }
+							data-tour-target="add-campaign"
 							onClick={ ( e ) => {
 								e.preventDefault();
 								setConfigureData( defaultMetaDefaults );
