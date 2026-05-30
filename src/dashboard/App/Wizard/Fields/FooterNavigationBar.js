@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Loader2, Check } from 'lucide-react';
 import { updateApiData } from '@Utils/ApiData';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Enhanced progress indicator component
 const ProgressIndicator = memo( ( { currentStep, maxSteps } ) => {
@@ -101,6 +101,11 @@ const FooterNavigationBar = memo( ( props ) => {
 
 	const { previousStep, nextStep, currentStep, maxSteps } = props;
 
+	// Redux state for persona form validation
+	const siteTitle = useSelector( ( state ) => state?.siteTitle || '' );
+	const siteFor = useSelector( ( state ) => state?.siteFor || '' );
+	const siteDescription = useSelector( ( state ) => state?.siteDescription || '' );
+
 	// Enhanced URL parameter handling
 	const query = useMemo( () => new URLSearchParams( location.search ), [ location.search ] );
 	const currentActiveStep = useMemo( () => query.get( 'step' ), [ query ] );
@@ -166,6 +171,24 @@ const FooterNavigationBar = memo( ( props ) => {
 	[ previousStep, isNavigating, isCompleting ]
 	);
 
+	// Check if persona form fields are valid (for finish button on persona-form step)
+	const isPersonaFormValid = useMemo( () => {
+		const trimmedTitle = siteTitle?.trim() || '';
+		const trimmedFor = siteFor?.trim() || '';
+		const trimmedDescription = siteDescription?.trim() || '';
+		return trimmedTitle.length >= 3 && trimmedTitle.length <= 100
+			&& trimmedFor.length >= 3 && trimmedFor.length <= 200
+			&& trimmedDescription.length >= 10 && trimmedDescription.length <= 1000;
+	}, [ siteTitle, siteFor, siteDescription ] );
+
+	// Disable finish button if on persona-form step and form is not valid
+	const isNextDisabled = useMemo( () => {
+		if ( ! nextStep && currentActiveStep === 'persona-form' ) {
+			return ! isPersonaFormValid;
+		}
+		return false;
+	}, [ nextStep, currentActiveStep, isPersonaFormValid ] );
+
 	// Determine button variants and states
 	const nextButtonVariant = useMemo( () => {
 		return 'primary';
@@ -214,6 +237,7 @@ const FooterNavigationBar = memo( ( props ) => {
 					<NavigationButton
 						onClick={ handleNextStep }
 						variant={ nextButtonVariant }
+						disabled={ isNextDisabled }
 						loading={ isNavigating || isCompleting }
 						icon={ ! nextStep && currentActiveStep === 'persona-form' ? Check : ChevronRight }
 						iconPlacement="right"
