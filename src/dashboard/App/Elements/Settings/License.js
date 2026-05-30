@@ -32,8 +32,8 @@ const LicenseForm = memo( ( {
 		<div className="space-y-4">
 			<SettingLabel
 				forId="license-key"
-				title={ __( 'License Key', 'solvex-ai-blogger' ) }
-				description={ ! activated ? __( 'Enter your license key to unlock premium features', 'solvex-ai-blogger' ) : undefined }
+				title={ __( 'API Key', 'solvex-ai-blogger' ) }
+				description={ ! activated ? __( 'Enter your API key to connect your site', 'solvex-ai-blogger' ) : undefined }
 			/>
 
 			<div className="flex gap-3">
@@ -53,7 +53,7 @@ const LicenseForm = memo( ( {
 						placeholder={
 							activated
 								? __( 'License is active', 'solvex-ai-blogger' )
-								: __( 'Enter your license key…', 'solvex-ai-blogger' )
+								: __( 'Enter your API key…', 'solvex-ai-blogger' )
 						}
 						className={ `
 							block w-full !pl-12 !pr-12 py-2.5 text-sm
@@ -122,7 +122,7 @@ const LicenseForm = memo( ( {
 
 			{ ! activated &&
 				<DynamicCard
-					heading={ __( 'No License Key?', 'solvex-ai-blogger' ) }
+					heading={ __( 'No API Key?', 'solvex-ai-blogger' ) }
 					subHeading={ __( 'Get started with free credits today.', 'solvex-ai-blogger' ) }
 					linkText={ __( 'Get Free Credits', 'solvex-ai-blogger' ) }
 					linkUrl={ noLicenseKeyUrl }

@@ -310,29 +310,29 @@ const CampaignCard = memo( ( { campaign } ) => {
 
 CampaignCard.displayName = 'CampaignInsightCard';
 
-// Enhanced license required component
+// Enhanced offline mode component
 const LicenseRequiredState = memo( ( { onNavigateToLicense } ) => (
-	<div className="flex flex-col items-center justify-center gap-6 border-2 border-dashed border-orange-300 rounded-xl p-8 max-w-lg mx-auto mt-12 bg-orange-50 hover:bg-orange-100 transition-colors">
-		<div className="p-4 bg-orange-100 rounded-full">
-			<Lock className="w-8 h-8 text-orange-600" aria-hidden="true" />
+	<div className="flex flex-col items-center justify-center gap-6 border-2 border-dashed border-blue-300 rounded-xl p-8 max-w-lg mx-auto mt-12 bg-blue-50 hover:bg-blue-100 transition-colors">
+		<div className="p-4 bg-blue-100 rounded-full">
+			<Lock className="w-8 h-8 text-blue-600" aria-hidden="true" />
 		</div>
 
 		<div className="text-center space-y-2">
-			<h3 className="text-xl font-semibold text-orange-900">
-				{ __( 'License Required', 'solvex-ai-blogger' ) }
+			<h3 className="text-xl font-semibold text-blue-900">
+				{ __( 'Offline Mode', 'solvex-ai-blogger' ) }
 			</h3>
-			<p className="text-orange-700 max-w-md">
-				{ __( 'Activate your license to access campaign insights and performance analytics.', 'solvex-ai-blogger' ) }
+			<p className="text-blue-700 max-w-md">
+				{ __( 'You are currently in Offline Mode. Connect a free account to unlock 20,000 monthly tokens and start generating posts.', 'solvex-ai-blogger' ) }
 			</p>
 		</div>
 
 		<button
 			type="button"
 			onClick={ onNavigateToLicense }
-			className="inline-flex items-center gap-2 rounded-lg bg-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105"
-			aria-label={ __( 'Navigate to license settings', 'solvex-ai-blogger' ) }
+			className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105"
+			aria-label={ __( 'Navigate to account settings', 'solvex-ai-blogger' ) }
 		>
-			{ __( 'Activate License', 'solvex-ai-blogger' ) }
+			{ __( 'Connect Account', 'solvex-ai-blogger' ) }
 			<ExternalLink className="w-4 h-4" aria-hidden="true" />
 		</button>
 	</div>

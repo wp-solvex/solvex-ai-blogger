@@ -138,8 +138,8 @@ const FooterNavigationBar = memo( ( props ) => {
 			return;
 		}
 
-		// Handle completion step
-		if ( ! nextStep && currentActiveStep === 'ready' ) {
+		// Handle completion step (persona-form is the final step)
+		if ( ! nextStep && currentActiveStep === 'persona-form' ) {
 			setIsCompleting( true );
 			try {
 				dispatch( { type: 'UPDATE_USER_ONBOARDED', payload: true } );
@@ -154,14 +154,10 @@ const FooterNavigationBar = memo( ( props ) => {
 
 	// Enhanced button text logic
 	const getNextButtonText = useCallback( () => {
-		const stepsToSkip = [ 'ready', 'optin' ];
-
-		if ( nextStep && ! stepsToSkip.includes( currentActiveStep ) ) {
-			return __( 'Next', 'solvex-ai-blogger' );
-		} else if ( nextStep || currentActiveStep === 'optin' ) {
-			return __( 'Skip', 'solvex-ai-blogger' );
+		if ( ! nextStep && currentActiveStep === 'persona-form' ) {
+			return __( 'Finish Setup', 'solvex-ai-blogger' );
 		}
-		return __( 'Finish Setup', 'solvex-ai-blogger' );
+		return __( 'Next', 'solvex-ai-blogger' );
 	}, [ nextStep, currentActiveStep ] );
 
 	// Determine if previous button should be disabled
@@ -172,14 +168,8 @@ const FooterNavigationBar = memo( ( props ) => {
 
 	// Determine button variants and states
 	const nextButtonVariant = useMemo( () => {
-		if ( ! nextStep && currentActiveStep === 'ready' ) {
-			return 'primary';
-		}
-		if ( currentActiveStep === 'optin' ) {
-			return 'secondary';
-		}
 		return 'primary';
-	}, [ nextStep, currentActiveStep ] );
+	}, [] );
 
 	return (
 		<footer
@@ -225,7 +215,7 @@ const FooterNavigationBar = memo( ( props ) => {
 						onClick={ handleNextStep }
 						variant={ nextButtonVariant }
 						loading={ isNavigating || isCompleting }
-						icon={ ! nextStep && currentActiveStep === 'ready' ? Check : ChevronRight }
+						icon={ ! nextStep && currentActiveStep === 'persona-form' ? Check : ChevronRight }
 						iconPlacement="right"
 						ariaLabel={ __( 'Continue to next step', 'solvex-ai-blogger' ) }
 					>

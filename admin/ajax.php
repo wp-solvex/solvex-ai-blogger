@@ -1336,7 +1336,16 @@ class Ajax {
 			);
 
 			if ( is_wp_error( $response ) ) {
-				wp_send_json_error( [ 'message' => __( 'Failed to connect to the server. Please try again.', 'solvex-ai-blogger' ) ] );
+				$error_message = $response->get_error_message();
+				$error_code    = $response->get_error_code();
+				wp_send_json_error( [
+					'message' => sprintf(
+						/* translators: %s: error details */
+						__( 'Failed to connect to the server: %s (Code: %s)', 'solvex-ai-blogger' ),
+						$error_message,
+						$error_code
+					),
+				] );
 				return;
 			}
 

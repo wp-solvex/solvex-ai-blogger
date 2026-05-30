@@ -1,11 +1,11 @@
-import React, { useCallback, memo } from 'react';
+import React, { useCallback, memo, Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { __ } from '@wordpress/i18n';
-import { ArrowRight, Sparkles, Zap, Globe } from 'lucide-react';
+import { ArrowRight, Sparkles, Zap, Gift } from 'lucide-react';
 
 // Enhanced feature card component with modern glass-morphism design
-const FeatureCard = memo( ( { icon: Icon, title, description } ) => (
-	<div className="group relative flex flex-col items-center p-3.5 bg-white/80 backdrop-blur-xl rounded-2xl border border-white/30 hover:border-brand-300/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 overflow-hidden">
+const FeatureCard = memo( ( { icon: Icon, title, description, highlighted } ) => (
+	<div className={ `group relative flex flex-col items-center p-3.5 bg-white/80 backdrop-blur-xl rounded-2xl border ${ highlighted ? 'border-brand-300 ring-2 ring-brand-100' : 'border-white/30' } hover:border-brand-300/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 overflow-hidden` }>
 		{ /* Card background glow effect */ }
 		<div className="absolute inset-0 bg-gradient-to-br from-brand-50/60 via-indigo-50/40 to-purple-50/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
 
@@ -20,7 +20,11 @@ const FeatureCard = memo( ( { icon: Icon, title, description } ) => (
 				{ title }
 			</h3>
 			<p className="text-[13px] text-gray-600 leading-relaxed font-medium group-hover:text-gray-700 transition-colors duration-300">
-				{ description }
+				{ Array.isArray( description )
+					? description.map( ( line, i ) => (
+						<Fragment key={ i }>{ i > 0 && <br /> }{ line }</Fragment>
+					) )
+					: description }
 			</p>
 		</div>
 	</div>
@@ -60,7 +64,7 @@ const ActionButton = memo( ( { onClick, children, icon: Icon } ) => {
 				"
 				onClick={ handleClick }
 				onKeyDown={ handleKeyDown }
-				aria-label={ __( 'Start the setup wizard', 'solvex-ai-blogger' ) }
+				aria-label={ __( 'Claim free tokens and continue setup', 'solvex-ai-blogger' ) }
 			>
 				{ /* Animated background shimmer */ }
 				<div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
@@ -80,29 +84,38 @@ ActionButton.displayName = 'WelcomeActionButton';
 const WelcomeStep = memo( () => {
 	const navigate = useNavigate();
 
-	// Enhanced navigation handler
+	// Navigate to Connect (license) step
 	const handleStepRedirection = useCallback( ( e ) => {
 		e.preventDefault();
-		const targetStep = 'persona-form';
-		navigate( `?step=${ targetStep }` );
+		navigate( `?step=license` );
 	}, [ navigate ] );
 
-	// Feature data - simplified and more focused
+	// Feature data highlighting the free tier
 	const features = [
+		{
+			icon: Gift,
+			title: __( 'Free Forever Plan', 'solvex-ai-blogger' ),
+			description: [
+				__( '20,000 FREE TOKENS every month', 'solvex-ai-blogger' ),
+				__( '~200 blog posts/year', 'solvex-ai-blogger' ),
+			],
+			highlighted: true,
+		},
 		{
 			icon: Sparkles,
 			title: __( 'AI Content Generation', 'solvex-ai-blogger' ),
-			description: __( 'Create engaging blog posts automatically', 'solvex-ai-blogger' ),
+			description: [
+				__( '100% SEO-optimized blog posts', 'solvex-ai-blogger' ),
+				__( 'Powered by cutting-edge AI models', 'solvex-ai-blogger' ),
+			],
 		},
 		{
 			icon: Zap,
 			title: __( 'Quick Setup', 'solvex-ai-blogger' ),
-			description: __( 'Ready in under 5 minutes', 'solvex-ai-blogger' ),
-		},
-		{
-			icon: Globe,
-			title: __( 'Automated Scheduling', 'solvex-ai-blogger' ),
-			description: __( 'Schedule AI-generated blog posts automatically', 'solvex-ai-blogger' ),
+			description: [
+				__( 'Ready in under 2 minutes', 'solvex-ai-blogger' ),
+				__( 'No credit card required', 'solvex-ai-blogger' ),
+			],
 		},
 	];
 
@@ -126,7 +139,7 @@ const WelcomeStep = memo( () => {
 					<div className="mb-5">
 						<span className="inline-flex items-center px-5 py-2.5 bg-white/90 backdrop-blur-xl border border-brand-200/50 text-brand-700 text-[13px] font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
 							<Sparkles className="w-3.5 h-3.5 mr-2 animate-pulse text-brand-500" aria-hidden="true" />
-							{ __( 'Step 1 of 5', 'solvex-ai-blogger' ) }
+							{ __( 'Step 1 of 3', 'solvex-ai-blogger' ) }
 							<div className="ml-2 w-1.5 h-1.5 bg-brand-400 rounded-full animate-ping" />
 						</span>
 					</div>
@@ -136,19 +149,18 @@ const WelcomeStep = memo( () => {
 						id="welcome-heading"
 						className="text-2xl md:text-[36px] font-black text-gray-900 mb-3.5 leading-[1.1] tracking-tight"
 					>
-						{ __( 'Turn Ideas Into', 'solvex-ai-blogger' ) }
+						{ __( 'Automate Your Blog with AI.', 'solvex-ai-blogger' ) }
 						<br />
 						<span className="bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent drop-shadow-sm">
-							{ __( 'AI-Powered Blogs', 'solvex-ai-blogger' ) }
+							{ __( 'Get Started for Free.', 'solvex-ai-blogger' ) }
 						</span>
 					</h1>
 
-					{ /* Enhanced description with better typography */ }
-					<h3 className="text-[15px] md:text-[17px] text-gray-700 mx-auto mb-5 leading-relaxed font-medium">
-						{ __(
-							'Set once and forget - automatically publish high-quality blog posts on schedule.',
-							'solvex-ai-blogger'
-						) }
+					{ /* Enhanced description with free tier details */ }
+					<h3 className="text-[15px] md:text-[17px] text-gray-700 mx-auto mb-5 leading-relaxed font-medium max-w-2xl">
+						{ __( 'Connect your site now to claim your', 'solvex-ai-blogger' ) }{ ' ' }
+						<strong className="uppercase bg-blue-50 px-1.5 py-0.5 rounded" style={ { color: 'rgb(235, 165, 37)' } }>{ __( '20,000 free monthly tokens', 'solvex-ai-blogger' ) }</strong>
+						{ '. ' }<br />{ __( 'No credit card required.', 'solvex-ai-blogger' ) }
 					</h3>
 
 					{ /* Enhanced CTA section */ }
@@ -157,7 +169,7 @@ const WelcomeStep = memo( () => {
 							onClick={ handleStepRedirection }
 							icon={ ArrowRight }
 						>
-							{ __( 'Start Building', 'solvex-ai-blogger' ) }
+							{ __( 'Claim My Free Tokens & Continue', 'solvex-ai-blogger' ) }
 						</ActionButton>
 					</div>
 				</div>
@@ -170,6 +182,7 @@ const WelcomeStep = memo( () => {
 							icon={ feature.icon }
 							title={ feature.title }
 							description={ feature.description }
+							highlighted={ feature.highlighted }
 						/>
 					) ) }
 				</div>
@@ -177,7 +190,9 @@ const WelcomeStep = memo( () => {
 
 			{ /* Screen reader announcements */ }
 			<div className="sr-only" aria-live="polite">
-				{ __( 'Welcome to Solvex AI Blogger setup wizard. Use the Start Building button to begin.', 'solvex-ai-blogger' ) }
+				{ __( 'Welcome to Solvex AI Blogger.', 'solvex-ai-blogger' ) }{ ' ' }
+				<strong>{ __( 'Get 20,000 free tokens every month', 'solvex-ai-blogger' ) }</strong>
+				{ '. ' }{ __( 'Click Claim My Free Tokens to begin setup.', 'solvex-ai-blogger' ) }
 			</div>
 		</main>
 	);
