@@ -38,6 +38,7 @@ export default function MainNav() {
 				path: 'campaigns',
 				icon: null,
 				requiresLicense: true,
+				tourTarget: 'campaigns-nav',
 			},
 			{
 				name: __( 'Settings', 'solvex-ai-blogger' ),
@@ -125,6 +126,7 @@ export default function MainNav() {
 											className={ linkClasses }
 											aria-current={ isActive ? 'page' : undefined }
 											aria-label={ menu.name }
+											{ ...( menu.tourTarget ? { 'data-tour-target': menu.tourTarget } : {} ) }
 										>
 											{ menu.icon && (
 												<span className="mr-2" aria-hidden="true">

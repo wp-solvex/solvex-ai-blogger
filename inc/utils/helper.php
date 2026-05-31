@@ -32,6 +32,7 @@ class Helper {
 	 */
 	private static $allowed_keys = [
 		'userOnboarded',
+		'tourCompleted',
 		'onboardingTab',
 		'userName',
 		'userEmail',
@@ -159,7 +160,7 @@ class Helper {
 		$sanitized_value = self::sanitize_input( $original_key, $value );
 
 		// Check if sanitization failed (false can be a valid value for boolean fields).
-		$boolean_fields = [ 'userOnboarded', 'enableLogging', 'emailNotificationEnabled' ];
+		$boolean_fields = [ 'userOnboarded', 'tourCompleted', 'enableLogging', 'emailNotificationEnabled' ];
 		if ( $sanitized_value === false && ! in_array( $original_key, $boolean_fields, true ) ) {
 			return [
 				'success' => false,
@@ -288,7 +289,7 @@ class Helper {
 			$sanitized_value = self::sanitize_input( $original_key, $value );
 
 			// Check if sanitization failed (false can be a valid value for boolean fields).
-			$boolean_fields = [ 'userOnboarded', 'enableLogging', 'emailNotificationEnabled' ];
+			$boolean_fields = [ 'userOnboarded', 'tourCompleted', 'enableLogging', 'emailNotificationEnabled' ];
 			$is_valid_value = $sanitized_value !== false || in_array( $original_key, $boolean_fields, true );
 
 			if ( $is_valid_value ) {
@@ -316,6 +317,7 @@ class Helper {
 	private static function sanitize_input( string $key, $value ) {
 		switch ( $key ) {
 			case 'userOnboarded':
+			case 'tourCompleted':
 				return (bool) $value;
 
 			case 'onboardingTab':

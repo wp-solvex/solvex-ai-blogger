@@ -1,12 +1,13 @@
 <?php
 /**
- * Plugin Name: Solvex AI Blogger
+ * Plugin Name: Hero AI Blogger
  * Plugin URI: https://wpaiblogger.com/
  * Author: WP Solvex
- * Author URI: https://wpsolvex.com/
- * Version: 1.0.1
+ * Author URI: https://wpaiblogger.com/
+ * Version: 1.0.2
  * License: GPLv2 or later
  * Requires at least: 6.7
+ * Tested up to: 7.0
  * Requires PHP: 7.4
  * Description: AI‑powered auto‑blogging that creates high‑quality, optimized posts automatically, delivering smarter content beyond traditional blogging tools.
  * Text Domain: solvex-ai-blogger
@@ -21,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Define Constants.
 define( 'WPSOLVEX_AUTOAIBLOGGER_FILE', __FILE__ );
-define( 'WPSOLVEX_AUTOAIBLOGGER_VERSION', '1.0.1' );
+define( 'WPSOLVEX_AUTOAIBLOGGER_VERSION', '1.0.2' );
 define( 'WPSOLVEX_AUTOAIBLOGGER_DIR', plugin_dir_path( WPSOLVEX_AUTOAIBLOGGER_FILE ) );
 define( 'WPSOLVEX_AUTOAIBLOGGER_BASE_PATH', plugin_basename( WPSOLVEX_AUTOAIBLOGGER_FILE ) );
 define( 'WPSOLVEX_AUTOAIBLOGGER_BASE_URL', plugins_url( '/', WPSOLVEX_AUTOAIBLOGGER_FILE ) );

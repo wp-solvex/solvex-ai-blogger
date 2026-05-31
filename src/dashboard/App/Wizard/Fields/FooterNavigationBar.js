@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Loader2, Check } from 'lucide-react';
 import { updateApiData } from '@Utils/ApiData';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Enhanced progress indicator component
 const ProgressIndicator = memo( ( { currentStep, maxSteps } ) => {
@@ -101,6 +101,11 @@ const FooterNavigationBar = memo( ( props ) => {
 
 	const { previousStep, nextStep, currentStep, maxSteps } = props;
 
+	// Redux state for persona form validation
+	const siteTitle = useSelector( ( state ) => state?.siteTitle || '' );
+	const siteFor = useSelector( ( state ) => state?.siteFor || '' );
+	const siteDescription = useSelector( ( state ) => state?.siteDescription || '' );
+
 	// Enhanced URL parameter handling
 	const query = useMemo( () => new URLSearchParams( location.search ), [ location.search ] );
 	const currentActiveStep = useMemo( () => query.get( 'step' ), [ query ] );
@@ -138,8 +143,8 @@ const FooterNavigationBar = memo( ( props ) => {
 			return;
 		}
 
-		// Handle completion step
-		if ( ! nextStep && currentActiveStep === 'ready' ) {
+		// Handle completion step (persona-form is the final step)
+		if ( ! nextStep && currentActiveStep === 'persona-form' ) {
 			setIsCompleting( true );
 			try {
 				dispatch( { type: 'UPDATE_USER_ONBOARDED', payload: true } );
@@ -154,14 +159,10 @@ const FooterNavigationBar = memo( ( props ) => {
 
 	// Enhanced button text logic
 	const getNextButtonText = useCallback( () => {
-		const stepsToSkip = [ 'ready', 'optin' ];
-
-		if ( nextStep && ! stepsToSkip.includes( currentActiveStep ) ) {
-			return __( 'Next', 'solvex-ai-blogger' );
-		} else if ( nextStep || currentActiveStep === 'optin' ) {
-			return __( 'Skip', 'solvex-ai-blogger' );
+		if ( ! nextStep && currentActiveStep === 'persona-form' ) {
+			return __( 'Finish Setup', 'solvex-ai-blogger' );
 		}
-		return __( 'Finish Setup', 'solvex-ai-blogger' );
+		return __( 'Next', 'solvex-ai-blogger' );
 	}, [ nextStep, currentActiveStep ] );
 
 	// Determine if previous button should be disabled
@@ -170,16 +171,28 @@ const FooterNavigationBar = memo( ( props ) => {
 	[ previousStep, isNavigating, isCompleting ]
 	);
 
+	// Check if persona form fields are valid (for finish button on persona-form step)
+	const isPersonaFormValid = useMemo( () => {
+		const trimmedTitle = siteTitle?.trim() || '';
+		const trimmedFor = siteFor?.trim() || '';
+		const trimmedDescription = siteDescription?.trim() || '';
+		return trimmedTitle.length >= 2 && trimmedTitle.length <= 100 &&
+			trimmedFor.length >= 3 && trimmedFor.length <= 200 &&
+			trimmedDescription.length >= 10 && trimmedDescription.length <= 1000;
+	}, [ siteTitle, siteFor, siteDescription ] );
+
+	// Disable finish button if on persona-form step and form is not valid
+	const isNextDisabled = useMemo( () => {
+		if ( ! nextStep && currentActiveStep === 'persona-form' ) {
+			return ! isPersonaFormValid;
+		}
+		return false;
+	}, [ nextStep, currentActiveStep, isPersonaFormValid ] );
+
 	// Determine button variants and states
 	const nextButtonVariant = useMemo( () => {
-		if ( ! nextStep && currentActiveStep === 'ready' ) {
-			return 'primary';
-		}
-		if ( currentActiveStep === 'optin' ) {
-			return 'secondary';
-		}
 		return 'primary';
-	}, [ nextStep, currentActiveStep ] );
+	}, [] );
 
 	return (
 		<footer
@@ -224,8 +237,9 @@ const FooterNavigationBar = memo( ( props ) => {
 					<NavigationButton
 						onClick={ handleNextStep }
 						variant={ nextButtonVariant }
+						disabled={ isNextDisabled }
 						loading={ isNavigating || isCompleting }
-						icon={ ! nextStep && currentActiveStep === 'ready' ? Check : ChevronRight }
+						icon={ ! nextStep && currentActiveStep === 'persona-form' ? Check : ChevronRight }
 						iconPlacement="right"
 						ariaLabel={ __( 'Continue to next step', 'solvex-ai-blogger' ) }
 					>

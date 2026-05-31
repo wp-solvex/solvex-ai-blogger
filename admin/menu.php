@@ -215,6 +215,7 @@ class Menu {
 				'pro_purchase_url'           => esc_url( WPSOLVEX_AUTOAIBLOGGER_UPGRADE_LINK ),
 				'pro_available'              => defined( 'WPSOLVEX_AUTOAIBLOGGER_PRO_VERSION' ),
 				'pro_version'                => defined( 'WPSOLVEX_AUTOAIBLOGGER_PRO_VERSION' ) ? WPSOLVEX_AUTOAIBLOGGER_PRO_VERSION : '',
+				'tour_completed'             => (bool) get_option( 'wpsolvex_autoaiblogger_tour_completed', false ),
 				'pro_plugin_name'            => defined( 'WPSOLVEX_AUTOAIBLOGGER_PRO_PRODUCT_NAME' ) ? str_replace( 'Solvex AI Blogger - ', '', WPSOLVEX_AUTOAIBLOGGER_PRO_PRODUCT_NAME ) : '',
 				'edit_post_link'             => esc_url(
 					add_query_arg(
@@ -335,8 +336,8 @@ class Menu {
 		if ( current_user_can( WPSOLVEX_AUTOAIBLOGGER_CAPABILITY ) ) {
 			add_submenu_page(
 				'edit.php',
-				__( 'Solvex AI Blogger', 'solvex-ai-blogger' ),
-				__( 'Solvex AI Blogger', 'solvex-ai-blogger' ),
+				__( 'Hero AI Blogger', 'solvex-ai-blogger' ),
+				__( 'Hero AI Blogger', 'solvex-ai-blogger' ),
 				WPSOLVEX_AUTOAIBLOGGER_CAPABILITY,
 				self::PAGE_ID,
 				[ $this, 'render_settings_page' ]

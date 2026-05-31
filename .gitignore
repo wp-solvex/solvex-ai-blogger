@@ -4,6 +4,7 @@ vendor-bin/
 node_modules/
 wordpress/
 artifact/
+docs/
 
 # Copilot documentation
 copilot_readme/

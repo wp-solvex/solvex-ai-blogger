@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { WelcomeStep, PersonaFormStep, LicenseStep, OptinStep, ReadyStep } from '@WizardSteps';
+import { WelcomeStep, PersonaFormStep, LicenseStep } from '@WizardSteps';
 import { NavigationBar, FooterNavigationBar } from '@WizardFields';
 
 const WizardRoute = () => {
@@ -9,7 +9,7 @@ const WizardRoute = () => {
 
 	const query = new URLSearchParams( useLocation().search );
 	const action = query.get( 'step' );
-	const maxSteps = 4;
+	const maxSteps = 3;
 
 	let previous_step = 'dashboard',
 		next_step = '',
@@ -22,35 +22,24 @@ const WizardRoute = () => {
 			case 'welcome':
 				route_page = <WelcomeStep />;
 				previous_step = 'dashboard';
-				next_step = 'persona-form'; //change next step
+				next_step = 'license';
 				step_sequence = 0;
 				break;
-			case 'persona-form': //Add new case
-				route_page = <PersonaFormStep />;
+			case 'license':
+				route_page = <LicenseStep />;
 				previous_step = 'welcome';
-				next_step = 'license';
+				next_step = 'persona-form';
 				step_sequence = 1;
 				break;
-			case 'license': //Add new case
-				route_page = <LicenseStep />;
-				previous_step = 'persona-form';
-				next_step = 'optin';
-				step_sequence = 2;
-				break;
-			case 'optin':
-				route_page = <OptinStep />;
+			case 'persona-form':
+				route_page = <PersonaFormStep />;
 				previous_step = 'license';
-				next_step = 'ready';
-				step_sequence = 3;
-				break;
-			case 'ready':
-				route_page = <ReadyStep />;
-				previous_step = 'optin';
-				step_sequence = 4;
+				next_step = '';
+				step_sequence = 2;
 				break;
 			default:
 				route_page = <WelcomeStep />;
-				next_step = 'persona-form'; //change next step
+				next_step = 'license';
 				step_sequence = 0;
 				break;
 		}
