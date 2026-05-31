@@ -154,11 +154,11 @@ function Settings() {
 			description: __( 'Manage email and push notifications', 'solvex-ai-blogger' ),
 		},
 		{
-			name: __( 'License', 'solvex-ai-blogger' ),
+			name: __( 'API Key', 'solvex-ai-blogger' ),
 			slug: TAB_IDS.LICENSE,
 			icon: Key,
 			component: License,
-			description: __( 'License activation and management', 'solvex-ai-blogger' ),
+			description: __( 'API key and account connection', 'solvex-ai-blogger' ),
 		},
 	], [] );
 

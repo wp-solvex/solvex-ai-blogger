@@ -197,3 +197,16 @@ GPLv
 Hookname
 solvex
 stripos
+autoaiblogger
+bloggers
+Blogs
+claude
+claudeignore
+filesystems
+Gnomovision
+listicle
+msgctxt
+redistributors
+spam
+surerank
+Yoyodyne

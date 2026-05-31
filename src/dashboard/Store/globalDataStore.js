@@ -111,6 +111,7 @@ const getInitialState = () => {
 		version: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.version, 'string', '1.0.0' ),
 		proVersion: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.pro_version, 'string', '' ),
 		postTypes: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.post_types, 'object', {} ),
+		tourCompleted: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.tour_completed, 'boolean', false ),
 
 		// Notification settings - default to false/empty
 		emailNotificationEnabled: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.email_notification_enabled, 'boolean', false ),

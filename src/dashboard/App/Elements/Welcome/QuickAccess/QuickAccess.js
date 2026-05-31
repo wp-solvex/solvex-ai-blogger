@@ -16,7 +16,7 @@ export default function QuickAccess() {
 		{
 			icon: <Ticket className="w-5 h-5" />,
 			title: __( 'Open Support Ticket', 'solvex-ai-blogger' ),
-			url: 'https://wpaiblogger.com/comtact/',
+			url: 'https://wpaiblogger.com/contact/',
 		},
 		{
 			icon: <FileText className="w-5 h-5" />,

@@ -166,6 +166,7 @@ const globalDataReducer = ( state = {}, action ) => {
 		UPDATE_EMAIL_NOTIFICATION_ENABLED: () => ( { ...state, emailNotificationEnabled: Boolean( action.payload ) } ),
 		UPDATE_EMAIL_NOTIFICATION_VALUE: () => ( { ...state, emailNotificationValue: String( action.payload || '' ) } ),
 
+		UPDATE_TOUR_COMPLETED: () => ( { ...state, tourCompleted: Boolean( action.payload ) } ),
 		CLEAR_ERROR: () => ( { ...state, error: null } ),
 		STORE_ERROR: () => ( { ...state, error: action.payload?.message || 'Store error occurred', isLoading: false } ),
 		RESET_STATE: () => {

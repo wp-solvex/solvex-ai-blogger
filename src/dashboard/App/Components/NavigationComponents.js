@@ -161,7 +161,7 @@ export const TokenDisplayAndRefresh = () => {
 	const tokenStatus = getTokenStatus();
 
 	return (
-		<div className="flex items-center gap-2 pl-4">
+		<div className="flex items-center gap-2 pl-4" data-tour-target="token-display">
 			<div className="flex flex-col gap-1">
 				<p className={ `text-sm m-0 p-0 ${
 					isError ? 'text-red-600' : isWarning ? 'text-amber-600' : 'text-gray-500'

@@ -266,8 +266,8 @@ export default function PostIdeas() {
 		}
 
 		if ( error === 'License key is not available. Please check your license configuration.' ) {
-			const title = __( 'License key is missing. Please activate your license to use this feature.', 'solvex-ai-blogger' );
-			const buttonText = __( 'Go to License Settings', 'solvex-ai-blogger' );
+			const title = __( 'Connect your free account to use this feature.', 'solvex-ai-blogger' );
+			const buttonText = __( 'Connect Account', 'solvex-ai-blogger' );
 
 			return (
 				<div className="p-4 text-red-500 flex flex-col items-center">
@@ -477,7 +477,7 @@ export default function PostIdeas() {
 	};
 
 	return (
-		<div className="px-4 sm:px-6 lg:px-8 pt-4 pb-8">
+		<div className="px-4 sm:px-6 lg:px-8 pt-4 pb-8" data-tour-target="post-ideas">
 			<div className="sm:flex sm:items-center sm:justify-between">
 				<div className="flex flex-col gap-2">
 					<h2 className="text-xl font-semibold text-gray-900 flex items-center gap-4 p-0 m-0">
