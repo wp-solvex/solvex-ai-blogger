@@ -176,9 +176,9 @@ const FooterNavigationBar = memo( ( props ) => {
 		const trimmedTitle = siteTitle?.trim() || '';
 		const trimmedFor = siteFor?.trim() || '';
 		const trimmedDescription = siteDescription?.trim() || '';
-		return trimmedTitle.length >= 3 && trimmedTitle.length <= 100
-			&& trimmedFor.length >= 3 && trimmedFor.length <= 200
-			&& trimmedDescription.length >= 10 && trimmedDescription.length <= 1000;
+		return trimmedTitle.length >= 2 && trimmedTitle.length <= 100 &&
+			trimmedFor.length >= 3 && trimmedFor.length <= 200 &&
+			trimmedDescription.length >= 10 && trimmedDescription.length <= 1000;
 	}, [ siteTitle, siteFor, siteDescription ] );
 
 	// Disable finish button if on persona-form step and form is not valid

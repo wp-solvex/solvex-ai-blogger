@@ -104,8 +104,8 @@ const FormField = memo( ( {
 				</div>
 			) }
 
-			{ /* Error message without character count */ }
-			{ error && ! maxLength && (
+			{ /* Error message */ }
+			{ error && (
 				<p id={ `${ id }-error` } className="text-[11px] text-red-600 flex items-center gap-1">
 					<AlertCircle className="w-2.5 h-2.5" />
 					{ error }
@@ -199,8 +199,8 @@ const PersonaFormStep = memo( () => {
 		const trimmedTitle = formData.siteTitle?.trim() || '';
 		if ( ! trimmedTitle ) {
 			newErrors.siteTitle = __( 'Site title is required', 'solvex-ai-blogger' );
-		} else if ( trimmedTitle.length < 3 ) {
-			newErrors.siteTitle = __( 'Site title must be at least 3 characters', 'solvex-ai-blogger' );
+		} else if ( trimmedTitle.length < 2 ) {
+			newErrors.siteTitle = __( 'Site title must be at least 2 characters', 'solvex-ai-blogger' );
 		} else if ( trimmedTitle.length > 100 ) {
 			newErrors.siteTitle = __( 'Site title must be less than 100 characters', 'solvex-ai-blogger' );
 		}
@@ -252,7 +252,7 @@ const PersonaFormStep = memo( () => {
 		}
 
 		// Real-time validation for better UX
-		if ( field === 'siteTitle' && sanitizedValue.trim() && sanitizedValue.length >= 3 ) {
+		if ( field === 'siteTitle' && sanitizedValue.trim() && sanitizedValue.length >= 2 ) {
 			setErrors( ( prev ) => ( { ...prev, siteTitle: '' } ) );
 		}
 		if ( field === 'siteFor' && sanitizedValue.trim() && sanitizedValue.trim().length >= 3 && sanitizedValue.length <= 200 ) {
@@ -340,14 +340,14 @@ const PersonaFormStep = memo( () => {
 	}, [ formData, validateForm, dispatch, navigate ] );
 
 	// Form completion percentage
-	// Check if form is valid for button state (only siteTitle is required)
+	// Check if form is valid for button state
 	const isFormValid = useMemo( () => {
 		const trimmedTitle = formData.siteTitle?.trim() || '';
 		const trimmedFor = formData.siteFor?.trim() || '';
 		const trimmedDescription = formData.siteDescription?.trim() || '';
-		return trimmedTitle.length >= 3 && trimmedTitle.length <= 100
-			&& trimmedFor.length >= 3 && trimmedFor.length <= 200
-			&& trimmedDescription.length >= 10 && trimmedDescription.length <= 1000;
+		return trimmedTitle.length >= 2 && trimmedTitle.length <= 100 &&
+			trimmedFor.length >= 3 && trimmedFor.length <= 200 &&
+			trimmedDescription.length >= 10 && trimmedDescription.length <= 1000;
 	}, [ formData.siteTitle, formData.siteFor, formData.siteDescription ] );
 
 	return (

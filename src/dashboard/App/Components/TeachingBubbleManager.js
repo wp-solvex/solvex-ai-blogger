@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { __ } from '@wordpress/i18n';
 import { updateApiData } from '@Utils/ApiData';
 import TeachingBubble from './TeachingBubble';
@@ -19,6 +20,8 @@ const LICENSED_TOUR_STEPS = [
 		title: __( 'View Campaigns', 'solvex-ai-blogger' ),
 		description: __( 'Set up automated campaigns to publish blog posts on a schedule.', 'solvex-ai-blogger' ),
 		placement: 'bottom',
+		// On "Next", open the Campaigns tab so the tour can continue on the "Add New" button.
+		navigateOnNext: 'campaigns',
 	},
 	{
 		id: 'add-campaign',
@@ -69,6 +72,7 @@ const TOUR_COMPLETED_KEY = 'wpsolvex_ai_blogger_tour_completed';
  */
 const TeachingBubbleManager = memo( ( { children } ) => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const abortControllerRef = useRef( {} );
 	const observerRef = useRef( null );
 	const checkIntervalRef = useRef( null );
@@ -77,6 +81,7 @@ const TeachingBubbleManager = memo( ( { children } ) => {
 	const tourCompleted = useSelector( ( state ) => state.tourCompleted );
 	const licenseStatus = useSelector( ( state ) => state.license_status );
 	const userOnboarded = useSelector( ( state ) => state.userOnboarded );
+	const homeSlug = useSelector( ( state ) => state.homeSlug ) || 'solvex-ai-blogger';
 
 	// Local state
 	const [ currentStepIndex, setCurrentStepIndex ] = useState( 0 );
@@ -188,10 +193,17 @@ const TeachingBubbleManager = memo( ( { children } ) => {
 		if ( currentStepIndex >= tourSteps.length - 1 ) {
 			completeTour();
 		} else {
+			// If this step should open another tab, navigate there so the next
+			// step's target (e.g. the "Add New" button) renders for the tour.
+			if ( currentStep?.navigateOnNext ) {
+				navigate( {
+					search: `?page=${ homeSlug }&path=${ currentStep.navigateOnNext }`,
+				} );
+			}
 			setTargetFound( false );
 			setCurrentStepIndex( ( prev ) => prev + 1 );
 		}
-	}, [ currentStepIndex, tourSteps.length, completeTour ] );
+	}, [ currentStepIndex, tourSteps.length, completeTour, currentStep, navigate, homeSlug ] );
 
 	// Handle Skip
 	const handleSkip = useCallback( () => {

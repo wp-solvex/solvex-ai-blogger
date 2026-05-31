@@ -124,7 +124,7 @@ const Persona = memo( () => {
 							<div className="absolute right-3 top-3">
 								{ errors.siteTitle ? (
 									<AlertTriangle className="w-4 h-4 text-red-500" aria-hidden="true" />
-								) : siteTitle?.trim() && siteTitle.length >= 3 ? (
+								) : siteTitle?.trim() && siteTitle.length >= 2 ? (
 									<CheckCircle2 className="w-4 h-4 text-green-500" aria-hidden="true" />
 								) : null }
 							</div>

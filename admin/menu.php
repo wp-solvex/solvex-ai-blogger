@@ -336,8 +336,8 @@ class Menu {
 		if ( current_user_can( WPSOLVEX_AUTOAIBLOGGER_CAPABILITY ) ) {
 			add_submenu_page(
 				'edit.php',
-				__( 'Solvex AI Blogger', 'solvex-ai-blogger' ),
-				__( 'Solvex AI Blogger', 'solvex-ai-blogger' ),
+				__( 'Hero AI Blogger', 'solvex-ai-blogger' ),
+				__( 'Hero AI Blogger', 'solvex-ai-blogger' ),
 				WPSOLVEX_AUTOAIBLOGGER_CAPABILITY,
 				self::PAGE_ID,
 				[ $this, 'render_settings_page' ]
