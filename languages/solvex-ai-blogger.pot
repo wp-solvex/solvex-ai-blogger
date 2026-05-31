@@ -2,27 +2,27 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Solvex AI Blogger 1.0.1\n"
+"Project-Id-Version: Hero AI Blogger 1.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/solvex-ai-blogger\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-04T10:05:00+00:00\n"
+"POT-Creation-Date: 2026-05-31T08:40:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: solvex-ai-blogger\n"
 
 #. Plugin Name of the plugin
 #: solvex-ai-blogger.php
-#: admin/menu.php:338
 #: admin/menu.php:339
-#: inc/notifications/email-templates.php:294
-msgid "Solvex AI Blogger"
+#: admin/menu.php:340
+msgid "Hero AI Blogger"
 msgstr ""
 
 #. Plugin URI of the plugin
+#. Author URI of the plugin
 #: solvex-ai-blogger.php
 msgid "https://wpaiblogger.com/"
 msgstr ""
@@ -37,419 +37,444 @@ msgstr ""
 msgid "WP Solvex"
 msgstr ""
 
-#. Author URI of the plugin
-#: solvex-ai-blogger.php
-msgid "https://wpsolvex.com/"
-msgstr ""
-
-#: admin/ajax.php:94
+#: admin/ajax.php:96
 msgid "Sorry, you are not allowed to do this operation."
 msgstr ""
 
-#: admin/ajax.php:95
+#: admin/ajax.php:97
 msgid "Nonce validation failed"
 msgstr ""
 
-#: admin/ajax.php:96
+#: admin/ajax.php:98
 msgid "Sorry, something went wrong."
 msgstr ""
 
-#: admin/ajax.php:97
+#: admin/ajax.php:99
 msgid "Successfully saved data!"
 msgstr ""
 
-#: admin/ajax.php:98
+#: admin/ajax.php:100
 msgid "Too many requests. Please try again later."
 msgstr ""
 
-#: admin/ajax.php:99
+#: admin/ajax.php:101
 #: admin/api.php:538
 msgid "Request size exceeds maximum allowed limit."
 msgstr ""
 
-#: admin/ajax.php:100
+#: admin/ajax.php:102
 msgid "Invalid or malformed data provided."
 msgstr ""
 
-#: admin/ajax.php:101
+#: admin/ajax.php:103
 msgid "Security check failed. Request blocked."
 msgstr ""
 
-#: admin/ajax.php:102
+#: admin/ajax.php:104
 msgid "Content exceeds maximum allowed length."
 msgstr ""
 
-#: admin/ajax.php:270
-#: admin/ajax.php:378
+#: admin/ajax.php:273
+#: admin/ajax.php:381
 msgid "Campaign title is required."
 msgstr ""
 
-#: admin/ajax.php:349
-#: admin/ajax.php:444
-#: admin/ajax.php:733
-#: admin/ajax.php:964
-#: admin/ajax.php:1010
-#: admin/ajax.php:1065
-#: admin/ajax.php:1133
+#: admin/ajax.php:352
+#: admin/ajax.php:447
+#: admin/ajax.php:736
+#: admin/ajax.php:967
+#: admin/ajax.php:1013
+#: admin/ajax.php:1068
+#: admin/ajax.php:1136
 msgid "Invalid campaign ID."
 msgstr ""
 
-#: admin/ajax.php:356
-#: admin/ajax.php:451
-#: admin/ajax.php:740
-#: admin/ajax.php:970
-#: admin/ajax.php:1017
-#: admin/ajax.php:1071
-#: admin/ajax.php:1139
+#: admin/ajax.php:359
+#: admin/ajax.php:454
+#: admin/ajax.php:743
+#: admin/ajax.php:973
+#: admin/ajax.php:1020
+#: admin/ajax.php:1074
+#: admin/ajax.php:1142
 msgid "Campaign not found."
 msgstr ""
 
-#: admin/ajax.php:464
+#: admin/ajax.php:467
 msgid "Failed to retrieve campaign data."
 msgstr ""
 
-#: admin/ajax.php:480
+#: admin/ajax.php:483
 msgid "Campaign data retrieved successfully."
 msgstr ""
 
-#: admin/ajax.php:532
+#: admin/ajax.php:535
 msgid "Post title is required."
 msgstr ""
 
-#: admin/ajax.php:542
+#: admin/ajax.php:545
 msgid "Post title is too long (max 200 characters)."
 msgstr ""
 
-#: admin/ajax.php:597
+#: admin/ajax.php:600
 msgid "Post content is too long."
 msgstr ""
 
-#: admin/ajax.php:616
+#: admin/ajax.php:619
 msgid "You do not have permission to create this type of post."
 msgstr ""
 
-#: admin/ajax.php:651
+#: admin/ajax.php:654
 msgid "Failed to create post - unknown error occurred."
 msgstr ""
 
-#: admin/ajax.php:696
+#: admin/ajax.php:699
 msgid "An unexpected error occurred while creating the post. Please try again."
 msgstr ""
 
-#: admin/ajax.php:725
+#: admin/ajax.php:728
 msgid "You do not have permission to run campaigns."
 msgstr ""
 
-#: admin/ajax.php:751
+#: admin/ajax.php:754
 msgid "Campaign must be published to run."
 msgstr ""
 
-#: admin/ajax.php:772
+#: admin/ajax.php:775
 msgid "Failed to create post from campaign."
 msgstr ""
 
-#: admin/ajax.php:889
-#: assets/build/869.js:1
+#: admin/ajax.php:892
+#: assets/build/341.js:1
 msgid "Unknown"
 msgstr ""
 
-#: admin/ajax.php:980
-#: assets/build/869.js:1
+#: admin/ajax.php:983
+#: assets/build/341.js:1
 msgid "Campaign deleted successfully."
 msgstr ""
 
-#: admin/ajax.php:982
+#: admin/ajax.php:985
 msgid "Error occurred while deleting campaign: "
 msgstr ""
 
-#: admin/ajax.php:1033
+#: admin/ajax.php:1036
 msgid "Logs retrieved successfully."
 msgstr ""
 
-#: admin/ajax.php:1082
+#: admin/ajax.php:1085
 msgid "Campaign is already paused."
 msgstr ""
 
-#: admin/ajax.php:1088
+#: admin/ajax.php:1091
 msgid "Cannot pause a completed campaign."
 msgstr ""
 
-#: admin/ajax.php:1100
+#: admin/ajax.php:1103
 msgid "Campaign paused successfully."
 msgstr ""
 
-#: admin/ajax.php:1106
+#: admin/ajax.php:1109
 msgid "An error occurred while pausing the campaign."
 msgstr ""
 
-#: admin/ajax.php:1150
+#: admin/ajax.php:1153
 msgid "Campaign is not paused."
 msgstr ""
 
-#: admin/ajax.php:1156
+#: admin/ajax.php:1159
 msgid "Cannot resume a completed campaign."
 msgstr ""
 
-#: admin/ajax.php:1164
+#: admin/ajax.php:1167
 msgid "Campaign target already reached."
 msgstr ""
 
-#: admin/ajax.php:1187
+#: admin/ajax.php:1190
 msgid "Campaign resumed successfully."
 msgstr ""
 
-#: admin/ajax.php:1193
+#: admin/ajax.php:1196
 msgid "An error occurred while resuming the campaign."
 msgstr ""
 
-#: admin/ajax.php:1207
+#: admin/ajax.php:1210
 msgid "Security check failed"
 msgstr ""
 
-#: admin/ajax.php:1212
+#: admin/ajax.php:1215
 msgid "You do not have permission to perform this action"
 msgstr ""
 
-#: admin/ajax.php:1219
+#: admin/ajax.php:1222
 msgid "Invalid campaign ID"
 msgstr ""
 
-#: admin/ajax.php:1228
+#: admin/ajax.php:1231
 msgid "Campaign is missing repeat interval or unit"
 msgstr ""
 
-#: admin/ajax.php:1243
+#: admin/ajax.php:1246
 msgid "Campaign cron jobs rescheduled successfully!"
 msgstr ""
 
-#: admin/ajax.php:1248
+#: admin/ajax.php:1251
 msgid "Failed to reschedule campaign"
 msgstr ""
 
-#: admin/ajax.php:1413
+#: admin/ajax.php:1284
+msgid "Keywords are required to generate topics."
+msgstr ""
+
+#: admin/ajax.php:1293
+msgid "License is required. Please activate your license first."
+msgstr ""
+
+#. translators: %s: error details
+#: admin/ajax.php:1344
+msgid "Failed to connect to the server: %s (Code: %s)"
+msgstr ""
+
+#: admin/ajax.php:1356
+msgid "Server returned an error. Please try again."
+msgstr ""
+
+#: admin/ajax.php:1365
+msgid "No topics were generated. Please try again."
+msgstr ""
+
+#. translators: %d: number of topics generated
+#: admin/ajax.php:1377
+msgid "%d topics generated successfully!"
+msgstr ""
+
+#: admin/ajax.php:1384
+msgid "Failed to generate topics. Please try again."
+msgstr ""
+
+#: admin/ajax.php:1549
 msgid "Campaign title is too long."
 msgstr ""
 
-#: admin/ajax.php:1684
+#: admin/ajax.php:1820
 msgid "Failed to connect to content generation API: "
 msgstr ""
 
-#: admin/ajax.php:1697
+#: admin/ajax.php:1833
 msgid "Invalid JSON response from API"
 msgstr ""
 
 #. translators: %d is the HTTP status code
-#: admin/ajax.php:1716
+#: admin/ajax.php:1852
 msgid "API returned HTTP error %d"
 msgstr ""
 
-#: admin/ajax.php:1726
+#: admin/ajax.php:1862
 msgid "Unknown API error"
 msgstr ""
 
-#: admin/ajax.php:1740
+#: admin/ajax.php:1876
 msgid "API did not return generated content"
 msgstr ""
 
-#: admin/ajax.php:1750
+#: admin/ajax.php:1886
 msgid "Generated content is too short or empty"
 msgstr ""
 
-#: admin/ajax.php:1773
+#: admin/ajax.php:1909
 msgid "Exception occurred during content generation: "
 msgstr ""
 
-#: admin/ajax.php:1806
+#: admin/ajax.php:1942
 msgid "Content must be a string."
 msgstr ""
 
-#: admin/ajax.php:1893
+#: admin/ajax.php:2029
 msgid "Exception occurred during image processing: "
 msgstr ""
 
-#: admin/ajax.php:2075
-#: inc/cron-handler.php:913
+#: admin/ajax.php:2211
+#: inc/cron-handler.php:905
 msgid "Failed to download image: "
 msgstr ""
 
 #. translators: %d is the HTTP status code
-#: admin/ajax.php:2085
-#: inc/cron-handler.php:923
+#: admin/ajax.php:2221
+#: inc/cron-handler.php:915
 msgid "Image download returned HTTP error %d"
 msgstr ""
 
-#: admin/ajax.php:2095
-#: inc/cron-handler.php:933
+#: admin/ajax.php:2231
+#: inc/cron-handler.php:925
 msgid "Downloaded image data is empty"
 msgstr ""
 
-#: admin/ajax.php:2117
-#: inc/cron-handler.php:955
+#: admin/ajax.php:2253
+#: inc/cron-handler.php:947
 msgid "Failed to upload image: "
 msgstr ""
 
-#: admin/ajax.php:2149
-#: inc/cron-handler.php:987
+#: admin/ajax.php:2285
+#: inc/cron-handler.php:979
 msgid "Exception occurred during image upload: "
 msgstr ""
 
 #. translators: 1: Interval number, 2: Time unit, 3: s (if interval is greater than 1).
-#: admin/ajax.php:2290
+#: admin/ajax.php:2426
 msgid "Every %1$d %2$s%3$s"
 msgstr ""
 
-#: admin/ajax.php:2324
+#: admin/ajax.php:2460
 #: inc/functions/common.php:1094
 msgid "ago"
 msgstr ""
 
 #. translators: %d is the post number.
-#: admin/ajax.php:2334
-#: admin/ajax.php:2429
+#: admin/ajax.php:2470
+#: admin/ajax.php:2565
 msgid "Post #%d Created"
 msgstr ""
 
 #. translators: %s is the success message.
-#: admin/ajax.php:2335
+#: admin/ajax.php:2471
 msgid "Post was created successfully and published."
 msgstr ""
 
 #. translators: %1$s: Post number, %2$s: Default post title.
 #. translators: %d is the post number.
-#: admin/ajax.php:2337
-#: admin/ajax.php:2432
+#: admin/ajax.php:2473
+#: admin/ajax.php:2568
 msgid "Generated Blog Post #%d"
 msgstr ""
 
-#: admin/ajax.php:2341
-#: admin/ajax.php:2405
-#: admin/ajax.php:2454
+#: admin/ajax.php:2477
+#: admin/ajax.php:2541
+#: admin/ajax.php:2590
 #: inc/functions/common.php:1113
 msgid "Campaign validation passed"
 msgstr ""
 
-#: admin/ajax.php:2346
-#: admin/ajax.php:2410
-#: admin/ajax.php:2459
+#: admin/ajax.php:2482
+#: admin/ajax.php:2546
+#: admin/ajax.php:2595
 #: inc/functions/common.php:1118
 msgid "API request initiated"
 msgstr ""
 
-#: admin/ajax.php:2351
-#: admin/ajax.php:2415
+#: admin/ajax.php:2487
+#: admin/ajax.php:2551
 msgid "Content generated successfully"
 msgstr ""
 
-#: admin/ajax.php:2356
-#: admin/ajax.php:2420
+#: admin/ajax.php:2492
+#: admin/ajax.php:2556
 msgid "Post created and published"
 msgstr ""
 
 #. translators: %d is the post number.
 #. translators: %d: Post number.
-#: admin/ajax.php:2430
+#: admin/ajax.php:2566
 #: inc/functions/common.php:1017
 msgid "Post #%d was created successfully and published."
 msgstr ""
 
-#: admin/ajax.php:2440
+#: admin/ajax.php:2576
 msgid "API quota exceeded. Please check your subscription limits."
 msgstr ""
 
-#: admin/ajax.php:2441
+#: admin/ajax.php:2577
 msgid "Network timeout occurred during content generation."
 msgstr ""
 
-#: admin/ajax.php:2442
+#: admin/ajax.php:2578
 msgid "Invalid keywords provided. Content generation failed."
 msgstr ""
 
-#: admin/ajax.php:2443
+#: admin/ajax.php:2579
 msgid "Database connection error while saving post."
 msgstr ""
 
-#: admin/ajax.php:2444
+#: admin/ajax.php:2580
 msgid "Content filtering blocked the generated text."
 msgstr ""
 
-#: admin/ajax.php:2464
+#: admin/ajax.php:2600
 msgid "Content generation failed"
 msgstr ""
 
-#: admin/ajax.php:2469
+#: admin/ajax.php:2605
 msgid "Post creation aborted"
 msgstr ""
 
 #. translators: %d is the post number.
-#: admin/ajax.php:2478
+#: admin/ajax.php:2614
 msgid "Post #%d Creation - Failed"
 msgstr ""
 
 #. translators: %d is the post number.
-#: admin/ajax.php:2479
+#: admin/ajax.php:2615
 msgid "Post #%d creation failed due to an error."
 msgstr ""
 
 #. translators: %d is the post number.
-#: admin/ajax.php:2492
+#: admin/ajax.php:2628
 msgid "Post #%d Creation - Scheduled"
 msgstr ""
 
 #. translators: %d is the post number.
-#: admin/ajax.php:2493
+#: admin/ajax.php:2629
 msgid "Post #%d is scheduled to be created in the next cron run."
 msgstr ""
 
-#: admin/ajax.php:2497
+#: admin/ajax.php:2633
 msgid "Waiting for scheduled time..."
 msgstr ""
 
 #. translators: %d is the success rate.
-#: admin/ajax.php:2514
+#: admin/ajax.php:2650
 msgid "Campaign Completed - %d%% Successful"
 msgstr ""
 
 #. translators: %1$d is the number of successful posts, %2$d is the number of attempts, %3$d is the number of failed posts, %4$d is the target number of posts.
-#: admin/ajax.php:2517
+#: admin/ajax.php:2653
 msgid "Campaign completed with %1$d successful posts out of %2$d attempts (%3$d failed). Target of %4$d posts reached."
 msgstr ""
 
-#: admin/ajax.php:2525
+#: admin/ajax.php:2661
 msgid "Campaign Completed Successfully"
 msgstr ""
 
 #. translators: %d is the number of successful posts.
-#: admin/ajax.php:2526
+#: admin/ajax.php:2662
 msgid "Campaign successfully completed with all %d posts created without any failures."
 msgstr ""
 
 #. translators: %d is the number of successful posts.
-#: admin/ajax.php:2538
+#: admin/ajax.php:2674
 msgid "%d posts created successfully"
 msgstr ""
 
 #. translators: %d is the number of failed posts.
-#: admin/ajax.php:2542
+#: admin/ajax.php:2678
 msgid "%d posts failed"
 msgstr ""
 
-#: admin/ajax.php:2546
+#: admin/ajax.php:2682
 msgid "Campaign marked as completed"
 msgstr ""
 
-#: admin/ajax.php:2550
+#: admin/ajax.php:2686
 msgid "Scheduled events cleared"
 msgstr ""
 
-#: admin/ajax.php:2562
+#: admin/ajax.php:2698
 msgid "Campaign Inactive"
 msgstr ""
 
-#: admin/ajax.php:2563
+#: admin/ajax.php:2699
 msgid "Campaign is currently inactive. Activate the campaign to start creating posts."
 msgstr ""
 
-#: admin/ajax.php:2564
+#: admin/ajax.php:2700
 msgid "Campaign status is set to draft. Change status to published to enable post creation."
 msgstr ""
 
@@ -538,7 +563,7 @@ msgid "All Campaigns"
 msgstr ""
 
 #: admin/filters.php:142
-#: assets/build/869.js:1
+#: assets/build/341.js:1
 msgid "Campaign"
 msgstr ""
 
@@ -556,7 +581,7 @@ msgid "Please %1$sactivate%2$s your copy to claim tokens %4$s%3$s%5$s to generat
 msgstr ""
 
 #: admin/licensing.php:454
-#: assets/build/229.js:2
+#: assets/build/610.js:2
 msgid "Security verification failed. Please refresh the page and try again."
 msgstr ""
 
@@ -635,12 +660,12 @@ msgid "Search Campaign"
 msgstr ""
 
 #: core/cpt.php:64
-#: assets/build/869.js:1
+#: assets/build/341.js:1
 msgid "Campaigns"
 msgstr ""
 
 #: core/cpt.php:65
-#: assets/build/869.js:1
+#: assets/build/341.js:1
 msgid "Edit Campaign"
 msgstr ""
 
@@ -652,7 +677,7 @@ msgstr ""
 
 #: core/cpt.php:67
 #: core/cpt.php:69
-#: assets/build/869.js:1
+#: assets/build/341.js:1
 msgid "Add New"
 msgstr ""
 
@@ -703,7 +728,7 @@ msgid "Published"
 msgstr ""
 
 #: inc/functions/common.php:234
-#: assets/build/869.js:1
+#: assets/build/341.js:1
 msgid "Scheduled"
 msgstr ""
 
@@ -835,12 +860,12 @@ msgid "Target Posts"
 msgstr ""
 
 #: inc/notifications/email-templates.php:85
-#: assets/build/869.js:1
+#: assets/build/341.js:1
 msgid "Frequency"
 msgstr ""
 
 #: inc/notifications/email-templates.php:86
-#: assets/build/869.js:1
+#: assets/build/341.js:1
 msgid "Keywords"
 msgstr ""
 
@@ -879,7 +904,7 @@ msgid "View Post"
 msgstr ""
 
 #: inc/notifications/email-templates.php:148
-#: assets/build/869.js:1
+#: assets/build/341.js:1
 msgid "Edit Post"
 msgstr ""
 
@@ -910,12 +935,12 @@ msgid "Completion Time"
 msgstr ""
 
 #: inc/notifications/email-templates.php:197
-#: assets/build/869.js:1
+#: assets/build/341.js:1
 msgid "Status"
 msgstr ""
 
 #: inc/notifications/email-templates.php:197
-#: assets/build/869.js:1
+#: assets/build/341.js:1
 msgid "Completed"
 msgstr ""
 
@@ -961,6 +986,10 @@ msgstr ""
 msgid "Solvex AI Blogger Notification"
 msgstr ""
 
+#: inc/notifications/email-templates.php:294
+msgid "Solvex AI Blogger"
+msgstr ""
+
 #: inc/notifications/email-templates.php:317
 msgid "You are receiving this notification because you have enabled notifications for Solvex AI Blogger."
 msgstr ""
@@ -998,7 +1027,7 @@ msgstr[1] ""
 msgid "Every %1$d %2$s"
 msgstr ""
 
-#: inc/utils/helper.php:123
+#: inc/utils/helper.php:124
 msgid "Invalid key parameter"
 msgstr ""
 
@@ -1047,7 +1076,19 @@ msgid "Automate Blogging"
 msgstr ""
 
 #: assets/build/9.js:2
-msgid "Start the setup wizard"
+msgid "Claim free tokens and continue setup"
+msgstr ""
+
+#: assets/build/9.js:2
+msgid "Free Forever Plan"
+msgstr ""
+
+#: assets/build/9.js:2
+msgid "20,000 FREE TOKENS every month"
+msgstr ""
+
+#: assets/build/9.js:2
+msgid "Up to 7 blog posts monthly"
 msgstr ""
 
 #: assets/build/9.js:2
@@ -1055,7 +1096,11 @@ msgid "AI Content Generation"
 msgstr ""
 
 #: assets/build/9.js:2
-msgid "Create engaging blog posts automatically"
+msgid "SEO-optimized blog posts"
+msgstr ""
+
+#: assets/build/9.js:2
+msgid "Powered by cutting-edge AI models"
 msgstr ""
 
 #: assets/build/9.js:2
@@ -1063,409 +1108,1928 @@ msgid "Quick Setup"
 msgstr ""
 
 #: assets/build/9.js:2
-msgid "Ready in under 5 minutes"
+msgid "Ready in under 2 minutes"
 msgstr ""
 
 #: assets/build/9.js:2
-msgid "Automated Scheduling"
+msgid "Start free, no payment needed"
 msgstr ""
 
 #: assets/build/9.js:2
-msgid "Schedule AI-generated blog posts automatically"
+msgid "Step 1 of 3"
 msgstr ""
 
 #: assets/build/9.js:2
-msgid "Step 1 of 5"
+msgid "Automate Your Blog with AI."
 msgstr ""
 
 #: assets/build/9.js:2
-msgid "Turn Ideas Into"
+msgid "Get Started for Free."
 msgstr ""
 
 #: assets/build/9.js:2
-msgid "AI-Powered Blogs"
+msgid "Connect your site now to claim your"
 msgstr ""
 
 #: assets/build/9.js:2
-msgid "Set once and forget - automatically publish high-quality blog posts on schedule."
+msgid "20,000 free monthly tokens"
 msgstr ""
 
 #: assets/build/9.js:2
-msgid "Start Building"
+msgid "No credit card required."
 msgstr ""
 
 #: assets/build/9.js:2
-msgid "Welcome to Solvex AI Blogger setup wizard. Use the Start Building button to begin."
+msgid "Claim My Free Tokens & Continue"
 msgstr ""
 
-#: assets/build/51.js:2
-#: assets/build/229.js:2
-#: assets/build/869.js:1
-#: assets/build/999.js:2
-msgid "Required"
+#: assets/build/9.js:2
+msgid "Welcome to Solvex AI Blogger."
 msgstr ""
 
-#: assets/build/51.js:2
-msgid "Save preferences and continue to final step"
+#: assets/build/9.js:2
+msgid "Get 20,000 free tokens every month"
 msgstr ""
 
-#: assets/build/51.js:2
-msgid "First name must be at least 2 characters."
+#: assets/build/9.js:2
+msgid "Click Claim My Free Tokens to begin setup."
 msgstr ""
 
-#: assets/build/51.js:2
-msgid "First name is required."
+#: assets/build/341.js:1
+msgid "CORE"
 msgstr ""
 
-#: assets/build/51.js:2
-msgid "Please enter a valid email address."
+#: assets/build/341.js:1
+msgid "Tokens refreshed successfully!"
 msgstr ""
 
-#: assets/build/51.js:2
-msgid "Email address is required."
+#: assets/build/341.js:1
+msgid "Failed to refresh token data"
 msgstr ""
 
-#: assets/build/51.js:2
-#: assets/build/999.js:2
-msgid "Failed to save your information. Please try again."
+#: assets/build/341.js:1
+msgid "Plenty of tokens"
 msgstr ""
 
-#: assets/build/51.js:2
-msgid "Weekly AI Writing Tips"
+#: assets/build/341.js:1
+msgid "Moderate"
 msgstr ""
 
-#: assets/build/51.js:2
-msgid "Master AI-powered content creation with expert tips and techniques delivered every week."
+#: assets/build/341.js:1
+msgid "Low"
 msgstr ""
 
-#: assets/build/51.js:2
-msgid "Marketing Strategies"
+#: assets/build/341.js:1
+msgid "Tokens"
 msgstr ""
 
-#: assets/build/51.js:2
-msgid "Receive proven marketing strategies and growth tips from successful bloggers."
+#: assets/build/341.js:1
+msgid "Refresh token data"
 msgstr ""
 
-#: assets/build/51.js:2
-msgid "Blog Growth Tips"
+#: assets/build/341.js:1
+msgid "Refresh"
 msgstr ""
 
-#: assets/build/51.js:2
-msgid "Access exclusive content optimization and audience engagement techniques."
-msgstr ""
-
-#: assets/build/51.js:2
-msgid "Step 4 of 5"
-msgstr ""
-
-#: assets/build/51.js:2
-msgid "Almost There!"
-msgstr ""
-
-#: assets/build/51.js:2
-msgid "Get personalized growth insights"
-msgstr ""
-
-#: assets/build/51.js:2
-msgid "Your Information"
-msgstr ""
-
-#: assets/build/51.js:2
-msgid "First Name"
-msgstr ""
-
-#: assets/build/51.js:2
-msgid "Enter your first name"
-msgstr ""
-
-#: assets/build/51.js:2
-msgid "Email Address"
-msgstr ""
-
-#: assets/build/51.js:2
-msgid "Enter your email address"
-msgstr ""
-
-#: assets/build/51.js:2
-#: assets/build/869.js:1
-#: assets/build/999.js:2
-msgid "Saving…"
-msgstr ""
-
-#: assets/build/51.js:2
-msgid "Save & Continue"
-msgstr ""
-
-#: assets/build/51.js:2
-msgid "Privacy Guaranteed"
-msgstr ""
-
-#: assets/build/51.js:2
-msgid "We respect your privacy. No spam, unsubscribe anytime. Your data is secure and never shared."
-msgstr ""
-
-#: assets/build/51.js:2
-msgid "What You'll Receive"
-msgstr ""
-
-#: assets/build/51.js:2
-msgid "Saving your information…"
-msgstr ""
-
-#: assets/build/229.js:2
-#: assets/build/869.js:1
-msgid "License Key"
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "Enter your license key here…"
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "Activate license and continue"
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "License activated and token data updated successfully!"
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "License activated but failed to fetch token data"
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "License activated but token fetch failed"
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "Invalid license key. Please check your license key and try again."
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "License activation failed. Please check your license key."
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "Connection failed. Please check your internet connection and try again."
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "License key is required."
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "Step 3 of 5"
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "Activate Your License"
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "Connect your site to unlock AI-powered content generation with your license key."
-msgstr ""
-
-#: assets/build/229.js:2
-#: assets/build/869.js:1
-msgid "No License Key?"
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "Get started with free credits today.."
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "Claim Free Credits"
-msgstr ""
-
-#: assets/build/229.js:2
-#: assets/build/869.js:1
-msgid "Get free credits - opens in new tab"
-msgstr ""
-
-#: assets/build/229.js:2
-#: assets/build/869.js:1
-msgid "License activated successfully!"
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "Proceeding…"
-msgstr ""
-
-#: assets/build/229.js:2
-#: assets/build/869.js:1
-msgid "Activating…"
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "Activate & Continue"
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "Your license key connects your site to our AI services and allocates content generation tokens. "
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "Learn more about licensing"
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "Activating your license…"
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "License activated successfully. Proceeding to next step."
-msgstr ""
-
-#: assets/build/229.js:2
-msgid "License activation failed:"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "What's Next?"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Learn how to get the most out of Solvex AI Blogger"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Create your first AI-powered blog post"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Set up automated content schedules"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Optimize your content for search engines"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Watch getting started video"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Watch Getting Started Video"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Complete setup and go to dashboard"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Setup Complete"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Your WordPress site is now connected to our AI-powered content generation system."
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "AI Models Ready"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Advanced language models are configured and ready to create high-quality content."
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Free Credits Applied"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Your account has been credited with free tokens to get you started immediately."
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "🎉 Congratulations!"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Solvex AI Blogger is now ready to transform your content creation process with the power of artificial intelligence."
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Finishing Setup…"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Start Creating Amazing Content!"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "You're all set! Your WordPress site is now equipped with powerful AI tools to help you create engaging, high-quality content faster than ever before."
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Finishing setup and redirecting to dashboard…"
-msgstr ""
-
-#: assets/build/610.js:2
-msgid "Congratulations! Setup completed successfully with celebration."
-msgstr ""
-
-#: assets/build/622.js:2
-msgid "Are you sure you want to exit the setup wizard?"
-msgstr ""
-
-#: assets/build/622.js:2
-msgid "Exit setup wizard"
-msgstr ""
-
-#: assets/build/622.js:2
-msgid "Exit Setup"
-msgstr ""
-
-#: assets/build/622.js:2
-#: assets/build/869.js:1
+#: assets/build/341.js:1
+#: assets/build/974.js:2
 msgid "Welcome"
 msgstr ""
 
-#: assets/build/622.js:2
-msgid "Site Info"
+#: assets/build/341.js:1
+msgid "Settings"
 msgstr ""
 
-#: assets/build/622.js:2
-#: assets/build/869.js:1
-msgid "License"
+#: assets/build/341.js:1
+msgid "Free vs Pro"
 msgstr ""
 
-#: assets/build/622.js:2
-msgid "Subscribe"
+#: assets/build/341.js:1
+msgid "Unlock Pro Features - Opens in new tab"
 msgstr ""
 
-#: assets/build/622.js:2
-msgid "Done"
+#: assets/build/341.js:1
+msgid "Unlock Pro Features"
 msgstr ""
 
-#: assets/build/622.js:2
+#: assets/build/341.js:1
+#: assets/build/851.js:2
+msgid "Required"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Date"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Time"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Select time"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Campaign Configuration"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "New Campaign"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "General"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Filters"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Advanced"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Name"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "21 Week Fitness Plan"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Yoga, Fitness, Health"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Posts Target"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Post Target can not be updated."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "How many posts you expect from this campaign?"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Once set, campaign targets are unchangeable."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Repeat Every"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Set how often the campaign should run automatically."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Day(s)"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Week(s)"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "On Days"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Start Date"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Start Date can not be updated later."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Select campaign start date"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Use Summary as Excerpt?"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Campaign Status"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "On"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "The campaign will be activated immediately and start running."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Off"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "The campaign setup will be saved, but it won't run until you switch it ON."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Post Type"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Post Author"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Post Status"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Post Category"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "-- Select --"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Post Tag"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Maximum Content Words"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Set the maximum number of words for generated content (100-5000 words)."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Free users are limited to 1000 words. Upgrade to Pro to customize up to 5000 words."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "e.g., 1500"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "1000 (Free limit)"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Number of Content Images"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Number of images in post content (1-5). A featured image is automatically included."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Free users are limited to 1 content image. Upgrade to Pro for up to 5. Featured image is always included."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "e.g., 3"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "1 (Free limit)"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Override Site Persona for this Campaign?"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Customize site persona specifically for this campaign. This overrides your global site settings."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Pro feature: Customize site persona per campaign. Upgrade to unlock."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Campaign For"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "e.g., Fitness enthusiasts and health-conscious individuals"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Campaign Description"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "e.g., A comprehensive guide to yoga and wellness practices"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Learn more about how to configure your campaign."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Unlock Premium Features"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Upgrade to Pro for more features and benefits."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Upgrade Now"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Close"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Cancel"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Week days should not be empty."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Campaign Description should not be empty when override is enabled."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Campaign For should not be empty when override is enabled."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Start Date should not be empty."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Posts Target should not be empty."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Keywords should not be empty."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Name should not be empty."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Campaign completed - Updates disabled"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Create"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Update"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Failed to fetch analytics data"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Error fetching analytics data"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Campaign Analytics"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Loading analytics…"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Try again"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Created Posts"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Total Visits"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Success Rate"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Total Comments"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Top Performing Posts"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "By views"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "views"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "No posts data available yet"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Get more features with Pro"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Unlock premium tools, advanced controls, and more automation."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Soon"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Upgrade"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Unlimited Ideas"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "More tokens"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Up to 5000 words per post"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "High"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Posts"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Visits"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Complete"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Paused"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Active"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Last Post Run"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Unnamed Campaign"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Posts List"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Analytics"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Configure"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Offline Mode"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "You are currently in Offline Mode. Connect a free account to unlock 20,000 monthly tokens and start generating posts."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Navigate to account settings"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Connect Account"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "No Campaign Data Available"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Campaign insights will appear here once you create and run your first campaign."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Campaigns Insights"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "View All"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Scroll left"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Scroll right"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "No campaigns found"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Create your first campaign to start generating content automatically."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Monitor your campaign performance and analytics."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Loading row"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: assets/build/341.js:1
+#: assets/build/blog-app.js:2
+msgid "Loading…"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Error while loading post ideas:"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Please fill out the general settings to see post ideas."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Go to General Settings"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Connect your free account to use this feature."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Retry"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Blog Post Suggestions"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "A list of some new blog post ideas that you can use to grow your blog."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Refresh Post Ideas"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "⚡ Limited to 5 Suggestions, Upgrade to Pro"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Refresh (0/5)"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Title"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Write Post"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "🚀 Need more ideas? Go Pro for unlimited suggestions"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Edit"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Invalid response received from server."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Error: Invalid response from server."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Failed to create post."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Failed to create post:"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Error: "
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Post created but no post ID or edit link received."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Error: Post created but unable to get post details."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Post created successfully! Click \"Edit\" to edit it."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Network error occurred while creating post."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Error creating post:"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Creating…"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "more post ideas available with Pro!"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Unlock All Ideas - Upgrade Now"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "No post ideas available."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Open Support Ticket"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Help Center"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Access Dashboard"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Quick Access"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Get help and connect with the community."
+msgstr ""
+
+#: assets/build/341.js:1
+#: assets/build/blog-app.js:2
+msgid "Something went wrong"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "We encountered an error loading the welcome page. Please try refreshing."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Retry loading welcome page"
+msgstr ""
+
+#: assets/build/341.js:1
+#: assets/build/blog-app.js:2
+msgid "Try Again"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Welcome dashboard"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Welcome page content loaded"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Required field"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "This field is required"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Optional field"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "optional"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Valid input"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Block none"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Block few"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Block some"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Block most"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Conservative"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Balanced"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Creative"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Very Creative"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Experimental"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Creativity Temperature"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Controls randomness and creativity in content generation."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Content creativity level"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "More predictable"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "More creative"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Advanced AI Settings"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Configure creativity temperature and content safety filters."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Content Safety Filters"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Harassment Filter"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Blocks harassing or bullying content."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Hate Speech Filter"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Blocks hateful or discriminatory content."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Adult Content Filter"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Blocks sexually explicit content."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Dangerous Content Filter"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Blocks potentially harmful instructions."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Safety Filter Guidelines"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Higher filter levels provide stronger content moderation but may be more restrictive. Adjust based on your content requirements and audience."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Safety filter configuration guidelines"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Site title must be 100 characters or less"
+msgstr ""
+
+#: assets/build/341.js:1
+#: assets/build/851.js:2
+msgid "Site title is required"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Please provide a more detailed description (at least 10 characters)"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Description must be 200 characters or less"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Site for is required"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Please provide more detailed information (at least 20 characters)"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Description must be 500 characters or less"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Detailed site information is required"
+msgstr ""
+
+#: assets/build/341.js:1
+#: assets/build/851.js:2
+msgid "Site Title"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Enter your site title"
+msgstr ""
+
+#: assets/build/341.js:1
+#: assets/build/851.js:2
+msgid "The main title of your website or blog."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Site For"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Brief description of your site"
+msgstr ""
+
+#: assets/build/341.js:1
+#: assets/build/851.js:2
+msgid "Who is your target audience?"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Detailed Site Information"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Provide detailed information about your site, target audience, content style, and any specific requirements…"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "This information helps AI generate more relevant and targeted content for your audience."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Pro Tips for Better Results"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Be specific about your target audience and industry."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Include your brand voice and tone preferences."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Mention any specific topics or keywords you focus on."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Pro tips for better content generation results"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Persona settings configuration completed"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "General settings page loaded with persona configuration options"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Email address is required when notifications are enabled"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Phone number is required when notifications are enabled"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "This field is required when notifications are enabled"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Please enter valid email address(es)"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Please enter a valid phone number"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Invalid format"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Toggle"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Email Notifications"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Receive notifications via email."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "admin@example.com, editor@example.com"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Enter multiple email addresses separated by commas for team notifications."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Notification Types"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Campaign started"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "New post created"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Campaign completed"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Types of notifications you can receive"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "API Key"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Enter your API key to connect your site"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "License is active"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Enter your API key…"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Deactivate license"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Activate license"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "No API Key?"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Get started with free credits today."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Get Free Credits"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Get free credits - opens in new tab"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Fetching your token data…"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "This may take a few seconds"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Activate"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Deactivate"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Activating…"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "License activation failed"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "License Activated & Tokens Updated!"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "License Activated (Token fetch failed)"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "License activated successfully!"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Failed to activate license"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Deactivating…"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Deactivated"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "License deactivated"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Activated"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "No active license"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "No settings to save"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Email address cannot be empty."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Saving setting"
+msgstr ""
+
+#: assets/build/341.js:1
 #: assets/build/643.js:2
-msgid "Setup wizard navigation"
+msgid "of"
 msgstr ""
 
-#: assets/build/622.js:2
-msgid "Setup Wizard"
+#: assets/build/341.js:1
+msgid "Settings saved successfully"
 msgstr ""
 
-#: assets/build/622.js:2
-msgid "Setup wizard steps"
+#: assets/build/341.js:1
+msgid "Failed to save settings. Please try again."
 msgstr ""
 
-#: assets/build/622.js:2
-msgid "Setup"
+#: assets/build/341.js:1
+msgid "Saving settings…"
 msgstr ""
 
+#: assets/build/341.js:1
+msgid "Save settings"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Saving…"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Save"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "License is Required"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "All site details are required"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Basic site settings and configuration"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Notifications"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Manage email and push notifications"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "API key and account connection"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Failed to load settings page"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Settings Error"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Settings navigation"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Settings sections"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Settings content"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Loading settings…"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Content Generation"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "AI-powered content creation capabilities"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Automation & Scheduling"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Automated publishing and management features"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "SEO & Optimization"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Search engine optimization tools"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Analytics & Insights"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Performance tracking and analytics"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Support & Updates"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Customer support and product updates"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Content Generation Tokens"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "20,000 Tokens/month"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "50,000+ Tokens/month"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Token allocation for AI content generation"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Upto 5 Ideas"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "AI-generated blog post ideas tailored to your niche"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Post Content Words"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Upto 1000 Words/post"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Upto 5000 Words/post"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Full-length article generation with advanced AI models"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Content Images"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "1 Image/post"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Upto 5 Images/post"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Make AI content sound natural and engaging"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Featured Image"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Automatically schedule and publish content"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Unlimited"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Target high-ranking keywords for better SEO"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Basic Campaign Analytics"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Basic + AI Backed Campaign Analytics [Soon]"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Email Based"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Email + WhatsApp [Soon]"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Get help when you need it most"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Support"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Free Basic Support"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "One Year Premium Support"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Updates & Features"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Free Product Updates"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "One Year Premium Updates"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Access to the latest features and improvements"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Included"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Not included"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Feature"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Free Version"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Pro Version"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Available"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Not available"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Custom"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Premium feature"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Free version"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Pro version"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Let AI Run Your Blog - You Focus on Growth"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Unlock all the features and take your blog to the next level with AI Blogger Pro."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Advanced AI Features"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Priority Support"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "AI Driven Analytics"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "14-day Money-back Guarantee • Cancel Anytime • Instant Activation"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Feature comparison between Free and Pro plans"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Detailed comparison of features available in Free and Pro versions of AI Blogger"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Features"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Free"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "$0/month"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Premium"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Starting at $3.99/month"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Failed to fetch logs data"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "An error occurred while fetching logs data"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Campaign Logs"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Post creation history and scheduling logs"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Loading logs…"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Successful"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Failed Attempts"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Target"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Not set"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "End Date"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Recently completed"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "In progress"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Not started"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Daily once"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Weekly once"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Hourly once"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Activity Timeline"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Campaign Activity"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Today"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Hide details"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Show details"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "ID:"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Error Details:"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Process Steps:"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "No Activity Yet"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Post creation logs will appear here once your campaign starts generating content. Make sure your campaign is active and properly configured."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Campaign is currently inactive. Activate it to start generating logs."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Logs are automatically generated during post creation and scheduling."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Delete Campaign"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Are you sure you want to delete this campaign?"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Failed to delete campaign."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "An error occurred while deleting the campaign."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Deleting…"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Default"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Active First"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Inactive First"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Last Run"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Sort"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Search campaigns…"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Page not found. Please check the URL and try again."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Access denied. This feature requires a connected account."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Invalid page parameter. Please navigate from the main menu."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "404 - Page Not Found"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Access Denied"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Invalid Page"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Error"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Go to Welcome Page"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Getting Started"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "🧪 Campaign Testing Mode Active"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Intervals are accelerated for testing: Daily = 1min, Weekly = 2min, Weekday Selection = 2min per day gap (Mon→Thu = 6min). Remember to disable testing mode in production!"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Manage Campaigns"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Results"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Latest Post"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Actions"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Untitled Campaign"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Toggle campaign status for"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Scheduled - No posts yet"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Not configured - Click Configure to set start date. Currently using creation date"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "View logs"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Delete"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "No campaigns match your search"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "No campaigns match \"%s\"."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Try different search terms or clear your search to see all campaigns."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Clear search"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "No Campaigns."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Get Started by Creating a New Campaign."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Close notification"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Got it!"
+msgstr ""
+
+#: assets/build/341.js:1
 #: assets/build/643.js:2
 msgid "Next"
 msgstr ""
 
+#: assets/build/341.js:1
 #: assets/build/643.js:2
-msgid "Skip"
+msgid "Step"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Dismiss"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Skip Tour"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Generate Post Ideas"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Click here to generate AI-powered blog post topics tailored to your site."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "View Campaigns"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Set up automated campaigns to publish blog posts on a schedule."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Start Auto-Publishing"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Create your first campaign to start auto-publishing posts on a schedule."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Track Token Usage"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Track your free token balance here. 20,000 tokens refresh monthly."
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Connect Your Free Account"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Connect your free account to unlock AI-powered blogging. It takes just 30 seconds!"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Get Your Free API Key"
+msgstr ""
+
+#: assets/build/341.js:1
+msgid "Click here to create your free account in 30 seconds and get your API key."
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "API Connection Key"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Paste your API connection key here…"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Connected successfully! Token data updated."
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Connected but failed to fetch token data"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Connected but token fetch failed"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Invalid API key. Please check your key and try again."
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Connection failed. Please check your API key."
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Connection failed. Please check your internet connection and try again."
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "API connection key is required."
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Step 2 of 3"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Connect Your Account"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Link your site to access your free tokens and AI models."
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Don't have a key?"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Create a free account in 30 seconds to get your API connection key and 20,000 monthly free tokens."
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Get free API key - opens in new tab"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Get Free API Key"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Start free, no payment needed • Free forever"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Already have a key?"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Paste your API connection key below to connect your site."
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Connected successfully!"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Connect your site"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Connecting…"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Connect Site"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Connecting your site…"
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Site connected successfully. Proceeding to next step."
+msgstr ""
+
+#: assets/build/610.js:2
+msgid "Connection failed:"
 msgstr ""
 
 #: assets/build/643.js:2
 msgid "Finish Setup"
+msgstr ""
+
+#: assets/build/643.js:2
+#: assets/build/974.js:2
+msgid "Setup wizard navigation"
 msgstr ""
 
 #: assets/build/643.js:2
@@ -1477,16 +3041,7 @@ msgid "Back"
 msgstr ""
 
 #: assets/build/643.js:2
-msgid "Step"
-msgstr ""
-
-#: assets/build/643.js:2
-#: assets/build/869.js:1
-msgid "of"
-msgstr ""
-
-#: assets/build/643.js:2
-#: assets/build/999.js:2
+#: assets/build/851.js:2
 msgid "Continue to next step"
 msgstr ""
 
@@ -1502,1744 +3057,124 @@ msgstr ""
 msgid "Completing setup process…"
 msgstr ""
 
-#: assets/build/869.js:1
-msgid "CORE"
+#: assets/build/851.js:2
+msgid "Site title must be at least 2 characters"
 msgstr ""
 
-#: assets/build/869.js:1
-msgid "Tokens refreshed successfully!"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Failed to refresh token data"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Plenty of tokens"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Moderate"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Low"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Tokens"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Refresh token data"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Refresh"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Settings"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Free vs Pro"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Unlock Pro Features - Opens in new tab"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Unlock Pro Features"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Date"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Time"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Select time"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Campaign Configuration"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "New Campaign"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "General"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Filters"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Advanced"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Name"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "21 Week Fitness Plan"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Yoga, Fitness, Health"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Posts Target"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Post Target can not be updated."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "How many posts you expect from this campaign?"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Once set, campaign targets are unchangeable."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Repeat Every"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Set how often the campaign should run automatically."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Day(s)"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Week(s)"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "On Days"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Start Date"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Start Date can not be updated later."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Select campaign start date"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Use Summary as Excerpt?"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Campaign Status"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "On"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "The campaign will be activated immediately and start running."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Off"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "The campaign setup will be saved, but it won't run until you switch it ON."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Post Type"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Post Author"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Post Status"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Post Category"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "-- Select --"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Post Tag"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Maximum Content Words"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Set the maximum number of words for generated content (100-5000 words)."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Free users are limited to 1000 words. Upgrade to Pro to customize up to 5000 words."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "e.g., 1500"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "1000 (Free limit)"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Number of Content Images"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Number of images in post content (1-5). A featured image is automatically included."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Free users are limited to 1 content image. Upgrade to Pro for up to 5. Featured image is always included."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "e.g., 3"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "1 (Free limit)"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Override Site Persona for this Campaign?"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Customize site persona specifically for this campaign. This overrides your global site settings."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Pro feature: Customize site persona per campaign. Upgrade to unlock."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Campaign For"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "e.g., Fitness enthusiasts and health-conscious individuals"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Campaign Description"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "e.g., A comprehensive guide to yoga and wellness practices"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Learn more about how to configure your campaign."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Unlock Premium Features"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Upgrade to Pro for more features and benefits."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Upgrade Now"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Close"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Cancel"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Week days should not be empty."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Campaign Description should not be empty when override is enabled."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Campaign For should not be empty when override is enabled."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Start Date should not be empty."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Posts Target should not be empty."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Keywords should not be empty."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Name should not be empty."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Campaign completed - Updates disabled"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Create"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Update"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Failed to fetch analytics data"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Error fetching analytics data"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Campaign Analytics"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Loading analytics…"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Try again"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Created Posts"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Total Visits"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Success Rate"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Total Comments"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Top Performing Posts"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "By views"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "views"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "No posts data available yet"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Get more features with Pro"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Unlock premium tools, advanced controls, and more automation."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Soon"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Upgrade"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Unlimited Ideas"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "More tokens"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Up to 5000 words per post"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "High"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Posts"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Visits"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Complete"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Paused"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Active"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Last Post Run"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Unnamed Campaign"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Posts List"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Analytics"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Configure"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "License Required"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Activate your license to access campaign insights and performance analytics."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Navigate to license settings"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Activate License"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "No Campaign Data Available"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Campaign insights will appear here once you create and run your first campaign."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Campaigns Insights"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "View All"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Scroll left"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Scroll right"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "No campaigns found"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Create your first campaign to start generating content automatically."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Monitor your campaign performance and analytics."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Loading row"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Upgrade to Pro"
-msgstr ""
-
-#: assets/build/869.js:1
-#: assets/build/blog-app.js:2
-msgid "Loading…"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Error while loading post ideas:"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Please fill out the general settings to see post ideas."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Go to General Settings"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "License key is missing. Please activate your license to use this feature."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Go to License Settings"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Retry"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Blog Post Suggestions"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "A list of some new blog post ideas that you can use to grow your blog."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Refresh Post Ideas"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "⚡ Limited to 5 Suggestions, Upgrade to Pro"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Refresh (0/5)"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Title"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Write Post"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "🚀 Need more ideas? Go Pro for unlimited suggestions"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Edit"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Invalid response received from server."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Error: Invalid response from server."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Failed to create post."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Failed to create post:"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Error: "
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Post created but no post ID or edit link received."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Error: Post created but unable to get post details."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Post created successfully! Click \"Edit\" to edit it."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Network error occurred while creating post."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Error creating post:"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Creating…"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "more post ideas available with Pro!"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Unlock All Ideas - Upgrade Now"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "No post ideas available."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Open Support Ticket"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Help Center"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Access Dashboard"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Quick Access"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Get help and connect with the community."
-msgstr ""
-
-#: assets/build/869.js:1
-#: assets/build/blog-app.js:2
-msgid "Something went wrong"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "We encountered an error loading the welcome page. Please try refreshing."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Retry loading welcome page"
-msgstr ""
-
-#: assets/build/869.js:1
-#: assets/build/blog-app.js:2
-msgid "Try Again"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Welcome dashboard"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Welcome page content loaded"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Required field"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "This field is required"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Optional field"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "optional"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Valid input"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Block none"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Block few"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Block some"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Block most"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Conservative"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Balanced"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Creative"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Very Creative"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Experimental"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Creativity Temperature"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Controls randomness and creativity in content generation."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Content creativity level"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "More predictable"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "More creative"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Advanced AI Settings"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Configure creativity temperature and content safety filters."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Content Safety Filters"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Harassment Filter"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Blocks harassing or bullying content."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Hate Speech Filter"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Blocks hateful or discriminatory content."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Adult Content Filter"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Blocks sexually explicit content."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Dangerous Content Filter"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Blocks potentially harmful instructions."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Safety Filter Guidelines"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Higher filter levels provide stronger content moderation but may be more restrictive. Adjust based on your content requirements and audience."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Safety filter configuration guidelines"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Site title must be 100 characters or less"
-msgstr ""
-
-#: assets/build/869.js:1
-#: assets/build/999.js:2
-msgid "Site title is required"
-msgstr ""
-
-#: assets/build/869.js:1
-#: assets/build/999.js:2
-msgid "Please provide a more detailed description (at least 10 characters)"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Description must be 200 characters or less"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Site for is required"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Please provide more detailed information (at least 20 characters)"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Description must be 500 characters or less"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Detailed site information is required"
-msgstr ""
-
-#: assets/build/869.js:1
-#: assets/build/999.js:2
-msgid "Site Title"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Enter your site title"
-msgstr ""
-
-#: assets/build/869.js:1
-#: assets/build/999.js:2
-msgid "The main title of your website or blog."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Site For"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Brief description of your site"
-msgstr ""
-
-#: assets/build/869.js:1
-#: assets/build/999.js:2
-msgid "Who is your target audience?"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Detailed Site Information"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Provide detailed information about your site, target audience, content style, and any specific requirements…"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "This information helps AI generate more relevant and targeted content for your audience."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Pro Tips for Better Results"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Be specific about your target audience and industry."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Include your brand voice and tone preferences."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Mention any specific topics or keywords you focus on."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Pro tips for better content generation results"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Persona settings configuration completed"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "General settings page loaded with persona configuration options"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Email address is required when notifications are enabled"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Phone number is required when notifications are enabled"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "This field is required when notifications are enabled"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Please enter valid email address(es)"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Please enter a valid phone number"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Invalid format"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Toggle"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Email Notifications"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Receive notifications via email."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "admin@example.com, editor@example.com"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Enter multiple email addresses separated by commas for team notifications."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Notification Types"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Campaign started"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "New post created"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Campaign completed"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Types of notifications you can receive"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Enter your license key to unlock premium features"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "License is active"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Enter your license key…"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Deactivate license"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Activate license"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Get started with free credits today."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Get Free Credits"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Fetching your token data…"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "This may take a few seconds"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Activate"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Deactivate"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "License activation failed"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "License Activated & Tokens Updated!"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "License Activated (Token fetch failed)"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Failed to activate license"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Deactivating…"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Deactivated"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "License deactivated"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Activated"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "No active license"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "No settings to save"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Email address cannot be empty."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Saving setting"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Settings saved successfully"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Failed to save settings. Please try again."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Saving settings…"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Save settings"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Save"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "License is Required"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "All site details are required"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Basic site settings and configuration"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Notifications"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Manage email and push notifications"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "License activation and management"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Failed to load settings page"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Settings Error"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Settings navigation"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Settings sections"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Settings content"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Loading settings…"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Content Generation"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "AI-powered content creation capabilities"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Automation & Scheduling"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Automated publishing and management features"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "SEO & Optimization"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Search engine optimization tools"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Analytics & Insights"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Performance tracking and analytics"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Support & Updates"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Customer support and product updates"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Content Generation Tokens"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "20,000 Tokens/month"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "50,000+ Tokens/month"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Token allocation for AI content generation"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Upto 5 Ideas"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "AI-generated blog post ideas tailored to your niche"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Post Content Words"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Upto 1000 Words/post"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Upto 5000 Words/post"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Full-length article generation with advanced AI models"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Content Images"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "1 Image/post"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Upto 5 Images/post"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Make AI content sound natural and engaging"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Featured Image"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Automatically schedule and publish content"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Unlimited"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Target high-ranking keywords for better SEO"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Basic Campaign Analytics"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Basic + AI Backed Campaign Analytics [Soon]"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Email Based"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Email + WhatsApp [Soon]"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Get help when you need it most"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Support"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Free Basic Support"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "One Year Premium Support"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Updates & Features"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Free Product Updates"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "One Year Premium Updates"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Access to the latest features and improvements"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Included"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Not included"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Feature"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Free Version"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Pro Version"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Available"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Not available"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Custom"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Premium feature"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Free version"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Pro version"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Let AI Run Your Blog - You Focus on Growth"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Unlock all the features and take your blog to the next level with AI Blogger Pro."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Advanced AI Features"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Priority Support"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "AI Driven Analytics"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "14-day Money-back Guarantee • Cancel Anytime • Instant Activation"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Feature comparison between Free and Pro plans"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Detailed comparison of features available in Free and Pro versions of AI Blogger"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Features"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Free"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "$0/month"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Premium"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Starting at $3.99/month"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Failed to fetch logs data"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "An error occurred while fetching logs data"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Campaign Logs"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Post creation history and scheduling logs"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Loading logs…"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Successful"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Failed Attempts"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Target"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Not set"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "End Date"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Recently completed"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "In progress"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Not started"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Daily once"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Weekly once"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Hourly once"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Activity Timeline"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Campaign Activity"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Today"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Hide details"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Show details"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "ID:"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Error Details:"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Process Steps:"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "No Activity Yet"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Post creation logs will appear here once your campaign starts generating content. Make sure your campaign is active and properly configured."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Campaign is currently inactive. Activate it to start generating logs."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Logs are automatically generated during post creation and scheduling."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Delete Campaign"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Are you sure you want to delete this campaign?"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Failed to delete campaign."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "An error occurred while deleting the campaign."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Deleting…"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Default"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Active First"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Inactive First"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Last Run"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Sort"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Search campaigns…"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Page not found. Please check the URL and try again."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Access denied. This feature requires a valid license."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Invalid page parameter. Please navigate from the main menu."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Something went wrong. Please try again."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "404 - Page Not Found"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Access Denied"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Invalid Page"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Error"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Go to Welcome Page"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Getting Started"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "🧪 Campaign Testing Mode Active"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Intervals are accelerated for testing: Daily = 1min, Weekly = 2min, Weekday Selection = 2min per day gap (Mon→Thu = 6min). Remember to disable testing mode in production!"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Manage Campaigns"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Results"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Latest Post"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Actions"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Untitled Campaign"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Toggle campaign status for"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Scheduled - No posts yet"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Not configured - Click Configure to set start date. Currently using creation date"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "View logs"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Delete"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "No campaigns match your search"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "No campaigns match \"%s\"."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Try different search terms or clear your search to see all campaigns."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Clear search"
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "No Campaigns."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Get Started by Creating a New Campaign."
-msgstr ""
-
-#: assets/build/869.js:1
-msgid "Close notification"
-msgstr ""
-
-#: assets/build/999.js:2
-msgid "Site title must be at least 3 characters"
-msgstr ""
-
-#: assets/build/999.js:2
+#: assets/build/851.js:2
 msgid "Site title must be less than 100 characters"
 msgstr ""
 
-#: assets/build/999.js:2
+#: assets/build/851.js:2
+msgid "Site purpose must be at least 3 characters"
+msgstr ""
+
+#: assets/build/851.js:2
 msgid "Site purpose must be less than 200 characters"
 msgstr ""
 
-#: assets/build/999.js:2
+#: assets/build/851.js:2
 msgid "Site purpose is required"
 msgstr ""
 
-#: assets/build/999.js:2
-msgid "Please provide a more detailed description (at least 20 characters)"
+#: assets/build/851.js:2
+msgid "Site description must be at least 10 characters"
 msgstr ""
 
-#: assets/build/999.js:2
+#: assets/build/851.js:2
 msgid "Site description must be less than 1000 characters"
 msgstr ""
 
-#: assets/build/999.js:2
+#: assets/build/851.js:2
 msgid "Site description is required"
 msgstr ""
 
-#: assets/build/999.js:2
-msgid "Step 2 of 5"
+#: assets/build/851.js:2
+msgid "Failed to save your information. Please try again."
 msgstr ""
 
-#: assets/build/999.js:2
-msgid "Tell Us About Your Site"
+#: assets/build/851.js:2
+msgid "Step 3 of 3"
 msgstr ""
 
-#: assets/build/999.js:2
-msgid "complete"
+#: assets/build/851.js:2
+msgid "Quick Configuration"
 msgstr ""
 
-#: assets/build/999.js:2
+#: assets/build/851.js:2
 msgid "e.g., Tech Insights Blog, Travel Adventures"
 msgstr ""
 
-#: assets/build/999.js:2
+#: assets/build/851.js:2
 msgid "Site Purpose"
 msgstr ""
 
-#: assets/build/999.js:2
+#: assets/build/851.js:2
 msgid "e.g., technology enthusiasts, travel lovers"
 msgstr ""
 
-#: assets/build/999.js:2
+#: assets/build/851.js:2
 msgid "Detailed Description"
 msgstr ""
 
-#: assets/build/999.js:2
+#: assets/build/851.js:2
 msgid "Describe your site: topics, style, audience, goals…"
 msgstr ""
 
-#: assets/build/999.js:2
+#: assets/build/851.js:2
 msgid "Help AI understand your content need."
 msgstr ""
 
-#: assets/build/999.js:2
-msgid "Continue"
+#: assets/build/851.js:2
+msgid "Finishing Setup…"
 msgstr ""
 
-#: assets/build/999.js:2
-msgid "This information will be used to configure your AI content generator for optimal results."
+#: assets/build/851.js:2
+msgid "Finish Setup & Go to Dashboard"
 msgstr ""
 
-#: assets/build/999.js:2
+#: assets/build/851.js:2
+msgid "Just a few details to guide the AI. You can always change this later in Settings."
+msgstr ""
+
+#: assets/build/851.js:2
 msgid "Saving your site information…"
 msgstr ""
 
-#: assets/build/999.js:2
+#: assets/build/851.js:2
 msgid "Please fix the form errors before continuing."
+msgstr ""
+
+#: assets/build/974.js:2
+msgid "Are you sure you want to exit the setup wizard?"
+msgstr ""
+
+#: assets/build/974.js:2
+msgid "Exit setup wizard"
+msgstr ""
+
+#: assets/build/974.js:2
+msgid "Exit Setup"
+msgstr ""
+
+#: assets/build/974.js:2
+msgid "Connect"
+msgstr ""
+
+#: assets/build/974.js:2
+msgid "Site Info"
+msgstr ""
+
+#: assets/build/974.js:2
+msgid "Setup Wizard"
+msgstr ""
+
+#: assets/build/974.js:2
+msgid "Setup wizard steps"
+msgstr ""
+
+#: assets/build/974.js:2
+msgid "Setup"
 msgstr ""
 
 #: assets/build/blog-app.js:2
