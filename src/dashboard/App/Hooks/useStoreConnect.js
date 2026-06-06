@@ -8,7 +8,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { __ } from '@wordpress/i18n';
-import { getConnectUrl, disconnectLicense } from '@Utils/StoreConnect';
+import { getConnectUrl, disconnectLicense, applyConnectedState } from '@Utils/StoreConnect';
 
 const WATCH_INTERVAL = 1000;
 const CONNECT_TIMEOUT = 300000; // 5 minutes.
@@ -29,22 +29,7 @@ export default function useStoreConnect() {
 	}, [ dispatch ] );
 
 	const applyConnected = useCallback( ( data = {} ) => {
-		dispatch( { type: 'UPDATE_LICENSE_STATUS', payload: 'licensed' } );
-		if ( data.license !== undefined ) {
-			dispatch( { type: 'UPDATE_LICENSE', payload: data.license } );
-		}
-		if ( data.connected_email !== undefined ) {
-			dispatch( { type: 'UPDATE_CONNECTED_EMAIL', payload: data.connected_email } );
-		}
-		if ( data.plan !== undefined ) {
-			dispatch( { type: 'UPDATE_PLAN', payload: data.plan } );
-		}
-		if ( data.tokenTotal !== undefined ) {
-			dispatch( { type: 'UPDATE_TOKEN_TOTAL', payload: data.tokenTotal } );
-		}
-		if ( data.tokenRemaining !== undefined ) {
-			dispatch( { type: 'UPDATE_TOKEN_REMAINING', payload: data.tokenRemaining } );
-		}
+		applyConnectedState( dispatch, data );
 	}, [ dispatch ] );
 
 	const cleanup = useCallback( () => {
@@ -86,8 +71,11 @@ export default function useStoreConnect() {
 			const authUrl = data.auth_url;
 			const popup = window.open( authUrl, 'solvex_connect', 'width=620,height=780,scrollbars=yes,resizable=yes' );
 
-			// Popup blocked → fall back to a full-page redirect.
+			// Popup blocked → fall back to a full-page redirect (reset state first in case
+			// the navigation is deferred or the page is restored from bfcache).
 			if ( ! popup || popup.closed || typeof popup.closed === 'undefined' ) {
+				isConnectingRef.current = false;
+				setIsConnecting( false );
 				window.location.href = authUrl;
 				return;
 			}
@@ -97,7 +85,8 @@ export default function useStoreConnect() {
 
 			// Success channel: the popup posts the connection result back to us.
 			const onMessage = ( event ) => {
-				if ( event.origin !== window.location.origin || ! event.data ) {
+				// Only trust a message from our own popup, on our own origin.
+				if ( event.origin !== window.location.origin || event.source !== popupRef.current || ! event.data ) {
 					return;
 				}
 				if ( event.data.type === 'solvex-connected' ) {

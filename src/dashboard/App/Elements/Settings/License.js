@@ -6,7 +6,7 @@ import SettingsContainer from '@Components/SettingsContainer';
 import SettingLabel from '@Components/SettingLabel';
 import DynamicCard from '@Components/DynamicCard';
 import { Key, Shield, CheckCircle2, Loader2, Link2, ChevronDown, RefreshCw } from 'lucide-react';
-import { updateApiData } from '@Utils/ApiData';
+import { fetchAndStoreTokenData } from '@Utils/StoreConnect';
 import useStoreConnect from '@DashboardApp/Hooks/useStoreConnect';
 
 /**
@@ -187,22 +187,7 @@ const License = memo( () => {
 
 			setTokenLoading( true );
 			try {
-				const tokenResponse = await fetch( `https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/get-token-data?license=${ encodeURIComponent( licenseKey ) }`, {
-					method: 'GET',
-					headers: { 'Content-Type': 'application/json' },
-					signal: abortController.signal,
-				} );
-				if ( tokenResponse.ok ) {
-					const tokenData = await tokenResponse.json();
-					if ( tokenData?.success && tokenData.data ) {
-						dispatch( { type: 'UPDATE_TOKEN_TOTAL', payload: tokenData.data.total } );
-						dispatch( { type: 'UPDATE_TOKEN_REMAINING', payload: tokenData.data.remaining } );
-						await updateApiData( 'tokenTotal', tokenData.data.total, dispatch, abortControllerRef );
-						await updateApiData( 'tokenRemaining', tokenData.data.remaining, dispatch, abortControllerRef );
-					}
-				}
-			} catch ( tokenError ) {
-				// Non-fatal.
+				await fetchAndStoreTokenData( licenseKey, dispatch, abortController.signal );
 			} finally {
 				setTokenLoading( false );
 			}

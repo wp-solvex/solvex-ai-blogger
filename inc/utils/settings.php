@@ -26,6 +26,16 @@ class Settings {
 	public static $dashboard_options = [];
 
 	/**
+	 * Flush the in-request settings cache (call after any write to the DB option).
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function flush_cache() {
+		self::$dashboard_options = [];
+	}
+
+	/**
 	 * Returns all default dashboard settings.
 	 *
 	 * @return array

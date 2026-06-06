@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { updateApiData } from '@Utils/ApiData';
 import apiFetch from '@wordpress/api-fetch';
 import useStoreConnect from '@DashboardApp/Hooks/useStoreConnect';
+import { fetchAndStoreTokenData } from '@Utils/StoreConnect';
 
 // API Key input component
 const ApiKeyInput = memo( ( { value, onChange, error, disabled, processing } ) => {
@@ -97,7 +98,6 @@ const LicenseStep = memo( () => {
 
 	// One-click connect.
 	const { isConnecting, connect } = useStoreConnect();
-	const globalLicenseStatus = useSelector( ( state ) => state.license_status );
 	const [ connectInitiated, setConnectInitiated ] = useState( false );
 
 	const handleConnect = useCallback( () => {
@@ -107,69 +107,22 @@ const LicenseStep = memo( () => {
 
 	// When the connect popup completes, advance to the next onboarding step.
 	useEffect( () => {
-		if ( connectInitiated && globalLicenseStatus === 'licensed' ) {
+		if ( connectInitiated && licenseStatusFromRedux === 'licensed' ) {
 			window.scrollTo( { top: 0, behavior: 'smooth' } );
 			const timer = setTimeout( () => navigate( '?step=persona-form' ), 1200 );
 			return () => clearTimeout( timer );
 		}
-	}, [ connectInitiated, globalLicenseStatus, navigate ] );
+	}, [ connectInitiated, licenseStatusFromRedux, navigate ] );
 
-	// Token fetching in background
+	// Token fetching in background (shared with the Settings activation path).
 	const fetchTokenDataInBackground = useCallback( async ( licenseKey ) => {
-		try {
-			const tokenResponse = await fetch( `https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/get-token-data?license=${ licenseKey }`, {
-				method: 'GET',
-				headers: { 'Content-Type': 'application/json' },
-			} );
-
-			if ( tokenResponse.ok ) {
-				const tokenData = await tokenResponse.json();
-
-				if ( tokenData && tokenData.success && tokenData.data ) {
-					dispatch( { type: 'UPDATE_TOKEN_TOTAL', payload: tokenData.data.total } );
-					dispatch( { type: 'UPDATE_TOKEN_REMAINING', payload: tokenData.data.remaining } );
-					await updateApiData( 'tokenTotal', tokenData.data.total, dispatch, abortControllerRef );
-					await updateApiData( 'tokenRemaining', tokenData.data.remaining, dispatch, abortControllerRef );
-
-					dispatch( {
-						type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
-						payload: {
-							message: __( 'Connected successfully! Token data updated.', 'solvex-ai-blogger' ),
-							type: 'success',
-							duration: 4000,
-						},
-					} );
-				} else {
-					dispatch( {
-						type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
-						payload: {
-							message: __( 'Connected but failed to fetch token data', 'solvex-ai-blogger' ),
-							type: 'warning',
-							duration: 4000,
-						},
-					} );
-				}
-			} else {
-				dispatch( {
-					type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
-					payload: {
-						message: __( 'Connected but token fetch failed', 'solvex-ai-blogger' ),
-						type: 'warning',
-						duration: 4000,
-					},
-				} );
-			}
-		} catch ( tokenError ) {
-			console.error( 'Token data fetch error:', tokenError );
-			dispatch( {
-				type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
-				payload: {
-					message: __( 'Connected but token fetch failed', 'solvex-ai-blogger' ),
-					type: 'warning',
-					duration: 4000,
-				},
-			} );
-		}
+		const ok = await fetchAndStoreTokenData( licenseKey, dispatch );
+		dispatch( {
+			type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
+			payload: ok
+				? { message: __( 'Connected successfully! Token data updated.', 'solvex-ai-blogger' ), type: 'success', duration: 4000 }
+				: { message: __( 'Connected but token fetch failed', 'solvex-ai-blogger' ), type: 'warning', duration: 4000 },
+		} );
 	}, [ dispatch ] );
 
 	// License activation

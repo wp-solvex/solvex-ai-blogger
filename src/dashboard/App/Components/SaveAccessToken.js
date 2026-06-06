@@ -9,7 +9,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { __ } from '@wordpress/i18n';
-import { connectLicense } from '@Utils/StoreConnect';
+import { connectLicense, applyConnectedState } from '@Utils/StoreConnect';
 
 const getAccessKey = () => {
 	try {
@@ -43,27 +43,15 @@ const SaveAccessToken = () => {
 					try {
 						window.opener.postMessage( { type: 'solvex-connected', data }, window.location.origin );
 					} catch ( e ) {}
-					window.setTimeout( () => window.close(), 600 );
+					// The opener closes us on receipt; this is only a fallback for a dead
+					// opener, and is intentionally longer than the opener's watcher interval
+					// so a self-close can't race ahead of the success message.
+					window.setTimeout( () => window.close(), 2500 );
 					return;
 				}
 
 				// Same-tab fallback (popup was blocked): apply state here.
-				dispatch( { type: 'UPDATE_LICENSE_STATUS', payload: 'licensed' } );
-				if ( data.license !== undefined ) {
-					dispatch( { type: 'UPDATE_LICENSE', payload: data.license } );
-				}
-				if ( data.connected_email !== undefined ) {
-					dispatch( { type: 'UPDATE_CONNECTED_EMAIL', payload: data.connected_email } );
-				}
-				if ( data.plan !== undefined ) {
-					dispatch( { type: 'UPDATE_PLAN', payload: data.plan } );
-				}
-				if ( data.tokenTotal !== undefined ) {
-					dispatch( { type: 'UPDATE_TOKEN_TOTAL', payload: data.tokenTotal } );
-				}
-				if ( data.tokenRemaining !== undefined ) {
-					dispatch( { type: 'UPDATE_TOKEN_REMAINING', payload: data.tokenRemaining } );
-				}
+				applyConnectedState( dispatch, data );
 				dispatch( {
 					type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
 					payload: { message: __( 'Connected successfully!', 'solvex-ai-blogger' ), type: 'success', duration: 4000 },
@@ -74,7 +62,7 @@ const SaveAccessToken = () => {
 					try {
 						window.opener.postMessage( { type: 'solvex-connect-error', message: error.message }, window.location.origin );
 					} catch ( e ) {}
-					window.setTimeout( () => window.close(), 1200 );
+					window.setTimeout( () => window.close(), 2500 );
 					return;
 				}
 				dispatch( {

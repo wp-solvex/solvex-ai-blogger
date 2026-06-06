@@ -197,7 +197,7 @@ class Helper {
 		update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $validated_settings );
 
 		// Invalidate the in-request settings cache so subsequent reads see this write.
-		Settings::$dashboard_options = [];
+		Settings::flush_cache();
 
 		// Return success with the sanitized value.
 		return [
@@ -257,7 +257,7 @@ class Helper {
 		$result = update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $settings );
 
 		// Invalidate the in-request settings cache.
-		Settings::$dashboard_options = [];
+		Settings::flush_cache();
 
 		return $result;
 	}
@@ -313,7 +313,7 @@ class Helper {
 			$result   = update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $settings );
 
 			// Invalidate the in-request settings cache.
-			Settings::$dashboard_options = [];
+			Settings::flush_cache();
 
 			return $result;
 		}

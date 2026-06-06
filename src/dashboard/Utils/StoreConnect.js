@@ -7,6 +7,9 @@
  *  - wpsolvex_autoaiblogger_deactivate_license-> disconnects + frees the store activation slot
  */
 import apiFetch from '@wordpress/api-fetch';
+import { updateApiData } from './ApiData';
+
+const TOKEN_DATA_URL = 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/get-token-data';
 
 const getConfig = () => {
 	const data = typeof wpsolvex_autoaiblogger_localized_data !== 'undefined' ? wpsolvex_autoaiblogger_localized_data : {};
@@ -72,4 +75,63 @@ export const disconnectLicense = async () => {
 		throw new Error( response?.data?.message || 'Unable to disconnect.' );
 	}
 	return response.data || {};
+};
+
+/**
+ * Apply a successful connection's data to the Redux store (single source of truth
+ * for the connected-state dispatch sequence, shared by the hook and the capture).
+ *
+ * @param {Function} dispatch Redux dispatch.
+ * @param {Object}   data     Connection data { license, connected_email, plan, tokenTotal, tokenRemaining }.
+ */
+export const applyConnectedState = ( dispatch, data = {} ) => {
+	dispatch( { type: 'UPDATE_LICENSE_STATUS', payload: 'licensed' } );
+	if ( data.license !== undefined ) {
+		dispatch( { type: 'UPDATE_LICENSE', payload: data.license } );
+	}
+	if ( data.connected_email !== undefined ) {
+		dispatch( { type: 'UPDATE_CONNECTED_EMAIL', payload: data.connected_email } );
+	}
+	if ( data.plan !== undefined ) {
+		dispatch( { type: 'UPDATE_PLAN', payload: data.plan } );
+	}
+	if ( data.tokenTotal !== undefined ) {
+		dispatch( { type: 'UPDATE_TOKEN_TOTAL', payload: data.tokenTotal } );
+	}
+	if ( data.tokenRemaining !== undefined ) {
+		dispatch( { type: 'UPDATE_TOKEN_REMAINING', payload: data.tokenRemaining } );
+	}
+};
+
+/**
+ * Fetch the token balance for a license and store it (Redux + DB). Shared by the
+ * manual activation and onboarding paths so there's a single token-sync implementation.
+ *
+ * @param {string}   licenseKey The license key.
+ * @param {Function} dispatch   Redux dispatch.
+ * @param {AbortSignal} [signal] Optional abort signal.
+ * @return {Promise<boolean>} True if tokens were fetched and stored.
+ */
+export const fetchAndStoreTokenData = async ( licenseKey, dispatch, signal ) => {
+	try {
+		const response = await fetch( `${ TOKEN_DATA_URL }?license=${ encodeURIComponent( licenseKey ) }`, {
+			method: 'GET',
+			headers: { 'Content-Type': 'application/json' },
+			signal,
+		} );
+		if ( ! response.ok ) {
+			return false;
+		}
+		const tokenData = await response.json();
+		if ( ! tokenData?.success || ! tokenData.data ) {
+			return false;
+		}
+		dispatch( { type: 'UPDATE_TOKEN_TOTAL', payload: tokenData.data.total } );
+		dispatch( { type: 'UPDATE_TOKEN_REMAINING', payload: tokenData.data.remaining } );
+		await updateApiData( 'tokenTotal', tokenData.data.total, dispatch );
+		await updateApiData( 'tokenRemaining', tokenData.data.remaining, dispatch );
+		return true;
+	} catch ( error ) {
+		return false;
+	}
 };
