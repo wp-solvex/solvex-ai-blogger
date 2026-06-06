@@ -120,6 +120,15 @@ class Settings {
 					'default' => wpsolvex_autoaiblogger_get_user_detail( 'email' ),
 					'type'    => 'email',
 				],
+				// Store connection (one-click connect).
+				'connectedEmail'           => [
+					'default' => '',
+					'type'    => 'email',
+				],
+				'plan'                     => [
+					'default' => '',
+					'type'    => 'string',
+				],
 			]
 		);
 	}

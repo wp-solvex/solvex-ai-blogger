@@ -256,6 +256,11 @@ class Menu {
 				'token_total'                => $token_total,
 				'token_remaining'            => $token_remaining,
 
+				// Store connection (one-click connect).
+				'connected_email'            => sanitize_email( Helper::get_option( 'connectedEmail', '' ) ),
+				'plan'                       => sanitize_text_field( Helper::get_option( 'plan', '' ) ),
+				'connect_portal_url'         => defined( 'WPSOLVEX_AUTOAIBLOGGER_CONNECT_PORTAL' ) ? esc_url( WPSOLVEX_AUTOAIBLOGGER_CONNECT_PORTAL ) : '',
+
 				// WordPress data collections.
 				'post_statuses'              => $post_statuses,
 				'categories'                 => $categories,

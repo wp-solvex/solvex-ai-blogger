@@ -93,6 +93,11 @@ const getInitialState = () => {
 		tokenRemaining: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.token_remaining, 'number', 0 ),
 		license_status: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.license_status, 'string', 'inactive' ),
 
+		// Store connection (one-click connect).
+		connectedEmail: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.connected_email, 'string', '' ),
+		plan: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.plan, 'string', '' ),
+		connectPortalUrl: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.connect_portal_url, 'string', '' ),
+
 		// Static configuration data that doesn't change during app lifecycle.
 		homeSlug: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.home_slug, 'string', 'solvex-ai-blogger' ),
 		adminNonce: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.admin_nonce, 'string', '' ),

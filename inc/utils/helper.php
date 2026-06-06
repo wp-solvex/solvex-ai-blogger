@@ -56,6 +56,8 @@ class Helper {
 		'adminEmail',
 		'emailNotificationEnabled',
 		'emailNotificationValue',
+		'connectedEmail',
+		'plan',
 	];
 
 	/**
@@ -194,6 +196,9 @@ class Helper {
 
 		update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $validated_settings );
 
+		// Invalidate the in-request settings cache so subsequent reads see this write.
+		Settings::$dashboard_options = [];
+
 		// Return success with the sanitized value.
 		return [
 			'success' => true,
@@ -249,7 +254,12 @@ class Helper {
 		// Validate final settings array.
 		$settings = self::validate_settings_array( $settings );
 
-		return update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $settings );
+		$result = update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $settings );
+
+		// Invalidate the in-request settings cache.
+		Settings::$dashboard_options = [];
+
+		return $result;
 	}
 
 	/**
@@ -300,7 +310,12 @@ class Helper {
 
 		if ( $updated ) {
 			$settings = self::validate_settings_array( $settings );
-			return update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $settings );
+			$result   = update_option( WPSOLVEX_AUTOAIBLOGGER_DB_OPTION, $settings );
+
+			// Invalidate the in-request settings cache.
+			Settings::$dashboard_options = [];
+
+			return $result;
 		}
 
 		return true;
@@ -327,6 +342,16 @@ class Helper {
 
 			case 'userName':
 				return sanitize_text_field( $value );
+
+			case 'plan':
+				return sanitize_text_field( $value );
+
+			case 'connectedEmail':
+				if ( '' === $value || null === $value ) {
+					return '';
+				}
+				$connected_email = sanitize_email( $value );
+				return is_email( $connected_email ) ? $connected_email : '';
 
 			case 'userEmail':
 				$email = sanitize_email( $value );
