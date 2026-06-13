@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import Skeleton from './Skeleton';
 import apiFetch from '@wordpress/api-fetch';
 import ProButton from '@Components/ProButton';
+import TokenExhaustionModal from '@Components/TokenExhaustionModal';
 
 const UPDATE_POST_IDEAS = 'UPDATE_POST_IDEAS';
 const ADD_CREATED_POST_IDEA = 'ADD_CREATED_POST_IDEA';
@@ -36,6 +37,7 @@ export default function PostIdeas() {
 	const adminNonce = useSelector( ( state ) => state.adminNonce );
 	const ajaxUrl = useSelector( ( state ) => state.ajaxUrl );
 	const createdPostIdeasFromRedux = useSelector( ( state ) => state.createdPostIdeas || {} );
+	const tokenRemaining = useSelector( ( state ) => state.tokenRemaining );
 
 	const [ postIdeas, setPostIdeas ] = useState( postIdeasFromRedux );
 	const [ postIdeasArr, setPostIdeasArr ] = useState( [] );
@@ -43,6 +45,7 @@ export default function PostIdeas() {
 	const [ error, setError ] = useState( null );
 	const [ isApiError, setIsApiError ] = useState( false );
 	const [ creatingPosts, setCreatingPosts ] = useState( new Set() ); // Track which posts are being created
+	const [ showTokenModal, setShowTokenModal ] = useState( false );
 	// Use Redux state for createdPosts instead of local component state
 	const createdPosts = createdPostIdeasFromRedux;
 
@@ -203,6 +206,12 @@ export default function PostIdeas() {
 		e.preventDefault();
 		e.stopPropagation();
 
+		// Pre-check: insufficient tokens.
+		if ( tokenRemaining !== undefined && tokenRemaining < 1500 ) {
+			setShowTokenModal( true );
+			return;
+		}
+
 		dispatch( {
 			type: UPDATE_POST_IDEAS,
 			payload: '', // Use empty string instead of empty array
@@ -213,7 +222,7 @@ export default function PostIdeas() {
 		setIsApiError( false );
 		hasFetchedRef.current = false; // Reset the fetch flag to allow refetch
 		fetchPostIdeas();
-	}, [ proAvailable, dispatch, fetchPostIdeas ] );
+	}, [ proAvailable, dispatch, fetchPostIdeas, tokenRemaining ] );
 
 	if ( ! licenseEnabled ) {
 		return ( '' );
@@ -312,6 +321,12 @@ export default function PostIdeas() {
 			return;
 		}
 
+		// Pre-check: insufficient tokens.
+		if ( tokenRemaining !== undefined && tokenRemaining < 1500 ) {
+			setShowTokenModal( true );
+			return;
+		}
+
 		// Prevent multiple clicks for the same post OR if any post is being created
 		if ( creatingPosts.has( title ) || creatingPosts.size > 0 ) {
 			return;
@@ -370,6 +385,22 @@ export default function PostIdeas() {
 				if ( ! response.success ) {
 					const errorMessage = response.data?.message || __( 'Failed to create post.', 'solvex-ai-blogger' );
 					console.error( __( 'Failed to create post:', 'solvex-ai-blogger' ), errorMessage );
+
+					// Update token data even on errors to keep UI in sync.
+					if ( response.data?.token_data &&
+						typeof response.data.token_data === 'object' &&
+						response.data.token_data.total !== undefined &&
+						response.data.token_data.remaining !== undefined ) {
+						dispatch( {
+							type: 'UPDATE_TOKEN_TOTAL',
+							payload: response.data.token_data.total,
+						} );
+						dispatch( {
+							type: 'UPDATE_TOKEN_REMAINING',
+							payload: response.data.token_data.remaining,
+						} );
+					}
+
 					dispatch( {
 						type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
 						payload: {
@@ -477,6 +508,7 @@ export default function PostIdeas() {
 	};
 
 	return (
+		<>
 		<div className="px-4 sm:px-6 lg:px-8 pt-4 pb-8" data-tour-target="post-ideas">
 			<div className="sm:flex sm:items-center sm:justify-between">
 				<div className="flex flex-col gap-2">
@@ -696,5 +728,11 @@ export default function PostIdeas() {
 				</div>
 			</div>
 		</div>
+
+		<TokenExhaustionModal
+			isOpen={ showTokenModal }
+			onClose={ () => setShowTokenModal( false ) }
+		/>
+		</>
 	);
 }

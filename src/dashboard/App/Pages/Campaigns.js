@@ -86,6 +86,9 @@ export default function Campaigns() {
 				return 'completed';
 			}
 			if ( isPaused ) {
+				if ( campaign.pauseReason === 'token_exhaustion' ) {
+					return 'paused_tokens';
+				}
 				return 'paused';
 			}
 			return 'active';
@@ -528,41 +531,49 @@ export default function Campaigns() {
 															let tooltipText = '';
 															if ( shouldDisableSwitch ) {
 																tooltipText = __( 'Completed', 'solvex-ai-blogger' );
+															} else if ( isPaused && campaign.pauseReason === 'token_exhaustion' ) {
+																tooltipText = __( 'Out of tokens, upgrade to resume', 'solvex-ai-blogger' );
 															} else if ( isPaused ) {
 																tooltipText = __( 'Paused', 'solvex-ai-blogger' );
 															} else {
 																tooltipText = __( 'Active', 'solvex-ai-blogger' );
 															}
 
+															const disableForTokens = isPaused && campaign.pauseReason === 'token_exhaustion';
+
 															return (
-																<Tooltip
-																	text={ tooltipText }
-																	delay={ 100 }
-																	className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
-																>
-																	<span className="inline-block">
-																		<button
-																			type="button"
-																			onClick={ shouldDisableSwitch ? undefined : () => toggleCampaignStatus( campaign.id ) }
-																			disabled={ isUpdating || shouldDisableSwitch }
-																			aria-label={ `${ __( 'Toggle campaign status for', 'solvex-ai-blogger' ) } ${ campaign.name }` }
-																			className={ `relative inline-flex h-6 w-11 flex-shrink-0 rounded-full transition-colors duration-200 ease-in-out border-none p-0 ${
-																				isUpdating || shouldDisableSwitch
-																					? 'opacity-50 cursor-default bg-gray-300 focus:outline-none'
-																					: isPaused
-																						? 'bg-brand-300 focus:ring-2 focus:ring-brand-300 focus:ring-offset-2 focus:outline-none cursor-pointer'
-																						: 'bg-brand-500 focus:ring-2 focus:ring-brand-600 focus:ring-offset-2 focus:outline-none cursor-pointer'
-																			}` }
-																		>
-																			<span
-																				className={ `inline-block h-5 w-5 transform rounded-full bg-white shadow-lg transition-transform duration-200 ease-in-out ${
-																					! isPaused && ! shouldDisableSwitch ? 'translate-x-5' : 'translate-x-0'
+																<div className="flex items-center gap-1.5">
+																	<Tooltip
+																		text={ tooltipText }
+																		delay={ 100 }
+																		className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
+																	>
+																		<span className="inline-block">
+																			<button
+																				type="button"
+																				onClick={ ( shouldDisableSwitch || disableForTokens ) ? undefined : () => toggleCampaignStatus( campaign.id ) }
+																				disabled={ isUpdating || shouldDisableSwitch || disableForTokens }
+																				aria-label={ `${ __( 'Toggle campaign status for', 'solvex-ai-blogger' ) } ${ campaign.name }` }
+																				className={ `relative inline-flex h-6 w-11 flex-shrink-0 rounded-full transition-colors duration-200 ease-in-out border-none p-0 ${
+																					isUpdating || shouldDisableSwitch
+																						? 'opacity-50 cursor-default bg-gray-300 focus:outline-none'
+																						: disableForTokens
+																							? 'opacity-70 cursor-default bg-brand-300 focus:outline-none'
+																							: isPaused
+																								? 'bg-brand-300 focus:ring-2 focus:ring-brand-300 focus:ring-offset-2 focus:outline-none cursor-pointer'
+																								: 'bg-brand-500 focus:ring-2 focus:ring-brand-600 focus:ring-offset-2 focus:outline-none cursor-pointer'
 																				}` }
-																				style={ { margin: '2px' } }
-																			/>
-																		</button>
-																	</span>
-																</Tooltip>
+																			>
+																				<span
+																					className={ `inline-block h-5 w-5 transform rounded-full bg-white shadow-lg transition-transform duration-200 ease-in-out ${
+																						! isPaused && ! shouldDisableSwitch ? 'translate-x-5' : 'translate-x-0'
+																					}` }
+																					style={ { margin: '2px' } }
+																				/>
+																			</button>
+																		</span>
+																	</Tooltip>
+																</div>
 															);
 														} )() }
 													</td>

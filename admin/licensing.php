@@ -90,7 +90,7 @@ class Licensing {
 
 		// Check if licensing client class exists.
 		if ( ! class_exists( '\SureCart\Licensing\Client' ) ) {
-			$client_path = WPSOLVEX_AUTOAIBLOGGER_DIR . '/inc/licensing/client.php';
+			$client_path = WPSOLVEX_AUTOAIBLOGGER_DIR . '/inc/licensing/Client.php';
 			if ( ! file_exists( $client_path ) || ! is_readable( $client_path ) ) {
 				return;
 			}
