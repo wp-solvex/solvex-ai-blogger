@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import globalDataStore from '@AdminRoot/store/globalDataStore';
 import Entry from '@DashboardApp/Entry';
 import ErrorBoundary from '@Components/ErrorBoundary';
+import SaveAccessToken from '@Components/SaveAccessToken';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 const currentState = globalDataStore.getState();
@@ -24,6 +25,7 @@ if ( container ) {
 	root.render(
 		<ErrorBoundary>
 			<Provider store={ globalDataStore }>
+				<SaveAccessToken />
 				<Router>
 					<Entry />
 				</Router>

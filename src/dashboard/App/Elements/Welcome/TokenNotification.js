@@ -4,7 +4,7 @@ import { AlertTriangle, AlertOctagon, MoveRight } from 'lucide-react';
 
 export default function TokenNotification() {
 	const tokenRemaining = useSelector( ( state ) => state.tokenRemaining );
-	const licenseStatus = useSelector( ( state ) => state.licenseStatus ) || 'unlicensed';
+	const licenseStatus = useSelector( ( state ) => state.license_status ) || 'unlicensed';
 	const tokenTotal = useSelector( ( state ) => state.tokenTotal );
 
 	console.log( 'TokenNotification rendered with:', {
