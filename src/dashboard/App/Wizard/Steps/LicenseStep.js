@@ -1,10 +1,12 @@
-import React, { useState, useRef, useCallback, memo } from 'react';
+import React, { useState, useRef, useCallback, useEffect, memo } from 'react';
 import { __ } from '@wordpress/i18n';
-import { ArrowRight, Key, CheckCircle2, AlertCircle, Link2, Loader2, ExternalLink, Gift } from 'lucide-react';
+import { ArrowRight, Key, CheckCircle2, AlertCircle, Link2, Loader2, Gift } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { updateApiData } from '@Utils/ApiData';
 import apiFetch from '@wordpress/api-fetch';
+import useStoreConnect from '@DashboardApp/Hooks/useStoreConnect';
+import { fetchAndStoreTokenData } from '@Utils/StoreConnect';
 
 // API Key input component
 const ApiKeyInput = memo( ( { value, onChange, error, disabled, processing } ) => {
@@ -82,7 +84,7 @@ const LicenseStep = memo( () => {
 	const reduxLicense = useSelector( ( state ) => state.license );
 	const ajaxUrl = useSelector( ( state ) => state.ajaxUrl ) || '';
 	const licensingNonce = useSelector( ( state ) => state.licensingNonce );
-	const licenseStatusFromRedux = useSelector( ( state ) => state.licenseStatus );
+	const licenseStatusFromRedux = useSelector( ( state ) => state.license_status );
 	const noLicenseKeyUrl = useSelector( ( state ) => state.noLicenseKeyUrl ) || 'https://wpaiblogger.com/register/';
 
 	// Component state
@@ -94,62 +96,33 @@ const LicenseStep = memo( () => {
 	const [ processing, setProcessing ] = useState( false );
 	const [ error, setError ] = useState( '' );
 
-	// Token fetching in background
-	const fetchTokenDataInBackground = useCallback( async ( licenseKey ) => {
-		try {
-			const tokenResponse = await fetch( `https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/get-token-data?license=${ licenseKey }`, {
-				method: 'GET',
-				headers: { 'Content-Type': 'application/json' },
-			} );
+	// One-click connect.
+	const { isConnecting, connect } = useStoreConnect();
+	const [ connectInitiated, setConnectInitiated ] = useState( false );
 
-			if ( tokenResponse.ok ) {
-				const tokenData = await tokenResponse.json();
+	const handleConnect = useCallback( () => {
+		setConnectInitiated( true );
+		connect();
+	}, [ connect ] );
 
-				if ( tokenData && tokenData.success && tokenData.data ) {
-					dispatch( { type: 'UPDATE_TOKEN_TOTAL', payload: tokenData.data.total } );
-					dispatch( { type: 'UPDATE_TOKEN_REMAINING', payload: tokenData.data.remaining } );
-					await updateApiData( 'tokenTotal', tokenData.data.total, dispatch, abortControllerRef );
-					await updateApiData( 'tokenRemaining', tokenData.data.remaining, dispatch, abortControllerRef );
-
-					dispatch( {
-						type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
-						payload: {
-							message: __( 'Connected successfully! Token data updated.', 'solvex-ai-blogger' ),
-							type: 'success',
-							duration: 4000,
-						},
-					} );
-				} else {
-					dispatch( {
-						type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
-						payload: {
-							message: __( 'Connected but failed to fetch token data', 'solvex-ai-blogger' ),
-							type: 'warning',
-							duration: 4000,
-						},
-					} );
-				}
-			} else {
-				dispatch( {
-					type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
-					payload: {
-						message: __( 'Connected but token fetch failed', 'solvex-ai-blogger' ),
-						type: 'warning',
-						duration: 4000,
-					},
-				} );
-			}
-		} catch ( tokenError ) {
-			console.error( 'Token data fetch error:', tokenError );
-			dispatch( {
-				type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
-				payload: {
-					message: __( 'Connected but token fetch failed', 'solvex-ai-blogger' ),
-					type: 'warning',
-					duration: 4000,
-				},
-			} );
+	// When the connect popup completes, advance to the next onboarding step.
+	useEffect( () => {
+		if ( connectInitiated && licenseStatusFromRedux === 'licensed' ) {
+			window.scrollTo( { top: 0, behavior: 'smooth' } );
+			const timer = setTimeout( () => navigate( '?step=persona-form' ), 1200 );
+			return () => clearTimeout( timer );
 		}
+	}, [ connectInitiated, licenseStatusFromRedux, navigate ] );
+
+	// Token fetching in background (shared with the Settings activation path).
+	const fetchTokenDataInBackground = useCallback( async ( licenseKey ) => {
+		const ok = await fetchAndStoreTokenData( licenseKey, dispatch );
+		dispatch( {
+			type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
+			payload: ok
+				? { message: __( 'Connected successfully! Token data updated.', 'solvex-ai-blogger' ), type: 'success', duration: 4000 }
+				: { message: __( 'Connected but token fetch failed', 'solvex-ai-blogger' ), type: 'warning', duration: 4000 },
+		} );
 	}, [ dispatch ] );
 
 	// License activation
@@ -267,32 +240,40 @@ const LicenseStep = memo( () => {
 									<Gift className="w-8 h-8 text-brand-600" aria-hidden="true" />
 								</div>
 								<h2 className="text-lg font-bold text-gray-900 mb-2">
-									{ __( "Don't have a key?", 'solvex-ai-blogger' ) }
+									{ __( 'New here?', 'solvex-ai-blogger' ) }
 								</h2>
 								<p className="text-[13px] text-gray-600 mb-6 mt-0 leading-relaxed">
-									{ __( 'Create a free account in 30 seconds to get your API connection key and 20,000 monthly free tokens.', 'solvex-ai-blogger' ) }
+									{ __( 'Connect in one click — we create your free account and set up your 240,000 monthly free tokens automatically. No key to copy.', 'solvex-ai-blogger' ) }
 								</p>
-								<a
-									href={ noLicenseKeyUrl }
-									target="_blank"
-									rel="noopener noreferrer"
+								<button
+									type="button"
+									onClick={ handleConnect }
+									disabled={ isConnecting }
 									className="
 										group w-full inline-flex items-center justify-center gap-2.5 px-7 py-3
 										bg-gradient-to-r from-indigo-600 to-purple-600
 										!text-white font-semibold rounded-xl shadow-lg text-[13px]
 										hover:from-indigo-700 hover:to-purple-700 hover:!text-white
-										focus:outline-none focus:ring-0
+										focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
 										transform transition-all duration-200 hover:scale-105 hover:shadow-xl
-										no-underline my-[10px]
+										disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none my-[10px]
 									"
-									style={ { textDecoration: 'none', color: 'white', borderRadius: '0.75rem' } }
-									aria-label={ __( 'Get free API key - opens in new tab', 'solvex-ai-blogger' ) }
+									aria-label={ __( 'Connect to wpaiblogger.com', 'solvex-ai-blogger' ) }
 								>
-									<span>{ __( 'Get Free API Key', 'solvex-ai-blogger' ) }</span>
-									<ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" aria-hidden="true" />
-								</a>
+									{ isConnecting ? (
+										<Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+									) : (
+										<>
+											<span>{ __( 'Connect to wpaiblogger.com', 'solvex-ai-blogger' ) }</span>
+											<Link2 className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" aria-hidden="true" />
+										</>
+									) }
+								</button>
 								<p className="text-[11px] text-gray-500 mt-3">
-									{ __( 'Start free, no payment needed • Free forever', 'solvex-ai-blogger' ) }
+									{ __( 'Free forever • No credit card •', 'solvex-ai-blogger' ) }{ ' ' }
+									<a href={ noLicenseKeyUrl } target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
+										{ __( 'register manually', 'solvex-ai-blogger' ) }
+									</a>
 								</p>
 							</div>
 
