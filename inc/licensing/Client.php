@@ -154,7 +154,7 @@ class Client {
 	 */
 	public function updater() {
 		if ( ! class_exists( __NAMESPACE__ . '\Updater' ) ) {
-			require_once __DIR__ . '/updater.php';
+			require_once __DIR__ . '/Updater.php';
 		}
 
 		// if already instantiated, return the cached one.
@@ -170,7 +170,7 @@ class Client {
 	 */
 	public function license() {
 		if ( ! class_exists( __NAMESPACE__ . '\License' ) ) {
-			require_once __DIR__ . '/license.php';
+			require_once __DIR__ . '/License.php';
 		}
 
 		// if already instantiated, return the cached one.
@@ -186,7 +186,7 @@ class Client {
 	 */
 	public function activation() {
 		if ( ! class_exists( __NAMESPACE__ . '\Activation' ) ) {
-			require_once __DIR__ . '/activation.php';
+			require_once __DIR__ . '/Activation.php';
 		}
 
 		// if already instantiated, return the cached one.
@@ -202,7 +202,7 @@ class Client {
 	 */
 	public function settings() {
 		if ( ! class_exists( __NAMESPACE__ . '\Settings' ) ) {
-			require_once __DIR__ . '/settings.php';
+			require_once __DIR__ . '/Settings.php';
 		}
 
 		// if already instantiated, return the cached one.
