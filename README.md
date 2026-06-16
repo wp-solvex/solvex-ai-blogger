@@ -4,7 +4,7 @@
 **Tags:** auto blog, ai content generator, auto blogging, auto post, content creation  
 **Tested up to:** 7.0  
 **Requires PHP:** 7.4  
-**Stable tag:** 1.0.2  
+**Stable tag:** 1.0.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 **Requires at least:** 6.7  
@@ -116,8 +116,8 @@ No. The AI processing runs on our secure remote servers rather than your own hos
 
 ## Upgrade Notice ##
 
-### 1.0.2 ###
-This update adds a guided dashboard tour, improves the onboarding experience, and ensures compatibility with WordPress 7.0. Upgrade recommended for all users.
+### 1.0.3 ###
+This update introduces an auth screen to connect the plugin to your account and claim your free API key, strengthens the API key validation and connection process, and ensures a smooth onboarding experience. Upgrade recommended for all users.
 
 ## Screenshots ##
 
@@ -128,6 +128,10 @@ This update adds a guided dashboard tour, improves the onboarding experience, an
 5. Settings - Plugin general settings along with Advance AI Settings, License key activation, and notification management.
 
 ## Changelog ##
+
+### 1.0.3 ###
+* Improvement: Introducing auth screen to connect the plugin to your account and claim your free API key.
+* Improvement: Strengthened the API key validation and connection process to ensure a smooth onboarding experience.
 
 ### 1.0.2 ###
 * Improvement: Introduced dashboard tour to guide users through the plugin's features and interface.

@@ -1,6 +1,6 @@
 {
 	"name": "solvex-ai-blogger",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "This is not just a content creator, its beyond the blogging.",
 	"volta": {
 		"node": "18.15.0"
