@@ -159,6 +159,10 @@ class Metadata {
 					'default' => '',
 					'type'    => 'string',
 				],
+				'pauseReason'             => [
+					'default' => '',
+					'type'    => 'string',
+				],
 				'maxWords'                => [
 					'default' => 1000,
 					'type'    => 'number',

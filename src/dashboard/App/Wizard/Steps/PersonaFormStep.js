@@ -15,6 +15,7 @@ const FormField = memo( ( {
 	error,
 	placeholder,
 	maxLength,
+	minLength = 0,
 	rows,
 	icon: Icon,
 	required = false,
@@ -84,7 +85,7 @@ const FormField = memo( ( {
 				<div className="absolute right-2.5 top-2.5">
 					{ error ? (
 						<AlertCircle className="w-3.5 h-3.5 text-red-500" aria-hidden="true" />
-					) : value && ! error ? (
+					) : value && value.trim().length >= minLength && value.trim().length <= maxLength ? (
 						<CheckCircle2 className="w-3.5 h-3.5 text-green-500" aria-hidden="true" />
 					) : null }
 				</div>
@@ -383,6 +384,7 @@ const PersonaFormStep = memo( () => {
 								error={ errors.siteTitle }
 								placeholder={ __( 'e.g., Tech Insights Blog, Travel Adventures', 'solvex-ai-blogger' ) }
 								maxLength={ 100 }
+								minLength={ 2 }
 								icon={ Globe }
 								required
 								description={ __( 'The main title of your website or blog.', 'solvex-ai-blogger' ) }
@@ -396,6 +398,7 @@ const PersonaFormStep = memo( () => {
 								error={ errors.siteFor }
 								placeholder={ __( 'e.g., technology enthusiasts, travel lovers', 'solvex-ai-blogger' ) }
 								maxLength={ 200 }
+								minLength={ 3 }
 								icon={ User }
 								required
 								description={ __( 'Who is your target audience?', 'solvex-ai-blogger' ) }
@@ -410,6 +413,7 @@ const PersonaFormStep = memo( () => {
 								error={ errors.siteDescription }
 								placeholder={ __( 'Describe your site: topics, style, audience, goals…', 'solvex-ai-blogger' ) }
 								maxLength={ 1000 }
+								minLength={ 10 }
 								rows={ 6 }
 								icon={ FileText }
 								required

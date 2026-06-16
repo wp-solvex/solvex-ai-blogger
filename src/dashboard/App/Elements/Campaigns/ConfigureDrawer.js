@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { __ } from '@wordpress/i18n';
 import { Dialog, DialogPanel } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
@@ -8,10 +9,12 @@ import SwitchControl from '@Components/SwitchControl';
 import DateTimeField from '@Components/DateTimeField';
 import { Tooltip } from '@wordpress/components';
 import DynamicCard from '@Components/DynamicCard';
+import TokenExhaustionModal from '@Components/TokenExhaustionModal';
 
 export default function ConfigureDrawer( props ) {
 	const abortControllerRef = useRef( {} );
 	const { configureData, openDrawer, setOpenDrawer, mode = 'edit' } = props;
+	const tokenRemaining = useSelector( ( state ) => state.tokenRemaining );
 
 	const [ activeTab, setActiveTab ] = useState( 'campaign' );
 	const [ handlingCampaign, setHandlingCampaign ] = useState( false );
@@ -25,6 +28,7 @@ export default function ConfigureDrawer( props ) {
 	const isViewMode = mode === 'view';
 	const [ errorMessage, setErrorMessage ] = useState( '' );
 	const [ fieldErrors, setFieldErrors ] = useState( {} );
+	const [ showTokenModal, setShowTokenModal ] = useState( false );
 
 	// Helper function to check if start date has passed.
 	const hasStartDatePassed = ( startDate ) => {
@@ -84,6 +88,14 @@ export default function ConfigureDrawer( props ) {
 	const handleCampaign = ( e ) => {
 		e.preventDefault();
 
+		// Pre-check: insufficient tokens for new campaigns.
+		if ( drawerData.type === 'new' ) {
+			if ( tokenRemaining < 3000 ) {
+				setShowTokenModal( true );
+				return;
+			}
+		}
+
 		// Reset errors
 		setFieldErrors( {} );
 		setErrorMessage( '' );
@@ -142,6 +154,7 @@ export default function ConfigureDrawer( props ) {
 	};
 
 	return (
+		<>
 		<Dialog open={ open } onClose={ closePopup } className="relative z-10 ai-blogger-container">
 			<div className="fixed inset-0 bg-black opacity-75" />
 
@@ -941,5 +954,11 @@ export default function ConfigureDrawer( props ) {
 				</div>
 			</div>
 		</Dialog>
+
+		<TokenExhaustionModal
+			isOpen={ showTokenModal }
+			onClose={ () => setShowTokenModal( false ) }
+		/>
+		</>
 	);
 }

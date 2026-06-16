@@ -135,6 +135,10 @@ const globalDataReducer = ( state = {}, action ) => {
 		UPDATE_TOKEN_REMAINING: () => ( { ...state, tokenRemaining: Number( action.payload ) || 0 } ),
 		UPDATE_LICENSE_STATUS: () => ( { ...state, license_status: String( action.payload || 'inactive' ) } ),
 
+		// Store connection (one-click connect).
+		UPDATE_CONNECTED_EMAIL: () => ( { ...state, connectedEmail: String( action.payload || '' ) } ),
+		UPDATE_PLAN: () => ( { ...state, plan: String( action.payload || '' ) } ),
+
 		// Static configuration updates (rarely used but available if needed)
 		UPDATE_HOME_SLUG: () => ( { ...state, homeSlug: String( action.payload || 'solvex-ai-blogger' ) } ),
 		UPDATE_ADMIN_NONCE: () => ( { ...state, adminNonce: String( action.payload || '' ) } ),

@@ -566,6 +566,11 @@ class Ajax {
 						$error_response['status'] = (int) $error_data['status'];
 					}
 
+					// Include token_data so React can update Redux state on errors.
+					if ( is_array( $error_data ) && isset( $error_data['token_data'] ) && is_array( $error_data['token_data'] ) ) {
+						$error_response['token_data'] = $error_data['token_data'];
+					}
+
 					wp_send_json_error( $error_response );
 					return;
 				}
@@ -1170,6 +1175,7 @@ class Ajax {
 			// Resume the campaign.
 			Metadata::update_campaign_meta( $campaign_id, 'isPaused', false );
 			Metadata::update_campaign_meta( $campaign_id, 'pausedAt', '' );
+			Metadata::update_campaign_meta( $campaign_id, 'pauseReason', '' );
 
 			// Ensure campaign status is publish.
 			if ( $campaign->post_status !== 'publish' ) {
@@ -1836,11 +1842,21 @@ class Ajax {
 
 			// Handle non-200 HTTP status codes with API error response.
 			if ( $http_code !== 200 ) {
+				// Sync token data even on error responses to keep local cache accurate.
+				if ( is_array( $decoded_response ) && isset( $decoded_response['token_data'] ) && is_array( $decoded_response['token_data'] ) ) {
+					wpsolvex_autoaiblogger_update_token_data( $decoded_response['token_data'] );
+				}
+
 				// Try to extract error details from API response first.
 				if ( is_array( $decoded_response ) && isset( $decoded_response['code'] ) && isset( $decoded_response['message'] ) ) {
 					$error_code    = (string) $decoded_response['code'];
 					$error_message = (string) $decoded_response['message'];
 					$error_data    = isset( $decoded_response['data'] ) && is_array( $decoded_response['data'] ) && isset( $decoded_response['data']['status'] ) ? [ 'status' => (int) $decoded_response['data']['status'] ] : [ 'status' => $http_code ];
+
+					// Attach token_data to WP_Error so callers can forward it.
+					if ( is_array( $decoded_response['token_data'] ?? null ) ) {
+						$error_data['token_data'] = $decoded_response['token_data'];
+					}
 
 					return new \WP_Error( $error_code, $error_message, $error_data );
 				}
@@ -1859,12 +1875,22 @@ class Ajax {
 
 			// Check API response status.
 			if ( is_array( $decoded_response ) && isset( $decoded_response['code'] ) && $decoded_response['code'] !== 'success' ) {
+				// Sync token data even on non-success responses.
+				if ( isset( $decoded_response['token_data'] ) && is_array( $decoded_response['token_data'] ) ) {
+					wpsolvex_autoaiblogger_update_token_data( $decoded_response['token_data'] );
+				}
+
 				$error_message = (string) ( $decoded_response['message'] ?? __( 'Unknown API error', 'solvex-ai-blogger' ) );
 				$error_code    = (string) ( $decoded_response['code'] ?? 'api_error' );
 
 				// Include HTTP status code if available.
 				$http_status = isset( $decoded_response['data'] ) && is_array( $decoded_response['data'] ) && isset( $decoded_response['data']['status'] ) ? (int) $decoded_response['data']['status'] : null;
-				$error_data  = $http_status ? [ 'status' => $http_status ] : null;
+				$error_data  = $http_status ? [ 'status' => $http_status ] : [];
+
+				// Attach token_data to WP_Error for caller forwarding.
+				if ( is_array( $decoded_response['token_data'] ?? null ) ) {
+					$error_data['token_data'] = $decoded_response['token_data'];
+				}
 
 				return new \WP_Error( $error_code, $error_message, $error_data );
 			}

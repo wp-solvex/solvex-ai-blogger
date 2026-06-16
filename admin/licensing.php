@@ -90,7 +90,7 @@ class Licensing {
 
 		// Check if licensing client class exists.
 		if ( ! class_exists( '\SureCart\Licensing\Client' ) ) {
-			$client_path = WPSOLVEX_AUTOAIBLOGGER_DIR . '/inc/licensing/client.php';
+			$client_path = WPSOLVEX_AUTOAIBLOGGER_DIR . '/inc/licensing/Client.php';
 			if ( ! file_exists( $client_path ) || ! is_readable( $client_path ) ) {
 				return;
 			}
@@ -109,6 +109,13 @@ class Licensing {
 		// AJAX handlers with security validation (only for admin users).
 		add_action( 'wp_ajax_wpsolvex_autoaiblogger_activate_license', [ $this, 'activate_license' ] );
 		add_action( 'wp_ajax_wpsolvex_autoaiblogger_deactivate_license', [ $this, 'deactivate_license' ] );
+
+		// One-click connect (Solvex Auth Provider handshake).
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_get_connect_url', [ $this, 'get_connect_url' ] );
+		add_action( 'wp_ajax_wpsolvex_autoaiblogger_connect_license', [ $this, 'connect_license' ] );
+
+		// Background retry for token data if the post-connect fetch failed.
+		add_action( 'wpsolvex_autoaiblogger_retry_token_fetch', [ $this, 'retry_token_fetch' ] );
 
 		// Add hooks for periodic license validation.
 		add_action( 'wp_loaded', [ $this, 'validate_license_periodically' ] );
@@ -251,50 +258,267 @@ class Licensing {
 			wp_send_json_error( [ 'message' => $this->error_messages['rate_limit'] ] );
 		}
 
+		// Get current license key for logging and to free the store slot.
+		$current_license = Helper::get_option( 'license', '' );
+
+		// Free this site's activation slot on the store (best-effort).
+		$this->deactivate_site_on_store( $current_license );
+
+		// Best-effort SureCart SDK deactivation (manual-key licenses). Never blocks disconnect.
 		try {
 			$client = self::licensing_setup();
-
-			if ( ! $client ) {
-				wp_send_json_error( [ 'message' => $this->error_messages['client_error'] ] );
+			if ( $client ) {
+				$client->license()->deactivate();
 			}
+		} catch ( \Exception $e ) {
+			// Ignore — connect-flow licenses are managed via store activations, not the SDK.
+			unset( $e );
+		}
 
-			// Get current license key for logging.
-			$current_license = Helper::get_option( 'license', '' );
+		// Securely update license status and clear connection data.
+		$this->update_license_status( '', 'unlicensed' );
+		Helper::update_option( 'license_status', 'unlicensed' );
+		Helper::update_option( 'connectedEmail', '' );
+		Helper::update_option( 'plan', '' );
 
-			// Attempt license deactivation.
-			$response = $client->license()->deactivate();
+		// Clear token data using the shared helper function.
+		wpsolvex_autoaiblogger_update_token_data(
+			[
+				'total'     => 0,
+				'remaining' => 0,
+			]
+		);
 
-			if ( is_wp_error( $response ) ) {
-				wp_send_json_error( [ 'message' => $this->error_messages['deactivation_failed'] ] );
-			}
+		// Log successful deactivation.
+		$this->log_license_activity( 'deactivate', $current_license, get_current_user_id() );
 
-			// Securely update license status.
-			$this->update_license_status( '', 'unlicensed' );
+		wp_send_json_success(
+			[
+				'message' => __( 'Disconnected successfully.', 'solvex-ai-blogger' ),
+				'status'  => 'unlicensed',
+			]
+		);
+	}
 
-			// Clear license data from admin settings.
-			Helper::update_option( 'license_status', 'unlicensed' );
+	/**
+	 * Return the store auth URL, or null if the site is already connected.
+	 *
+	 * Used both to start the connect popup and as the polling "are we done yet?" signal.
+	 *
+	 * @hooked wp_ajax_wpsolvex_autoaiblogger_get_connect_url
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function get_connect_url(): void {
+		$security_check = $this->validate_license_security();
+		if ( is_wp_error( $security_check ) ) {
+			wp_send_json_error( [ 'message' => $security_check->get_error_message() ] );
+		}
 
-			// Clear token data using the shared helper function.
-			wpsolvex_autoaiblogger_update_token_data(
-				[
-					'total'     => 0,
-					'remaining' => 0,
-				]
-			);
+		// When switching accounts the client forces a fresh auth URL even while connected.
+		$force = ! empty( $_POST['force'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified in validate_license_security() above.
 
-			// Log successful deactivation.
-			$this->log_license_activity( 'deactivate', $current_license, get_current_user_id() );
-
+		// Already connected -> no auth URL (unless forcing a switch).
+		if ( ! $force && Helper::get_option( 'license_status', 'unlicensed' ) === 'licensed' ) {
 			wp_send_json_success(
 				[
-					'message' => __( 'License deactivated successfully.', 'solvex-ai-blogger' ),
-					'status'  => 'unlicensed',
+					'auth_url'        => null,
+					'license'         => Helper::get_option( 'license', '' ),
+					'connected_email' => Helper::get_option( 'connectedEmail', '' ),
+					'plan'            => Helper::get_option( 'plan', '' ),
+					'tokenTotal'      => (int) Helper::get_option( 'tokenTotal', 0 ),
+					'tokenRemaining'  => (int) Helper::get_option( 'tokenRemaining', 0 ),
 				]
 			);
-
-		} catch ( \Exception $e ) {
-			wp_send_json_error( [ 'message' => $this->error_messages['deactivation_exception'] ] );
 		}
+
+		$token = [
+			'redirect-back' => admin_url( 'edit.php?page=' . WPSOLVEX_AUTOAIBLOGGER_SLUG ),
+			'key'           => wp_generate_password( 16, false ),
+			'site-url'      => site_url(),
+			'nonce'         => wp_create_nonce( 'wpsolvex_autoaiblogger_store_connect' ),
+		];
+
+		$auth_url = WPSOLVEX_AUTOAIBLOGGER_CONNECT_PORTAL . 'auth/?token=' . base64_encode( wp_json_encode( $token ) );
+
+		wp_send_json_success( [ 'auth_url' => $auth_url ] );
+	}
+
+	/**
+	 * Complete the connection from the access_key returned by the auth provider.
+	 *
+	 * Decrypts the payload, verifies the nonce, stores the license/API key and the
+	 * connected account, then fetches the token balance.
+	 *
+	 * @hooked wp_ajax_wpsolvex_autoaiblogger_connect_license
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function connect_license(): void {
+		$security_check = $this->validate_license_security();
+		if ( is_wp_error( $security_check ) ) {
+			wp_send_json_error( [ 'message' => $security_check->get_error_message() ] );
+		}
+
+		$rate_limit_check = $this->check_license_rate_limit( 'connect' );
+		if ( is_wp_error( $rate_limit_check ) ) {
+			wp_send_json_error( [ 'message' => $this->error_messages['rate_limit'] ] );
+		}
+
+		$access_key = isset( $_POST['access_key'] ) ? sanitize_text_field( wp_unslash( $_POST['access_key'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified in validate_license_security() above.
+
+		if ( empty( $access_key ) ) {
+			wp_send_json_error( [ 'message' => $this->error_messages['nonce'] ] );
+		}
+
+		$payload = $this->decrypt_connect_payload( $access_key );
+
+		if ( ! is_array( $payload ) || empty( $payload['nonce'] ) ) {
+			wp_send_json_error( [ 'message' => $this->error_messages['nonce'] ] );
+		}
+
+		// Verify the handshake nonce we issued in get_connect_url().
+		if ( ! wp_verify_nonce( $payload['nonce'], 'wpsolvex_autoaiblogger_store_connect' ) ) {
+			wp_send_json_error( [ 'message' => $this->error_messages['nonce'] ] );
+		}
+
+		$license_key = isset( $payload['license_key'] ) ? sanitize_text_field( $payload['license_key'] ) : '';
+
+		if ( ! $this->validate_license_key_format( $license_key ) ) {
+			wp_send_json_error( [ 'message' => $this->error_messages['invalid_license_format'] ] );
+		}
+
+		$plan            = isset( $payload['plan'] ) ? sanitize_text_field( $payload['plan'] ) : '';
+		$connected_email = isset( $payload['user_email'] ) ? sanitize_email( $payload['user_email'] ) : '';
+
+		// Switching accounts/licenses: free the previous license's site slot on the store
+		// before overwriting it, otherwise the old activation is orphaned.
+		$previous_license = Helper::get_option( 'license', '' );
+		if ( ! empty( $previous_license ) && $previous_license !== $license_key ) {
+			$this->deactivate_site_on_store( $previous_license );
+		}
+
+		// Store the license/API key and connection metadata.
+		$this->update_license_status( $license_key, 'licensed' );
+		Helper::update_option( 'license_status', 'licensed' );
+		Helper::update_option( 'connectedEmail', $connected_email );
+		Helper::update_option( 'plan', $plan );
+
+		// Persist the analytics opt-in choice from the provider screen, if present.
+		if ( isset( $payload['is_subscribed'] ) ) {
+			update_option( 'wpsolvex_autoaiblogger_usage_optin', rest_sanitize_boolean( $payload['is_subscribed'] ) ? 'yes' : '' );
+		}
+
+		// Fetch token balance. If it fails, stay connected and retry in the background.
+		$token_synced = $this->fetch_and_save_token_data( $license_key );
+		if ( ! $token_synced && function_exists( 'wp_schedule_single_event' ) ) {
+			wp_schedule_single_event( time() + 30, 'wpsolvex_autoaiblogger_retry_token_fetch', [ $license_key ] );
+		}
+
+		$this->log_license_activity( 'connect', $license_key, get_current_user_id() );
+
+		wp_send_json_success(
+			[
+				'message'         => __( 'Connected successfully.', 'solvex-ai-blogger' ),
+				'status'          => 'licensed',
+				'license'         => $license_key,
+				'connected_email' => $connected_email,
+				'plan'            => $plan,
+				'tokenTotal'      => (int) Helper::get_option( 'tokenTotal', 0 ),
+				'tokenRemaining'  => (int) Helper::get_option( 'tokenRemaining', 0 ),
+				'tokenSynced'     => (bool) $token_synced,
+			]
+		);
+	}
+
+	/**
+	 * Background retry of the token-data fetch.
+	 *
+	 * @hooked wpsolvex_autoaiblogger_retry_token_fetch
+	 * @since 1.0.0
+	 * @param string $license_key The license key.
+	 * @return void
+	 */
+	public function retry_token_fetch( $license_key ): void {
+		if ( ! empty( $license_key ) && is_string( $license_key ) ) {
+			$this->fetch_and_save_token_data( $license_key );
+		}
+	}
+
+	/**
+	 * Decrypt the provider's access_key payload (mirrors the provider's encrypt_string()).
+	 *
+	 * The format is base64( key . '::' . openssl_encrypt(json, AES-256-CBC, key, 0, key) ).
+	 *
+	 * @since 1.0.0
+	 * @param string $access_key The base64 access key from the redirect.
+	 * @return array|null Decoded payload or null on failure.
+	 */
+	private function decrypt_connect_payload( $access_key ) {
+		$decoded = base64_decode( $access_key, true );
+		if ( false === $decoded || strpos( $decoded, '::' ) === false ) {
+			return null;
+		}
+
+		list( $key, $encrypted ) = explode( '::', $decoded, 2 );
+
+		$decrypted = openssl_decrypt( $encrypted, 'AES-256-CBC', $key, 0, $key );
+		if ( false === $decrypted ) {
+			return null;
+		}
+
+		$data = json_decode( $decrypted, true );
+		return is_array( $data ) ? $data : null;
+	}
+
+	/**
+	 * Free this site's activation slot on the store (best-effort).
+	 *
+	 * @since 1.0.0
+	 * @param string $license_key The current license key.
+	 * @return void
+	 */
+	private function deactivate_site_on_store( $license_key ): void {
+		if ( empty( $license_key ) || ! defined( 'WPSOLVEX_AUTOAIBLOGGER_DEACTIVATE_SITE_API' ) ) {
+			return;
+		}
+
+		$url = add_query_arg(
+			[
+				'license'  => rawurlencode( $license_key ),
+				'site_url' => rawurlencode( $this->get_site_fingerprint() ),
+			],
+			WPSOLVEX_AUTOAIBLOGGER_DEACTIVATE_SITE_API
+		);
+
+		wp_remote_post(
+			$url,
+			[
+				'timeout'   => 10,
+				'sslverify' => true,
+				'headers'   => [
+					'Accept'       => 'application/json',
+					// Required: the store's REST permission gate rejects POSTs without a JSON content type.
+					'Content-Type' => 'application/json',
+				],
+			]
+		);
+	}
+
+	/**
+	 * Stable site fingerprint (scheme://host) used for store activations.
+	 *
+	 * Matches the base URL the provider derives from the connect token.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	private function get_site_fingerprint(): string {
+		$parsed = wp_parse_url( site_url() );
+		if ( empty( $parsed['scheme'] ) || empty( $parsed['host'] ) ) {
+			return site_url();
+		}
+		return $parsed['scheme'] . '://' . $parsed['host'];
 	}
 
 	/**
@@ -370,6 +594,11 @@ class Licensing {
 			return;
 		}
 
+		// Pro manages its own licensing — don't nudge free connect there.
+		if ( defined( 'WPSOLVEX_AUTOAIBLOGGER_PRO_VERSION' ) ) {
+			return;
+		}
+
 		// Additional capability checks.
 		if ( ! current_user_can( 'activate_plugins' ) || ! current_user_can( 'install_plugins' ) ) {
 			return;
@@ -391,13 +620,10 @@ class Licensing {
 
 		// Secure notice message with proper escaping.
 		$notice_message = sprintf(
-			/* translators: %1$s: opening link tag, %2$s: closing link tag, %3$s: product name, %4$s: opening emphasis tag, %5$s: closing emphasis tag */
-			__( 'Please %1$sactivate%2$s your copy to claim tokens %4$s%3$s%5$s to generate blog posts.', 'solvex-ai-blogger' ),
+			/* translators: %1$s: opening link tag, %2$s: closing link tag */
+			__( '%1$sConnect your site%2$s to wpaiblogger.com to claim your free 240,000 tokens and start generating blog posts.', 'solvex-ai-blogger' ),
 			'<a href="' . $cta_url . '">',
-			'</a>',
-			esc_html( WPSOLVEX_AUTOAIBLOGGER_PRODUCT_NAME ),
-			'<em>',
-			'</em>'
+			'</a>'
 		);
 
 		// Only show notice if the Notices class is available.
@@ -413,7 +639,7 @@ class Licensing {
 					'repeat-notice-after'        => false,
 					'priority'                   => 10,
 					'display-with-other-notices' => true,
-					'is_dismissible'             => false,
+					'is_dismissible'             => true,
 				]
 			);
 		}
