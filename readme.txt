@@ -24,7 +24,7 @@ Create your free account directly inside the plugin and claim 20,000 tokens ever
 
 Most AI plugins force you to act as an editor, writing prompts and copy-pasting content. Hero AI Blogger acts as your fully automated marketing team. Simply give it a topic or keywords, set your publishing schedule, and watch your blog grow organically.
 
-*   **Hands-Free Auto-Blogging:** Create "Campaigns" based on your target keywords. The plugin will automatically generate, format, and publish posts entirely in the background.
+*   **Hands-Free Auto-Blogging:** Create "Campaigns" based on your target keywords. The plugin will automatically generate, format, and publish posts entirely in the background. [Read our complete guide to Campaigns](https://wpaiblogger.com/blog)
 *   **Smart Scheduling (Drip-Feed Content):** Don't publish everything at once. Tell the AI to drip-feed your content by publishing a new post every few days, or weeks to keep search engines crawling your site.
 *   **Automatic Featured Images:** A blog post isn't complete without visuals. We automatically fetch and attach stunning, royalty-free featured images from Unsplash and Pixabay directly to your generated posts.
 *   **Custom Persona Engine:** Train the AI on your unique brand voice. Tell the plugin about your target audience, site purpose, and preferred tone, ensuring every generated article sounds like *you*.
@@ -113,6 +113,12 @@ You decide. Configure your campaign to publish posts automatically on your chose
 = Does this plugin slow down my website? =
 
 No. The AI processing runs on our secure remote servers rather than your own hosting, so your site's speed and performance are not impacted by content generation.
+
+== SUPPORT & DOCUMENTATION ==
+We are here to help you succeed with AI auto-blogging!
+*   **Documentation:** [Check out our full knowledge base](https://wpaiblogger.com/docs/)
+*   **Get in Touch:** [Contact our support team](https://wpaiblogger.com/contact/)
+*   **Scale Up:** Need more than 20,000 tokens? [View our premium plans](https://wpaiblogger.com/#pricing)
 
 == Upgrade Notice ==
 
