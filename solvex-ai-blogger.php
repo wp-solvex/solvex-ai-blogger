@@ -37,6 +37,10 @@ define( 'WPSOLVEX_AUTOAIBLOGGER_PUBLIC_TOKEN', 'pt_YA4aSFMwU9stG91RYGGfV7aq' );
 define( 'WPSOLVEX_AUTOAIBLOGGER_CAMPAIGN_POST_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-campaign-post' );
 define( 'WPSOLVEX_AUTOAIBLOGGER_CONTENT_FROM_TITLE_POST_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-content-from-title' );
 define( 'WPSOLVEX_AUTOAIBLOGGER_TOKEN_USAGE_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/get-token-data' );
+define( 'WPSOLVEX_AUTOAIBLOGGER_DEACTIVATE_SITE_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/deactivate-site' );
+
+// One-click connect: the Solvex Auth Provider lives at this store URL (page /auth).
+define( 'WPSOLVEX_AUTOAIBLOGGER_CONNECT_PORTAL', 'https://wpaiblogger.com/' );
 
 // CPT Constants.
 define( 'WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN', 'campaign' );

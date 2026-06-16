@@ -66,6 +66,34 @@ class Cron_Handler {
 				return;
 			}
 
+			// Pre-check: Auto-pause if local token balance is below campaign threshold.
+			$local_token_remaining = absint( \WPSolvex\AutoAIBlogger\Inc\Utils\Helper::get_option( 'tokenRemaining', 0 ) );
+			if ( $local_token_remaining < 3000 ) {
+				Metadata::update_campaign_meta( $campaign_id, 'isPaused', true );
+				Metadata::update_campaign_meta( $campaign_id, 'pauseReason', 'token_exhaustion' );
+				Metadata::update_campaign_meta( $campaign_id, 'pausedAt', current_time( 'mysql' ) );
+
+				$posts_created_precheck = intval( Metadata::get_campaign_meta( $campaign_id, 'postsCreated' ) );
+				wpsolvex_autoaiblogger_log_campaign_error(
+					$campaign_id,
+					'quota_error',
+					sprintf(
+						'Campaign auto-paused: Token balance (%d) below minimum threshold (3000). Please upgrade your plan or wait for your monthly refresh.',
+						$local_token_remaining
+					),
+					[
+						'token_remaining' => $local_token_remaining,
+						'posts_created'   => $posts_created_precheck,
+						'auto_paused'     => true,
+					]
+				);
+
+				$cron_hook = 'wpsolvex_autoaiblogger_create_single_post';
+				wp_clear_scheduled_hook( $cron_hook, [ $campaign_id ] );
+
+				return;
+			}
+
 			// Get current campaign statistics.
 			$posts_created   = intval( Metadata::get_campaign_meta( $campaign_id, 'postsCreated' ) );
 			$posts_scheduled = intval( Metadata::get_campaign_meta( $campaign_id, 'postsScheduled' ) );
@@ -146,6 +174,33 @@ class Cron_Handler {
 			} else {
 				// Log detailed error information with post and attempt numbers.
 				$error_type = $result['error_type'] ?? $this->determine_error_type( $result['message'] ?? '' );
+
+				// Smart Pause: Auto-pause campaign on token exhaustion or auth errors.
+				if ( $error_type === 'quota_error' || $error_type === 'auth_error' ) {
+					Metadata::update_campaign_meta( $campaign_id, 'isPaused', true );
+					Metadata::update_campaign_meta( $campaign_id, 'pauseReason', 'token_exhaustion' );
+					Metadata::update_campaign_meta( $campaign_id, 'pausedAt', current_time( 'mysql' ) );
+
+					wpsolvex_autoaiblogger_log_campaign_error(
+						$campaign_id,
+						$error_type,
+						sprintf(
+							'Campaign auto-paused: Insufficient tokens. Post #%d creation failed. Please upgrade your plan or wait for your monthly refresh.',
+							$target_post_number
+						),
+						[
+							'post_number'   => $target_post_number,
+							'posts_created' => $posts_created,
+							'auto_paused'   => true,
+						]
+					);
+
+					// Clear any scheduled cron for this campaign.
+					$cron_hook = 'wpsolvex_autoaiblogger_create_single_post';
+					wp_clear_scheduled_hook( $cron_hook, [ $campaign_id ] );
+
+					return;
+				}
 
 				$context = [
 					'post_number'     => $target_post_number,

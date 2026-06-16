@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useState, useRef, useCallback } from 'react';
 import { Tooltip } from '@wordpress/components';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Zap } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateApiData } from '@Utils/ApiData';
 
@@ -131,8 +131,8 @@ export const TokenDisplayAndRefresh = () => {
 		return null;
 	}
 
-	const isError = tokenRemaining < 100;
-	const isWarning = tokenRemaining <= 1000;
+	const isError = tokenRemaining < 1500;
+	const isWarning = tokenRemaining <= 3000;
 
 	const formattedTokensUsed = tokensUsed.toLocaleString();
 	const formattedTotalTokens = totalTokens.toLocaleString();
@@ -141,20 +141,20 @@ export const TokenDisplayAndRefresh = () => {
 	const progressPercentage = totalTokens > 0 ? ( ( totalTokens - tokenRemaining ) / totalTokens ) * 100 : 0;
 	const getTokenStatus = () => {
 		const remaining = tokenRemaining;
-		if ( remaining >= 2000 ) {
+		if ( remaining >= 3000 ) {
 			return {
 				text: __( 'Plenty of tokens', 'solvex-ai-blogger' ),
 				color: 'bg-green-500',
 			};
 		}
-		if ( remaining >= 1000 ) {
+		if ( remaining >= 1500 ) {
 			return {
-				text: __( 'Moderate', 'solvex-ai-blogger' ),
+				text: __( 'Running low', 'solvex-ai-blogger' ),
 				color: 'bg-amber-500',
 			};
 		}
 		return {
-			text: __( 'Low', 'solvex-ai-blogger' ),
+			text: __( 'Exhausted', 'solvex-ai-blogger' ),
 			color: 'bg-red-500',
 		};
 	};
@@ -212,6 +212,18 @@ export const TokenDisplayAndRefresh = () => {
 					</div>
 				</Tooltip>
 			</button>
+
+			{ tokenRemaining < 1500 && (
+				<a
+					href="https://wpaiblogger.com/pricing/"
+					target="_blank"
+					rel="noopener noreferrer"
+					className="inline-flex items-center cursor-pointer text-[#9138c8] hover:text-[#7c2fb0] focus:outline-none rounded px-3 py-2 transition-colors duration-200 gap-2 no-underline bg-[rgb(240,240,240)] hover:bg-[rgb(240,240,240)] font-medium text-sm"
+				>
+					<Zap className="w-4 h-4" />
+					{ __( 'Get More Tokens', 'solvex-ai-blogger' ) }
+				</a>
+			) }
 
 			<span className="wpsolvex-autoaiblogger-vertical-divider" />
 		</div>
