@@ -35,6 +35,7 @@ define( 'WPSOLVEX_AUTOAIBLOGGER_CAPABILITY', 'manage_options' );
 // Store Linking.
 define( 'WPSOLVEX_AUTOAIBLOGGER_PUBLIC_TOKEN', 'pt_YA4aSFMwU9stG91RYGGfV7aq' );
 define( 'WPSOLVEX_AUTOAIBLOGGER_CAMPAIGN_POST_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-campaign-post' );
+define( 'WPSOLVEX_AUTOAIBLOGGER_V2_POST_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-post' );
 define( 'WPSOLVEX_AUTOAIBLOGGER_CONTENT_FROM_TITLE_POST_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-content-from-title' );
 define( 'WPSOLVEX_AUTOAIBLOGGER_TOKEN_USAGE_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/get-token-data' );
 define( 'WPSOLVEX_AUTOAIBLOGGER_DEACTIVATE_SITE_API', 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/deactivate-site' );
