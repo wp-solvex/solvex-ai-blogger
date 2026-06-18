@@ -369,13 +369,21 @@ export default function PostIdeas() {
 				// Check if the request was successful
 				if ( ! response.success ) {
 					const errorMessage = response.data?.message || __( 'Failed to create post.', 'solvex-ai-blogger' );
+					const details = response.data?.details || null;
 					console.error( __( 'Failed to create post:', 'solvex-ai-blogger' ), errorMessage );
 					dispatch( {
 						type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
 						payload: {
-							message: __( 'Error: ', 'solvex-ai-blogger' ) + errorMessage,
+							title: details?.title || __( "Couldn't generate this post", 'solvex-ai-blogger' ),
+							message: details?.user_message || errorMessage,
 							type: 'error',
-							duration: 5000,
+							duration: 8000,
+							details: details || {
+								error_code: response.data?.code,
+								http_status: response.data?.status,
+								detail: errorMessage,
+								user_message: errorMessage,
+							},
 						},
 					} );
 					return;
@@ -449,19 +457,36 @@ export default function PostIdeas() {
 
 				dispatch( {
 					type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
-					payload: __( 'Post created successfully! Click "Edit" to edit it.', 'solvex-ai-blogger' ),
+					payload: {
+						message: __( 'Post created successfully!', 'solvex-ai-blogger' ),
+						type: 'success',
+						duration: 6000,
+						link: {
+							url: editUrl,
+							label: __( 'View post', 'solvex-ai-blogger' ),
+						},
+					},
 				} );
 			} )
 			.catch( ( newError ) => {
 				// Handle network errors or other exceptions
 				const errorMessage = newError?.message || __( 'Network error occurred while creating post.', 'solvex-ai-blogger' );
+				const details = newError?.details || null;
 				console.error( __( 'Error creating post:', 'solvex-ai-blogger' ), newError );
 				dispatch( {
 					type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
 					payload: {
-						message: __( 'Error: ', 'solvex-ai-blogger' ) + errorMessage,
+						title: details?.title || __( 'Service temporarily unavailable', 'solvex-ai-blogger' ),
+						message: details?.user_message || __( 'Our service is temporarily unavailable. Please try again after some time.', 'solvex-ai-blogger' ),
 						type: 'error',
-						duration: 5000,
+						duration: 8000,
+						details: details || {
+							error_code: newError?.code || 'network_error',
+							http_status: newError?.data?.status,
+							category: 'temporary',
+							detail: errorMessage,
+							user_message: errorMessage,
+						},
 					},
 				} );
 				// Reset button state
@@ -514,185 +539,145 @@ export default function PostIdeas() {
 			</div>
 
 			<div className="mt-6 flow-root">
-				<div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-					<div className="block py-2 align-middle sm:px-6 lg:px-8">
-						<div className="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg">
-							<table className="w-full divide-y divide-gray-300 table-fixed">
-								<thead className="bg-gradient-to-r from-brand-50 to-indigo-50 header-nav">
-									<tr>
-										<th scope="col" className="w-3/5 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-											{ __( 'Title', 'solvex-ai-blogger' ) }
-										</th>
-										<th scope="col" className="w-2/5 px-3 py-3.5 text-right text-sm font-semibold text-gray-900">
-											{ __( 'Write Post', 'solvex-ai-blogger' ) }
-										</th>
-									</tr>
-								</thead>
-
-								<tbody className="divide-y divide-gray-200 bg-white">
-									{ loading ? (
-										// Show skeleton loader within table
-										<Suspense fallback={
-											<tr>
-												<td colSpan="2" className="px-6 py-4 text-center text-gray-500">
-													{ __( 'Loading…', 'solvex-ai-blogger' ) }
-												</td>
-											</tr>
-										}>
-											<Skeleton />
-										</Suspense>
-									) : postIdeasFromRedux === '-1' ? (
-										// Special case for when postIdeasFromRedux is "-1"
-										<tr>
-											<td colSpan="2" className="px-6 py-4 text-center text-amber-600 font-medium">
-												{ __( '🚀 Need more ideas? Go Pro for unlimited suggestions', 'solvex-ai-blogger' ) }
-											</td>
-										</tr>
-									) : postIdeasArr && Array.isArray( postIdeasArr ) && postIdeasArr.length > 0 ? (
-										<>
-											{ /* Limit to 5 ideas for free users, unlimited for pro users */ }
-											{ postIdeasArr.slice( 0, proAvailable ? postIdeasArr.length : 5 ).map( ( postTitle, index ) => (
-												<tr key={ `post-idea-${ index }-${ postTitle?.slice( 0, 20 ) || index }` } className="even:bg-gray-50">
-													<td className="py-4 pl-4 pr-3 text-sm text-gray-900 sm:pl-6">
-														<div className="font-normal">
-															<TrimWordsContent
-																content={ postTitle || '' }
-																count={ 120 }
-															/>
-														</div>
-													</td>
-													<td className="whitespace-nowrap py-4 pl-3 pr-4 text-sm text-right sm:pr-6">
-														{ createdPosts[ postTitle ] ? (
-															// Show "Open Post" for created posts
-															<a
-																target="_blank"
-																href={ createdPosts[ postTitle ] }
-																className="flex items-center gap-x-1 cursor-pointer font-semibold justify-end"
-																style={ { color: 'rgb(22, 163, 74)' } }
-																onMouseEnter={ ( e ) => e.currentTarget.style.color = 'rgb(22, 163, 74)' }
-																onMouseLeave={ ( e ) => e.currentTarget.style.color = 'rgb(22, 163, 74)' }
-																onFocus={ ( e ) => e.currentTarget.style.color = 'rgb(22, 163, 74)' }
-																onBlur={ ( e ) => e.currentTarget.style.color = 'rgb(22, 163, 74)' }
-																onClick={ ( e ) => {
-																	// Let the default link behavior handle opening the post
-																	e.stopPropagation();
-																} } rel="noreferrer"
-															>
-																<Edit className="w-5 h-5" />
-																{ __( 'Edit', 'solvex-ai-blogger' ) }
-															</a>
-														) : (
-															// Show "Create" or loading state
-															<a
-																target="_blank"
-																href="#"
-																onClick={ ( e ) => wpsolvex_autoaiblogger_create_post( e, postTitle || '' ) }
-																className={ `flex items-center gap-x-1 cursor-pointer justify-end ${
-																	creatingPosts.size > 0
-																		? ( creatingPosts.has( postTitle )
-																			? ''
-																			: 'text-gray-400 cursor-not-allowed' )
-																		: 'text-brand-600 hover:text-brand-900'
-																}` }
-																data-type="create"
-																style={ {
-																	pointerEvents: creatingPosts.size > 0 && ! creatingPosts.has( postTitle ) ? 'none' : 'auto',
-																	...( creatingPosts.has( postTitle ) && { color: 'rgb(22, 163, 74)' } ),
-																} }
-																onMouseEnter={ ( e ) => {
-																	if ( creatingPosts.has( postTitle ) ) {
-																		e.currentTarget.style.color = 'rgb(22, 163, 74)';
-																	}
-																} }
-																onMouseLeave={ ( e ) => {
-																	if ( creatingPosts.has( postTitle ) ) {
-																		e.currentTarget.style.color = 'rgb(22, 163, 74)';
-																	}
-																} }
-																onFocus={ ( e ) => {
-																	if ( creatingPosts.has( postTitle ) ) {
-																		e.currentTarget.style.color = 'rgb(22, 163, 74)';
-																	}
-																} }
-																onBlur={ ( e ) => {
-																	if ( creatingPosts.has( postTitle ) ) {
-																		e.currentTarget.style.color = 'rgb(22, 163, 74)';
-																	}
-																} }
-															>
-																{ creatingPosts.has( postTitle ) ? (
-																	// Show loading state for the current post being created
-																	<>
-																		<svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style={ { filter: 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.5))', backdropFilter: 'blur(4px)' } }>
-																			<circle className="opacity-30" cx="12" cy="12" r="10" stroke="rgb(34, 197, 94)" strokeWidth="3"></circle>
-																			<path className="opacity-90" fill="rgb(34, 197, 94)" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-																		</svg>
-																		{ __( 'Creating…', 'solvex-ai-blogger' ) }
-																	</>
-																) : (
-																	// Show normal or disabled state
-																	<>
-																		<Plus className="w-5 h-5" />
-																		{ __( 'Create', 'solvex-ai-blogger' ) }
-																	</>
-																) }
-															</a>
-														) }
-													</td>
-												</tr>
-											) ) }
-
-											{ /* Show upgrade prompt for free users when there are more than 5 ideas */ }
-											{ ! proAvailable && postIdeasArr.length > 5 && (
-												<tr className="bg-gradient-to-r from-amber-50 to-orange-50 border-t-2 border-amber-200">
-													<td colSpan="2" className="px-6 py-6 text-center">
-														<div className="flex flex-col items-center space-y-3">
-															<div className="text-amber-700 font-semibold text-sm">
-																🔒 { `${ postIdeasArr.length - 5 } ${ __( 'more post ideas available with Pro!', 'solvex-ai-blogger' ) }` }
-															</div>
-															<ProButton
-																url={ proPurchaseUrl }
-																variant="primary"
-																size="small"
-																icon={ <MoveRight className="w-4 h-4" /> }
-															>
-																{ __( 'Unlock All Ideas - Upgrade Now', 'solvex-ai-blogger' ) }
-															</ProButton>
-														</div>
-													</td>
-												</tr>
-											) }
-										</>
-									) : (
-										<tr>
-											<td colSpan="2" className="px-6 py-4 text-center text-gray-500">
-												{ __( 'No post ideas available.', 'solvex-ai-blogger' ) }
-											</td>
-										</tr>
-									) }
-								</tbody>
-
-								{ ! proAvailable ? (
-									<tfoot className="bg-gray-50">
-										<tr>
-											<td colSpan="2" className="px-3 py-3.5 text-center text-sm font-semibold">
-												<div className="flex flex-col items-center space-y-2">
-													<ProButton
-														url={ proPurchaseUrl }
-														variant="primary"
-														size="default"
-														icon={ <MoveRight className="w-5 h-5" /> }
-													>
-														{ __( 'Upgrade to Pro', 'solvex-ai-blogger' ) }
-													</ProButton>
-												</div>
-											</td>
-										</tr>
-									</tfoot>
-								) : null }
-							</table>
+				<div className="overflow-hidden shadow ring-1 ring-black/5 rounded-lg">
+					{ /* Header row */ }
+					<div className="flex bg-gradient-to-r from-brand-50 to-indigo-50 border-b border-gray-300">
+						<div className="w-3/5 py-3.5 pl-4 pr-3 sm:pl-6 text-left text-sm font-semibold text-gray-900">
+							{ __( 'Title', 'solvex-ai-blogger' ) }
+						</div>
+						<div className="w-2/5 px-3 py-3.5 text-right text-sm font-semibold text-gray-900">
+							{ __( 'Write Post', 'solvex-ai-blogger' ) }
 						</div>
 					</div>
+
+					{ /* Body */ }
+					<div className="divide-y divide-gray-200 bg-white">
+						{ loading ? (
+							// Show skeleton loader
+							<Suspense fallback={
+								<div className="px-6 py-4 text-center text-gray-500">
+									{ __( 'Loading…', 'solvex-ai-blogger' ) }
+								</div>
+							}>
+								<Skeleton />
+							</Suspense>
+						) : postIdeasFromRedux === '-1' ? (
+							// Special case for when postIdeasFromRedux is "-1"
+							<div className="px-6 py-4 text-center text-amber-600 font-medium">
+								{ __( '🚀 Need more ideas? Go Pro for unlimited suggestions', 'solvex-ai-blogger' ) }
+							</div>
+						) : postIdeasArr && Array.isArray( postIdeasArr ) && postIdeasArr.length > 0 ? (
+							<>
+								{ /* Limit to 5 ideas for free users, unlimited for pro users */ }
+								{ postIdeasArr.slice( 0, proAvailable ? postIdeasArr.length : 5 ).map( ( postTitle, index ) => (
+									<div
+										key={ `post-idea-${ index }-${ postTitle?.slice( 0, 20 ) || index }` }
+										className={ `flex items-stretch ${ index % 2 === 1 ? 'bg-gray-50' : '' }` }
+									>
+										<div className="w-3/5 min-w-0 overflow-hidden py-4 pl-4 pr-3 sm:pl-6 text-sm text-gray-900 font-normal break-words">
+											<TrimWordsContent
+												content={ postTitle || '' }
+												count={ 120 }
+											/>
+										</div>
+										<div className="w-2/5 flex-shrink-0 relative z-10 flex items-center justify-end pl-3 pr-4 sm:pr-6 text-sm text-right">
+											{ createdPosts[ postTitle ] ? (
+												// Show "Open Post" for created posts
+												<a
+													target="_blank"
+													href={ createdPosts[ postTitle ] }
+													className="relative z-20 inline-flex items-center gap-x-1 cursor-pointer font-semibold py-4"
+													style={ { color: 'rgb(22, 163, 74)' } }
+													onClick={ ( e ) => {
+														// Let the default link behavior handle opening the post
+														e.stopPropagation();
+													} } rel="noreferrer"
+												>
+													<Edit className="w-5 h-5 flex-shrink-0" />
+													{ __( 'Edit', 'solvex-ai-blogger' ) }
+												</a>
+											) : (
+												// Show "Create" or loading state
+												<a
+													target="_blank"
+													href="#"
+													onClick={ ( e ) => wpsolvex_autoaiblogger_create_post( e, postTitle || '' ) }
+													className={ `relative z-20 inline-flex items-center gap-x-1 cursor-pointer py-4 ${
+														creatingPosts.size > 0
+															? ( creatingPosts.has( postTitle )
+																? ''
+																: 'text-gray-400 cursor-not-allowed' )
+															: 'text-brand-600 hover:text-brand-900'
+													}` }
+													data-type="create"
+													style={ {
+														pointerEvents: creatingPosts.size > 0 && ! creatingPosts.has( postTitle ) ? 'none' : 'auto',
+														...( creatingPosts.has( postTitle ) && { color: 'rgb(22, 163, 74)' } ),
+													} }
+												>
+													{ creatingPosts.has( postTitle ) ? (
+														// Show loading state for the current post being created
+														<>
+															<svg className="animate-spin h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style={ { filter: 'drop-shadow(0 0 8px rgba(34, 197, 94, 0.5))', backdropFilter: 'blur(4px)' } }>
+																<circle className="opacity-30" cx="12" cy="12" r="10" stroke="rgb(34, 197, 94)" strokeWidth="3"></circle>
+																<path className="opacity-90" fill="rgb(34, 197, 94)" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+															</svg>
+															{ __( 'Creating…', 'solvex-ai-blogger' ) }
+														</>
+													) : (
+														// Show normal or disabled state
+														<>
+															<Plus className="w-5 h-5 flex-shrink-0" />
+															{ __( 'Create', 'solvex-ai-blogger' ) }
+														</>
+													) }
+												</a>
+											) }
+										</div>
+									</div>
+								) ) }
+
+								{ /* Show upgrade prompt for free users when there are more than 5 ideas */ }
+								{ ! proAvailable && postIdeasArr.length > 5 && (
+									<div className="bg-gradient-to-r from-amber-50 to-orange-50 border-t-2 border-amber-200 px-6 py-6 text-center">
+										<div className="flex flex-col items-center space-y-3">
+											<div className="text-amber-700 font-semibold text-sm">
+												🔒 { `${ postIdeasArr.length - 5 } ${ __( 'more post ideas available with Pro!', 'solvex-ai-blogger' ) }` }
+											</div>
+											<ProButton
+												url={ proPurchaseUrl }
+												variant="primary"
+												size="small"
+												icon={ <MoveRight className="w-4 h-4" /> }
+											>
+												{ __( 'Unlock All Ideas - Upgrade Now', 'solvex-ai-blogger' ) }
+											</ProButton>
+										</div>
+									</div>
+								) }
+							</>
+						) : (
+							<div className="px-6 py-4 text-center text-gray-500">
+								{ __( 'No post ideas available.', 'solvex-ai-blogger' ) }
+							</div>
+						) }
+					</div>
+
+					{ /* Footer */ }
+					{ ! proAvailable ? (
+						<div className="bg-gray-50 px-3 py-3.5 text-center text-sm font-semibold">
+							<div className="flex flex-col items-center space-y-2">
+								<ProButton
+									url={ proPurchaseUrl }
+									variant="primary"
+									size="default"
+									icon={ <MoveRight className="w-5 h-5" /> }
+								>
+									{ __( 'Upgrade to Pro', 'solvex-ai-blogger' ) }
+								</ProButton>
+							</div>
+						</div>
+					) : null }
 				</div>
 			</div>
 		</div>

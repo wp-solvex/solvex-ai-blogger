@@ -544,24 +544,41 @@ class Ajax {
 			}
 
 			// If no content provided, generate content from title via API.
-			$featured_image_id = null;
-			$post_content      = $post_data['post_content'] ?? '';
-			$post_excerpt      = ''; // Initialize excerpt variable.
-			$token_data        = null; // Initialize token data variable.
+			$featured_image_id    = null;
+			$post_content         = $post_data['post_content'] ?? '';
+			$post_excerpt         = ''; // Initialize excerpt variable.
+			$token_data           = null; // Initialize token data variable.
+			$seo_keyphrase        = ''; // Initialize SEO focus keyphrase.
+			$seo_title            = ''; // Initialize SEO title.
+			$seo_meta_description = ''; // Initialize SEO meta description.
 
 			if ( empty( $post_content ) && ! empty( $post_title ) ) {
 				$api_result = $this->generate_content_from_title_api( $post_title, $post_data );
 				if ( is_wp_error( $api_result ) ) {
+					$error_data = $api_result->get_error_data();
+					$error_data = is_array( $error_data ) ? $error_data : [];
+
 					$error_response = [
 						'message' => $api_result->get_error_message(),
 						'code'    => $api_result->get_error_code(),
 					];
 
 					// Include HTTP status code if available.
-					$error_data = $api_result->get_error_data();
-					if ( is_array( $error_data ) && isset( $error_data['status'] ) ) {
+					if ( isset( $error_data['status'] ) ) {
 						$error_response['status'] = (int) $error_data['status'];
 					}
+
+					// Forward the structured error details for the error side panel.
+					$error_response['details'] = [
+						'error_code'      => $error_data['error_code'] ?? $api_result->get_error_code(),
+						'http_status'     => $error_data['http_status'] ?? ( $error_data['status'] ?? null ),
+						'provider_status' => $error_data['provider_status'] ?? '',
+						'provider_code'   => $error_data['provider_code'] ?? 0,
+						'category'        => $error_data['category'] ?? 'generation',
+						'title'           => $error_data['title'] ?? '',
+						'user_message'    => $error_data['user_message'] ?? $api_result->get_error_message(),
+						'detail'          => $error_data['detail'] ?? $api_result->get_error_message(),
+					];
 
 					wp_send_json_error( $error_response );
 					return;
@@ -571,6 +588,11 @@ class Ajax {
 					$post_content = $api_result['post_content'] ?? '';
 					// Store token data from API response.
 					$token_data = $api_result['token_data'] ?? null;
+
+					// Capture SEO fields for Yoast integration.
+					$seo_keyphrase        = isset( $api_result['seo_keyphrase'] ) ? sanitize_text_field( (string) $api_result['seo_keyphrase'] ) : '';
+					$seo_title            = isset( $api_result['seo_title'] ) ? sanitize_text_field( (string) $api_result['seo_title'] ) : '';
+					$seo_meta_description = isset( $api_result['seo_meta_description'] ) ? sanitize_text_field( (string) $api_result['seo_meta_description'] ) : '';
 
 					// Extract and limit excerpt/summary to 160 characters.
 					if ( ! empty( $api_result['summary'] ) && is_string( $api_result['summary'] ) ) {
@@ -639,6 +661,11 @@ class Ajax {
 				$post_args['post_excerpt'] = wp_kses_post( $post_excerpt );
 			}
 
+			// Set slug from SEO keyphrase for Yoast "Keyphrase in slug" check.
+			if ( ! empty( $seo_keyphrase ) ) {
+				$post_args['post_name'] = sanitize_title( $seo_keyphrase );
+			}
+
 			if ( ! empty( $meta_data ) && is_array( $meta_data ) ) {
 				$post_args['meta_input'] = $meta_data;
 			}
@@ -663,6 +690,39 @@ class Ajax {
 			if ( $featured_image_id && is_numeric( $featured_image_id ) ) {
 				set_post_thumbnail( $post_id, $featured_image_id );
 				// Note: We don't fail the post creation if thumbnail setting fails as the post content already includes the images.
+			}
+
+			// Set SEO meta fields for Yoast integration.
+			if ( defined( 'WPSEO_VERSION' ) ) {
+				// Yoast SEO is active — set focus keyphrase, SEO title, and meta description.
+				if ( ! empty( $seo_keyphrase ) ) {
+					update_post_meta( $post_id, '_yoast_wpseo_focuskw', $seo_keyphrase );
+				}
+				if ( ! empty( $seo_title ) ) {
+					update_post_meta( $post_id, '_yoast_wpseo_title', $seo_title );
+				}
+				if ( ! empty( $seo_meta_description ) ) {
+					update_post_meta( $post_id, '_yoast_wpseo_metadesc', $seo_meta_description );
+				}
+			} elseif ( ! empty( $seo_meta_description ) && empty( $post_excerpt ) ) {
+				// No Yoast — use meta description as excerpt for basic SEO.
+				wp_update_post(
+					[
+						'ID'           => $post_id,
+						'post_excerpt' => $seo_meta_description,
+					]
+				);
+			}
+
+			// Update featured image alt text to include keyphrase for Yoast image alt check.
+			if ( $featured_image_id && is_numeric( $featured_image_id ) && ! empty( $seo_keyphrase ) ) {
+				$existing_alt = get_post_meta( $featured_image_id, '_wp_attachment_image_alt', true );
+				if ( empty( $existing_alt ) || stripos( $existing_alt, $seo_keyphrase ) === false ) {
+					$new_alt = ! empty( $existing_alt )
+						? $seo_keyphrase . ' - ' . $existing_alt
+						: $seo_keyphrase;
+					update_post_meta( $featured_image_id, '_wp_attachment_image_alt', sanitize_text_field( $new_alt ) );
+				}
 			}
 
 			// Remove this title from the postIdeas DB option (but keep Redux unchanged).
@@ -1704,7 +1764,15 @@ class Ajax {
 				if ( is_array( $decoded_response ) && isset( $decoded_response['code'] ) && isset( $decoded_response['message'] ) ) {
 					$error_code    = (string) $decoded_response['code'];
 					$error_message = (string) $decoded_response['message'];
-					$error_data    = isset( $decoded_response['data'] ) && is_array( $decoded_response['data'] ) && isset( $decoded_response['data']['status'] ) ? [ 'status' => (int) $decoded_response['data']['status'] ] : [ 'status' => $http_code ];
+
+					// Preserve the full structured error data from the server
+					// (status, error_code, provider_status, detail, etc.).
+					$error_data = isset( $decoded_response['data'] ) && is_array( $decoded_response['data'] )
+						? $decoded_response['data']
+						: [];
+					if ( ! isset( $error_data['status'] ) ) {
+						$error_data['status'] = $http_code;
+					}
 
 					return new \WP_Error( $error_code, $error_message, $error_data );
 				}
@@ -1726,9 +1794,10 @@ class Ajax {
 				$error_message = (string) ( $decoded_response['message'] ?? __( 'Unknown API error', 'solvex-ai-blogger' ) );
 				$error_code    = (string) ( $decoded_response['code'] ?? 'api_error' );
 
-				// Include HTTP status code if available.
-				$http_status = isset( $decoded_response['data'] ) && is_array( $decoded_response['data'] ) && isset( $decoded_response['data']['status'] ) ? (int) $decoded_response['data']['status'] : null;
-				$error_data  = $http_status ? [ 'status' => $http_status ] : null;
+				// Preserve the full structured error data from the server.
+				$error_data = isset( $decoded_response['data'] ) && is_array( $decoded_response['data'] )
+					? $decoded_response['data']
+					: [];
 
 				return new \WP_Error( $error_code, $error_message, $error_data );
 			}
@@ -1761,10 +1830,13 @@ class Ajax {
 			$token_data = isset( $decoded_response['token_data'] ) && is_array( $decoded_response['token_data'] ) ? $decoded_response['token_data'] : null;
 
 			return [
-				'post_content' => $generated_content,
-				'summary'      => $summary,
-				'images'       => $images,
-				'token_data'   => $token_data,
+				'post_content'         => $generated_content,
+				'summary'              => $summary,
+				'images'               => $images,
+				'token_data'           => $token_data,
+				'seo_keyphrase'        => isset( $decoded_response['seo_keyphrase'] ) && is_string( $decoded_response['seo_keyphrase'] ) ? $decoded_response['seo_keyphrase'] : '',
+				'seo_title'            => isset( $decoded_response['seo_title'] ) && is_string( $decoded_response['seo_title'] ) ? $decoded_response['seo_title'] : '',
+				'seo_meta_description' => isset( $decoded_response['seo_meta_description'] ) && is_string( $decoded_response['seo_meta_description'] ) ? $decoded_response['seo_meta_description'] : '',
 			];
 
 		} catch ( \Exception $e ) {

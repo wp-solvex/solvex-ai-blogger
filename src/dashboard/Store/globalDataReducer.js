@@ -57,6 +57,7 @@ const globalDataReducer = ( state = {}, action ) => {
 		UPDATE_INITIAL_STATE_FLAG: () => ( { ...state, initialStateSetFlag: Boolean( action.payload ) } ),
 		UPDATE_SETTINGS_ACTIVE_NAVIGATION_TAB: () => ( { ...state, activeSettingsNavigationTab: String( action.payload || 'general' ) } ),
 		UPDATE_SETTINGS_SAVED_NOTIFICATION: () => ( { ...state, settingsSavedNotification: action.payload } ),
+		UPDATE_API_ERROR_PANEL: () => ( { ...state, apiErrorPanel: action.payload || null } ),
 		UPDATE_CONFETTI_SHOW: () => ( { ...state, confettiShow: Boolean( action.payload ) } ),
 		UPDATE_ONBOARDING_TAB: () => ( { ...state, onboardingTab: Number( action.payload ) || 0 } ),
 		UPDATE_SITE_TITLE: () => ( { ...state, siteTitle: String( action.payload || '' ) } ),

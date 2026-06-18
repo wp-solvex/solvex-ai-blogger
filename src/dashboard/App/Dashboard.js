@@ -2,6 +2,7 @@ import React from 'react';
 import MainNav from './MainNav';
 import PagesRoute from './PagesRoute';
 import SettingsSavedNotification from './SettingsSavedNotification';
+import ApiErrorPanel from './ApiErrorPanel';
 import ErrorBoundary from '@Components/ErrorBoundary';
 
 /**
@@ -13,6 +14,7 @@ const Dashboard = () => {
 			<ErrorBoundary>
 				<MainNav />
 				<SettingsSavedNotification />
+				<ApiErrorPanel />
 				<PagesRoute />
 			</ErrorBoundary>
 		</div>
