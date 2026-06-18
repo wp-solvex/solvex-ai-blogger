@@ -5,83 +5,74 @@ import { useSelector, useDispatch } from 'react-redux';
 import { __ } from '@wordpress/i18n';
 
 /**
- * Enhanced notification types with modern gradient designs and animations
+ * Notification styling tokens — modeled on the MS Fabric Lakehouse
+ * (Fluent UI) toast: a clean white surface with a colored status icon,
+ * subtle border, and an accent bar. Uses our brand purple for info.
  */
 const NotificationTypes = {
 	success: {
 		icon: CheckCircleIcon,
-		iconColor: 'text-emerald-500',
-		bgGradient: 'bg-gradient-to-r from-emerald-50 via-green-50 to-emerald-50',
-		borderColor: 'border-emerald-200',
-		shadowColor: 'shadow-emerald-100/50',
-		accentColor: 'bg-emerald-500',
+		iconColor: 'text-emerald-600',
 		iconBg: 'bg-emerald-100',
+		accentColor: 'bg-emerald-500',
 	},
 	error: {
 		icon: AlertCircleIcon,
-		iconColor: 'text-red-500',
-		bgGradient: 'bg-gradient-to-r from-red-50 via-pink-50 to-red-50',
-		borderColor: 'border-red-200',
-		shadowColor: 'shadow-red-100/50',
-		accentColor: 'bg-red-500',
+		iconColor: 'text-red-600',
 		iconBg: 'bg-red-100',
+		accentColor: 'bg-red-500',
 	},
 	warning: {
 		icon: AlertCircleIcon,
-		iconColor: 'text-amber-500',
-		bgGradient: 'bg-gradient-to-r from-amber-50 via-yellow-50 to-amber-50',
-		borderColor: 'border-amber-200',
-		shadowColor: 'shadow-amber-100/50',
-		accentColor: 'bg-amber-500',
+		iconColor: 'text-amber-600',
 		iconBg: 'bg-amber-100',
+		accentColor: 'bg-amber-500',
 	},
 	info: {
 		icon: InfoIcon,
-		iconColor: 'text-brand-500',
-		bgGradient: 'bg-gradient-to-r from-brand-50 via-indigo-50 to-brand-50',
-		borderColor: 'border-brand-200',
-		shadowColor: 'shadow-brand-100/50',
-		accentColor: 'bg-brand-500',
+		iconColor: 'text-brand-600',
 		iconBg: 'bg-brand-100',
+		accentColor: 'bg-brand-500',
 	},
 };
 
+const DEFAULT_DURATION = 3000;
+const ERROR_DURATION = 8000;
+
 /**
- * Enhanced Settings Saved Notification component with premium styling and animations
+ * Toast notification component styled like the Fabric Lakehouse message,
+ * with our brand colors. Supports a friendly title, wrapping body, and an
+ * optional "View details" action that opens the API error side panel.
  */
 export default function SettingsSavedNotification() {
 	const dispatch = useDispatch();
 
-	// Enhanced selector to handle different notification types
+	// Normalize the notification into a consistent object shape.
 	const notification = useSelector( ( state ) => {
-		const settingsNotification = state.settingsSavedNotification;
+		const raw = state.settingsSavedNotification;
 
-		// Debug logging.
-		if ( settingsNotification ) {
-			console.log( 'SettingsSavedNotification received:', settingsNotification );
+		if ( typeof raw === 'string' ) {
+			if ( ! raw ) {
+				return null;
+			}
+			return { message: raw, type: 'success', duration: DEFAULT_DURATION };
 		}
 
-		// Support both string and object notifications.
-		if ( typeof settingsNotification === 'string' ) {
+		if ( raw && typeof raw === 'object' ) {
+			const type = raw.type || 'success';
 			return {
-				message: settingsNotification,
-				type: 'success',
-				duration: 3000,
-			};
-		}
-
-		if ( settingsNotification && typeof settingsNotification === 'object' ) {
-			return {
-				message: settingsNotification.message || '',
-				type: settingsNotification.type || 'success',
-				duration: settingsNotification.duration || 3000,
+				title: raw.title || '',
+				message: raw.message || '',
+				type,
+				duration: raw.duration || ( type === 'error' ? ERROR_DURATION : DEFAULT_DURATION ),
+				details: raw.details || null,
+				link: raw.link || null,
 			};
 		}
 
 		return null;
 	} );
 
-	// Memoized dismiss action.
 	const dismissNotification = useCallback( () => {
 		dispatch( {
 			type: 'UPDATE_SETTINGS_SAVED_NOTIFICATION',
@@ -89,7 +80,26 @@ export default function SettingsSavedNotification() {
 		} );
 	}, [ dispatch ] );
 
-	// Auto-dismiss effect with proper cleanup.
+	// Open the error details side panel with the structured error info.
+	const openDetails = useCallback( () => {
+		if ( ! notification?.details ) {
+			return;
+		}
+		const d = notification.details;
+		dispatch( {
+			type: 'UPDATE_API_ERROR_PANEL',
+			payload: {
+				open: true,
+				message: d.user_message || notification.message || '',
+				code: d.error_code || '',
+				status: d.http_status || '',
+				providerStatus: d.provider_status || '',
+				detail: d.detail || '',
+			},
+		} );
+	}, [ dispatch, notification ] );
+
+	// Auto-dismiss after the type-appropriate duration.
 	useEffect( () => {
 		if ( notification?.message ) {
 			const timer = setTimeout( () => {
@@ -100,20 +110,19 @@ export default function SettingsSavedNotification() {
 		}
 	}, [ notification, dismissNotification ] );
 
-	// Memoized notification styles.
-	const notificationStyle = useMemo( () => {
+	const style = useMemo( () => {
 		if ( ! notification?.type ) {
 			return NotificationTypes.success;
 		}
 		return NotificationTypes[ notification.type ] || NotificationTypes.success;
 	}, [ notification?.type ] );
 
-	// Early return if no notification.
 	if ( ! notification?.message ) {
 		return null;
 	}
 
-	const { icon: IconComponent, iconColor, bgGradient, borderColor, shadowColor, accentColor, iconBg } = notificationStyle;
+	const { icon: IconComponent, iconColor, iconBg, accentColor } = style;
+	const hasDetails = Boolean( notification.details );
 
 	return (
 		<div
@@ -128,72 +137,92 @@ export default function SettingsSavedNotification() {
 					show={ Boolean( notification.message ) }
 					as={ Fragment }
 					enter="transform ease-out duration-300 transition-all"
-					enterFrom="translate-y-1 opacity-0 sm:translate-y-0 sm:translate-x-2 scale-98"
-					enterTo="translate-y-0 opacity-100 sm:translate-x-0 scale-100"
+					enterFrom="translate-y-1 opacity-0 sm:translate-y-0 sm:translate-x-2"
+					enterTo="translate-y-0 opacity-100 sm:translate-x-0"
 					leave="transition ease-in duration-200"
-					leaveFrom="opacity-100 scale-100"
-					leaveTo="opacity-0 scale-98"
+					leaveFrom="opacity-100"
+					leaveTo="opacity-0"
 				>
 					<div
-						className={ `
-							max-w-xs w-full ${ bgGradient }
-							shadow-lg ${ shadowColor }
+						className="
+							max-w-md w-full bg-white
+							shadow-lg shadow-gray-200/60
 							rounded-lg pointer-events-auto
 							ring-1 ring-black/5
 							overflow-hidden
-							border ${ borderColor }
-							notification-container notification-card
-							transform transition-all duration-200
+							border border-gray-200
 							relative
-						` }
+						"
 						role="alert"
 					>
-						{ /* Animated progress bar with CSS animation */ }
-						<div className="absolute top-0 left-0 right-0 h-0.5 bg-gray-200/40 overflow-hidden">
+						{ /* Accent progress bar */ }
+						<div className="absolute top-0 left-0 right-0 h-0.5 bg-gray-100 overflow-hidden">
 							<div
 								className={ `h-full ${ accentColor } transform origin-left notification-progress` }
 								style={ { '--duration': `${ notification.duration }ms` } }
 							/>
 						</div>
 
-						{ /* Main content */ }
-						<div className="p-2.5">
-							<div className="flex items-center gap-2.5">
-								{ /* Compact icon */ }
+						<div className="p-3">
+							<div className="flex items-start gap-3">
+								{ /* Status icon */ }
 								<div className={ `
-									flex-shrink-0 w-6 h-6 ${ iconBg } rounded-full
-									flex items-center justify-center
-									ring-1 ring-white/50 shadow-sm
-									transform transition-all duration-300
+									flex-shrink-0 w-7 h-7 ${ iconBg } rounded-full
+									flex items-center justify-center mt-0.5
 								` }>
 									<IconComponent
-										className={ `h-3.5 w-3.5 ${ iconColor }` }
+										className={ `h-4 w-4 ${ iconColor }` }
 										aria-hidden="true"
 									/>
 								</div>
 
 								{ /* Message content */ }
 								<div className="flex-1 min-w-0">
+									{ notification.title && (
+										<p className="text-[13px] font-semibold text-gray-900 m-0 p-0 leading-5">
+											{ notification.title }
+										</p>
+									) }
 									<p
-										className="text-xs font-medium text-gray-900 m-0 p-0 leading-4 truncate"
+										className="text-[13px] text-gray-700 m-0 p-0 leading-5 break-words"
 										id="notification-message"
 									>
 										{ notification.message }
 									</p>
+
+									{ /* View details action */ }
+									{ hasDetails && (
+										<button
+											type="button"
+											onClick={ openDetails }
+											className="mt-1.5 text-[13px] font-medium text-brand-600 hover:text-brand-700 bg-transparent border-none p-0 cursor-pointer"
+										>
+											{ __( 'View details', 'solvex-ai-blogger' ) }
+										</button>
+									) }
+
+									{ /* Success link action (e.g. View post) */ }
+									{ notification.link && notification.link.url && (
+										<a
+											href={ notification.link.url }
+											target="_blank"
+											rel="noopener noreferrer"
+											className="mt-1.5 inline-block text-[13px] font-medium text-brand-600 hover:text-brand-700 no-underline cursor-pointer"
+										>
+											{ notification.link.label || __( 'View post', 'solvex-ai-blogger' ) }
+										</a>
+									) }
 								</div>
 
-								{ /* Compact close button */ }
+								{ /* Close button */ }
 								<div className="flex-shrink-0">
 									<button
 										type="button"
 										className="
-											bg-white/60 backdrop-blur-sm rounded-full
-											inline-flex text-gray-400 hover:text-gray-600
-											focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-gray-300
-											border-none p-1 transition-all duration-150
-											hover:bg-white/80 hover:shadow-md
-											transform hover:scale-105
-											group
+											rounded-md inline-flex text-gray-400 hover:text-gray-600
+											focus:outline-none focus:ring-1 focus:ring-gray-300
+											border-none bg-transparent p-1 transition-colors duration-150
+											hover:bg-gray-100 cursor-pointer
 										"
 										onClick={ dismissNotification }
 										aria-label={ __( 'Close notification', 'solvex-ai-blogger' ) }
@@ -202,16 +231,12 @@ export default function SettingsSavedNotification() {
 										<span className="sr-only">
 											{ __( 'Close notification', 'solvex-ai-blogger' ) }
 										</span>
-										<XIcon
-											className="h-3 w-3 transition-transform duration-150 group-hover:scale-110"
-											aria-hidden="true"
-										/>
+										<XIcon className="h-3.5 w-3.5" aria-hidden="true" />
 									</button>
 								</div>
 							</div>
 						</div>
 
-						{ /* Add CSS for progress bar animation */ }
 						<style>{ `
 							.notification-progress {
 								animation: shrinkWidth var(--duration) linear forwards;

@@ -484,187 +484,87 @@ class Cron_Handler {
 			$max_words = $max_words ? $max_words : 1000;
 
 			$site_persona_details = wpsolvex_autoaiblogger_get_site_persona_details( $campaign_id );
-			$settings             = \WPSolvex\AutoAIBlogger\Inc\Utils\Settings::get_ai_blogger_settings();
-			$license              = \WPSolvex\AutoAIBlogger\Inc\Utils\Helper::get_option( 'license', '' );
 
-			if ( empty( $license ) ) {
-				return [
-					'success' => false,
-					'message' => __( 'License token is required.', 'solvex-ai-blogger' ),
-				];
-			}
+			// Get campaign name for better context.
+			$campaign_post = get_post( $campaign_id );
+			$campaign_name = $campaign_post ? $campaign_post->post_title : 'Campaign Post';
 
-			// Get number of images from campaign metadata (content images only, 1-4).
+			// Get number of images from campaign metadata (represents content images only).
 			$image_count = Metadata::get_campaign_meta( $campaign_id, 'numberOfImages' ) ?? 1;
+
+			// Apply filter to allow Pro plugin to modify image count.
+			// Free users are limited to 1 image, Pro users can customize 1-4.
 			$image_count = apply_filters( 'wpsolvex_autoaiblogger_campaign_image_count', $image_count, $campaign_id );
-			$image_count = max( 1, min( 4, absint( $image_count ) ) );
+			$image_count = max( 1, min( 4, absint( $image_count ) ) ); // Limit: 1-4 content images.
 
-			// Tone and demographic from campaign meta, fallback to global settings.
-			$content_tone       = Metadata::get_campaign_meta( $campaign_id, 'contentTone' );
-			$target_demographic = Metadata::get_campaign_meta( $campaign_id, 'targetDemographic' );
-			if ( empty( $content_tone ) ) {
-				$content_tone = $settings['contentTone'] ?? 'Professional';
-			}
-			if ( empty( $target_demographic ) ) {
-				$target_demographic = $settings['targetDemographic'] ?? 'General Public';
-			}
-
-			// Collect existing post titles from this campaign for deduplication.
-			$existing_titles = [];
-			$existing_posts  = get_posts(
-				[
-					'post_type'              => 'post',
-					'posts_per_page'         => -1,
-					'fields'                 => 'ids',
-					'post_status'            => [ 'publish', 'draft', 'pending', 'future' ],
-					'meta_key'               => 'wpsolvex_autoaiblogger_campaign_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-					'meta_value'             => $campaign_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-					'update_post_meta_cache' => false,
-					'update_post_term_cache' => false,
-				]
-			);
-			if ( ! empty( $existing_posts ) ) {
-				foreach ( $existing_posts as $existing_post_id ) {
-					$existing_title = get_the_title( $existing_post_id );
-					if ( ! empty( $existing_title ) ) {
-						$existing_titles[] = $existing_title;
-					}
-				}
-			}
-
-			// Build the standard-format payload for the /generate-post endpoint.
-			// Note: Phase 2 content formats (listicle, comparison, series, etc.) are
-			// intentionally not exposed in this release — every post uses 'standard'.
-			$body_args = [
-				'license_key'       => $license,
-				'site_url'          => home_url(),
-				'generation_params' => [
-					'format'            => 'standard',
-					'keywords'          => $keywords,
-					'tone'              => $content_tone,
-					'demographic'       => $target_demographic,
-					'max_words'         => $max_words,
-					'images_per_post'   => $image_count,
-					'temperature'       => floatval( $settings['temperature'] ?? 1 ),
-					'harassment'        => absint( $settings['harassment'] ?? 2 ),
-					'hate'              => absint( $settings['hate'] ?? 2 ),
-					'sexually_explicit' => absint( $settings['sexuallyExplicit'] ?? 2 ),
-					'dangerous_content' => absint( $settings['dangerousContent'] ?? 2 ),
-					'format_data'       => [],
-					'existing_titles'   => $existing_titles,
-					'topic'             => '',
-				],
-				'state_data'        => [],
-				'site_persona'      => [
-					'site_title'       => $site_persona_details['site_title'] ?? '',
-					'site_description' => $site_persona_details['site_description'] ?? '',
-					'site_for'         => $site_persona_details['site_purpose'] ?? '',
-				],
-			];
-
-			$api_url = WPSOLVEX_AUTOAIBLOGGER_V2_POST_API;
-			if ( ! filter_var( $api_url, FILTER_VALIDATE_URL ) ) {
-				return [
-					'success' => false,
-					'message' => __( 'Invalid API endpoint.', 'solvex-ai-blogger' ),
-				];
-			}
+			// Add 1 for featured image (first image is always featured, rest go in content).
+			// Total will be 2-5 images (API limit is 0-5, we use 2-5 range).
+			$total_image_count = $image_count + 1;
 
 			$max_retries = 2;
 			$retry_delay = 3;
 			$response    = null;
 
 			for ( $attempt = 1; $attempt <= $max_retries; $attempt++ ) {
-				$response = wp_remote_post(
-					$api_url,
-					[
-						'headers'   => [
-							'Content-Type' => 'application/json',
-							'User-Agent'   => 'Solvex-AI-Blogger/' . WPSOLVEX_AUTOAIBLOGGER_VERSION,
-						],
-						'body'      => wp_json_encode( $body_args ),
-						'timeout'   => 150,
-						'sslverify' => true,
-					]
-				);
+				$response = wpsolvex_autoaiblogger_get_post_creation_api_response( $keywords, $max_words, $site_persona_details, $campaign_id, $campaign_name, $total_image_count );
 
 				if ( ! is_wp_error( $response ) ) {
-					$response_code = wp_remote_retrieve_response_code( $response );
-					if ( $response_code === 200 ) {
-						break;
-					}
-
-					// Retry on transient server errors.
-					if ( in_array( $response_code, [ 502, 503, 504 ], true ) && $attempt < $max_retries ) {
-						sleep( $retry_delay );
-						$retry_delay *= 2;
-						continue;
-					}
-
-					// Non-retryable error — extract server message.
-					$error_body = wp_remote_retrieve_body( $response );
-					$error_data = json_decode( $error_body, true );
-					$error_msg  = isset( $error_data['message'] ) ? $error_data['message'] : "API returned status code: {$response_code}";
-
-					return [
-						'success'  => false,
-						'message'  => $error_msg,
-						'attempts' => $attempt,
-					];
+					break;
 				}
 
-				// WP_Error — retry on timeout/connection failure.
-				if ( $attempt < $max_retries ) {
-					sleep( $retry_delay );
-					$retry_delay *= 2;
+				$error_code    = $response->get_error_code();
+				$error_message = $response->get_error_message();
+
+				if ( in_array( $error_code, [ 'api_error' ], true ) &&
+					(
+						strpos( $error_message, '502' ) !== false ||
+						strpos( $error_message, '503' ) !== false ||
+						strpos( $error_message, '504' ) !== false )
+					) {
+
+					if ( $attempt < $max_retries ) {
+						sleep( $retry_delay );
+						$retry_delay *= 2;
+					}
+				} else {
+					break;
 				}
 			}
 
 			if ( is_wp_error( $response ) ) {
+				$error_code    = $response->get_error_code();
+				$error_message = $response->get_error_message();
+
+				// Enhance error message with more context.
+				$detailed_message = sprintf(
+					/* translators: 1: error code, 2: error message */
+					__( 'API Error (%1$s): %2$s', 'solvex-ai-blogger' ),
+					$error_code,
+					$error_message
+				);
+
+				// Add retry attempt information.
+				if ( $attempt > 1 ) {
+					$detailed_message .= sprintf(
+						/* translators: %d: Attempt number. */
+						__( ' (Failed after %d attempts)', 'solvex-ai-blogger' ),
+						$attempt
+					);
+				}
+
 				return [
-					'success'  => false,
-					'message'  => 'API Error: ' . $response->get_error_message(),
-					'attempts' => $attempt,
+					'success'    => false,
+					'message'    => $detailed_message,
+					'error_code' => $error_code,
+					'attempts'   => $attempt,
 				];
 			}
-
-			$body = wp_remote_retrieve_body( $response );
-			$data = json_decode( $body, true );
-
-			if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $data ) ) {
-				return [
-					'success' => false,
-					'message' => __( 'Invalid JSON response from API.', 'solvex-ai-blogger' ),
-				];
-			}
-
-			if ( empty( $data['success'] ) || empty( $data['data'] ) ) {
-				return [
-					'success' => false,
-					'message' => $data['message'] ?? __( 'API returned unsuccessful response.', 'solvex-ai-blogger' ),
-				];
-			}
-
-			$api_data = $data['data'];
-
-			// Convert the /generate-post response (Gutenberg blocks) into the flat
-			// shape expected by generate_post_from_campaign().
-			$blocks       = $api_data['blocks'] ?? [];
-			$post_content = is_array( $blocks ) ? implode( "\n\n", $blocks ) : '';
 
 			return [
 				'success' => true,
-				'data'    => [
-					'post_title'           => $api_data['title'] ?? 'Generated Post',
-					'post_content'         => $post_content,
-					'summary'              => $api_data['summary'] ?? '',
-					'images'               => $api_data['images'] ?? [],
-					'token_data'           => $api_data['meta_updates']['tokens_used'] ?? null,
-					'seo_keyphrase'        => $api_data['seo_keyphrase'] ?? '',
-					'seo_title'            => $api_data['seo_title'] ?? '',
-					'seo_meta_description' => $api_data['seo_meta_description'] ?? '',
-				],
+				'data'    => $response,
 			];
+
 		} catch ( \Exception $e ) {
 			return [
 				'success' => false,
