@@ -19,6 +19,7 @@ const selectSettings = ( state ) => ( {
 	dangerousContent: typeof state.dangerousContent === 'number' ? state.dangerousContent : 2,
 	emailNotificationEnabled: typeof state.emailNotificationEnabled === 'boolean' ? state.emailNotificationEnabled : false,
 	emailNotificationValue: state.emailNotificationValue || '',
+	gscPropertyUrl: state.gscPropertyUrl || '',
 	isLoading: state.isLoading || false,
 	error: state.error || null,
 } );
@@ -45,6 +46,7 @@ export const useSettingsSelector = () => {
 		settings.dangerousContent,
 		settings.emailNotificationEnabled,
 		settings.emailNotificationValue,
+		settings.gscPropertyUrl,
 		settings.isLoading,
 		settings.error,
 	] );
@@ -81,6 +83,8 @@ export const useSettingSelector = ( settingKey ) => {
 				return typeof state.emailNotificationEnabled === 'boolean' ? state.emailNotificationEnabled : false;
 			case 'emailNotificationValue':
 				return state.emailNotificationValue || '';
+			case 'gscPropertyUrl':
+				return state.gscPropertyUrl || '';
 			case 'isLoading':
 				return state.isLoading || false;
 			case 'error':

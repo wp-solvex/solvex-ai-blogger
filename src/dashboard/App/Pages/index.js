@@ -4,6 +4,7 @@ import Welcome from './Welcome';
 import Settings from './Settings';
 import FreeVsPro from './FreeVsPro';
 import Campaigns from './Campaigns';
+import SearchConsole from './SearchConsole';
 
 // Page metadata for better organization and routing
 export const pageMetadata = {
@@ -35,6 +36,13 @@ export const pageMetadata = {
 		description: 'Manage your blog campaigns',
 		icon: 'campaigns',
 	},
+	SEARCH_CONSOLE: {
+		component: SearchConsole,
+		path: '/search-console',
+		title: 'Search Console',
+		description: 'Connect Google Search Console and track search performance',
+		icon: 'search',
+	},
 };
 
 // Export individual components (maintaining backward compatibility)
@@ -43,6 +51,7 @@ export {
 	Settings,
 	FreeVsPro,
 	Campaigns,
+	SearchConsole,
 };
 
 // Export page list for routing and navigation
@@ -54,6 +63,7 @@ export default {
 	Settings,
 	FreeVsPro,
 	Campaigns,
+	SearchConsole,
 	pageMetadata,
 	pages,
 };

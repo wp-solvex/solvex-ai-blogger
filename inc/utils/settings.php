@@ -139,6 +139,11 @@ class Settings {
 					'default' => '',
 					'type'    => 'string',
 				],
+				// Google Search Console selected property (URL or sc-domain:host).
+				'gscPropertyUrl'           => [
+					'default' => '',
+					'type'    => 'string',
+				],
 			]
 		);
 	}

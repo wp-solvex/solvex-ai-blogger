@@ -97,6 +97,9 @@ const getInitialState = () => {
 		connectedEmail: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.connected_email, 'string', '' ),
 		plan: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.plan, 'string', '' ),
 
+		// Google Search Console selected property (URL or sc-domain:host).
+		gscPropertyUrl: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.gscPropertyUrl, 'string', '' ),
+
 		// Static configuration data that doesn't change during app lifecycle.
 		homeSlug: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.home_slug, 'string', 'solvex-ai-blogger' ),
 		adminNonce: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.admin_nonce, 'string', '' ),

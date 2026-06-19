@@ -14,6 +14,7 @@
 namespace WPSolvex\AutoAIBlogger\Admin;
 
 use WPSolvex\AutoAIBlogger\Inc\Traits\Get_Instance;
+use WPSolvex\AutoAIBlogger\Inc\Integrations\Google_Search_Console;
 use WPSolvex\AutoAIBlogger\Inc\Utils\Helper;
 use WPSolvex\AutoAIBlogger\Inc\Utils\Metadata;
 use WPSolvex\AutoAIBlogger\Inc\Utils\Sanitizer;
@@ -259,6 +260,14 @@ class Menu {
 				// Store connection (one-click connect).
 				'connected_email'            => sanitize_email( Helper::get_option( 'connectedEmail', '' ) ),
 				'plan'                       => sanitize_text_field( Helper::get_option( 'plan', '' ) ),
+
+				// Google Search Console connection state and OAuth handshake URLs.
+				'gsc'                        => [
+					'connected'      => Google_Search_Console::is_connected(),
+					'connect_url'    => Google_Search_Console::get_connect_url(),
+					'disconnect_url' => Google_Search_Console::get_disconnect_url(),
+				],
+				'gscPropertyUrl'             => sanitize_text_field( Helper::get_option( 'gscPropertyUrl', '' ) ),
 
 				// WordPress data collections.
 				'post_statuses'              => $post_statuses,

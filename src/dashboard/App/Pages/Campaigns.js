@@ -3,6 +3,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { Settings, Trash2, Info, FolderPlus, RotateCw, List, ChartNoAxesColumn, CalendarArrowUp, ScrollText, Search } from 'lucide-react';
 import { Tooltip } from '@wordpress/components';
 import { ConfigureDrawer } from '@Elements/Campaigns';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CampaignAnalyticsModal from '@Components/CampaignAnalyticsModal';
 import CampaignLogsModal from '@Components/CampaignLogsModal';
 import CampaignDeleteModal from '@Components/CampaignDeleteModal';
@@ -26,6 +27,9 @@ export default function Campaigns() {
 	const [ showSortDropdown, setShowSortDropdown ] = useState( false );
 	const [ searchTerm, setSearchTerm ] = useState( '' ); // Search functionality
 	const [ highlightedCampaignId, setHighlightedCampaignId ] = useState( null );
+
+	const navigate = useNavigate();
+	const { search: seedSearch } = useLocation();
 
 	// Check if debug logs should be shown via URL parameter
 	const shouldShowDebugLogs = useMemo( () => {
@@ -60,6 +64,23 @@ export default function Campaigns() {
 			}, 300 );
 		}
 	}, [ campaigns ] );
+
+	// Open a pre-seeded campaign drawer when arriving from the Search Console tab
+	// (e.g. ?…&path=campaigns&seed_keyword=wp+ai). The param is stripped afterwards
+	// so a refresh doesn't reopen the drawer.
+	useEffect( () => {
+		const params = new URLSearchParams( seedSearch );
+		const seed = params.get( 'seed_keyword' );
+		if ( ! seed ) {
+			return;
+		}
+
+		setConfigureData( { ...defaultMetaDefaults, keywords: seed } );
+		setOpenDrawer( true );
+
+		params.delete( 'seed_keyword' );
+		navigate( `?${ params.toString() }`, { replace: true } );
+	}, [ seedSearch ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
 	// Sort campaigns based on selected criteria
 	const sortedCampaigns = useMemo( () => {

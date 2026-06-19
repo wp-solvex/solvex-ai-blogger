@@ -15,6 +15,7 @@ namespace WPSolvex\AutoAIBlogger\Admin;
 
 use WPSolvex\AutoAIBlogger\Inc\Traits\Get_Instance;
 use WPSolvex\AutoAIBlogger\Inc\Utils\Settings;
+use WPSolvex\AutoAIBlogger\Inc\Integrations\Google_Search_Console;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -205,6 +206,48 @@ class API extends \WP_REST_Controller {
 				],
 			]
 		);
+
+		// Google Search Console: list the connected account's verified properties.
+		register_rest_route(
+			$this->namespace,
+			'/admin/gsc/sites',
+			[
+				[
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_gsc_sites' ],
+					'permission_callback' => [ $this, 'get_permissions_check' ],
+					'args'                => [],
+				],
+			]
+		);
+
+		// Google Search Console: return the locally cached top keywords.
+		register_rest_route(
+			$this->namespace,
+			'/admin/gsc/keywords',
+			[
+				[
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_gsc_keywords' ],
+					'permission_callback' => [ $this, 'get_permissions_check' ],
+					'args'                => [],
+				],
+			]
+		);
+
+		// Google Search Console: trigger an on-demand sync of the keyword cache.
+		register_rest_route(
+			$this->namespace,
+			'/admin/gsc/sync',
+			[
+				[
+					'methods'             => \WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'sync_gsc_keywords' ],
+					'permission_callback' => [ $this, 'update_permissions_check' ],
+					'args'                => [],
+				],
+			]
+		);
 	}
 
 	/**
@@ -320,6 +363,97 @@ class API extends \WP_REST_Controller {
 
 		return true;
 	}
+
+	/**
+	 * REST callback: return the connected account's verified GSC properties.
+	 *
+	 * Delegates to the Google Search Console integration and maps its structured
+	 * result to appropriate HTTP status codes (401 for an expired connection,
+	 * 4xx/5xx for API errors).
+	 *
+	 * @param  \WP_REST_Request $request Full details about the request.
+	 * @return \WP_REST_Response|\WP_Error
+	 * @since 1.0.5
+	 */
+	public function get_gsc_sites( \WP_REST_Request $request ) {
+		$result = Google_Search_Console::get_instance()->get_verified_sites();
+
+		if ( empty( $result['success'] ) ) {
+			$code   = isset( $result['code'] ) ? (string) $result['code'] : 'api_error';
+			$status = 'needs_reauth' === $code ? 401 : ( 'not_connected' === $code ? 400 : 502 );
+
+			return new \WP_Error(
+				'wpsolvex_autoaiblogger_gsc_' . $code,
+				isset( $result['message'] ) ? (string) $result['message'] : __( 'Could not load Search Console properties.', 'solvex-ai-blogger' ),
+				[ 'status' => $status ]
+			);
+		}
+
+		return rest_ensure_response(
+			[
+				'success' => true,
+				'sites'   => isset( $result['sites'] ) ? $result['sites'] : [],
+			]
+		);
+	}
+
+	/**
+	 * REST callback: return the locally cached top GSC keywords.
+	 *
+	 * Reads from the plugin's custom cache table (populated by the daily sync cron),
+	 * ordered by impressions so the dashboard renders instantly.
+	 *
+	 * @param  \WP_REST_Request $request Full details about the request.
+	 * @return \WP_REST_Response
+	 * @since 1.0.5
+	 */
+	public function get_gsc_keywords( \WP_REST_Request $request ) {
+		global $wpdb;
+
+		$table_name = \WPSolvex\AutoAIBlogger\Inc\Cron_GSC_Sync::get_table_name();
+
+		$rows = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Reading the plugin-owned cache table; table name is internal, no user input.
+			"SELECT keyword, clicks, impressions, ctr, position FROM {$table_name} ORDER BY impressions DESC",
+			ARRAY_A
+		);
+
+		return rest_ensure_response(
+			[
+				'success'  => true,
+				'keywords' => is_array( $rows ) ? $rows : [],
+			]
+		);
+	}
+
+	/**
+	 * REST callback: run an on-demand Search Console keyword sync.
+	 *
+	 * @param  \WP_REST_Request $request Full details about the request.
+	 * @return \WP_REST_Response|\WP_Error
+	 * @since 1.0.5
+	 */
+	public function sync_gsc_keywords( \WP_REST_Request $request ) {
+		$result = \WPSolvex\AutoAIBlogger\Inc\Cron_GSC_Sync::get_instance()->run_sync();
+
+		if ( empty( $result['success'] ) ) {
+			$code   = isset( $result['code'] ) ? (string) $result['code'] : 'api_error';
+			$status = 'needs_reauth' === $code ? 401 : ( 'no_property' === $code ? 400 : 502 );
+
+			return new \WP_Error(
+				'wpsolvex_autoaiblogger_gsc_' . $code,
+				isset( $result['message'] ) ? (string) $result['message'] : __( 'Sync failed.', 'solvex-ai-blogger' ),
+				[ 'status' => $status ]
+			);
+		}
+
+		return rest_ensure_response(
+			[
+				'success' => true,
+				'count'   => isset( $result['count'] ) ? (int) $result['count'] : 0,
+			]
+		);
+	}
+
 
 	/**
 	 * Check whether a given request has permission to update settings.

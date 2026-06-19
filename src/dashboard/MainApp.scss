@@ -119,6 +119,21 @@
 	outline: 2px solid transparent !important;
 }
 
+/* The keyword tag field draws its own outer box; the inner typing input must be
+   fully borderless (override the WP/plugin input border + focus box-shadow above). */
+.posts_page_solvex-ai-blogger input[type="text"].gsc-tag-input,
+.posts_page_solvex-ai-blogger input[type="text"].gsc-tag-input:focus,
+#headlessui-portal-root input[type="text"].gsc-tag-input,
+#headlessui-portal-root input[type="text"].gsc-tag-input:focus {
+	border: 0 !important;
+	box-shadow: none !important;
+	outline: none !important;
+	background: transparent !important;
+	min-height: 0 !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
 .solvex-ai-blogger-wizard #wpfooter {
 	display: none;
 }

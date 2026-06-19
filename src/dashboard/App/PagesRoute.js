@@ -80,6 +80,7 @@ import Welcome from '@DashboardApp/Pages/Welcome';
 import Settings from '@DashboardApp/Pages/Settings';
 import FreeVsPro from '@DashboardApp/Pages/FreeVsPro';
 import Campaigns from '@DashboardApp/Pages/Campaigns';
+import SearchConsole from '@DashboardApp/Pages/SearchConsole';
 
 /**
  * Route mapping with metadata
@@ -109,6 +110,11 @@ const ROUTE_MAP = {
 		component: Campaigns,
 		title: __( 'Campaigns', 'solvex-ai-blogger' ),
 		requiresLicense: true,
+	},
+	'search-console': {
+		component: SearchConsole,
+		title: __( 'Search Console', 'solvex-ai-blogger' ),
+		requiresLicense: false,
 	},
 };
 

@@ -58,6 +58,7 @@ class Helper {
 		'emailNotificationValue',
 		'connectedEmail',
 		'plan',
+		'gscPropertyUrl',
 	];
 
 	/**
@@ -345,6 +346,18 @@ class Helper {
 
 			case 'plan':
 				return sanitize_text_field( $value );
+
+			case 'gscPropertyUrl':
+				// A GSC property is either a URL (https://example.com/) or a
+				// domain property (sc-domain:example.com). Preserve both forms.
+				if ( '' === $value || null === $value ) {
+					return '';
+				}
+				$property = trim( (string) $value );
+				if ( 0 === strpos( $property, 'sc-domain:' ) ) {
+					return sanitize_text_field( $property );
+				}
+				return esc_url_raw( $property );
 
 			case 'connectedEmail':
 				if ( '' === $value || null === $value ) {

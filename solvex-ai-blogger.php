@@ -42,6 +42,16 @@ define( 'WPSOLVEX_AUTOAIBLOGGER_DEACTIVATE_SITE_API', 'https://wpaiblogger.com/w
 // One-click connect: the Solvex Auth Provider lives at this store URL (page /auth).
 define( 'WPSOLVEX_AUTOAIBLOGGER_CONNECT_PORTAL', 'https://wpaiblogger.com/' );
 
+// Google Search Console OAuth callback. This standalone server-side script
+// (decoupled from WordPress) exchanges the Google authorization code for tokens
+// and redirects back to the site, via the OAuth 'state' parameter, with the
+// encoded token payload. Used as the redirect_uri when starting the Google flow.
+define( 'WPSOLVEX_AUTOAIBLOGGER_GSC_CALLBACK_URL', 'https://wp-ai-auth-bridge-242609428505.us-central1.run.app' );
+
+// Google Search Console token refresh endpoint. The relay holds the client
+// secret and exchanges a refresh_token for a fresh short-lived access_token.
+define( 'WPSOLVEX_AUTOAIBLOGGER_GSC_REFRESH_URL', 'https://wp-ai-auth-bridge-242609428505.us-central1.run.app/refresh' );
+
 // CPT Constants.
 define( 'WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN', 'campaign' );
 

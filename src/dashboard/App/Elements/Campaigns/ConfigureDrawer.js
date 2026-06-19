@@ -10,6 +10,9 @@ import DateTimeField from '@Components/DateTimeField';
 import { Tooltip } from '@wordpress/components';
 import DynamicCard from '@Components/DynamicCard';
 import TokenExhaustionModal from '@Components/TokenExhaustionModal';
+import GscImportModal from '@Components/GscImportModal';
+import KeywordTagsInput, { mergeKeywords } from '@Components/KeywordTagsInput';
+import { ChartLine } from 'lucide-react';
 
 export default function ConfigureDrawer( props ) {
 	const abortControllerRef = useRef( {} );
@@ -29,6 +32,7 @@ export default function ConfigureDrawer( props ) {
 	const [ errorMessage, setErrorMessage ] = useState( '' );
 	const [ fieldErrors, setFieldErrors ] = useState( {} );
 	const [ showTokenModal, setShowTokenModal ] = useState( false );
+	const [ showGscModal, setShowGscModal ] = useState( false );
 
 	// Helper function to check if start date has passed.
 	const hasStartDatePassed = ( startDate ) => {
@@ -250,25 +254,27 @@ export default function ConfigureDrawer( props ) {
 														</div>
 
 														<div>
-															<label htmlFor="campaign-keywords" className="block text-sm/6 font-medium text-gray-900">
-																{ __( 'Keywords', 'solvex-ai-blogger' ) }
-															</label>
+															<div className="flex items-center justify-between">
+																<label htmlFor="campaign-keywords" className="block text-sm/6 font-medium text-gray-900">
+																	{ __( 'Focus keywords', 'solvex-ai-blogger' ) }
+																</label>
+																{ ! isViewMode && (
+																	<button
+																		type="button"
+																		onClick={ () => setShowGscModal( true ) }
+																		className="cursor-pointer inline-flex items-center gap-1 text-xs font-medium text-brand-600 hover:text-brand-700 transition-colors duration-200"
+																	>
+																		<ChartLine className="h-3.5 w-3.5" aria-hidden="true" />
+																		{ __( 'Import from Google Search Console', 'solvex-ai-blogger' ) }
+																	</button>
+																) }
+															</div>
 															<div className="mt-2">
-																<textarea
-																	id="campaign-keywords"
-																	name="campaign-keywords"
-																	rows={ 3 }
-																	className={ `block w-full rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 transition-colors duration-200 ${
-																		fieldErrors[ 'campaign-keywords' ]
-																			? 'bg-red-50 outline-red-300 focus:outline-red-500 text-red-900'
-																			: isViewMode
-																				? 'bg-gray-50 outline-gray-200'
-																				: 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-brand'
-																	}` }
-																	defaultValue={ drawerData.keywords }
-																	onChange={ ( e ) => ! isViewMode && setDrawerData( { ...drawerData, keywords: e.target.value } ) }
-																	readOnly={ isViewMode }
-																	placeholder={ __( 'Yoga, Fitness, Health', 'solvex-ai-blogger' ) }
+																<KeywordTagsInput
+																	value={ drawerData.keywords || '' }
+																	onChange={ ( v ) => ! isViewMode && setDrawerData( ( d ) => ( { ...d, keywords: v } ) ) }
+																	disabled={ isViewMode }
+																	hasError={ !! fieldErrors[ 'campaign-keywords' ] }
 																/>
 																{ fieldErrors[ 'campaign-keywords' ] && (
 																	<p className="mt-1 text-sm text-red-600">
@@ -958,6 +964,14 @@ export default function ConfigureDrawer( props ) {
 		<TokenExhaustionModal
 			isOpen={ showTokenModal }
 			onClose={ () => setShowTokenModal( false ) }
+		/>
+
+		<GscImportModal
+			isOpen={ showGscModal }
+			onClose={ () => setShowGscModal( false ) }
+			onImport={ ( str ) => {
+				setDrawerData( ( d ) => ( { ...d, keywords: mergeKeywords( d.keywords || '', str ) } ) );
+			} }
 		/>
 		</>
 	);

@@ -18,6 +18,8 @@ use WPSolvex\AutoAIBlogger\Core\Editor;
 use WPSolvex\AutoAIBlogger\Core\Frontend;
 use WPSolvex\AutoAIBlogger\Core\Maintenance;
 use WPSolvex\AutoAIBlogger\Inc\Cron_Handler;
+use WPSolvex\AutoAIBlogger\Inc\Cron_GSC_Sync;
+use WPSolvex\AutoAIBlogger\Inc\Integrations\Google_Search_Console;
 use WPSolvex\AutoAIBlogger\Inc\Notifications\Notification_Helper;
 
 defined( 'ABSPATH' ) || exit;
@@ -85,6 +87,9 @@ class Loader {
 		/* Cron Handler init (always loaded for cron functionality) */
 		Cron_Handler::get_instance();
 
+		/* Google Search Console daily sync (always loaded so WP-Cron can run it) */
+		Cron_GSC_Sync::get_instance();
+
 		/* Notification Helper init (handles all notification hooks) */
 		Notification_Helper::get_instance();
 
@@ -109,6 +114,9 @@ class Loader {
 
 			/* Admin Menu init */
 			Menu::get_instance();
+
+			/* Google Search Console integration (OAuth handshake + helpers) */
+			Google_Search_Console::get_instance();
 		} else {
 			// Load Frontend Support.
 			Frontend::get_instance();
@@ -225,6 +233,7 @@ class Loader {
 	 * @since 1.0.0
 	 */
 	public function activation_actions(): void {
+		Cron_GSC_Sync::install_table();
 	}
 
 	/**
@@ -233,6 +242,7 @@ class Loader {
 	 * @since 1.0.0
 	 */
 	public function deactivation_actions(): void {
+		wp_clear_scheduled_hook( Cron_GSC_Sync::CRON_HOOK );
 	}
 
 	/**

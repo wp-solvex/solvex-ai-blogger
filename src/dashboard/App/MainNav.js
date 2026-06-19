@@ -41,6 +41,12 @@ export default function MainNav() {
 				tourTarget: 'campaigns-nav',
 			},
 			{
+				name: __( 'Search Console', 'solvex-ai-blogger' ),
+				slug: homeSlug,
+				path: 'search-console',
+				icon: null,
+			},
+			{
 				name: __( 'Settings', 'solvex-ai-blogger' ),
 				slug: homeSlug,
 				path: 'settings',
@@ -60,13 +66,13 @@ export default function MainNav() {
 		} );
 
 		// Let's remove Free vs Pro tab if premium is already enabled as per wpsolvex_autoaiblogger_localized_data.pro_available.
-		if ( proAvailable ) {
-			filteredMenus.splice( 3, 1 );
-		}
+		const visibleMenus = proAvailable
+			? filteredMenus.filter( ( menu ) => menu.path !== 'free-vs-pro' )
+			: filteredMenus;
 
 		// Apply WordPress hooks filter
-		return wp?.hooks?.applyFilters?.( 'wpsolvex_autoaiblogger_dashboard.main_navigation', filteredMenus ) || filteredMenus;
-	}, [ licenseEnabled, homeSlug ] );
+		return wp?.hooks?.applyFilters?.( 'wpsolvex_autoaiblogger_dashboard.main_navigation', visibleMenus ) || visibleMenus;
+	}, [ licenseEnabled, homeSlug, proAvailable ] );
 
 	// Memoize URL query parsing
 	const { activePage, activePath } = useMemo( () => {
