@@ -392,7 +392,7 @@ const License = memo( () => {
 	return (
 		<div className="space-y-6 min-h-full">
 			{ /* Settings container */ }
-				<SettingsContainer
+			<SettingsContainer
 				element={
 					<LicenseForm
 						licenseKey={ licenseKey }
@@ -404,7 +404,7 @@ const License = memo( () => {
 						deactivationText={ deactivationText }
 						onActivate={ activateLicense }
 						onDeactivate={ deactivateLicense }
-							noLicenseKeyUrl={ noLicenseKeyUrl }
+						noLicenseKeyUrl={ noLicenseKeyUrl }
 					/>
 				}
 				className="bg-white shadow-sm rounded-lg border border-gray-200"

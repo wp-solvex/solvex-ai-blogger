@@ -344,10 +344,12 @@ class Cron_Handler {
 				}
 			} elseif ( ! empty( $seo_meta_description ) && empty( $post_data['post_excerpt'] ) ) {
 				// No Yoast — use meta description as excerpt for basic SEO.
-				wp_update_post( [
-					'ID'           => $post_id,
-					'post_excerpt' => $seo_meta_description,
-				] );
+				wp_update_post(
+					[
+						'ID'           => $post_id,
+						'post_excerpt' => $seo_meta_description,
+					] 
+				);
 			}
 
 			// Update featured image alt text to include keyphrase for Yoast image alt check.

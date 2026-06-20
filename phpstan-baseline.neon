@@ -1,0 +1,1581 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to an undefined method object\\:\\:generate_post_from_campaign\\(\\)\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Call to function is_wp_error\\(\\) with 0 will always evaluate to false\\.$#"
+			count: 4
+			path: admin/ajax.php
+
+		-
+			message: "#^Call to function is_wp_error\\(\\) with int\\<0, max\\> will always evaluate to false\\.$#"
+			count: 4
+			path: admin/ajax.php
+
+		-
+			message: "#^Cannot access offset 'metadata' on mixed\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Cannot access offset 'post_content' on mixed\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Cannot access offset 'post_type' on mixed\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Cannot access offset 'status' on array\\|bool\\.$#"
+			count: 2
+			path: admin/ajax.php
+
+		-
+			message: "#^Cannot access offset 'status' on mixed\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Cannot access offset 'title' on mixed\\.$#"
+			count: 2
+			path: admin/ajax.php
+
+		-
+			message: "#^Cannot access offset non\\-falsy\\-string on mixed\\.$#"
+			count: 2
+			path: admin/ajax.php
+
+		-
+			message: "#^Cannot cast mixed to string\\.$#"
+			count: 13
+			path: admin/ajax.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Ajax\\:\\:generate_sample_campaign_logs\\(\\) is unused\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Ajax\\:\\:get_wp_cron_schedule\\(\\) is unused\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Ajax\\:\\:inject_images_after_h2_sections\\(\\) has parameter \\$images with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Ajax\\:\\:process_images_and_replace_placeholders\\(\\) has parameter \\$images with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Ajax\\:\\:process_images_and_replace_placeholders\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Ajax\\:\\:replace_placeholders_with_images\\(\\) has parameter \\$images with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Ajax\\:\\:replace_placeholders_with_images\\(\\) should return string but returns string\\|null\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Ajax\\:\\:schedule_campaign_posts\\(\\) has parameter \\$meta_input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Negated boolean expression is always true\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Offset 'code' on array on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Parameter \\#1 \\$content of method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Ajax\\:\\:process_images_and_replace_placeholders\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Parameter \\#1 \\$haystack of function stripos expects string, mixed given\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Parameter \\#1 \\$maybeint of function absint expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 9
+			path: admin/ajax.php
+
+		-
+			message: "#^Parameter \\#1 \\$post_id of function get_post_meta expects int, float\\|int\\<min, \\-1\\>\\|int\\<1, max\\>\\|string given\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Parameter \\#1 \\$post_id of function update_post_meta expects int, float\\|int\\<min, \\-1\\>\\|int\\<1, max\\>\\|string given\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Parameter \\#1 \\$postdata of static method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Metadata\\:\\:format_data\\(\\) expects array, mixed given\\.$#"
+			count: 2
+			path: admin/ajax.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function trim expects string, string\\|null given\\.$#"
+			count: 3
+			path: admin/ajax.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of function floatval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Parameter \\#2 \\$args of function wp_remote_post expects array\\{method\\?\\: string, timeout\\?\\: float, redirection\\?\\: int, httpversion\\?\\: string, user\\-agent\\?\\: string, reject_unsafe_urls\\?\\: bool, blocking\\?\\: bool, headers\\?\\: array\\|string, \\.\\.\\.\\}, array\\{timeout\\: 90, headers\\: array\\{Content\\-Type\\: 'application/json', User\\-Agent\\: non\\-falsy\\-string\\}, body\\: non\\-empty\\-string\\|false\\} given\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function add_action expects callable\\(\\)\\: mixed, array\\{\\$this\\(WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Ajax\\), string\\} given\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Parameter \\#2 \\$post_data of method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Ajax\\:\\:generate_content_from_title_api\\(\\) expects array\\<string, mixed\\>, mixed given\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Parameter \\#2 \\$thumbnail_id of function set_post_thumbnail expects int, float\\|int\\<min, \\-1\\>\\|int\\<1, max\\>\\|string given\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, string\\|null given\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Ternary operator condition is always true\\.$#"
+			count: 1
+			path: admin/ajax.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 55
+			path: admin/ajax.php
+
+		-
+			message: "#^is_wp_error\\(int\\) will always evaluate to false\\.$#"
+			count: 4
+			path: admin/ajax.php
+
+		-
+			message: "#^is_wp_error\\(int\\<0, max\\>\\) will always evaluate to false\\.$#"
+			count: 4
+			path: admin/ajax.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\API\\:\\:sanitize_settings_data\\(\\) never returns WP_Error so it can be removed from the return type\\.$#"
+			count: 1
+			path: admin/api.php
+
+		-
+			message: "#^Parameter \\#1 \\$maybeint of function absint expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 2
+			path: admin/api.php
+
+		-
+			message: "#^Parameter \\#1 \\$str of function sanitize_text_field expects string, mixed given\\.$#"
+			count: 2
+			path: admin/api.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of function floatval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: admin/api.php
+
+		-
+			message: "#^Parameter \\$result of method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\API\\:\\:set_security_headers\\(\\) has invalid type WP_HTTP_Response_Interface\\.$#"
+			count: 1
+			path: admin/api.php
+
+		-
+			message: "#^Static property WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\API\\:\\:\\$ai_blogger_admin_settings is never read, only written\\.$#"
+			count: 1
+			path: admin/api.php
+
+		-
+			message: "#^Parameter \\#1 \\$maybeint of function absint expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: admin/filters.php
+
+		-
+			message: "#^Access to property \\$license_key on an unknown class SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\.$#"
+			count: 1
+			path: admin/licensing.php
+
+		-
+			message: "#^Call to method activate\\(\\) on an unknown class SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\.$#"
+			count: 1
+			path: admin/licensing.php
+
+		-
+			message: "#^Call to method deactivate\\(\\) on an unknown class SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\.$#"
+			count: 1
+			path: admin/licensing.php
+
+		-
+			message: "#^Call to method get_activation\\(\\) on an unknown class SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\.$#"
+			count: 1
+			path: admin/licensing.php
+
+		-
+			message: "#^Call to method retrieve\\(\\) on an unknown class SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\.$#"
+			count: 2
+			path: admin/licensing.php
+
+		-
+			message: "#^Cannot access offset 'count' on mixed\\.$#"
+			count: 1
+			path: admin/licensing.php
+
+		-
+			message: "#^Cannot access offset 'data' on mixed\\.$#"
+			count: 1
+			path: admin/licensing.php
+
+		-
+			message: "#^Cannot access offset 'success' on mixed\\.$#"
+			count: 1
+			path: admin/licensing.php
+
+		-
+			message: "#^Constant WPSOLVEX_AUTOAIBLOGGER_PRODUCT_ID not found\\.$#"
+			count: 2
+			path: admin/licensing.php
+
+		-
+			message: "#^Constant WPSOLVEX_AUTOAIBLOGGER_PRODUCT_NAME not found\\.$#"
+			count: 1
+			path: admin/licensing.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Licensing\\:\\:fetch_and_save_token_data\\(\\) is unused\\.$#"
+			count: 1
+			path: admin/licensing.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Licensing\\:\\:mask_license_key\\(\\) is unused\\.$#"
+			count: 1
+			path: admin/licensing.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Licensing\\:\\:sanitize_license_key\\(\\) is unused\\.$#"
+			count: 1
+			path: admin/licensing.php
+
+		-
+			message: "#^Parameter \\#1 \\$key of function sanitize_key expects string, mixed given\\.$#"
+			count: 1
+			path: admin/licensing.php
+
+		-
+			message: "#^Parameter \\#2 \\$args of function wp_remote_get expects array\\{method\\?\\: string, timeout\\?\\: float, redirection\\?\\: int, httpversion\\?\\: string, user\\-agent\\?\\: string, reject_unsafe_urls\\?\\: bool, blocking\\?\\: bool, headers\\?\\: array\\|string, \\.\\.\\.\\}, array\\{timeout\\: 15, redirection\\: 5, httpversion\\: '1\\.1', user\\-agent\\: non\\-falsy\\-string, headers\\: array\\{Accept\\: 'application/json', Content\\-Type\\: 'application/json'\\}, cookies\\: array\\{\\}, body\\: null, compress\\: false, \\.\\.\\.\\} given\\.$#"
+			count: 1
+			path: admin/licensing.php
+
+		-
+			message: "#^Parameter \\#2 \\$license_key of method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Licensing\\:\\:log_license_activity\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: admin/licensing.php
+
+		-
+			message: "#^Property WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Licensing\\:\\:\\$error_messages type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: admin/licensing.php
+
+		-
+			message: "#^Cannot cast mixed to float\\.$#"
+			count: 1
+			path: admin/menu.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Menu\\:\\:validate_security_input\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: admin/menu.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Menu\\:\\:validate_security_input\\(\\) is unused\\.$#"
+			count: 1
+			path: admin/menu.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\Menu\\:\\:validate_security_input\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: admin/menu.php
+
+		-
+			message: "#^Parameter \\#1 \\$email of function sanitize_email expects string, mixed given\\.$#"
+			count: 1
+			path: admin/menu.php
+
+		-
+			message: "#^Parameter \\#1 \\$key of function sanitize_key expects string, mixed given\\.$#"
+			count: 1
+			path: admin/menu.php
+
+		-
+			message: "#^Parameter \\#1 \\$maybeint of function absint expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 6
+			path: admin/menu.php
+
+		-
+			message: "#^Parameter \\#1 \\$str of function sanitize_text_field expects string, mixed given\\.$#"
+			count: 5
+			path: admin/menu.php
+
+		-
+			message: "#^Parameter \\#1 \\$str of function sanitize_textarea_field expects string, mixed given\\.$#"
+			count: 3
+			path: admin/menu.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of function strval expects bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: core/maintenance.php
+
+		-
+			message: "#^Call to function is_wp_error\\(\\) with 0 will always evaluate to false\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Call to function is_wp_error\\(\\) with int\\<0, max\\> will always evaluate to false\\.$#"
+			count: 2
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Cannot access offset non\\-falsy\\-string on mixed\\.$#"
+			count: 2
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Cron_Handler\\:\\:calculate_next_weekday\\(\\) has parameter \\$selected_days with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Cron_Handler\\:\\:call_post_creation_api\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Cron_Handler\\:\\:generate_post_from_campaign\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Cron_Handler\\:\\:process_images_and_replace_placeholders\\(\\) has invalid return type WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\WP_Error\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Cron_Handler\\:\\:process_images_and_replace_placeholders\\(\\) has parameter \\$images with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Cron_Handler\\:\\:process_images_and_replace_placeholders\\(\\) never returns WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\WP_Error so it can be removed from the return type\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Cron_Handler\\:\\:process_images_and_replace_placeholders\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Cron_Handler\\:\\:upload_image_to_media_library\\(\\) has invalid return type WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\WP_Error\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Cron_Handler\\:\\:upload_image_to_media_library\\(\\) should return int\\|WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\WP_Error but returns WP_Error\\.$#"
+			count: 5
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Offset 'post_title' on array\\{post_title\\: string, post_content\\: string, post_status\\: mixed, post_type\\: mixed, post_author\\: mixed, post_name\\?\\: string, post_excerpt\\?\\: string\\} on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#1 \\$attachment_id of function wp_get_attachment_url expects int, int\\|WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\WP_Error given\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#1 \\$haystack of function stripos expects string, mixed given\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#1 \\$interval of method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Cron_Handler\\:\\:get_interval_seconds\\(\\) expects int, mixed given\\.$#"
+			count: 2
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#1 \\$post_id of function get_post_meta expects int, float\\|int\\<min, \\-1\\>\\|int\\<1, max\\>\\|string given\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#1 \\$post_id of function update_post_meta expects int, float\\|int\\<min, \\-1\\>\\|int\\<1, max\\>\\|string given\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#1 \\$postarr of function wp_insert_post expects array\\{ID\\?\\: int, post_author\\?\\: int, post_date\\?\\: string, post_date_gmt\\?\\: string, post_content\\?\\: string, post_content_filtered\\?\\: string, post_title\\?\\: string, post_excerpt\\?\\: string, \\.\\.\\.\\}, array\\{post_title\\: string, post_content\\: string, post_status\\: mixed, post_type\\: mixed, post_author\\: mixed, post_name\\?\\: string, post_excerpt\\?\\: string\\} given\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 7
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#2 \\$keywords of method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Cron_Handler\\:\\:call_post_creation_api\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#2 \\$post_categories of function wp_set_post_categories expects array\\<int\\>\\|int, array\\<int, mixed\\> given\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#2 \\$tags of function wp_set_post_tags expects array\\|string, mixed given\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#2 \\$thumbnail_id of function set_post_thumbnail expects int, float\\|int\\<min, \\-1\\>\\|int\\<1, max\\>\\|string given\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#2 \\$unit of method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Cron_Handler\\:\\:get_interval_seconds\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, int\\|WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\WP_Error given\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 2
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#3 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 2
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Parameter \\#5 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, int\\|WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\WP_Error given\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^is_wp_error\\(array\\|WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\WP_Error\\) will always evaluate to false\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^is_wp_error\\(int\\) will always evaluate to false\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^is_wp_error\\(int\\<0, max\\>\\) will always evaluate to false\\.$#"
+			count: 2
+			path: inc/cron-handler.php
+
+		-
+			message: "#^is_wp_error\\(int\\|WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\WP_Error\\) will always evaluate to false\\.$#"
+			count: 1
+			path: inc/cron-handler.php
+
+		-
+			message: "#^Call to function is_array\\(\\) with non\\-falsy\\-string will always evaluate to false\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Call to function is_wp_error\\(\\) with array will always evaluate to false\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Call to function is_wp_error\\(\\) with array\\<int, WP_Post\\> will always evaluate to false\\.$#"
+			count: 2
+			path: inc/functions/common.php
+
+		-
+			message: "#^Call to function is_wp_error\\(\\) with array\\<int, WP_Term\\> will always evaluate to false\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_create_timestamp_data\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_get_all_campaigns\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_get_array_depth\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_get_authors\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_get_campaign_error_logs\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_get_campaign_success_logs\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_get_categories\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_get_generated_posts\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_get_post_creation_api_response\\(\\) has parameter \\$site_persona_details with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_get_post_creation_api_response\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_get_post_creation_api_response\\(\\) should return array\\|WP_Error but returns mixed\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_get_post_statuses\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_get_post_types\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_get_previous_campaign_posts\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_get_site_persona_details\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_get_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_log_campaign_error\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_log_campaign_success\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_replace_internal_link_placeholders\\(\\) has parameter \\$previous_posts with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_replace_internal_link_placeholders\\(\\) should return string but returns string\\|null\\.$#"
+			count: 2
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_sanitize_api_response\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_sanitize_api_response\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_sanitize_api_response\\(\\) should return array but returns string\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Function wpsolvex_autoaiblogger_update_token_data\\(\\) has parameter \\$token_data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Parameter \\#1 \\$maybeint of function absint expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 3
+			path: inc/functions/common.php
+
+		-
+			message: "#^Parameter \\#1 \\$str of function sanitize_text_field expects string, mixed given\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Parameter \\#1 \\$str of function sanitize_textarea_field expects string, mixed given\\.$#"
+			count: 2
+			path: inc/functions/common.php
+
+		-
+			message: "#^Parameter \\#2 \\$args of function wp_remote_post expects array\\{method\\?\\: string, timeout\\?\\: float, redirection\\?\\: int, httpversion\\?\\: string, user\\-agent\\?\\: string, reject_unsafe_urls\\?\\: bool, blocking\\?\\: bool, headers\\?\\: array\\|string, \\.\\.\\.\\}, array\\{method\\: 'POST', timeout\\: 150, redirection\\: 5, httpversion\\: '1\\.1', blocking\\: true, headers\\: array\\{Content\\-Type\\: 'application/json', User\\-Agent\\: 'Solvex\\-AI\\-Blogger/1…'\\}, body\\: non\\-empty\\-string\\|false, cookies\\: array\\{\\}, \\.\\.\\.\\} given\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, string\\|null given\\.$#"
+			count: 4
+			path: inc/functions/common.php
+
+		-
+			message: "#^is_wp_error\\(array\\) will always evaluate to false\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^is_wp_error\\(array\\<int, WP_Post\\>\\) will always evaluate to false\\.$#"
+			count: 2
+			path: inc/functions/common.php
+
+		-
+			message: "#^is_wp_error\\(array\\<int, WP_Term\\>\\) will always evaluate to false\\.$#"
+			count: 1
+			path: inc/functions/common.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:__\\(\\)\\.$#"
+			count: 3
+			path: inc/licensing/Activation.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:license\\(\\)\\.$#"
+			count: 1
+			path: inc/licensing/Activation.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:send_request\\(\\)\\.$#"
+			count: 4
+			path: inc/licensing/Activation.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$client with type SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\\\Client is not subtype of native type SureCart\\\\Licensing\\\\Client\\.$#"
+			count: 1
+			path: inc/licensing/Activation.php
+
+		-
+			message: "#^Parameter \\$client of method SureCart\\\\Licensing\\\\Activation\\:\\:__construct\\(\\) has invalid type SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\\\Client\\.$#"
+			count: 1
+			path: inc/licensing/Activation.php
+
+		-
+			message: "#^Cannot access property \\$code on mixed\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Default value of the parameter \\#1 \\$method \\(string\\) of method SureCart\\\\Licensing\\\\Client\\:\\:send_request\\(\\) is incompatible with type array\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:__\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:activation\\(\\) has invalid return type SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:activation\\(\\) should return SureCart\\\\Licensing\\\\SureCart\\\\Licensing but returns object\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:license\\(\\) has invalid return type SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:license\\(\\) should return SureCart\\\\Licensing\\\\SureCart\\\\Licensing but returns object\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:send_request\\(\\) has invalid return type SureCart\\\\Licensing\\\\WP_Error\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:send_request\\(\\) has parameter \\$body with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:send_request\\(\\) has parameter \\$method with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:send_request\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:send_request\\(\\) should return array\\|SureCart\\\\Licensing\\\\WP_Error but returns WP_Error\\.$#"
+			count: 4
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:send_request\\(\\) should return array\\|SureCart\\\\Licensing\\\\WP_Error but returns mixed\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:set_textdomain\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:settings\\(\\) has invalid return type SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:settings\\(\\) should return SureCart\\\\Licensing\\\\SureCart\\\\Licensing but returns object\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:updater\\(\\) has invalid return type SureCart\\\\Licensing\\\\SureCart\\\\Updater\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Client\\:\\:updater\\(\\) should return SureCart\\\\Licensing\\\\SureCart\\\\Updater but returns object\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Parameter \\#2 \\$args of function wp_remote_request expects array\\{method\\?\\: string, timeout\\?\\: float, redirection\\?\\: int, httpversion\\?\\: string, user\\-agent\\?\\: string, reject_unsafe_urls\\?\\: bool, blocking\\?\\: bool, headers\\?\\: array\\|string, \\.\\.\\.\\}, array\\{headers\\: array\\{X\\-SURECART\\-WP\\-LICENSING\\-SDK\\-VERSION\\: string, Accept\\: 'application/json', Authorization\\?\\: non\\-falsy\\-string\\}, method\\: array, timeout\\: 30, blocking\\: bool, body\\: array\\|null\\} given\\.$#"
+			count: 1
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Ternary operator condition is always true\\.$#"
+			count: 4
+			path: inc/licensing/Client.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
+			count: 1
+			path: inc/licensing/License.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$key\\.$#"
+			count: 1
+			path: inc/licensing/License.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$slug\\.$#"
+			count: 1
+			path: inc/licensing/License.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:__\\(\\)\\.$#"
+			count: 7
+			path: inc/licensing/License.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:activation\\(\\)\\.$#"
+			count: 5
+			path: inc/licensing/License.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:send_request\\(\\)\\.$#"
+			count: 2
+			path: inc/licensing/License.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:settings\\(\\)\\.$#"
+			count: 12
+			path: inc/licensing/License.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\License\\:\\:activate\\(\\) should return object but returns true\\.$#"
+			count: 1
+			path: inc/licensing/License.php
+
+		-
+			message: "#^Method WP_Error\\:\\:get_error_code\\(\\) invoked with 1 parameter, 0 required\\.$#"
+			count: 1
+			path: inc/licensing/License.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$client with type SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\\\Client is not subtype of native type SureCart\\\\Licensing\\\\Client\\.$#"
+			count: 1
+			path: inc/licensing/License.php
+
+		-
+			message: "#^Parameter \\$client of method SureCart\\\\Licensing\\\\License\\:\\:__construct\\(\\) has invalid type SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\\\Client\\.$#"
+			count: 1
+			path: inc/licensing/License.php
+
+		-
+			message: "#^Property SureCart\\\\Licensing\\\\License\\:\\:\\$is_valid_license \\(bool\\) does not accept bool\\|WP_Error\\.$#"
+			count: 1
+			path: inc/licensing/License.php
+
+		-
+			message: "#^Access to an undefined property SureCart\\\\Licensing\\\\Settings\\:\\:\\$activation_id\\.$#"
+			count: 3
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Access to an undefined property SureCart\\\\Licensing\\\\Settings\\:\\:\\$license_id\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Access to an undefined property SureCart\\\\Licensing\\\\Settings\\:\\:\\$license_key\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$name\\.$#"
+			count: 6
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$slug\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:__\\(\\)\\.$#"
+			count: 13
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:activation\\(\\)\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:license\\(\\)\\.$#"
+			count: 2
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Settings\\:\\:__set\\(\\) with return type void returns bool but should not return anything\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Settings\\:\\:add_page\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Settings\\:\\:create_menu_page\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Settings\\:\\:create_options_page\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Settings\\:\\:create_submenu_page\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Settings\\:\\:form_action_url\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Settings\\:\\:get_options\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Settings\\:\\:license_form_submit\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Settings\\:\\:set_option_key\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$client with type SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\\\Client is not subtype of native type SureCart\\\\Licensing\\\\Client\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Parameter \\#1 \\$code of method SureCart\\\\Licensing\\\\Settings\\:\\:add_error\\(\\) expects string, int\\|string given\\.$#"
+			count: 2
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function strtolower expects string, string\\|null given\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Parameter \\$client of method SureCart\\\\Licensing\\\\Settings\\:\\:__construct\\(\\) has invalid type SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\\\Client\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Property SureCart\\\\Licensing\\\\Settings\\:\\:\\$menu_args type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Result of method SureCart\\\\Licensing\\\\Settings\\:\\:add_success\\(\\) \\(void\\) is used\\.$#"
+			count: 2
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Variable \\$nonce in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: inc/licensing/Settings.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$basename\\.$#"
+			count: 4
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$checked\\.$#"
+			count: 2
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$last_checked\\.$#"
+			count: 2
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$last_updated\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$new_version\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$no_update\\.$#"
+			count: 2
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$package\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$project_version\\.$#"
+			count: 4
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$response\\.$#"
+			count: 2
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$slug\\.$#"
+			count: 5
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$version\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:license\\(\\)\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Updater\\:\\:check_plugin_update\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Updater\\:\\:check_theme_update\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Updater\\:\\:get_cached_version_info\\(\\) should return object but returns false\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Updater\\:\\:get_cached_version_info\\(\\) should return object but returns mixed\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Updater\\:\\:get_project_latest_version\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Updater\\:\\:get_version_info\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Updater\\:\\:plugins_api_filter\\(\\) should return object but returns mixed\\.$#"
+			count: 2
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Method SureCart\\\\Licensing\\\\Updater\\:\\:set_cached_version_info\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$client with type SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\\\Client is not subtype of native type SureCart\\\\Licensing\\\\Client\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Parameter \\#1 \\$format of function date_i18n expects string, mixed given\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Parameter \\$client of method SureCart\\\\Licensing\\\\Updater\\:\\:__construct\\(\\) has invalid type SureCart\\\\Licensing\\\\SureCart\\\\Licensing\\\\Client\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between false and object will always evaluate to false\\.$#"
+			count: 1
+			path: inc/licensing/Updater.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Email_Templates\\:\\:campaign_completed_template\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/email-templates.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Email_Templates\\:\\:campaign_completed_template\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/email-templates.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Email_Templates\\:\\:campaign_failed_template\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/email-templates.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Email_Templates\\:\\:campaign_failed_template\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/email-templates.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Email_Templates\\:\\:campaign_started_template\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/email-templates.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Email_Templates\\:\\:campaign_started_template\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/email-templates.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Email_Templates\\:\\:get_template\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/email-templates.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Email_Templates\\:\\:get_template\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/email-templates.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Email_Templates\\:\\:post_created_template\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/email-templates.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Email_Templates\\:\\:post_created_template\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/email-templates.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:get_template\\(\\)\\.$#"
+			count: 1
+			path: inc/notifications/notification-helper.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Notification_Helper\\:\\:format_frequency\\(\\) has parameter \\$campaign_data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/notification-helper.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Notification_Helper\\:\\:get_email_addresses\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/notification-helper.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Notification_Helper\\:\\:handle_campaign_completed\\(\\) has parameter \\$campaign_data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/notification-helper.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Notification_Helper\\:\\:handle_campaign_failed\\(\\) has parameter \\$campaign_data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/notification-helper.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Notification_Helper\\:\\:handle_campaign_started\\(\\) has parameter \\$campaign_data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/notification-helper.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Notification_Helper\\:\\:handle_post_created\\(\\) has parameter \\$post_data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/notification-helper.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Notification_Helper\\:\\:send_email_notification\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/notification-helper.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Notifications\\\\Notification_Helper\\:\\:send_notification\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/notifications/notification-helper.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function array_filter expects \\(callable\\(string\\)\\: bool\\)\\|null, 'is_email' given\\.$#"
+			count: 1
+			path: inc/notifications/notification-helper.php
+
+		-
+			message: "#^Parameter \\#2 \\$string of function explode expects string, mixed given\\.$#"
+			count: 1
+			path: inc/notifications/notification-helper.php
+
+		-
+			message: "#^Cannot cast mixed to float\\.$#"
+			count: 1
+			path: inc/utils/helper.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Helper\\:\\:bulk_update_options\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/helper.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Helper\\:\\:update_option\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/helper.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Helper\\:\\:validate_settings_array\\(\\) has parameter \\$settings with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/helper.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Helper\\:\\:validate_settings_array\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/helper.php
+
+		-
+			message: "#^Parameter \\#1 \\$email of function sanitize_email expects string, mixed given\\.$#"
+			count: 2
+			path: inc/utils/helper.php
+
+		-
+			message: "#^Parameter \\#1 \\$key of function sanitize_key expects string, mixed given\\.$#"
+			count: 2
+			path: inc/utils/helper.php
+
+		-
+			message: "#^Parameter \\#1 \\$maybeint of function absint expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 2
+			path: inc/utils/helper.php
+
+		-
+			message: "#^Parameter \\#1 \\$str of function sanitize_text_field expects string, mixed given\\.$#"
+			count: 5
+			path: inc/utils/helper.php
+
+		-
+			message: "#^Parameter \\#1 \\$str of function sanitize_textarea_field expects string, mixed given\\.$#"
+			count: 1
+			path: inc/utils/helper.php
+
+		-
+			message: "#^Parameter \\#2 \\$string of function explode expects string, mixed given\\.$#"
+			count: 1
+			path: inc/utils/helper.php
+
+		-
+			message: "#^Property WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Helper\\:\\:\\$allowed_keys type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/helper.php
+
+		-
+			message: "#^Cannot cast mixed to float\\.$#"
+			count: 1
+			path: inc/utils/metadata.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Metadata\\:\\:format_data\\(\\) has parameter \\$postdata with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/metadata.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Metadata\\:\\:format_data\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/metadata.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Metadata\\:\\:get_campaign_data\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/metadata.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Metadata\\:\\:get_default_settings\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/metadata.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Metadata\\:\\:get_settings_dataset\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/metadata.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Metadata\\:\\:update_campaign_meta\\(\\) should return bool but returns bool\\|int\\.$#"
+			count: 1
+			path: inc/utils/metadata.php
+
+		-
+			message: "#^Parameter \\#1 \\$data of function wp_kses_post expects string, mixed given\\.$#"
+			count: 1
+			path: inc/utils/metadata.php
+
+		-
+			message: "#^Parameter \\#1 \\$email of function sanitize_email expects string, mixed given\\.$#"
+			count: 1
+			path: inc/utils/metadata.php
+
+		-
+			message: "#^Parameter \\#1 \\$maybeint of function absint expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 3
+			path: inc/utils/metadata.php
+
+		-
+			message: "#^Parameter \\#1 \\$str of function sanitize_text_field expects string, mixed given\\.$#"
+			count: 3
+			path: inc/utils/metadata.php
+
+		-
+			message: "#^Parameter \\#1 \\$url of function esc_url expects string, mixed given\\.$#"
+			count: 2
+			path: inc/utils/metadata.php
+
+		-
+			message: "#^Property WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Metadata\\:\\:\\$dashboard_options type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/metadata.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Sanitizer\\:\\:get_sanitized_authors\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/sanitizer.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Sanitizer\\:\\:get_sanitized_categories\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/sanitizer.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Sanitizer\\:\\:get_sanitized_post_statuses\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/sanitizer.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Sanitizer\\:\\:get_sanitized_post_types\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/sanitizer.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Sanitizer\\:\\:get_sanitized_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/sanitizer.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Settings\\:\\:get_ai_blogger_settings\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/settings.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Settings\\:\\:get_all_type_wise_settings\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/settings.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Settings\\:\\:get_default_settings\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/settings.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Settings\\:\\:get_settings_dataset\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/settings.php
+
+		-
+			message: "#^Parameter \\#1 \\$args of function wp_parse_args expects array\\|object\\|string, mixed given\\.$#"
+			count: 1
+			path: inc/utils/settings.php
+
+		-
+			message: "#^Parameter \\#1 \\$email of function sanitize_email expects string, mixed given\\.$#"
+			count: 1
+			path: inc/utils/settings.php
+
+		-
+			message: "#^Parameter \\#1 \\$maybeint of function absint expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: inc/utils/settings.php
+
+		-
+			message: "#^Parameter \\#1 \\$str of function sanitize_text_field expects string, mixed given\\.$#"
+			count: 3
+			path: inc/utils/settings.php
+
+		-
+			message: "#^Parameter \\#1 \\$str of function sanitize_textarea_field expects string, mixed given\\.$#"
+			count: 2
+			path: inc/utils/settings.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function stripslashes expects string, mixed given\\.$#"
+			count: 1
+			path: inc/utils/settings.php
+
+		-
+			message: "#^Parameter \\#1 \\$url of function esc_url expects string, mixed given\\.$#"
+			count: 1
+			path: inc/utils/settings.php
+
+		-
+			message: "#^Property WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Utils\\\\Settings\\:\\:\\$dashboard_options type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/utils/settings.php
+
+		-
+			message: "#^Argument of an invalid type array\\|null supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:add_data_attributes\\(\\) has parameter \\$allowedposttags with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:add_data_attributes\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:add_notice\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:get_notice_by_id\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:get_notice_id\\(\\) has parameter \\$notice with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:get_notices\\(\\) never returns null so it can be removed from the return type\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:get_notices\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:get_wrap_classes\\(\\) has parameter \\$notice with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:get_wrap_classes\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:get_wrap_classes\\(\\) should return array but returns string\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:is_expired\\(\\) has parameter \\$notice with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:markup\\(\\) has parameter \\$notice with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:sort_notices\\(\\) has parameter \\$notice_1 with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:sort_notices\\(\\) has parameter \\$notice_2 with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:sort_notices\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:sort_notices\\(\\) should return array but returns \\(float\\|int\\)\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Parameter \\#1 \\$input_list of function wp_list_filter expects array, array\\|null given\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function usort expects callable\\(mixed, mixed\\)\\: int, array\\{\\$this\\(WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\), 'sort_notices'\\} given\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Parameter \\#4 \\$ver of function wp_enqueue_style expects bool\\|string\\|null, array given\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Parameter \\#4 \\$ver of function wp_register_script expects bool\\|string\\|null, array given\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Property WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:\\$notices type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Property WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:\\$version type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
+
+		-
+			message: "#^Static property WPSolvex\\\\AutoAIBlogger\\\\Inc\\\\Web_Notices\\\\Notices\\:\\:\\$version \\(array\\) does not accept default value of type string\\.$#"
+			count: 1
+			path: inc/web-notices/class-web-notices.php
