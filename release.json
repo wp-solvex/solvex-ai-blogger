@@ -3,7 +3,7 @@
     "slug": "solvex-ai-blogger",
     "author": "<a href='https://wpsolvex.com/'>WP Solvex</a>",
     "author_profile": "https://wpsolvex.com/",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "requires": "6.7",
     "tested": "7.0",
     "requires_php": "7.4",

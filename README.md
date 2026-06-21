@@ -4,7 +4,7 @@
 **Tags:** auto blog, ai content generator, auto blogging, auto post, content creation  
 **Tested up to:** 7.0  
 **Requires PHP:** 7.4  
-**Stable tag:** 1.0.3  
+**Stable tag:** 1.0.4  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 **Requires at least:** 6.7  
@@ -40,7 +40,8 @@ Hero AI Blogger is designed for anyone who needs consistent, high-quality conten
 
 ### 📈 SEO & GROWTH BENEFITS
 
-Search engines love fresh, relevant, and consistent content. By automating your publishing schedule with Hero AI Blogger, you naturally increase your site's indexing frequency. Our AI ensures the content is well-structured, highly readable, and optimized for search intent.
+Search engines love fresh, relevant, and consistent content. By automating your publishing schedule with Hero AI Blogger, you naturally increase your site’s indexing frequency. Our AI ensures the content is well-structured, highly readable, and optimized for search intent.
+*   **Yoast SEO Compatible:** Our plugin generates fully structured, SEO-ready posts that naturally integrate with Yoast SEO. By automatically optimizing headings, keyword placement, and semantic content structure, Hero AI Blogger does the heavy lifting to help you easily achieve those coveted "green lights" in Yoast without manual tweaking.
 
 ### 💡 HOW IT WORKS (IN 3 SIMPLE STEPS)
 
@@ -132,8 +133,13 @@ This update introduces an auth screen to connect the plugin to your account and 
 3. Campaigns - List of all set campaigns with status, results, and quick actions table.
 4. Dashboard - Campaign Insights with suggested Posts Ideas.
 5. Settings - Plugin general settings along with Advance AI Settings, License key activation, and notification management.
+6. Proven SEO friendly content - Verified checks from Yoast SEO plugin for AI-generated content, ensuring your posts are optimized for search engines.
 
 ## Changelog ##
+
+### 1.0.3 ###
+* New: Yoast SEO compatibility - Generated content will ensure SEO-friendly structure and readability to help you easily achieve "green lights" in Yoast without manual tweaking.
+* Improvement: Hardened the server API usage and error reporting process.
 
 ### 1.0.3 ###
 * Improvement: Introducing auth screen to connect the plugin to your account and claim your free API key.
