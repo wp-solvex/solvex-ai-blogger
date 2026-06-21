@@ -3,22 +3,22 @@ import { __ } from '@wordpress/i18n';
 
 // Individual skeleton row component for better performance
 const SkeletonRow = memo( ( { index } ) => (
-	<tr
-		className="animate-pulse even:bg-gray-50 hover:bg-blue-50/30 transition-colors duration-150"
+	<div
+		className={ `flex items-stretch animate-pulse hover:bg-blue-50/30 transition-colors duration-150 ${ index % 2 === 1 ? 'bg-gray-50' : '' }` }
 		role="row"
 		aria-label={ __( 'Loading row', 'solvex-ai-blogger' ) + ' ' + ( index + 1 ) }
 	>
-		<td className="py-4 pl-4 pr-3 text-sm sm:pl-6">
+		<div className="w-3/5 py-4 pl-4 pr-3 text-sm sm:pl-6">
 			<div className="flex items-center">
 				{ /* Content placeholder - single line */ }
 				<div className="h-4 bg-gray-300 rounded animate-pulse" style={ { width: `${ ( Math.random() * 40 ) + 60 }%` } } />
 			</div>
-		</td>
+		</div>
 
-		<td className="whitespace-nowrap py-4 pl-3 pr-4 text-sm sm:pr-6">
+		<div className="w-2/5 flex items-center justify-end py-4 pl-3 pr-4 sm:pr-6">
 			<div className="h-4 bg-gray-300 rounded animate-pulse w-16" />
-		</td>
-	</tr>
+		</div>
+	</div>
 ) );
 
 SkeletonRow.displayName = 'SkeletonRow';

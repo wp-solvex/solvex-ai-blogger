@@ -8,6 +8,7 @@ docs/
 
 # Copilot documentation
 copilot_readme/
+docs/
 
 # Logs
 *.log
