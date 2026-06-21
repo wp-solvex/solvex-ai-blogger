@@ -232,7 +232,7 @@ const DateTimeField = forwardRef( ( {
 	};
 
 	// Base input classes with consistent height
-	const inputClasses = `block w-full h-10 rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 transition-colors duration-200 ${
+	const inputClasses = `block w-full h-10 rounded-md px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 placeholder:text-gray-400 sm:text-sm/6 transition-colors duration-200 mt-[10px] ${
 		readOnly
 			? 'bg-gray-50 outline-gray-200 cursor-default'
 			: 'bg-white outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600'

@@ -2,24 +2,27 @@
 @use "./Styles/common.scss";
 @use "./Styles/typography-config.scss";
 @use "./Styles/tailwind-important.scss";
-@use "./Styles/brand-colors.scss";
 
-@import url( "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" );
+/* Tailwind v4 design tokens — must precede the legacy SCSS overrides below. */
+@import "./Styles/theme.css";
 
-#solvex-ai-blogger-main-page--wrapper *,
+/*
+ * Google Fonts (Inter + JetBrains Mono) are enqueued from PHP — see
+ * `Admin\Menu::app_build_scripts()`. Loading them via wp_enqueue_style
+ * lets the browser fetch the fonts in parallel with our app CSS, and
+ * keeps this stylesheet free of an `@import url()` rule (which CSS
+ * requires to precede every other rule — impossible here because @use
+ * inlines content first).
+ */
+
 .ai-blogger-container * {
 	box-sizing: border-box;
 }
 
-#solvex-ai-blogger-main-page--wrapper,
 .ai-blogger-container {
 	font-family: inter, sans-serif;
 	position: relative;
 }
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 .posts_page_solvex-ai-blogger {
 	--tw-bg-opacity: 1;
@@ -60,7 +63,27 @@
 
 #headlessui-portal-root select,
 .posts_page_solvex-ai-blogger select.wpsolvex-autoaiblogger-select-control {
-	@apply col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-brand-600 sm:text-sm/6;
+	grid-column-start: 1;
+	grid-row-start: 1;
+	width: 100%;
+	appearance: none;
+	border-radius: 0.375rem;
+	background-color: #fff;
+	padding: 0.375rem 2rem 0.375rem 0.75rem;
+	font-size: 1rem;
+	color: #1f2937;
+	outline: 1px solid #d1d5db;
+	outline-offset: -1px;
+
+	&:focus {
+		outline: 2px solid var( --brand );
+		outline-offset: -2px;
+	}
+
+	@media ( min-width: 640px ) {
+		font-size: 0.875rem;
+		line-height: 1.25rem;
+	}
 }
 
 .post-filters-option > * {
@@ -198,16 +221,12 @@
 	}
 }
 
-.posts_page_solvex-ai-blogger ::scrollbar {
-	width: 4px;
-	height: 4px;
-}
-.posts_page_solvex-ai-blogger ::scrollbar-thumb {
-	background: #d5d6d7;
-}
-.posts_page_solvex-ai-blogger ::scrollbar-track {
-	background: #f1f1f1;
-}
+/*
+ * Note: previously this block used `::scrollbar`, `::scrollbar-thumb`,
+ * `::scrollbar-track` — those are not valid pseudo-elements and never
+ * matched anything. The working `::-webkit-scrollbar*` rules below
+ * already cover Chromium/Safari styling, so the dead block was removed.
+ */
 
 .posts_page_solvex-ai-blogger #wpbody,
 .posts_page_solvex-ai-blogger #wpwrap {
@@ -292,7 +311,12 @@
 	@apply text-center text-4xl font-semibold text-slate-800;
 }
 
-@screen sm {
+/*
+ * Tailwind v3's `@screen <breakpoint>` directive was removed in v4 —
+ * use plain `@media (min-width: ...)` queries with Tailwind's default
+ * breakpoint pixel values (sm: 640px, lg: 1024px).
+ */
+@media ( min-width: 640px ) {
 	.wpsolvex-autoaiblogger-container {
 		@apply p-4;
 
@@ -306,7 +330,7 @@
 	}
 }
 
-@screen lg {
+@media ( min-width: 1024px ) {
 	.wpsolvex-autoaiblogger-row {
 		@apply max-w-4xl;
 	}
@@ -332,4 +356,36 @@
 }
 .force-mt-4 {
 	margin-top: 16px !important;
+}
+.force-pl-9 {
+	padding-left: 36px !important;
+}
+
+.solvex-ai-blogger-dashboard h1,
+.solvex-ai-blogger-dashboard h2,
+.solvex-ai-blogger-dashboard h3,
+.solvex-ai-blogger-dashboard h4,
+.solvex-ai-blogger-dashboard h5,
+.solvex-ai-blogger-dashboard h6 {
+	margin-top: 0;
+	margin-bottom: 0.2em;
+}
+
+label + input,
+label + textarea {
+	margin-top: 10px;
+}
+input + p {
+	margin-top: 5px !important;
+}
+.force-m-0,
+ul li {
+	margin: 0 !important;
+}
+.force-p-0 {
+	padding: 0 !important;
+}
+.force-space-0 {
+	margin: 0 !important;
+	padding: 0 !important;
 }

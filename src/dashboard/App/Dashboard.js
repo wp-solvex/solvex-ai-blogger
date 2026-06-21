@@ -1,24 +1,29 @@
 import React from 'react';
-import MainNav from './MainNav';
+import AppShell from './AppShell';
 import PagesRoute from './PagesRoute';
-import SettingsSavedNotification from './SettingsSavedNotification';
-import ApiErrorPanel from './ApiErrorPanel';
 import ErrorBoundary from '@Components/ErrorBoundary';
 import TeachingBubbleManager from '@Components/TeachingBubbleManager';
+import ApiErrorPanel from './ApiErrorPanel';
 
 /**
- * Enhanced Dashboard component with error handling and performance optimization
+ * Dashboard — wraps the SPA routes in the modern AppShell (header, tabs,
+ * token counter, Toaster). Onboarding renders outside Dashboard, so AppShell
+ * always applies here.
+ *
+ * TeachingBubbleManager provides the first-run guided tour (it points at
+ * [data-tour-target] anchors in the AppShell/pages). ApiErrorPanel is the
+ * global error side-panel driven by the `apiErrorPanel` redux state.
  */
 const Dashboard = () => {
 	return (
-		<div className="solvex-ai-blogger-dashboard" role="main">
+		<div className="solvex-ai-blogger-dashboard">
 			<ErrorBoundary>
 				<TeachingBubbleManager>
-					<MainNav />
-					<SettingsSavedNotification />
-					<ApiErrorPanel />
-					<PagesRoute />
+					<AppShell>
+						<PagesRoute />
+					</AppShell>
 				</TeachingBubbleManager>
+				<ApiErrorPanel />
 			</ErrorBoundary>
 		</div>
 	);

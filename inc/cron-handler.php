@@ -356,7 +356,8 @@ class Cron_Handler {
 				$post_data['post_excerpt'] = $excerpt;
 			}
 
-			$post_id = wp_insert_post( $post_data );            if ( is_wp_error( $post_id ) || ! $post_id ) {
+			$post_id = wp_insert_post( $post_data );
+			if ( is_wp_error( $post_id ) || ! $post_id ) {
 				$wp_error_message = is_wp_error( $post_id ) ? $post_id->get_error_message() : 'Unknown database error';
 				return [
 					'success'    => false,
@@ -403,7 +404,7 @@ class Cron_Handler {
 					[
 						'ID'           => $post_id,
 						'post_excerpt' => $seo_meta_description,
-					] 
+					]
 				);
 			}
 

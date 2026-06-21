@@ -20,7 +20,19 @@
 		"at-rule-no-unknown": [
 			true,
 			{
-				"ignoreAtRules": [ "tailwind", "layer" ]
+				"ignoreAtRules": [
+					"tailwind",
+					"layer",
+					"theme",
+					"source",
+					"custom-variant",
+					"utility",
+					"apply",
+					"variant",
+					"config",
+					"plugin",
+					"reference"
+				]
 			}
 		]
 	}

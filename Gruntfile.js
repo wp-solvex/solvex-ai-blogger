@@ -310,7 +310,7 @@ module.exports = function (grunt) {
 			requires_php: getValueFromReadme( 'Requires PHP' ),
 			sections: {
 				description:
-					'Premium version of SureCookie with advanced cookie consent management features.',
+					'Beyond ordinary content creators — experience true AI-driven auto-blogging.',
 				changelog: getChangelogFromReadme(),
 			},
 		};

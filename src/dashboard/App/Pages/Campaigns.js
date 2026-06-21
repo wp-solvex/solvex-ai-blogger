@@ -1,781 +1,569 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
-import { Settings, Trash2, Info, FolderPlus, RotateCw, List, ChartNoAxesColumn, CalendarArrowUp, ScrollText, Search } from 'lucide-react';
-import { Tooltip } from '@wordpress/components';
+import { useDispatch, useSelector } from 'react-redux';
+import apiFetch from '@wordpress/api-fetch';
+import Plus from 'lucide-react/dist/esm/icons/plus';
+import Search from 'lucide-react/dist/esm/icons/search';
+import Settings2 from 'lucide-react/dist/esm/icons/settings-2';
+import BarChart3 from 'lucide-react/dist/esm/icons/bar-chart-3';
+import List from 'lucide-react/dist/esm/icons/list';
+import CalendarPlus from 'lucide-react/dist/esm/icons/calendar-plus';
+import Info from 'lucide-react/dist/esm/icons/info';
+import Trash2 from 'lucide-react/dist/esm/icons/trash-2';
+import ScrollText from 'lucide-react/dist/esm/icons/scroll-text';
+import ChevronLeft from 'lucide-react/dist/esm/icons/chevron-left';
+import ChevronRight from 'lucide-react/dist/esm/icons/chevron-right';
+import { Switch } from '@Components/ui/switch';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@Components/ui/tooltip';
 import { ConfigureDrawer } from '@Elements/Campaigns';
 import CampaignAnalyticsModal from '@Components/CampaignAnalyticsModal';
 import CampaignLogsModal from '@Components/CampaignLogsModal';
 import CampaignDeleteModal from '@Components/CampaignDeleteModal';
-import CampaignFilters from '@Components/CampaignFilters';
-import apiFetch from '@wordpress/api-fetch';
+import { fetchCampaigns } from '@Utils/CampaignsApi';
+import { toast } from '@Utils/toast';
+import { cn } from '@Utils/cn';
 
-export default function Campaigns() {
-	const initialCampaigns = wpsolvex_autoaiblogger_localized_data.all_campaigns;
-	const defaultMetaDefaults = wpsolvex_autoaiblogger_localized_data.postmeta_defaults;
-	const isTestingMode = wpsolvex_autoaiblogger_localized_data.campaign_testing_mode || false;
+const SORT_OPTIONS = [
+	{ value: 'latest', label: __( 'Latest first', 'solvex-ai-blogger' ), orderBy: 'date', order: 'DESC' },
+	{ value: 'oldest', label: __( 'Oldest first', 'solvex-ai-blogger' ), orderBy: 'date', order: 'ASC' },
+	{ value: 'name-asc', label: __( 'Name A → Z', 'solvex-ai-blogger' ), orderBy: 'title', order: 'ASC' },
+	{ value: 'name-desc', label: __( 'Name Z → A', 'solvex-ai-blogger' ), orderBy: 'title', order: 'DESC' },
+];
 
-	const [ campaigns, setCampaigns ] = useState( initialCampaigns ); // Make campaigns stateful
-	const [ configureData, setConfigureData ] = useState( defaultMetaDefaults );
+function deriveCampaignState( campaign ) {
+	const postsCreated = parseInt( campaign?.postsCreated, 10 ) || 0;
+	const postsTarget = parseInt( campaign?.postsTarget, 10 ) || 0;
+	const postsFailed = parseInt( campaign?.postsFailed, 10 ) || 0;
+	const isCompleted =
+		campaign?.status === 'draft' ||
+		( postsTarget > 0 && postsCreated >= postsTarget ) ||
+		( postsTarget > 0 && postsCreated + postsFailed >= postsTarget ) ||
+		campaign?.campaignCompleted;
+	if ( isCompleted ) {
+		return 'completed';
+	}
+	if ( campaign?.isPaused ) {
+		if ( campaign?.pauseReason === 'token_exhaustion' ) {
+			return 'paused_tokens';
+		}
+		return 'paused';
+	}
+	return 'active';
+}
+
+function RowIcon( { icon: Icon, onClick, label, danger, disabled } ) {
+	return (
+		<Tooltip>
+			<TooltipTrigger asChild>
+				<button
+					type="button"
+					onClick={ onClick }
+					disabled={ disabled }
+					aria-label={ label }
+					className={ cn(
+						'rounded p-1.5 text-muted-foreground transition-colors hover:bg-muted disabled:opacity-50',
+						danger ? 'hover:text-destructive' : 'hover:text-brand'
+					) }
+				>
+					<Icon className="size-3.5" aria-hidden="true" />
+				</button>
+			</TooltipTrigger>
+			<TooltipContent>{ label }</TooltipContent>
+		</Tooltip>
+	);
+}
+
+function Pill( { tone, children } ) {
+	const map = {
+		success: 'bg-[oklch(0.95_0.05_155)] text-[oklch(0.4_0.16_155)]',
+		brand: 'bg-brand-soft text-brand',
+		destructive: 'bg-destructive/10 text-destructive',
+	};
+	return (
+		<span className={ cn( 'inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold', map[ tone ] || map.brand ) }>
+			{ children }
+		</span>
+	);
+}
+
+function useDebouncedValue( value, delay = 300 ) {
+	const [ debounced, setDebounced ] = useState( value );
+	useEffect( () => {
+		const t = setTimeout( () => setDebounced( value ), delay );
+		return () => clearTimeout( t );
+	}, [ value, delay ] );
+	return debounced;
+}
+
+function Campaigns() {
+	const dispatch = useDispatch();
+
+	const campaignsList = useSelector( ( s ) => s.campaignsList ) || {};
+	const pagination = useSelector( ( s ) => s.campaignsPagination ) || { page: 1, perPage: 20, total: 0, totalPages: 0 };
+	const loading = useSelector( ( s ) => s.campaignsListLoading );
+	const error = useSelector( ( s ) => s.campaignsListError );
+	const postmetaDefaults = useSelector( ( s ) => s.postmetaDefaults ) || {};
+	const adminNonce = useSelector( ( s ) => s.adminNonce );
+	const ajaxUrl = useSelector( ( s ) => s.ajaxUrl );
+
+	const [ search, setSearch ] = useState( '' );
+	const [ sortValue, setSortValue ] = useState( 'latest' );
+	const [ page, setPage ] = useState( 1 );
+	const debouncedSearch = useDebouncedValue( search, 300 );
+
+	const [ updatingStatus, setUpdatingStatus ] = useState( {} );
+
+	const [ configureData, setConfigureData ] = useState( postmetaDefaults );
 	const [ openDrawer, setOpenDrawer ] = useState( false );
-	const [ openingConfigureDrawer, setOpeningConfigureDrawer ] = useState( false );
 	const [ analyticsModal, setAnalyticsModal ] = useState( { isOpen: false, campaignId: null, campaignData: null } );
 	const [ logsModal, setLogsModal ] = useState( { isOpen: false, campaignId: null, campaignData: null } );
 	const [ deleteModal, setDeleteModal ] = useState( { isOpen: false, campaignId: null, campaignData: null } );
-	const [ updatingStatus, setUpdatingStatus ] = useState( {} ); // Track which campaigns are being updated
-	const [ sortBy, setSortBy ] = useState( 'latest' ); // Default sort by latest
-	const [ showSortDropdown, setShowSortDropdown ] = useState( false );
-	const [ searchTerm, setSearchTerm ] = useState( '' ); // Search functionality
-	const [ highlightedCampaignId, setHighlightedCampaignId ] = useState( null );
 
-	// Check if debug logs should be shown via URL parameter
 	const shouldShowDebugLogs = useMemo( () => {
-		const urlParams = new URLSearchParams( window.location.search );
-		return urlParams.get( 'debugLogs' ) === 'true';
+		const params = new URLSearchParams( window.location.search );
+		return params.get( 'debugLogs' ) === 'true';
 	}, [] );
 
-	// Handle campaign ID from URL parameter and scroll to it
+	const { orderBy, order } = useMemo( () => {
+		const found = SORT_OPTIONS.find( ( s ) => s.value === sortValue ) || SORT_OPTIONS[ 0 ];
+		return { orderBy: found.orderBy, order: found.order };
+	}, [ sortValue ] );
+
+	// Reload trigger so external actions (e.g. delete) can force a re-fetch
+	// without changing query params.
+	const [ reloadToken, setReloadToken ] = useState( 0 );
+
 	useEffect( () => {
-		const urlParams = new URLSearchParams( window.location.search );
-		const campaignId = urlParams.get( 'id' );
+		let cancelled = false;
 
-		if ( campaignId && campaigns && campaigns[ campaignId ] ) {
-			// Small delay to ensure table is rendered
-			setTimeout( () => {
-				const campaignRow = document.querySelector( `tr[data-campaign-id="${ campaignId }"]` );
-				if ( campaignRow ) {
-					// Scroll to the campaign row with smooth behavior
-					campaignRow.scrollIntoView( {
-						behavior: 'smooth',
-						block: 'center',
-					} );
-
-					// Highlight the campaign row
-					setHighlightedCampaignId( campaignId );
-
-					// Remove highlight after 3 seconds
-					setTimeout( () => {
-						setHighlightedCampaignId( null );
-					}, 3000 );
-				}
-			}, 300 );
-		}
-	}, [ campaigns ] );
-
-	// Sort campaigns based on selected criteria
-	const sortedCampaigns = useMemo( () => {
-		if ( ! campaigns ) {
-			return [];
-		}
-
-		const campaignsArray = Object.values( campaigns );
-
-		// Helper function to determine campaign state
-		const getCampaignState = ( campaign ) => {
-			const postsCreated = parseInt( campaign.postsCreated ) || 0;
-			const postsTarget = parseInt( campaign.postsTarget ) || 0;
-			const postsFailed = parseInt( campaign.postsFailed ) || 0;
-			const isPaused = campaign.isPaused || false;
-			const campaignCompleted = campaign.campaignCompleted || false;
-
-			// Check if completed
-			const isTargetMet = postsTarget > 0 && postsCreated >= postsTarget;
-			const allAttemptsMade = postsTarget > 0 && ( postsCreated + postsFailed ) >= postsTarget;
-			const isCompleted = campaign.status === 'draft' || isTargetMet || allAttemptsMade || campaignCompleted;
-
-			if ( isCompleted ) {
-				return 'completed';
-			}
-			if ( isPaused ) {
-				if ( campaign.pauseReason === 'token_exhaustion' ) {
-					return 'paused_tokens';
-				}
-				return 'paused';
-			}
-			return 'active';
-		};
-
-		// First filter by search term
-		const filteredCampaigns = campaignsArray.filter( ( campaign ) => {
-			if ( ! searchTerm ) {
-				return true;
-			}
-
-			const searchLower = searchTerm.toLowerCase();
-			return (
-				( campaign.name || '' ).toLowerCase().includes( searchLower ) ||
-				( campaign.frequency || '' ).toLowerCase().includes( searchLower ) ||
-				( campaign.last_post_title || '' ).toLowerCase().includes( searchLower )
-			);
-		} );
-
-		// Then sort the filtered results
-		return filteredCampaigns.sort( ( a, b ) => {
-			switch ( sortBy ) {
-				case 'active': {
-					// Active first, then paused, then completed
-					const stateA = getCampaignState( a );
-					const stateB = getCampaignState( b );
-					const stateOrder = { active: 0, paused: 1, completed: 2 };
-
-					const orderA = stateOrder[ stateA ] ?? 3;
-					const orderB = stateOrder[ stateB ] ?? 3;
-
-					if ( orderA !== orderB ) {
-						return orderA - orderB;
-					}
-
-					// If same state, sort by creation date (latest first)
-					return new Date( b.created_at ) - new Date( a.created_at );
-				}
-
-				case 'inactive': {
-					// Completed first, then paused, then active
-					const stateA = getCampaignState( a );
-					const stateB = getCampaignState( b );
-					const stateOrder = { completed: 0, paused: 1, active: 2 };
-
-					const orderA = stateOrder[ stateA ] ?? 3;
-					const orderB = stateOrder[ stateB ] ?? 3;
-
-					if ( orderA !== orderB ) {
-						return orderA - orderB;
-					}
-
-					// If same state, sort by creation date (latest first)
-					return new Date( b.created_at ) - new Date( a.created_at );
-				}
-
-				case 'name-asc':
-					return ( a.name || '' ).localeCompare( b.name || '' );
-
-				case 'name-desc':
-					return ( b.name || '' ).localeCompare( a.name || '' );
-
-				case 'start-date-asc':
-					const startDateA = a.startDate ? new Date( a.startDate ) : new Date( a.created_at );
-					const startDateB = b.startDate ? new Date( b.startDate ) : new Date( b.created_at );
-					return startDateA - startDateB;
-
-				case 'start-date-desc':
-					const startDateDescA = a.startDate ? new Date( a.startDate ) : new Date( a.created_at );
-					const startDateDescB = b.startDate ? new Date( b.startDate ) : new Date( b.created_at );
-					return startDateDescB - startDateDescA;
-
-				case 'end-date-asc':
-					const endDateA = a.lastRun ? new Date( a.lastRun ) : new Date( 0 );
-					const endDateB = b.lastRun ? new Date( b.lastRun ) : new Date( 0 );
-					return endDateA - endDateB;
-
-				case 'end-date-desc':
-					const endDateDescA = a.lastRun ? new Date( a.lastRun ) : new Date( 0 );
-					const endDateDescB = b.lastRun ? new Date( b.lastRun ) : new Date( 0 );
-					return endDateDescB - endDateDescA;
-
-				case 'latest':
-				default:
-					// Default: Latest campaigns first (by creation date)
-					return new Date( b.created_at ) - new Date( a.created_at );
-			}
-		} );
-	}, [ campaigns, sortBy, searchTerm ] );
-
-	const fetchCampaignMetaData = async ( campaignId ) => {
-		const formData = new window.FormData();
-
-		formData.append( 'action', 'wpsolvex_autoaiblogger_get_campaign_metadata' );
-		formData.append( 'security', wpsolvex_autoaiblogger_localized_data.admin_nonce );
-		formData.append( 'campaign_id', campaignId );
-
-		const response = await apiFetch( {
-			url: wpsolvex_autoaiblogger_localized_data.ajax_url,
-			method: 'POST',
-			body: formData,
+		dispatch( { type: 'CAMPAIGNS_LIST_START' } );
+		fetchCampaigns( {
+			page,
+			perPage: 20,
+			search: debouncedSearch,
+			orderBy,
+			order,
 		} )
 			.then( ( data ) => {
-				if ( data.success ) {
-					return data.data.data;
+				if ( cancelled ) {
+					return;
 				}
+				dispatch( { type: 'CAMPAIGNS_LIST_LOADED', payload: data } );
 			} )
-			.catch( ( error ) => {
-				console.error( error );
+			.catch( ( e ) => {
+				if ( cancelled ) {
+					return;
+				}
+				dispatch( {
+					type: 'CAMPAIGNS_LIST_ERRORED',
+					payload: { message: e?.message || __( 'Failed to load campaigns', 'solvex-ai-blogger' ) },
+				} );
 			} );
 
-		return response;
-	};
+		return () => {
+			cancelled = true;
+		};
+	}, [ dispatch, page, debouncedSearch, orderBy, order, reloadToken ] );
 
-	const configureCampaign = ( e ) => {
-		e.preventDefault();
-		e.stopPropagation();
-		setOpeningConfigureDrawer( true );
+	useEffect( () => {
+		setPage( 1 );
+	}, [ debouncedSearch, sortValue ] );
 
-		const campaignId = e.currentTarget.getAttribute( 'data-campaign_id' );
-		if ( ! campaignId ) {
-			return;
-		}
+	const refetch = useCallback( () => setReloadToken( ( t ) => t + 1 ), [] );
 
-		fetchCampaignMetaData( campaignId )
-			.then( ( data ) => {
-				if ( data ) {
-					setConfigureData(
-						{
-							...data,
-							type: 'edit',
-						}
-					);
-					setOpenDrawer( true );
-				}
-			} )
-			.catch( ( error ) => {
-				console.error( error );
-			} );
-
-		setOpeningConfigureDrawer( false );
-	};
-
-	const openCampaignAnalytics = ( e, campaignId ) => {
-		e.preventDefault();
-		e.stopPropagation();
-
-		// Get the campaign data
-		const campaignData = campaigns[ campaignId ];
-
-		// Open analytics modal
-		setAnalyticsModal( {
-			isOpen: true,
-			campaignId,
-			campaignData,
-		} );
-	};
-
-	const openCampaignLogs = ( e, campaignId ) => {
-		e.preventDefault();
-		e.stopPropagation();
-
-		// Get the campaign data
-		const campaignData = campaigns[ campaignId ];
-
-		// Open logs modal
-		setLogsModal( {
-			isOpen: true,
-			campaignId,
-			campaignData,
-		} );
-	};
-
-	const viewCampaignPosts = ( e, campaignId ) => {
-		e.preventDefault();
-		e.stopPropagation();
-
-		// Get the campaign data to determine the post type
-		const campaignData = campaigns[ campaignId ];
-		const postType = campaignData?.postType || 'post'; // Default to 'post' if not found
-
-		// Redirect to All Posts page with campaign filter
-		const adminUrl = wpsolvex_autoaiblogger_localized_data.admin_url || '/wp-admin/';
-		let filterUrl;
-
-		// For 'post' type, we don't need to specify post_type parameter
-		if ( postType === 'post' ) {
-			filterUrl = `${ adminUrl }edit.php?wpsolvex_autoaiblogger_campaign_id=${ campaignId }`;
-		} else {
-			filterUrl = `${ adminUrl }edit.php?post_type=${ postType }&wpsolvex_autoaiblogger_campaign_id=${ campaignId }`;
-		}
-
-		window.open( filterUrl, '_blank' );
-	};
-
-	const openDeleteModal = ( e, campaignId ) => {
-		e.preventDefault();
-		e.stopPropagation();
-
-		// Get the campaign data
-		const campaignData = campaigns[ campaignId ];
-
-		// Open delete modal
-		setDeleteModal( {
-			isOpen: true,
-			campaignId,
-			campaignData,
-		} );
-	};
-
-	const handleCampaignDeleted = () => {
-		// Refresh the page or update the campaigns list
-		// For now, we'll refresh the page to update the campaigns list
-		window.location.reload();
-	};
-
-	const toggleCampaignStatus = async ( campaignId ) => {
-		// Prevent multiple simultaneous requests.
-		if ( updatingStatus[ campaignId ] ) {
-			return;
-		}
-
-		setUpdatingStatus( ( prev ) => ( { ...prev, [ campaignId ]: true } ) );
-
+	const fetchCampaignMetaData = useCallback( async ( campaignId ) => {
+		const formData = new window.FormData();
+		formData.append( 'action', 'wpsolvex_autoaiblogger_get_campaign_metadata' );
+		formData.append( 'security', adminNonce );
+		formData.append( 'campaign_id', campaignId );
 		try {
-			// Get current campaign data.
-			const campaignData = campaigns[ campaignId ];
-			const isPaused = campaignData.isPaused || false;
-
-			// Determine action: pause or resume.
-			const action = isPaused ? 'wpsolvex_autoaiblogger_resume_campaign' : 'wpsolvex_autoaiblogger_pause_campaign';
-
-			const formData = new window.FormData();
-			formData.append( 'action', action );
-			formData.append( 'security', wpsolvex_autoaiblogger_localized_data.admin_nonce );
-			formData.append( 'campaign_id', campaignId );
-
-			const response = await apiFetch( {
-				url: wpsolvex_autoaiblogger_localized_data.ajax_url,
+			const data = await apiFetch( {
+				url: ajaxUrl,
 				method: 'POST',
 				body: formData,
 			} );
-
-			if ( response.success ) {
-				// Update the local campaigns state without page refresh.
-				setCampaigns( ( prevCampaigns ) => ( {
-					...prevCampaigns,
-					[ campaignId ]: {
-						...prevCampaigns[ campaignId ],
-						isPaused: response.data.isPaused,
-					},
-				} ) );
-			} else {
-				console.error( 'Failed to toggle campaign status:', response );
-				// Optionally show an error message to the user.
-			}
-		} catch ( error ) {
-			console.error( 'Error toggling campaign status:', error );
-		} finally {
-			setUpdatingStatus( ( prev ) => ( { ...prev, [ campaignId ]: false } ) );
+			return data?.success ? data.data.data : null;
+		} catch ( e ) {
+			return null;
 		}
-	};	if ( ! campaigns || Object.keys( campaigns ).length === 0 ) {
-		return (
-			<>
-				<div className="flex flex-col items-center justify-center gap-y-3 border border-dashed border-gray-300 p-6 max-w-lg mx-auto mt-20 bg-white rounded-lg shadow-md">
-					<FolderPlus className="w-8 h-8 text-gray-400" />
-					<h3 className="text-base font-semibold text-gray-900 m-0 p-0">
-						{ __( 'No Campaigns.', 'solvex-ai-blogger' ) }
-					</h3>
-					<p className="text-sm text-gray-500">
-						{ __( 'Get Started by Creating a New Campaign.', 'solvex-ai-blogger' ) }
+	}, [ ajaxUrl, adminNonce ] );
+
+	const handleConfigure = useCallback( async ( campaign ) => {
+		if ( ! campaign?.id ) {
+			return;
+		}
+		const data = await fetchCampaignMetaData( campaign.id );
+		if ( data ) {
+			setConfigureData( { ...data, type: 'edit' } );
+			setOpenDrawer( true );
+		}
+	}, [ fetchCampaignMetaData ] );
+
+	const handleAddNew = useCallback( () => {
+		setConfigureData( { ...postmetaDefaults, type: 'new' } );
+		setOpenDrawer( true );
+	}, [ postmetaDefaults ] );
+
+	const handleAnalytics = useCallback( ( campaign ) => {
+		setAnalyticsModal( { isOpen: true, campaignId: campaign.id, campaignData: campaign } );
+	}, [] );
+
+	const handleLogs = useCallback( ( campaign ) => {
+		setLogsModal( { isOpen: true, campaignId: campaign.id, campaignData: campaign } );
+	}, [] );
+
+	const handleDelete = useCallback( ( campaign ) => {
+		setDeleteModal( { isOpen: true, campaignId: campaign.id, campaignData: campaign } );
+	}, [] );
+
+	const handleViewPosts = useCallback( ( campaign ) => {
+		const postType = campaign?.postType || 'post';
+		const adminUrl = wpsolvex_autoaiblogger_localized_data?.admin_url || '/wp-admin/';
+		const url = postType === 'post'
+			? `${ adminUrl }edit.php?wpsolvex_autoaiblogger_campaign_id=${ campaign.id }`
+			: `${ adminUrl }edit.php?post_type=${ postType }&wpsolvex_autoaiblogger_campaign_id=${ campaign.id }`;
+		window.open( url, '_blank', 'noopener,noreferrer' );
+	}, [] );
+
+	const handleToggle = useCallback(
+		async ( campaign ) => {
+			if ( updatingStatus[ campaign.id ] ) {
+				return;
+			}
+			const wasPaused = Boolean( campaign.isPaused );
+			const action = wasPaused
+				? 'wpsolvex_autoaiblogger_resume_campaign'
+				: 'wpsolvex_autoaiblogger_pause_campaign';
+
+			setUpdatingStatus( ( prev ) => ( { ...prev, [ campaign.id ]: true } ) );
+			// Optimistic update.
+			dispatch( {
+				type: 'CAMPAIGNS_LIST_UPDATE_ITEM',
+				payload: { id: campaign.id, changes: { isPaused: ! wasPaused } },
+			} );
+
+			try {
+				const formData = new window.FormData();
+				formData.append( 'action', action );
+				formData.append( 'security', adminNonce );
+				formData.append( 'campaign_id', campaign.id );
+				const response = await apiFetch( {
+					url: ajaxUrl,
+					method: 'POST',
+					body: formData,
+				} );
+				if ( ! response?.success ) {
+					throw new Error( response?.data?.message || __( 'Failed to update campaign', 'solvex-ai-blogger' ) );
+				}
+				dispatch( {
+					type: 'CAMPAIGNS_LIST_UPDATE_ITEM',
+					payload: { id: campaign.id, changes: { isPaused: Boolean( response.data?.isPaused ) } },
+				} );
+			} catch ( e ) {
+				// Roll back optimistic.
+				dispatch( {
+					type: 'CAMPAIGNS_LIST_UPDATE_ITEM',
+					payload: { id: campaign.id, changes: { isPaused: wasPaused } },
+				} );
+				toast.error( e?.message || __( 'Failed to update campaign', 'solvex-ai-blogger' ) );
+			} finally {
+				setUpdatingStatus( ( prev ) => {
+					const next = { ...prev };
+					delete next[ campaign.id ];
+					return next;
+				} );
+			}
+		},
+		[ updatingStatus, dispatch, ajaxUrl, adminNonce ]
+	);
+
+	const handleCampaignDeleted = useCallback( ( campaignId ) => {
+		dispatch( { type: 'CAMPAIGNS_LIST_REMOVE_ITEM', payload: { id: campaignId } } );
+		// Re-fetch to keep counts/pagination in sync.
+		refetch();
+	}, [ dispatch, refetch ] );
+
+	const rows = useMemo( () => Object.values( campaignsList || {} ), [ campaignsList ] );
+	const totalPages = pagination.totalPages || 1;
+	const hasResults = rows.length > 0;
+	// Stale-while-revalidate: only show the skeleton when we have nothing
+	// to render. If we have cached rows, keep them on screen while the
+	// refresh is in flight to avoid a flash of empty state.
+	const showSkeleton = loading && ! hasResults;
+	const isEmpty = ! hasResults && ! loading;
+
+	return (
+		<div className="animate-reveal">
+			<header className="flex flex-wrap items-end justify-between gap-4">
+				<div>
+					<h1 className="text-2xl font-semibold tracking-tight">
+						{ __( 'Manage Campaigns', 'solvex-ai-blogger' ) }
+					</h1>
+					<p className="mt-1 text-sm text-muted-foreground">
+						{ __( 'Configure and monitor your automated content pipelines.', 'solvex-ai-blogger' ) }
 					</p>
+				</div>
+				<div className="flex flex-wrap items-center gap-2">
+					<select
+						value={ sortValue }
+						onChange={ ( e ) => setSortValue( e.target.value ) }
+						className="h-9 rounded-md border border-border bg-card px-3 text-sm font-medium text-foreground transition-colors hover:border-brand/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/15"
+						aria-label={ __( 'Sort campaigns', 'solvex-ai-blogger' ) }
+					>
+						{ SORT_OPTIONS.map( ( opt ) => (
+							<option key={ opt.value } value={ opt.value }>
+								{ opt.label }
+							</option>
+						) ) }
+					</select>
+					<div className="relative">
+						<Search
+							className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground"
+							aria-hidden="true"
+						/>
+						<input
+							value={ search }
+							onChange={ ( e ) => setSearch( e.target.value ) }
+							placeholder={ __( 'Search campaigns…', 'solvex-ai-blogger' ) }
+							className="h-9 w-64 rounded-md border border-border bg-card pr-3 text-sm placeholder:text-muted-foreground focus-visible:border-brand/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/15 force-pl-9"
+						/>
+					</div>
 					<button
 						type="button"
-						className="rounded-md bg-brand-500 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-brand-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 border-none cursor-pointer m-2 flex gap-x-2 items-center"
+						onClick={ handleAddNew }
 						data-tour-target="add-campaign"
-						onClick={ ( e ) => {
-							e.preventDefault();
-							setConfigureData( defaultMetaDefaults );
-							setOpenDrawer( true );
-						} }
+						className="inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-sm font-semibold text-white transition-all hover:brightness-110"
 					>
+						<Plus className="size-3.5" aria-hidden="true" />
 						{ __( 'Add New', 'solvex-ai-blogger' ) }
 					</button>
 				</div>
+			</header>
 
-				<ConfigureDrawer
-					openDrawer={ openDrawer }
-					setOpenDrawer={ setOpenDrawer }
-					configureData={ configureData }
-				/>
-
-				<CampaignAnalyticsModal
-					isOpen={ analyticsModal.isOpen }
-					onClose={ () => setAnalyticsModal( { isOpen: false, campaignId: null, campaignData: null } ) }
-					campaignId={ analyticsModal.campaignId }
-					campaignData={ analyticsModal.campaignData }
-				/>
-
-				<CampaignLogsModal
-					isOpen={ logsModal.isOpen }
-					onClose={ () => setLogsModal( { isOpen: false, campaignId: null, campaignData: null } ) }
-					campaignId={ logsModal.campaignId }
-					campaignData={ logsModal.campaignData }
-				/>
-
-				<CampaignDeleteModal
-					isOpen={ deleteModal.isOpen }
-					onClose={ () => setDeleteModal( { isOpen: false, campaignId: null, campaignData: null } ) }
-					campaignId={ deleteModal.campaignId }
-					onDeleted={ handleCampaignDeleted }
-				/>
-			</>
-		);
-	}
-
-	return (
-		<>
-			{ isTestingMode && (
-				<div className="bg-amber-100 border border-amber-400 text-amber-800 px-4 py-3 rounded-md mx-4 mt-4 mb-2">
-					<div className="flex items-center gap-2">
-						<Info className="w-5 h-5" />
-						<div>
-							<h4 className="font-semibold text-sm m-0">{ __( '🧪 Campaign Testing Mode Active', 'solvex-ai-blogger' ) }</h4>
-							<p className="text-xs mt-1 mb-0">
-								{ __( 'Intervals are accelerated for testing: Daily = 1min, Weekly = 2min, Weekday Selection = 2min per day gap (Mon→Thu = 6min). Remember to disable testing mode in production!', 'solvex-ai-blogger' ) }
-							</p>
-						</div>
-					</div>
+			{ error && (
+				<div className="mt-6 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive" role="alert">
+					{ error }
 				</div>
 			) }
 
-			<div className="sm:px-6 lg:px-8 py-8 px-4">
-				<div className="sm:flex sm:items-center">
-					<div className="sm:flex-auto">
-						<h2 id="free-vs-pro-heading" className="text-xl font-bold text-gray-900 p-0 m-0">
-							{ __( 'Manage Campaigns', 'solvex-ai-blogger' ) }
-						</h2>
-					</div>
-
-					<div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex items-center gap-3">
-						{ /* Campaign Filters Component */ }
-						<CampaignFilters
-							sortBy={ sortBy }
-							onSortChange={ setSortBy }
-							searchTerm={ searchTerm }
-							onSearchChange={ setSearchTerm }
-							showSortDropdown={ showSortDropdown }
-							onToggleSortDropdown={ setShowSortDropdown }
-						/>
-
-						<button
-							type="button"
-							className="flex items-center justify-center rounded-md bg-brand-500 px-3 text-sm font-semibold text-white shadow-sm hover:bg-brand-600 focus:ring-2 focus:ring-inset focus:ring-brand-600 border-none cursor-pointer outline-none transition-all duration-200"
-							style={ { height: '38px' } }
-							data-tour-target="add-campaign"
-							onClick={ ( e ) => {
-								e.preventDefault();
-								setConfigureData( defaultMetaDefaults );
-								setOpenDrawer( true );
-							} }
-						>
-							{ __( 'Add New', 'solvex-ai-blogger' ) }
-						</button>
-					</div>
-				</div>
-
-				{
-					campaigns && Object.keys( campaigns ).length > 0 ? (
-						<div className="mt-6">
-							<div className="overflow-x-auto shadow ring-1 ring-black/5 sm:rounded-lg" style={ { scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' } }>
-								<table className="w-full divide-y divide-gray-300" style={ { tableLayout: 'fixed', minWidth: '1200px' } }>
-									<thead className="bg-gradient-to-r from-brand-50 to-indigo-50 header-nav">
-										<tr>
-											<th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6" style={ { width: '200px' } }>
-												{ __( 'Name', 'solvex-ai-blogger' ) }
-											</th>
-											<th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" style={ { width: '100px' } }>
-												{ __( 'Status', 'solvex-ai-blogger' ) }
-											</th>
-											<th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" style={ { width: '280px' } }>
-												{ __( 'Results', 'solvex-ai-blogger' ) }
-											</th>
-											<th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" style={ { width: '180px' } }>
-												{ __( 'Latest Post', 'solvex-ai-blogger' ) }
-											</th>
-											<th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" style={ { width: '120px' } }>
-												{ __( 'Frequency', 'solvex-ai-blogger' ) }
-											</th>
-											<th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" style={ { width: '280px' } }>
-												{ __( 'Actions', 'solvex-ai-blogger' ) }
-											</th>
-										</tr>
-									</thead>
-
-									<tbody className="divide-y divide-gray-200 bg-white">
-										{ sortedCampaigns && sortedCampaigns.length > 0 ? (
-											sortedCampaigns.map( ( campaign ) => (
-												<tr
-													key={ campaign.id }
-													data-campaign-id={ campaign.id }
-													className={ `even:bg-gray-50 transition-colors duration-500 ${
-														highlightedCampaignId === campaign.id.toString() ? 'bg-brand-50 ring-2 ring-brand-500 ring-inset' : ''
-													}` }
+			<div
+				className="mt-8 overflow-hidden rounded-xl border border-border bg-card ring-1 ring-black/[0.02]"
+				style={ { animationDelay: '100ms' } }
+			>
+				<div className="overflow-x-auto">
+					<table className="w-full text-left">
+						<thead>
+							<tr className="border-b border-border bg-muted/40 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+								<th className="px-6 py-4">{ __( 'Name', 'solvex-ai-blogger' ) }</th>
+								<th className="px-6 py-4">{ __( 'Status', 'solvex-ai-blogger' ) }</th>
+								<th className="px-6 py-4">{ __( 'Results', 'solvex-ai-blogger' ) }</th>
+								<th className="px-6 py-4">{ __( 'Latest Post', 'solvex-ai-blogger' ) }</th>
+								<th className="px-6 py-4">{ __( 'Frequency', 'solvex-ai-blogger' ) }</th>
+								<th className="px-6 py-4 text-right">{ __( 'Actions', 'solvex-ai-blogger' ) }</th>
+							</tr>
+						</thead>
+						<tbody className="divide-y divide-border">
+							{ showSkeleton &&
+								Array.from( { length: 5 } ).map( ( _, i ) => (
+									<tr key={ `skeleton-${ i }` } aria-hidden="true">
+										<td className="px-6 py-5">
+											<div className="h-4 w-40 animate-pulse rounded bg-muted" />
+										</td>
+										<td className="px-6 py-5">
+											<div className="h-5 w-9 animate-pulse rounded-full bg-muted" />
+										</td>
+										<td className="px-6 py-5">
+											<div className="flex gap-1.5">
+												<div className="h-5 w-20 animate-pulse rounded-full bg-muted" />
+												<div className="h-5 w-20 animate-pulse rounded-full bg-muted" />
+											</div>
+										</td>
+										<td className="px-6 py-5">
+											<div className="h-4 w-44 animate-pulse rounded bg-muted" />
+										</td>
+										<td className="px-6 py-5">
+											<div className="h-4 w-28 animate-pulse rounded bg-muted" />
+										</td>
+										<td className="px-6 py-5">
+											<div className="flex items-center justify-end gap-2">
+												{ Array.from( { length: 5 } ).map( ( __key, j ) => (
+													<div key={ j } className="size-5 animate-pulse rounded bg-muted" />
+												) ) }
+											</div>
+										</td>
+									</tr>
+								) ) }
+							{ ! showSkeleton && isEmpty && (
+								<tr>
+									<td colSpan={ 6 } className="px-6 py-12 text-center">
+										<div className="mx-auto flex max-w-sm flex-col items-center gap-2 text-muted-foreground">
+											<Search className="size-8 text-muted-foreground/40" aria-hidden="true" />
+											<p className="text-sm font-medium">
+												{ debouncedSearch
+													? __( 'No campaigns match your filters.', 'solvex-ai-blogger' )
+													: __( 'No campaigns yet — create your first one.', 'solvex-ai-blogger' ) }
+											</p>
+											{ debouncedSearch && (
+												<button
+													type="button"
+													onClick={ () => setSearch( '' ) }
+													className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-medium hover:border-brand/30"
 												>
-													<td className="py-4 pl-4 pr-3 text-sm text-gray-600 sm:pl-6 overflow-hidden" style={ { maxWidth: '200px' } }>
-														<div className="truncate">
-															{ campaign.name && campaign.name.length > 0 ? (
-																<Tooltip text={ campaign.name }
-																	delay={ 100 }
-																	className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
-																>
-																	<span className="truncate block">{ campaign.name }</span>
-																</Tooltip>
-															) : (
-																<span className="text-gray-500">{ __( 'Untitled Campaign', 'solvex-ai-blogger' ) }</span>
+													{ __( 'Clear search', 'solvex-ai-blogger' ) }
+												</button>
+											) }
+										</div>
+									</td>
+								</tr>
+							) }
+							{ ! showSkeleton && hasResults && rows.map( ( campaign ) => {
+								const state = deriveCampaignState( campaign );
+								const isUpdating = updatingStatus[ campaign.id ];
+								// Campaigns paused due to token exhaustion cannot be
+								// resumed until the user upgrades, so the toggle stays
+								// disabled (alongside completed/in-flight states).
+								const isTokenPaused = state === 'paused_tokens';
+								const switchDisabled = state === 'completed' || isTokenPaused || isUpdating;
+								let switchTooltip;
+								if ( state === 'completed' ) {
+									switchTooltip = __( 'Completed', 'solvex-ai-blogger' );
+								} else if ( isTokenPaused ) {
+									switchTooltip = __( 'Out of tokens, upgrade to resume', 'solvex-ai-blogger' );
+								} else if ( state === 'paused' ) {
+									switchTooltip = __( 'Paused', 'solvex-ai-blogger' );
+								} else {
+									switchTooltip = __( 'Active', 'solvex-ai-blogger' );
+								}
+								const lastPostTitle = campaign.last_post_title || __( 'Scheduled — No posts yet', 'solvex-ai-blogger' );
+								return (
+									<tr key={ campaign.id } className="transition-colors hover:bg-muted/30">
+										<td className="px-6 py-5 text-sm font-medium">
+											<span className="line-clamp-1" title={ campaign.name }>
+												{ campaign.name || __( 'Untitled Campaign', 'solvex-ai-blogger' ) }
+											</span>
+										</td>
+										<td className="px-6 py-5">
+											<Tooltip>
+												<TooltipTrigger asChild>
+													{ /* A disabled Radix Switch swallows pointer events, so wrap it in a
+													     non-disabled span to keep the tooltip reachable on hover/focus. */ }
+													<span className="inline-flex">
+														<Switch
+															checked={ ! campaign.isPaused && state !== 'completed' }
+															disabled={ switchDisabled }
+															onCheckedChange={ () => handleToggle( campaign ) }
+															aria-label={ sprintf(
+																/* translators: %s: campaign name */
+																__( 'Toggle %s', 'solvex-ai-blogger' ),
+																campaign.name
 															) }
-														</div>
-													</td>
-
-													<td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-														{ ( () => {
-															// Use direct metadata fields
-															const postsCreated = parseInt( campaign.postsCreated ) || 0;
-															const postsTarget = parseInt( campaign.postsTarget ) || 0;
-															const postsFailed = parseInt( campaign.postsFailed ) || 0;
-															const isPaused = campaign.isPaused || false;
-															const campaignCompleted = campaign.campaignCompleted || false;
-
-															// Check if campaign target is reached or all attempts completed
-															// Disable when:
-															// 1. Success >= Target (target met successfully)
-															// 2. Success + Failed >= Target (all attempts made, some failed)
-															const isTargetMet = postsTarget > 0 && postsCreated >= postsTarget;
-															const allAttemptsMade = postsTarget > 0 && ( postsCreated + postsFailed ) >= postsTarget;
-															const shouldDisableSwitch = isTargetMet || allAttemptsMade || campaignCompleted;
-															const isUpdating = updatingStatus[ campaign.id ] || false;
-
-															// Determine tooltip text
-															let tooltipText = '';
-															if ( shouldDisableSwitch ) {
-																tooltipText = __( 'Completed', 'solvex-ai-blogger' );
-															} else if ( isPaused && campaign.pauseReason === 'token_exhaustion' ) {
-																tooltipText = __( 'Out of tokens, upgrade to resume', 'solvex-ai-blogger' );
-															} else if ( isPaused ) {
-																tooltipText = __( 'Paused', 'solvex-ai-blogger' );
-															} else {
-																tooltipText = __( 'Active', 'solvex-ai-blogger' );
-															}
-
-															const disableForTokens = isPaused && campaign.pauseReason === 'token_exhaustion';
-
-															return (
-																<div className="flex items-center gap-1.5">
-																	<Tooltip
-																		text={ tooltipText }
-																		delay={ 100 }
-																		className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
-																	>
-																		<span className="inline-block">
-																			<button
-																				type="button"
-																				onClick={ ( shouldDisableSwitch || disableForTokens ) ? undefined : () => toggleCampaignStatus( campaign.id ) }
-																				disabled={ isUpdating || shouldDisableSwitch || disableForTokens }
-																				aria-label={ `${ __( 'Toggle campaign status for', 'solvex-ai-blogger' ) } ${ campaign.name }` }
-																				className={ `relative inline-flex h-6 w-11 flex-shrink-0 rounded-full transition-colors duration-200 ease-in-out border-none p-0 ${
-																					isUpdating || shouldDisableSwitch
-																						? 'opacity-50 cursor-default bg-gray-300 focus:outline-none'
-																						: disableForTokens
-																							? 'opacity-70 cursor-default bg-brand-300 focus:outline-none'
-																							: isPaused
-																								? 'bg-brand-300 focus:ring-2 focus:ring-brand-300 focus:ring-offset-2 focus:outline-none cursor-pointer'
-																								: 'bg-brand-500 focus:ring-2 focus:ring-brand-600 focus:ring-offset-2 focus:outline-none cursor-pointer'
-																				}` }
-																			>
-																				<span
-																					className={ `inline-block h-5 w-5 transform rounded-full bg-white shadow-lg transition-transform duration-200 ease-in-out ${
-																						! isPaused && ! shouldDisableSwitch ? 'translate-x-5' : 'translate-x-0'
-																					}` }
-																					style={ { margin: '2px' } }
-																				/>
-																			</button>
-																		</span>
-																	</Tooltip>
-																</div>
-															);
-														} )() }
-													</td>
-
-													<td className="whitespace-nowrap px-3 py-4 text-sm">
-														{ ( () => {
-															// Use direct metadata fields for clean display
-															const postsCreated = parseInt( campaign.postsCreated ) || 0;
-															const postsTarget = parseInt( campaign.postsTarget ) || 0;
-															const postsFailed = parseInt( campaign.postsFailed ) || 0;
-
-															// Check if campaign is completed (inactive, target met, or all attempts exhausted)
-															const isCompleted = campaign.status === 'draft' ||
-																	( postsTarget > 0 && postsCreated >= postsTarget ) ||
-																	( postsTarget > 0 && ( postsCreated + postsFailed ) >= postsTarget ) ||
-																	campaign.campaignCompleted === true;
-
-															return (
-																<div className="flex flex-col gap-1">
-																	<div className="flex items-center gap-2">
-																		<span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-																				Success: { postsCreated }
-																		</span>
-																		{ postsFailed > 0 && isCompleted && (
-																			<span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-																					Undelivered: { postsFailed }
-																			</span>
-																		) }
-																		<span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-brand-100 text-brand-800">
-																				Target: { postsTarget }
-																		</span>
-																	</div>
-																</div>
-															);
-														} )() }
-													</td>
-
-													<td className="px-3 py-4 text-sm text-gray-500 overflow-hidden" style={ { maxWidth: '180px' } }>
-														<div className="truncate">
-															{ campaign.last_post_title && campaign.last_post_title.length > 0 ? (
-																<Tooltip text={ campaign.last_post_title }
-																	delay={ 100 }
-																	className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
-																>
-																	<span className="truncate block">{ campaign.last_post_title }</span>
-																</Tooltip>
-															) : (
-																<span className="text-gray-500">{ __( 'Scheduled - No posts yet', 'solvex-ai-blogger' ) }</span>
-															) }
-														</div>
-													</td>
-
-													<td className="px-3 py-4 text-sm text-gray-500 overflow-hidden" style={ { maxWidth: '120px' } }>
-														<div className="truncate">
-															{ campaign.frequency }
-														</div>
-													</td>
-
-													<td className="py-4 pl-3 pr-4 sm:pr-6 text-sm">
-														<div className="flex gap-x-3 items-center flex-nowrap">
-															<button type="button" className={ `focus:outline-none focus:ring-0 border-none bg-transparent p-0 m-0 cursor-pointer flex-shrink-0 ${
-																campaign.startDate && campaign.startDate.trim() !== ''
-																	? 'text-gray-500 hover:text-brand-900'
-																	: 'text-amber-500 hover:text-amber-600'
-															}` }>
-																<Tooltip text={ `${ __( 'Start Date', 'solvex-ai-blogger' ) }: ${
-																	campaign.startDate && campaign.startDate.trim() !== ''
-																		? new Date( campaign.startDate ).toLocaleString()
-																		: __( 'Not configured - Click Configure to set start date. Currently using creation date', 'solvex-ai-blogger' ) + ': ' + new Date( campaign.created_at ).toLocaleString()
-																}` }
-																delay={ 100 }
-																className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
-																>
-																	<CalendarArrowUp className="w-4 h-4" style={ { outline: 'none' } } tabIndex="-1" />
-																</Tooltip>
-															</button>
-
-															<button type="button" className="text-gray-500 hover:text-brand-900 focus:outline-none focus:ring-0 border-none bg-transparent p-0 m-0 cursor-pointer flex-shrink-0">
-																<Tooltip text={ ( () => {
-																	// Use direct metadata field to check if any posts have been created
-																	const postsCreated = parseInt( campaign.postsCreated ) || 0;
-
-																	// Show appropriate message based on posts created
-																	if ( postsCreated === 0 ) {
-																		return __( 'Scheduled - No posts yet', 'solvex-ai-blogger' );
-																	}
-																	return `${ __( 'Last Post Run', 'solvex-ai-blogger' ) }: ${ campaign.lastRun }`;
-																} )() }
-																delay={ 100 }
-																className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
-																>
-																	<Info className="w-4 h-4" style={ { outline: 'none' } } tabIndex="-1" />
-																</Tooltip>
-															</button>
-
-															<button type="button" className="text-gray-500 hover:text-brand-900 focus:outline-none focus:ring-0 border-none bg-transparent p-0 m-0 cursor-pointer flex-shrink-0" data-campaign_id={ campaign.id } onClick={ ( e ) => {
-																viewCampaignPosts( e, campaign.id );
-															} }>
-																<Tooltip text={ __( 'Posts List', 'solvex-ai-blogger' ) }
-																	delay={ 100 }
-																	className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
-																>
-																	<List className="w-4 h-4" style={ { outline: 'none' } } tabIndex="-1" />
-																</Tooltip>
-															</button>
-
-															<button type="button" data-campaign_id={ campaign.id } className="text-gray-500 hover:text-brand-900 focus:outline-none focus:ring-0 border-none bg-transparent p-0 m-0 cursor-pointer flex-shrink-0" onClick={ configureCampaign }>
-																<Tooltip text={ __( 'Configure', 'solvex-ai-blogger' ) }
-																	delay={ 100 }
-																	className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
-																>
-																	{
-																		openingConfigureDrawer ? (
-																			<RotateCw className="w-4 h-4 animate-spin" style={ { outline: 'none' } } tabIndex="-1" />
-																		) : (
-																			<Settings className="w-4 h-4" style={ { outline: 'none' } } tabIndex="-1" />
-																		)
-																	}
-																</Tooltip>
-															</button>
-
-															<button type="button" className="text-gray-500 hover:text-brand-900 focus:outline-none focus:ring-0 border-none bg-transparent p-0 m-0 cursor-pointer flex-shrink-0" data-campaign_id={ campaign.id } onClick={ ( e ) => {
-																openCampaignAnalytics( e, campaign.id );
-															} }>
-																<Tooltip text={ __( 'Analytics', 'solvex-ai-blogger' ) }
-																	delay={ 100 }
-																	className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
-																>
-																	<ChartNoAxesColumn className="w-4 h-4" style={ { outline: 'none' } } tabIndex="-1" />
-																</Tooltip>
-															</button>
-
-															{ shouldShowDebugLogs && (
-																<button
-																	type="button"
-																	className="text-gray-500 hover:text-brand-900 focus:outline-none focus:ring-0 border-none bg-transparent p-0 m-0 cursor-pointer flex-shrink-0"
-																	data-campaign_id={ campaign.id }
-																	onClick={ ( e ) => {
-																		e.preventDefault();
-																		e.stopPropagation();
-																		openCampaignLogs( e, campaign.id );
-																	} }
-																>
-																	<Tooltip text={ __( 'View logs', 'solvex-ai-blogger' ) }
-																		delay={ 100 }
-																		className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
-																	>
-																		<ScrollText className="w-4 h-4" style={ { outline: 'none' } } tabIndex="-1" />
-																	</Tooltip>
-																</button>
-															) }
-
-															<button type="button" className="text-gray-500 hover:text-brand-900 focus:outline-none focus:ring-0 border-none bg-transparent p-0 m-0 cursor-pointer flex-shrink-0" data-campaign_id={ campaign.id } onClick={ ( e ) => {
-																openDeleteModal( e, campaign.id );
-															} }>
-																<Tooltip text={ __( 'Delete', 'solvex-ai-blogger' ) }
-																	delay={ 100 }
-																	className="z-999999 bg-black text-xs text-white shadow-md p-2 rounded-md"
-																>
-																	<Trash2 className="w-4 h-4" style={ { outline: 'none' } } tabIndex="-1" />
-																</Tooltip>
-															</button>
-														</div>
-													</td>
-												</tr>
-											) )
-										) : (
-											<tr>
-												<td colSpan="6" className="py-12 text-center">
-													<div className="flex flex-col items-center justify-center gap-y-3">
-														<Search className="w-8 h-8 text-gray-400" />
-														<h3 className="text-sm font-medium text-gray-900 m-0 p-0">
-															{ searchTerm
-																? __( 'No campaigns found', 'solvex-ai-blogger' )
-																: __( 'No campaigns match your search', 'solvex-ai-blogger' )
-															}
-														</h3>
-														<p className="text-sm text-gray-500 max-w-sm">
-															{ searchTerm
-																? sprintf( /* translators: %s: search term */ __( 'No campaigns match "%s".', 'solvex-ai-blogger' ), searchTerm )
-																: __( 'Try different search terms or clear your search to see all campaigns.', 'solvex-ai-blogger' )
-															}
-														</p>
-														{ searchTerm && (
-															<button
-																type="button"
-																onClick={ () => setSearchTerm( '' ) }
-																className="mt-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:ring-2 focus:ring-inset focus:ring-brand-600 border-none cursor-pointer outline-none transition-all duration-200"
-															>
-																{ __( 'Clear search', 'solvex-ai-blogger' ) }
-															</button>
-														) }
-													</div>
-												</td>
-											</tr>
-										) }
-									</tbody>
-								</table>
-							</div>
+														/>
+													</span>
+												</TooltipTrigger>
+												<TooltipContent>{ switchTooltip }</TooltipContent>
+											</Tooltip>
+										</td>
+										<td className="px-6 py-5">
+											<div className="flex flex-wrap gap-1.5">
+												<Pill tone="success">
+													{ __( 'Success', 'solvex-ai-blogger' ) }: { campaign.postsCreated || 0 }
+												</Pill>
+												{ Number( campaign.postsFailed ) > 0 && state === 'completed' && (
+													<Pill tone="destructive">
+														{ __( 'Undelivered', 'solvex-ai-blogger' ) }: { campaign.postsFailed }
+													</Pill>
+												) }
+												<Pill tone="brand">
+													{ __( 'Target', 'solvex-ai-blogger' ) }: { campaign.postsTarget || 0 }
+												</Pill>
+											</div>
+										</td>
+										<td className="px-6 py-5 text-sm text-muted-foreground">
+											<span className="line-clamp-1" title={ lastPostTitle }>{ lastPostTitle }</span>
+										</td>
+										<td className="px-6 py-5 text-sm text-muted-foreground">
+											<span className="line-clamp-1" title={ campaign.frequency }>{ campaign.frequency }</span>
+										</td>
+										<td className="px-6 py-5">
+											<div className="flex items-center justify-end gap-0.5">
+												<RowIcon
+													icon={ CalendarPlus }
+													label={ campaign.startDate ? sprintf(
+														/* translators: %s: ISO datetime */
+														__( 'Starts %s', 'solvex-ai-blogger' ),
+														new Date( campaign.startDate ).toLocaleString()
+													) : __( 'Start date not set', 'solvex-ai-blogger' ) }
+												/>
+												<RowIcon icon={ Info } label={ campaign.frequency } />
+												<RowIcon
+													icon={ List }
+													label={ __( 'View posts', 'solvex-ai-blogger' ) }
+													onClick={ () => handleViewPosts( campaign ) }
+												/>
+												<RowIcon
+													icon={ Settings2 }
+													label={ __( 'Configure', 'solvex-ai-blogger' ) }
+													onClick={ () => handleConfigure( campaign ) }
+												/>
+												<RowIcon
+													icon={ BarChart3 }
+													label={ __( 'Analytics', 'solvex-ai-blogger' ) }
+													onClick={ () => handleAnalytics( campaign ) }
+												/>
+												{ shouldShowDebugLogs && (
+													<RowIcon
+														icon={ ScrollText }
+														label={ __( 'Logs', 'solvex-ai-blogger' ) }
+														onClick={ () => handleLogs( campaign ) }
+													/>
+												) }
+												<RowIcon
+													icon={ Trash2 }
+													label={ __( 'Delete', 'solvex-ai-blogger' ) }
+													danger
+													onClick={ () => handleDelete( campaign ) }
+												/>
+											</div>
+										</td>
+									</tr>
+								);
+							} ) }
+						</tbody>
+					</table>
+				</div>
+				{ totalPages > 1 && (
+					<div className="flex items-center justify-between border-t border-border px-6 py-3 text-sm">
+						<span className="text-muted-foreground">
+							{ sprintf(
+								/* translators: 1: current page, 2: total pages, 3: total campaigns */
+								__( 'Page %1$d of %2$d · %3$d campaigns', 'solvex-ai-blogger' ),
+								pagination.page,
+								totalPages,
+								pagination.total
+							) }
+						</span>
+						<div className="flex items-center gap-1">
+							<button
+								type="button"
+								disabled={ page <= 1 || loading }
+								onClick={ () => setPage( ( p ) => Math.max( 1, p - 1 ) ) }
+								className="inline-flex h-8 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium transition-colors hover:border-brand/30 disabled:opacity-50"
+							>
+								<ChevronLeft className="size-3.5" aria-hidden="true" />
+								{ __( 'Prev', 'solvex-ai-blogger' ) }
+							</button>
+							<button
+								type="button"
+								disabled={ page >= totalPages || loading }
+								onClick={ () => setPage( ( p ) => Math.min( totalPages, p + 1 ) ) }
+								className="inline-flex h-8 items-center gap-1 rounded-md border border-border bg-card px-3 text-xs font-medium transition-colors hover:border-brand/30 disabled:opacity-50"
+							>
+								{ __( 'Next', 'solvex-ai-blogger' ) }
+								<ChevronRight className="size-3.5" aria-hidden="true" />
+							</button>
 						</div>
-					) : null
-				}
+					</div>
+				) }
 			</div>
 
 			<ConfigureDrawer
@@ -783,27 +571,28 @@ export default function Campaigns() {
 				setOpenDrawer={ setOpenDrawer }
 				configureData={ configureData }
 			/>
-
 			<CampaignAnalyticsModal
 				isOpen={ analyticsModal.isOpen }
 				onClose={ () => setAnalyticsModal( { isOpen: false, campaignId: null, campaignData: null } ) }
 				campaignId={ analyticsModal.campaignId }
 				campaignData={ analyticsModal.campaignData }
 			/>
-
 			<CampaignLogsModal
 				isOpen={ logsModal.isOpen }
 				onClose={ () => setLogsModal( { isOpen: false, campaignId: null, campaignData: null } ) }
 				campaignId={ logsModal.campaignId }
 				campaignData={ logsModal.campaignData }
 			/>
-
 			<CampaignDeleteModal
 				isOpen={ deleteModal.isOpen }
 				onClose={ () => setDeleteModal( { isOpen: false, campaignId: null, campaignData: null } ) }
 				campaignId={ deleteModal.campaignId }
-				onDeleted={ handleCampaignDeleted }
+				onDeleted={ () => handleCampaignDeleted( deleteModal.campaignId ) }
 			/>
-		</>
+		</div>
 	);
 }
+
+Campaigns.displayName = 'Campaigns';
+
+export default memo( Campaigns );

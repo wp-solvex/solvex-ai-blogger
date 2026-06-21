@@ -4,6 +4,8 @@ import CampaignsInsights from './CampaignsInsights';
 import PostIdeas from './PostIdeas/PostIdeas';
 import QuickAccess from './QuickAccess/QuickAccess';
 import TokenNotification from './TokenNotification';
+import ProUpgradeCard from './ProUpgradeCard';
+import WelcomeVideoCard from './WelcomeVideoCard';
 
 // Component metadata for better organization
 export const welcomeComponents = {
@@ -33,6 +35,8 @@ export {
 	PostIdeas,
 	QuickAccess,
 	TokenNotification,
+	ProUpgradeCard,
+	WelcomeVideoCard,
 };
 
 // Export component list for dynamic rendering

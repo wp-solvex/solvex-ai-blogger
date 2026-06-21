@@ -154,7 +154,7 @@ const CampaignFilters = ( {
 					value={ searchTerm }
 					onChange={ ( e ) => onSearchChange( e.target.value ) }
 					placeholder={ __( 'Search campaigns…', 'solvex-ai-blogger' ) }
-					className="block w-full text-sm rounded-md bg-white placeholder-gray-400 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:ring-2 focus:ring-inset focus:ring-brand-600 outline-none transition-all duration-200"
+					className="block w-full text-sm rounded-md bg-white placeholder-gray-400 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:ring-2 focus:ring-inset focus:ring-brand-600 outline-none transition-all duration-200 force-pl-9"
 					style={ {
 						height: '38px',
 						paddingLeft: '40px',

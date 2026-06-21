@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
 import { createPortal } from 'react-dom';
 import { __ } from '@wordpress/i18n';
 import { X } from 'lucide-react';
+import { Button } from '@Components/ui/button';
+import { cn } from '@Utils/cn';
 
 /**
  * Calculate optimal position for the teaching bubble relative to its target.
@@ -63,10 +65,10 @@ const calculatePosition = ( targetRect, bubbleRef, preferredPlacement = 'bottom'
  */
 const BubbleArrow = memo( ( { placement } ) => {
 	const arrowClasses = {
-		bottom: 'absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-gray-200 rotate-45',
-		top: 'absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-r border-b border-gray-200 rotate-45',
-		right: 'absolute top-1/2 -left-2 -translate-y-1/2 w-4 h-4 bg-white border-l border-b border-gray-200 rotate-45',
-		left: 'absolute top-1/2 -right-2 -translate-y-1/2 w-4 h-4 bg-white border-r border-t border-gray-200 rotate-45',
+		bottom: 'absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-popover border-l border-t border-border rotate-45',
+		top: 'absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-popover border-r border-b border-border rotate-45',
+		right: 'absolute top-1/2 -left-2 -translate-y-1/2 w-4 h-4 bg-popover border-l border-b border-border rotate-45',
+		left: 'absolute top-1/2 -right-2 -translate-y-1/2 w-4 h-4 bg-popover border-r border-t border-border rotate-45',
 	};
 
 	return <div className={ arrowClasses[ placement ] || arrowClasses.bottom } />;
@@ -82,7 +84,6 @@ const BackdropOverlay = memo( ( { targetRect } ) => {
 	}
 
 	const overlayPadding = 6;
-	const borderRadius = 8;
 
 	return (
 		<div
@@ -128,17 +129,17 @@ BackdropOverlay.displayName = 'BackdropOverlay';
  * TeachingBubble — A positioned tooltip-style coachmark component.
  *
  * @param {Object}   props
- * @param {string}   props.title           - Bold heading text
- * @param {string}   props.description     - Body text
- * @param {number}   props.currentStep     - Current step index (0-based)
- * @param {number}   props.totalSteps      - Total steps in the tour
- * @param {Function} props.onNext          - Called when user clicks Next/Got it
- * @param {Function} props.onSkip          - Called when user skips the tour
- * @param {Function} props.onDismiss       - Called when user dismisses (X button)
- * @param {string}   props.targetSelector  - CSS selector or data-tour-target value
- * @param {string}   props.placement       - Preferred placement: top|bottom|left|right
- * @param {string}   props.nextLabel       - Custom label for next button
- * @param {boolean}  props.showBackdrop    - Whether to show the backdrop overlay
+ * @param {string}   props.title          - Bold heading text
+ * @param {string}   props.description    - Body text
+ * @param {number}   props.currentStep    - Current step index (0-based)
+ * @param {number}   props.totalSteps     - Total steps in the tour
+ * @param {Function} props.onNext         - Called when user clicks Next/Got it
+ * @param {Function} props.onSkip         - Called when user skips the tour
+ * @param {Function} props.onDismiss      - Called when user dismisses (X button)
+ * @param {string}   props.targetSelector - CSS selector or data-tour-target value
+ * @param {string}   props.placement      - Preferred placement: top|bottom|left|right
+ * @param {string}   props.nextLabel      - Custom label for next button
+ * @param {boolean}  props.showBackdrop   - Whether to show the backdrop overlay
  */
 const TeachingBubble = memo( ( {
 	title,
@@ -241,7 +242,7 @@ const TeachingBubble = memo( ( {
 				aria-modal="false"
 				aria-label={ title }
 				tabIndex={ -1 }
-				className="z-[9999] w-[320px] bg-white rounded-xl shadow-2xl border border-gray-200"
+				className="z-[9999] w-[320px] rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl"
 				style={ {
 					position: 'absolute',
 					top: `${ position.top }px`,
@@ -260,18 +261,18 @@ const TeachingBubble = memo( ( {
 					<div className="flex items-start justify-between mb-2">
 						<div>
 							{ totalSteps > 1 && (
-								<span className="text-[11px] font-medium text-brand-600 uppercase tracking-wide">
+								<span className="text-[11px] font-medium text-brand uppercase tracking-wide">
 									{ `${ __( 'Step', 'solvex-ai-blogger' ) } ${ currentStep + 1 } ${ __( 'of', 'solvex-ai-blogger' ) } ${ totalSteps }` }
 								</span>
 							) }
-							<h3 className="text-[14px] font-bold text-gray-900 mt-0.5 mb-0">
+							<h3 className="text-[14px] font-bold text-foreground mt-0.5 mb-0">
 								{ title }
 							</h3>
 						</div>
 						<button
 							type="button"
 							onClick={ onDismiss }
-							className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 -mt-1 -mr-1 border-none bg-transparent cursor-pointer p-0 leading-none"
+							className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0 -mt-1 -mr-1 border-none bg-transparent cursor-pointer p-0 leading-none"
 							aria-label={ __( 'Dismiss', 'solvex-ai-blogger' ) }
 						>
 							<X className="w-4 h-4" />
@@ -279,7 +280,7 @@ const TeachingBubble = memo( ( {
 					</div>
 
 					{ /* Description */ }
-					<p className="text-[13px] text-gray-600 leading-relaxed mb-3">
+					<p className="text-[13px] text-muted-foreground leading-relaxed mb-3">
 						{ description }
 					</p>
 
@@ -289,7 +290,14 @@ const TeachingBubble = memo( ( {
 							{ Array.from( { length: totalSteps } ).map( ( _, i ) => (
 								<div
 									key={ i }
-									className={ `h-1.5 rounded-full transition-all duration-300 ${ i === currentStep ? 'w-6 bg-brand-500' : i < currentStep ? 'w-1.5 bg-brand-300' : 'w-1.5 bg-gray-200' }` }
+									className={ cn(
+										'h-1.5 rounded-full transition-all duration-300',
+										i === currentStep
+											? 'w-6 bg-brand'
+											: i < currentStep
+												? 'w-1.5 bg-brand/40'
+												: 'w-1.5 bg-muted'
+									) }
 								/>
 							) ) }
 						</div>
@@ -298,24 +306,26 @@ const TeachingBubble = memo( ( {
 					{ /* Actions */ }
 					<div className="flex items-center justify-between gap-2">
 						{ totalSteps > 1 && ! isLastStep ? (
-							<button
+							<Button
 								type="button"
+								variant="outline"
+								size="sm"
 								onClick={ onSkip }
-								className="px-4 py-1.5 text-[12px] font-semibold text-brand-600 border border-brand-500 rounded bg-white hover:bg-brand-50 cursor-pointer transition-colors"
 							>
 								{ __( 'Skip Tour', 'solvex-ai-blogger' ) }
-							</button>
+							</Button>
 						) : (
 							<div />
 						) }
 
-						<button
+						<Button
 							type="button"
+							variant="brand"
+							size="sm"
 							onClick={ onNext }
-							className="px-4 py-1.5 text-[12px] font-semibold text-white bg-brand-500 border border-brand-500 rounded hover:bg-brand-600 cursor-pointer transition-colors"
 						>
 							{ buttonLabel }
-						</button>
+						</Button>
 					</div>
 				</div>
 			</div>

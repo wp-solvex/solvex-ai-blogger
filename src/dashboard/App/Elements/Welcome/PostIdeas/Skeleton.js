@@ -1,46 +1,31 @@
 import React, { memo, useMemo } from 'react';
 import { __ } from '@wordpress/i18n';
 
-// Individual skeleton row component for better performance
-const SkeletonRow = memo( ( { index } ) => (
-	<div
-		className={ `flex items-stretch animate-pulse hover:bg-blue-50/30 transition-colors duration-150 ${ index % 2 === 1 ? 'bg-gray-50' : '' }` }
-		role="row"
-		aria-label={ __( 'Loading row', 'solvex-ai-blogger' ) + ' ' + ( index + 1 ) }
-	>
-		<div className="w-3/5 py-4 pl-4 pr-3 text-sm sm:pl-6">
-			<div className="flex items-center">
-				{ /* Content placeholder - single line */ }
-				<div className="h-4 bg-gray-300 rounded animate-pulse" style={ { width: `${ ( Math.random() * 40 ) + 60 }%` } } />
-			</div>
-		</div>
-
-		<div className="w-2/5 flex items-center justify-end py-4 pl-3 pr-4 sm:pr-6">
-			<div className="h-4 bg-gray-300 rounded animate-pulse w-16" />
-		</div>
-	</div>
-) );
-
-SkeletonRow.displayName = 'SkeletonRow';
-
-// Enhanced skeleton table component
+/**
+ * Loading skeleton for the post-ideas row list.
+ * Renders `rows` ghost rows matching the new Lovable layout.
+ */
 const Skeleton = memo( ( { rows = 5 } ) => {
-	// Memoize skeleton rows for performance
-	const skeletonRows = useMemo( () =>
-		Array.from( { length: rows }, ( _, index ) => (
-			<SkeletonRow key={ `skeleton-${ index }` } index={ index } />
-		) ),
-	[ rows ]
+	const items = useMemo(
+		() =>
+			Array.from( { length: rows }, ( _, i ) => (
+				<li
+					key={ `skeleton-${ i }` }
+					className="grid grid-cols-[1fr_auto] items-center gap-4 px-6 py-4"
+					aria-label={ __( 'Loading row', 'solvex-ai-blogger' ) }
+				>
+					<div
+						className="h-4 animate-pulse rounded bg-muted"
+						style={ { width: `${ ( ( i * 11 ) % 40 ) + 50 }%` } }
+					/>
+					<div className="h-4 w-16 animate-pulse rounded bg-muted" />
+				</li>
+			) ),
+		[ rows ]
 	);
 
-	// Return just the skeleton rows without table wrapper for inline use
-	return (
-		<>
-			{ skeletonRows }
-		</>
-	);
+	return <ul className="divide-y divide-border">{ items }</ul>;
 } );
-
 Skeleton.displayName = 'PostIdeasSkeleton';
 
 export default Skeleton;
