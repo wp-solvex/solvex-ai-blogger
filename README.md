@@ -137,7 +137,7 @@ This update introduces an auth screen to connect the plugin to your account and 
 
 ## Changelog ##
 
-### 1.0.3 ###
+### 1.0.4 ###
 * New: Yoast SEO compatibility - Generated content will ensure SEO-friendly structure and readability to help you easily achieve "green lights" in Yoast without manual tweaking.
 * Improvement: Hardened the server API usage and error reporting process.
 
