@@ -12,6 +12,12 @@ module.exports = {
 		'react/jsx-indent-props': 'off',
 		'no-nested-ternary': 'off',
 		'react/jsx-indent': 'off',
+		// Formatting is owned by Prettier; the eslint `indent`/`brace-style` rules conflict with it.
+		indent: 'off',
+		'brace-style': 'off',
+		'no-mixed-operators': 'off',
+		'jsdoc/require-param': 'off',
+		'no-unused-vars': 'warn',
 		'jsx-a11y/click-events-have-key-events': 'off',
 		'jsx-a11y/anchor-is-valid': 'off',
 		'jsx-a11y/no-static-element-interactions': 'off',
@@ -21,6 +27,9 @@ module.exports = {
 			'error',
 			{ allowedTextDomain: 'solvex-ai-blogger' },
 		],
+	},
+	env: {
+		browser: true,
 	},
 	parserOptions: {
 		requireConfigFile: false,

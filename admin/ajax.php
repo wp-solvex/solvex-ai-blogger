@@ -1367,13 +1367,13 @@ class Ajax {
 
 			// Format-specific context for better topic generation.
 			$format_labels = [
-				'listicle'    => 'listicle/top-list',
+				'listicle'     => 'listicle/top-list',
 				'step_by_step' => 'how-to guide',
-				'comparison'  => 'comparison article',
-				'glossary'    => 'glossary/terms reference',
-				'standard'    => 'blog post',
+				'comparison'   => 'comparison article',
+				'glossary'     => 'glossary/terms reference',
+				'standard'     => 'blog post',
 			];
-			$format_label = $format_labels[ $format ] ?? 'blog post';
+			$format_label  = $format_labels[ $format ] ?? 'blog post';
 
 			// Call the server generate-post-ideas endpoint.
 			$api_url  = 'https://wpaiblogger.com/wp-json/wp-ai-blogger/v1/generate-post-ideas';
@@ -1386,15 +1386,15 @@ class Ajax {
 					],
 					'body'    => wp_json_encode(
 						[
-							'license'            => $license,
-							'site_title'         => $site_title,
-							'site_purpose'       => "Generate {$count} unique {$format_label} topics about: {$keywords}. " . $site_purpose,
-							'site_description'   => $site_desc,
-							'temperature'        => floatval( $settings['temperature'] ?? 1 ),
-							'harassment'         => absint( $settings['harassment'] ?? 2 ),
-							'hate'               => absint( $settings['hate'] ?? 2 ),
-							'sexually_explicit'  => absint( $settings['sexuallyExplicit'] ?? 2 ),
-							'dangerous_content'  => absint( $settings['dangerousContent'] ?? 2 ),
+							'license'           => $license,
+							'site_title'        => $site_title,
+							'site_purpose'      => "Generate {$count} unique {$format_label} topics about: {$keywords}. " . $site_purpose,
+							'site_description'  => $site_desc,
+							'temperature'       => floatval( $settings['temperature'] ?? 1 ),
+							'harassment'        => absint( $settings['harassment'] ?? 2 ),
+							'hate'              => absint( $settings['hate'] ?? 2 ),
+							'sexually_explicit' => absint( $settings['sexuallyExplicit'] ?? 2 ),
+							'dangerous_content' => absint( $settings['dangerousContent'] ?? 2 ),
 						]
 					),
 					'timeout' => 30,
@@ -1404,14 +1404,16 @@ class Ajax {
 			if ( is_wp_error( $response ) ) {
 				$error_message = $response->get_error_message();
 				$error_code    = $response->get_error_code();
-				wp_send_json_error( [
-					'message' => sprintf(
-						/* translators: %s: error details */
-						__( 'Failed to connect to the server: %s (Code: %s)', 'solvex-ai-blogger' ),
-						$error_message,
-						$error_code
-					),
-				] );
+				wp_send_json_error(
+					[
+						'message' => sprintf(
+							/* translators: %s: error details */
+							__( 'Failed to connect to the server: %1$s (Code: %2$s)', 'solvex-ai-blogger' ),
+							$error_message,
+							$error_code
+						),
+					] 
+				);
 				return;
 			}
 
