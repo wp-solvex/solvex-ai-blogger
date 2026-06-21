@@ -121,11 +121,6 @@ We are here to help you succeed with AI auto-blogging!
 *   **Get in Touch:** [Contact our support team](https://wpaiblogger.com/contact/)
 *   **Scale Up:** Need more than 20,000 tokens? [View our premium plans](https://wpaiblogger.com/#pricing)
 
-## Upgrade Notice ##
-
-### 1.0.3 ###
-This update introduces an auth screen to connect the plugin to your account and claim your free API key, strengthens the API key validation and connection process, and ensures a smooth onboarding experience. Upgrade recommended for all users.
-
 ## Screenshots ##
 
 1. Generated Post - AI-generated content with auto-attached featured image, ready to publish post.
