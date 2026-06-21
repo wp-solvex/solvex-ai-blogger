@@ -86,11 +86,11 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 		<Dialog open={ open } onClose={ closeModal } className="relative z-[999999] ai-blogger-container">
 			<div className="fixed inset-0 bg-black/50 transition-opacity" />
 
-			<div className="fixed inset-0 z-[999999] w-screen overflow-y-auto">
+			<div className="fixed inset-0 z-999999 w-screen overflow-y-auto">
 				<div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
 					<DialogPanel
 						transition
-						className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-4xl data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95"
+						className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-leave:duration-200 data-enter:ease-out data-leave:ease-in sm:my-8 sm:w-full sm:max-w-4xl data-closed:sm:translate-y-0 data-closed:sm:scale-95"
 					>
 						{ /* Header */ }
 						<div className="flex items-center justify-between bg-gray-50 px-6 py-4 border-b border-gray-200">
@@ -99,7 +99,7 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 									<BarChart3 className="w-5 h-5 text-brand-600" />
 								</div>
 								<div>
-									<h3 className="text-lg font-semibold text-gray-900 m-0">
+									<h3 className="text-lg font-semibold text-gray-900 force-space-0">
 										{ __( 'Campaign Analytics', 'solvex-ai-blogger' ) }
 									</h3>
 									<p className="text-sm text-gray-600 m-0">
@@ -139,7 +139,7 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 										{ /* Top Stats */ }
 										<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 											{ /* Published Posts */ }
-											<div className="bg-gradient-to-r from-brand-50 to-indigo-50 p-4 rounded-lg border border-brand-200">
+											<div className="bg-linear-to-r from-brand-50 to-indigo-50 p-4 rounded-lg border border-brand-400">
 												<div className="flex items-center justify-between">
 													<div className="flex flex-col gap-2">
 														<p className="text-sm font-medium text-brand-600 m-0">{ __( 'Created Posts', 'solvex-ai-blogger' ) }</p>
@@ -150,7 +150,7 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 											</div>
 
 											{ /* Total Visits */ }
-											<div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg border border-blue-200">
+											<div className="bg-linear-to-r from-blue-50 to-cyan-50 p-4 rounded-lg border border-blue-200">
 												<div className="flex items-center justify-between">
 													<div className="flex flex-col gap-2">
 														<p className="text-sm font-medium text-blue-600 m-0">{ __( 'Total Visits', 'solvex-ai-blogger' ) }</p>
@@ -161,7 +161,7 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 											</div>
 
 											{ /* Success Rate */ }
-											<div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200">
+											<div className="bg-linear-to-r from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200">
 												<div className="flex items-center justify-between">
 													<div className="flex flex-col gap-2">
 														<p className="text-sm font-medium text-green-600 m-0">{ __( 'Success Rate', 'solvex-ai-blogger' ) }</p>
@@ -172,7 +172,7 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 											</div>
 
 											{ /* Comments */ }
-											<div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg border border-purple-200">
+											<div className="bg-linear-to-r from-purple-50 to-pink-50 p-4 rounded-lg border border-purple-200">
 												<div className="flex items-center justify-between">
 													<div className="flex flex-col gap-2">
 														<p className="text-sm font-medium text-purple-600 m-0">{ __( 'Total Comments', 'solvex-ai-blogger' ) }</p>
@@ -185,10 +185,10 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 
 										{ /* Top Performing Posts */ }
 										<div className="bg-white border border-gray-200 rounded-lg p-4">
-											<div className="flex items-center justify-between mb-3">
+											<div className="flex items-center justify-between mb-6">
 												<div className="flex items-center">
 													<Trophy className="w-4 h-4 text-yellow-600 mr-2" />
-													<h4 className="text-base font-semibold text-gray-900 m-0">{ __( 'Top Performing Posts', 'solvex-ai-blogger' ) }</h4>
+													<h4 className="text-base font-semibold text-gray-900 force-space-0">{ __( 'Top Performing Posts', 'solvex-ai-blogger' ) }</h4>
 												</div>
 												<span className="text-xs text-gray-500">{ __( 'By views', 'solvex-ai-blogger' ) }</span>
 											</div>
@@ -222,14 +222,14 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 										</div>
 
 										{ /* Pro Upgrade CTA */ }
-										<div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-4 text-white">
+										<div className="bg-linear-to-r from-indigo-500 to-purple-600 rounded-lg p-4 text-white">
 											<div className="flex items-center justify-between">
 												<div className="flex items-center space-x-3">
 													<div className="p-2 bg-white bg-opacity-20 rounded-lg flex">
-														<Crown className="w-5 h-5 text-white" />
+														<Crown className="w-5 h-5 text-indigo-600" />
 													</div>
 													<div>
-														<h4 className="text-base font-bold m-0">{ __( 'Get more features with Pro', 'solvex-ai-blogger' ) }</h4>
+														<h4 className="text-base font-bold force-space-0">{ __( 'Get More Features with Pro', 'solvex-ai-blogger' ) }</h4>
 														<p className="text-indigo-100 text-sm m-0">
 															{ __( 'Unlock premium tools, advanced controls, and more automation.', 'solvex-ai-blogger' ) }
 														</p>
@@ -245,7 +245,7 @@ const CampaignAnalyticsModal = ( { isOpen, onClose, campaignId, campaignData } )
 												</button>
 											</div>
 
-											<div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4">
+											<div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-6">
 												<div className="flex items-center space-x-1">
 													<CheckCircle className="w-4 h-4 text-green-300" />
 													<span className="text-sm">{ __( 'Unlimited Ideas', 'solvex-ai-blogger' ) }</span>

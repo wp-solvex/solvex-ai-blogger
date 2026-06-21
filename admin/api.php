@@ -59,13 +59,6 @@ class API extends \WP_REST_Controller {
 	protected $update_route = '/admin/settings/update';
 
 	/**
-	 * License verification route.
-	 *
-	 * @var string
-	 */
-	protected $license_route = '/admin/license/';
-
-	/**
 	 * Option name
 	 *
 	 * @access private
@@ -166,45 +159,174 @@ class API extends \WP_REST_Controller {
 			]
 		);
 
-		// License management endpoints.
+		// Campaigns list (server-paginated).
 		register_rest_route(
 			$this->namespace,
-			$this->license_route . 'verify',
+			'/campaigns',
 			[
 				[
-					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'verify_license' ],
-					'permission_callback' => [ $this, 'license_permissions_check' ],
-					'args'                => $this->get_license_args(),
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'list_campaigns' ],
+					'permission_callback' => [ $this, 'get_permissions_check' ],
+					'args'                => $this->get_campaigns_args(),
 				],
 			]
+		);
+	}
+
+	/**
+	 * List campaigns with pagination, search, and sort.
+	 *
+	 * Filters:
+	 * - wpsolvex_autoaiblogger_campaigns_per_page    (int)
+	 * - wpsolvex_autoaiblogger_campaigns_query_args  (array, WP_Query args)
+	 * - wpsolvex_autoaiblogger_campaigns_list_response (array, final payload)
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function list_campaigns( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
+		if ( ! class_exists( '\\WPSolvex\\AutoAIBlogger\\Inc\\Utils\\Metadata' ) ) {
+			return new \WP_Error(
+				'metadata_missing',
+				__( 'Campaign metadata helper not available.', 'solvex-ai-blogger' ),
+				[ 'status' => 500 ]
+			);
+		}
+
+		$page          = max( 1, (int) $request->get_param( 'page' ) );
+		$per_page_raw  = (int) ( $request->get_param( 'per_page' ) ?: 20 );
+		$max_per_page  = (int) apply_filters( 'wpsolvex_autoaiblogger_campaigns_per_page', 100 );
+		$per_page      = max( 1, min( $per_page_raw, $max_per_page ) );
+		$search        = sanitize_text_field( (string) $request->get_param( 'search' ) );
+		$status_filter = sanitize_text_field( (string) $request->get_param( 'status' ) );
+		$order_by_raw  = sanitize_text_field( (string) $request->get_param( 'order_by' ) );
+		$order_raw     = strtoupper( sanitize_text_field( (string) $request->get_param( 'order' ) ) );
+
+		$allowed_order_by = [ 'date', 'title', 'modified' ];
+		$order_by         = in_array( $order_by_raw, $allowed_order_by, true ) ? $order_by_raw : 'date';
+		$order            = ( 'ASC' === $order_raw ) ? 'ASC' : 'DESC';
+
+		$query_args = [
+			'post_type'              => WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN,
+			'posts_per_page'         => $per_page,
+			'paged'                  => $page,
+			'post_status'            => [ 'publish', 'draft', 'private' ],
+			'orderby'                => $order_by,
+			'order'                  => $order,
+			'update_post_term_cache' => false,
+			'update_post_meta_cache' => false,
+		];
+
+		if ( '' !== $search ) {
+			$query_args['s'] = $search;
+		}
+
+		$query_args = (array) apply_filters( 'wpsolvex_autoaiblogger_campaigns_query_args', $query_args, $request );
+
+		$query = new \WP_Query( $query_args );
+
+		$items = [];
+		foreach ( $query->posts as $post ) {
+			if ( ! ( $post instanceof \WP_Post ) || WPSOLVEX_AUTOAIBLOGGER_CPT_CAMPAIGN !== $post->post_type ) {
+				continue;
+			}
+			if ( ! current_user_can( 'read_post', $post->ID ) ) {
+				continue;
+			}
+
+			$campaign = \WPSolvex\AutoAIBlogger\Inc\Utils\Metadata::get_campaign_data( $post->ID, false );
+			if ( ! is_array( $campaign ) || empty( $campaign ) ) {
+				continue;
+			}
+
+			if ( '' !== $status_filter ) {
+				$is_paused    = ! empty( $campaign['isPaused'] );
+				$is_completed =
+					'draft' === ( $campaign['status'] ?? '' )
+					|| ! empty( $campaign['campaignCompleted'] )
+					|| (
+						(int) ( $campaign['postsTarget'] ?? 0 ) > 0
+						&& (int) ( $campaign['postsCreated'] ?? 0 ) >= (int) ( $campaign['postsTarget'] ?? 0 )
+					);
+
+				$campaign_state = $is_completed ? 'completed' : ( $is_paused ? 'paused' : 'active' );
+				if ( $status_filter !== $campaign_state ) {
+					continue;
+				}
+			}
+
+			$items[ (int) $post->ID ] = $campaign;
+		}
+
+		$response = [
+			'items'       => $items,
+			'page'        => $page,
+			'per_page'    => $per_page,
+			'total'       => (int) $query->found_posts,
+			'total_pages' => (int) $query->max_num_pages,
+		];
+
+		$response = (array) apply_filters(
+			'wpsolvex_autoaiblogger_campaigns_list_response',
+			$response,
+			$request,
+			$query
 		);
 
-		register_rest_route(
-			$this->namespace,
-			$this->license_route . 'activate',
-			[
-				[
-					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'activate_license' ],
-					'permission_callback' => [ $this, 'license_permissions_check' ],
-					'args'                => $this->get_license_args(),
-				],
-			]
-		);
+		return rest_ensure_response( $response );
+	}
 
-		register_rest_route(
-			$this->namespace,
-			$this->license_route . 'deactivate',
-			[
-				[
-					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => [ $this, 'deactivate_license' ],
-					'permission_callback' => [ $this, 'license_permissions_check' ],
-					'args'                => [],
-				],
-			]
-		);
+	/**
+	 * Arg schema for the campaigns list endpoint.
+	 *
+	 * @return array<string,array<string,mixed>>
+	 */
+	private function get_campaigns_args(): array {
+		return [
+			'page'     => [
+				'description'       => __( 'Current page of the collection.', 'solvex-ai-blogger' ),
+				'type'              => 'integer',
+				'default'           => 1,
+				'sanitize_callback' => 'absint',
+				'minimum'           => 1,
+			],
+			'per_page' => [
+				'description'       => __( 'Maximum number of items to return per page.', 'solvex-ai-blogger' ),
+				'type'              => 'integer',
+				'default'           => 20,
+				'sanitize_callback' => 'absint',
+				'minimum'           => 1,
+				'maximum'           => 100,
+			],
+			'search'   => [
+				'description'       => __( 'Limit results to items matching a string.', 'solvex-ai-blogger' ),
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+				'default'           => '',
+			],
+			'status'   => [
+				'description'       => __( 'Filter by campaign state.', 'solvex-ai-blogger' ),
+				'type'              => 'string',
+				'enum'              => [ '', 'active', 'paused', 'completed' ],
+				'sanitize_callback' => 'sanitize_text_field',
+				'default'           => '',
+			],
+			'order_by' => [
+				'description'       => __( 'Field to sort the collection by.', 'solvex-ai-blogger' ),
+				'type'              => 'string',
+				'enum'              => [ 'date', 'title', 'modified' ],
+				'sanitize_callback' => 'sanitize_text_field',
+				'default'           => 'date',
+			],
+			'order'    => [
+				'description'       => __( 'Sort direction (ASC or DESC).', 'solvex-ai-blogger' ),
+				'type'              => 'string',
+				'enum'              => [ 'ASC', 'DESC', 'asc', 'desc' ],
+				'sanitize_callback' => 'sanitize_text_field',
+				'default'           => 'DESC',
+			],
+		];
 	}
 
 	/**
@@ -355,77 +477,6 @@ class API extends \WP_REST_Controller {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Check whether a given request has permission to manage licenses.
-	 *
-	 * @param  \WP_REST_Request $request Full details about the request.
-	 * @return \WP_Error|bool
-	 * @since 1.0.0
-	 */
-	public function license_permissions_check( \WP_REST_Request $request ): \WP_Error|bool {
-		// Admin-only capability for license management.
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return new \WP_Error(
-				'wpsolvex_autoaiblogger_rest_cannot_manage_license',
-				__( 'Sorry, you cannot manage licenses.', 'solvex-ai-blogger' ),
-				[ 'status' => rest_authorization_required_code() ]
-			);
-		}
-
-		// Additional security checks.
-		$security_check = $this->perform_security_checks( $request );
-		if ( is_wp_error( $security_check ) ) {
-			return $security_check;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Verify license with security.
-	 *
-	 * @param \WP_REST_Request $request The request object.
-	 * @return \WP_REST_Response|\WP_Error Response or error.
-	 */
-	public function verify_license( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
-		// Implementation will be added when integrating with licensing system.
-		return new \WP_Error(
-			'not_implemented',
-			__( 'License verification not yet implemented.', 'solvex-ai-blogger' ),
-			[ 'status' => 501 ]
-		);
-	}
-
-	/**
-	 * Activate license with security.
-	 *
-	 * @param \WP_REST_Request $request The request object.
-	 * @return \WP_REST_Response|\WP_Error Response or error.
-	 */
-	public function activate_license( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
-		// Implementation will be added when integrating with licensing system.
-		return new \WP_Error(
-			'not_implemented',
-			__( 'License activation not yet implemented.', 'solvex-ai-blogger' ),
-			[ 'status' => 501 ]
-		);
-	}
-
-	/**
-	 * Deactivate license with security.
-	 *
-	 * @param \WP_REST_Request $request The request object.
-	 * @return \WP_REST_Response|\WP_Error Response or error.
-	 */
-	public function deactivate_license( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
-		// Implementation will be added when integrating with licensing system.
-		return new \WP_Error(
-			'not_implemented',
-			__( 'License deactivation not yet implemented.', 'solvex-ai-blogger' ),
-			[ 'status' => 501 ]
-		);
 	}
 
 	/**
@@ -715,23 +766,4 @@ class API extends \WP_REST_Controller {
 		];
 	}
 
-	/**
-	 * Get arguments for license endpoints.
-	 *
-	 * @return array<string,array<string,mixed>> Endpoint arguments.
-	 */
-	private function get_license_args(): array {
-		return [
-			'license_key' => [
-				'description'       => __( 'License key for activation.', 'solvex-ai-blogger' ),
-				'type'              => 'string',
-				'required'          => true,
-				'sanitize_callback' => 'sanitize_text_field',
-				'validate_callback' => static function( $param ) {
-					// Basic UUID format validation.
-					return preg_match( '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $param );
-				},
-			],
-		];
-	}
 }

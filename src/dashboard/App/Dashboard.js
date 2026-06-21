@@ -1,24 +1,20 @@
 import React from 'react';
-import MainNav from './MainNav';
+import AppShell from './AppShell';
 import PagesRoute from './PagesRoute';
-import SettingsSavedNotification from './SettingsSavedNotification';
-import ApiErrorPanel from './ApiErrorPanel';
 import ErrorBoundary from '@Components/ErrorBoundary';
-import TeachingBubbleManager from '@Components/TeachingBubbleManager';
 
 /**
- * Enhanced Dashboard component with error handling and performance optimization
+ * Dashboard — wraps the SPA routes in the modern AppShell (header, tabs,
+ * token counter, Toaster). Onboarding renders outside Dashboard, so AppShell
+ * always applies here.
  */
 const Dashboard = () => {
 	return (
-		<div className="solvex-ai-blogger-dashboard" role="main">
+		<div className="solvex-ai-blogger-dashboard">
 			<ErrorBoundary>
-				<TeachingBubbleManager>
-					<MainNav />
-					<SettingsSavedNotification />
-					<ApiErrorPanel />
+				<AppShell>
 					<PagesRoute />
-				</TeachingBubbleManager>
+				</AppShell>
 			</ErrorBoundary>
 		</div>
 	);

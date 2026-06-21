@@ -66,8 +66,19 @@ class Menu {
 		}
 
 		// Add Content Security Policy.
+		// Allow Google Fonts (stylesheet on fonts.googleapis.com, font files
+		// on fonts.gstatic.com) and YouTube embeds in the welcome video
+		// popup. Also keep the upstream API endpoint reachable.
 		if ( ! headers_sent() ) {
-			header( "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://wpaiblogger.com;" );
+			header(
+				"Content-Security-Policy: default-src 'self'; "
+				. "script-src 'self' 'unsafe-inline' 'unsafe-eval'; "
+				. "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+				. "img-src 'self' data: https:; "
+				. "font-src 'self' data: https://fonts.gstatic.com; "
+				. "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; "
+				. "connect-src 'self' https://wpaiblogger.com;"
+			);
 			header( 'X-Content-Type-Options: nosniff' );
 			header( 'X-Frame-Options: SAMEORIGIN' );
 			header( 'X-XSS-Protection: 1; mode=block' );
@@ -191,7 +202,7 @@ class Menu {
 		$authors           = Sanitizer::get_sanitized_authors();
 		$post_types        = Sanitizer::get_sanitized_post_types();
 		$postmeta_defaults = Metadata::get_default_settings();
-		$all_campaigns     = wpsolvex_autoaiblogger_get_all_campaigns();
+		// Campaigns are fetched via REST (GET /solvex-ai-blogger/v1/campaigns) on demand.
 		$generated_posts   = wpsolvex_autoaiblogger_get_generated_posts();
 
 		$localized_data = apply_filters(
@@ -267,7 +278,6 @@ class Menu {
 				'authors'                    => $authors,
 				'post_types'                 => $post_types,
 				'postmeta_defaults'          => $postmeta_defaults,
-				'all_campaigns'              => $all_campaigns,
 				'generated_posts'            => $generated_posts,
 
 				// System configuration.
@@ -312,6 +322,19 @@ class Menu {
 		wp_localize_script( $handle, 'wpsolvex_autoaiblogger_localized_data', $localized_data );
 
 		wp_set_script_translations( $handle, 'solvex-ai-blogger', WPSOLVEX_AUTOAIBLOGGER_DIR . 'languages' );
+
+		// Enqueue Google Fonts (Inter + JetBrains Mono) used by the dashboard.
+		// Done from PHP rather than via CSS `@import url(...)` so that the
+		// browser fetches font CSS in parallel with our app CSS (no waterfall),
+		// and to avoid the CSS-spec rule that `@import` must precede every
+		// other rule — which is impossible to satisfy in our SCSS pipeline
+		// where `@use` inlines content before any `@import` can appear.
+		wp_enqueue_style(
+			'wpsolvex-autoaiblogger-fonts',
+			'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap',
+			[],
+			null
+		);
 
 		// Validate and enqueue styles.
 		$style_file = is_rtl() ? $build_path . 'blog-app-rtl.css' : $build_path . 'blog-app.css';
