@@ -342,6 +342,11 @@ class Cron_Handler {
 				'post_author'  => $author_id ? $author_id : get_current_user_id(),
 			];
 
+			// Set slug from SEO keyphrase for Yoast "Keyphrase in slug" check.
+			if ( ! empty( $api_data['seo_keyphrase'] ) ) {
+				$post_data['post_name'] = sanitize_title( $api_data['seo_keyphrase'] );
+			}
+
 			if ( $summary_as_excerpt && ! empty( $api_data['summary'] ) ) {
 				// Limit excerpt to 160 characters for SEO best practices.
 				$excerpt = sanitize_text_field( $api_data['summary'] );
@@ -375,6 +380,44 @@ class Cron_Handler {
 			// Add campaign reference meta to the post.
 			add_post_meta( $post_id, 'wpsolvex_autoaiblogger_reference', 1 );
 			add_post_meta( $post_id, 'wpsolvex_autoaiblogger_campaign_id', $campaign_id );
+
+			// Set SEO meta fields.
+			$seo_keyphrase        = sanitize_text_field( $api_data['seo_keyphrase'] ?? '' );
+			$seo_title            = sanitize_text_field( $api_data['seo_title'] ?? '' );
+			$seo_meta_description = sanitize_text_field( $api_data['seo_meta_description'] ?? '' );
+
+			if ( defined( 'WPSEO_VERSION' ) ) {
+				// Yoast SEO is active — set focus keyphrase, SEO title, and meta description.
+				if ( ! empty( $seo_keyphrase ) ) {
+					update_post_meta( $post_id, '_yoast_wpseo_focuskw', $seo_keyphrase );
+				}
+				if ( ! empty( $seo_title ) ) {
+					update_post_meta( $post_id, '_yoast_wpseo_title', $seo_title );
+				}
+				if ( ! empty( $seo_meta_description ) ) {
+					update_post_meta( $post_id, '_yoast_wpseo_metadesc', $seo_meta_description );
+				}
+			} elseif ( ! empty( $seo_meta_description ) && empty( $post_data['post_excerpt'] ) ) {
+				// No Yoast — use meta description as excerpt for basic SEO.
+				wp_update_post(
+					[
+						'ID'           => $post_id,
+						'post_excerpt' => $seo_meta_description,
+					] 
+				);
+			}
+
+			// Update featured image alt text to include keyphrase for Yoast image alt check.
+			if ( $featured_image_id && is_numeric( $featured_image_id ) && ! empty( $seo_keyphrase ) ) {
+				$existing_alt = get_post_meta( $featured_image_id, '_wp_attachment_image_alt', true );
+				if ( empty( $existing_alt ) || stripos( $existing_alt, $seo_keyphrase ) === false ) {
+					$new_alt = ! empty( $existing_alt )
+						? $seo_keyphrase . ' - ' . $existing_alt
+						: $seo_keyphrase;
+					update_post_meta( $featured_image_id, '_wp_attachment_image_alt', sanitize_text_field( $new_alt ) );
+				}
+			}
+
 			$posts_created     = Metadata::get_campaign_meta( $campaign_id, 'postsCreated' );
 			$new_posts_created = intval( $posts_created ) + 1;
 			Metadata::update_campaign_meta( $campaign_id, 'postsCreated', $new_posts_created );

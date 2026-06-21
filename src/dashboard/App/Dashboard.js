@@ -2,6 +2,7 @@ import React from 'react';
 import MainNav from './MainNav';
 import PagesRoute from './PagesRoute';
 import SettingsSavedNotification from './SettingsSavedNotification';
+import ApiErrorPanel from './ApiErrorPanel';
 import ErrorBoundary from '@Components/ErrorBoundary';
 import TeachingBubbleManager from '@Components/TeachingBubbleManager';
 
@@ -15,6 +16,7 @@ const Dashboard = () => {
 				<TeachingBubbleManager>
 					<MainNav />
 					<SettingsSavedNotification />
+					<ApiErrorPanel />
 					<PagesRoute />
 				</TeachingBubbleManager>
 			</ErrorBoundary>
