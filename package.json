@@ -70,7 +70,6 @@
 		"zod": "^3.25.76"
 	},
 	"devDependencies": {
-		"@tailwindcss/oxide-darwin-arm64": "^4.3.0",
 		"@tailwindcss/postcss": "^4.3.0",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/react": "^16.3.2",
