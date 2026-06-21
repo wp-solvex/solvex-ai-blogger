@@ -203,7 +203,7 @@ class Menu {
 		$post_types        = Sanitizer::get_sanitized_post_types();
 		$postmeta_defaults = Metadata::get_default_settings();
 		// Campaigns are fetched via REST (GET /solvex-ai-blogger/v1/campaigns) on demand.
-		$generated_posts   = wpsolvex_autoaiblogger_get_generated_posts();
+		$generated_posts = wpsolvex_autoaiblogger_get_generated_posts();
 
 		$localized_data = apply_filters(
 			'wpsolvex_autoaiblogger_localized_admin_data',
@@ -333,7 +333,7 @@ class Menu {
 			'wpsolvex-autoaiblogger-fonts',
 			'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap',
 			[],
-			null
+			WPSOLVEX_AUTOAIBLOGGER_VERSION
 		);
 
 		// Validate and enqueue styles.

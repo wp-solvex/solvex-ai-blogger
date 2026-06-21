@@ -1,15 +1,21 @@
-import { Fragment, useCallback, useMemo, useState } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { __ } from '@wordpress/i18n';
+import AlertCircle from 'lucide-react/dist/esm/icons/alert-circle';
+import Copy from 'lucide-react/dist/esm/icons/copy';
+import Check from 'lucide-react/dist/esm/icons/check';
+import LifeBuoy from 'lucide-react/dist/esm/icons/life-buoy';
+import BookOpen from 'lucide-react/dist/esm/icons/book-open';
 import {
-	AlertCircle,
-	X,
-	Copy,
-	Check,
-	LifeBuoy,
-	BookOpen,
-} from 'lucide-react';
+	Sheet,
+	SheetContent,
+	SheetHeader,
+	SheetTitle,
+	SheetDescription,
+	SheetFooter,
+} from '@Components/ui/sheet';
+import { Button } from '@Components/ui/button';
+import { cn } from '@Utils/cn';
 
 /**
  * Support links (mirrors the Welcome tab Quick Access links).
@@ -32,14 +38,15 @@ function DetailRow( { label, value, mono = false } ) {
 	}
 
 	return (
-		<div className="flex flex-col gap-1 py-2.5 border-b border-gray-100 last:border-b-0">
-			<span className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+		<div className="flex flex-col gap-1 py-2.5 border-b border-border last:border-b-0">
+			<span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
 				{ label }
 			</span>
 			<span
-				className={ `text-[13px] text-gray-900 break-words ${
-					mono ? 'font-mono whitespace-pre-wrap leading-5' : ''
-				}` }
+				className={ cn(
+					'text-[13px] text-foreground break-words',
+					mono && 'font-mono whitespace-pre-wrap leading-5'
+				) }
 			>
 				{ value }
 			</span>
@@ -48,34 +55,63 @@ function DetailRow( { label, value, mono = false } ) {
 }
 
 /**
- * Right-side slide-in panel that shows the full details of an API error,
- * styled to match the MS Fabric Lakehouse error panel with brand colors.
+ * Right-side slide-in Sheet that shows the full structured details of an API
+ * error. Reads the `apiErrorPanel` Redux state (set via UPDATE_API_ERROR_PANEL)
+ * and renders the structured error fields. Closing dispatches
+ * UPDATE_API_ERROR_PANEL with a `null` payload.
+ *
+ * The panel accepts both the camelCase shape used by existing dispatchers
+ * ( message / code / status / providerStatus / detail ) and the raw structured
+ * shape ( user_message / error_code / http_status / provider_status / category
+ * / title / detail ), so it surfaces every available field regardless of the
+ * payload variant that opened it.
+ *
+ * @return {JSX.Element} The error details Sheet.
  */
 export default function ApiErrorPanel() {
 	const dispatch = useDispatch();
 	const panel = useSelector( ( state ) => state.apiErrorPanel );
 	const [ copied, setCopied ] = useState( false );
 
-	const isOpen = Boolean( panel && panel.open );
+	const isOpen = Boolean( panel );
 
 	const close = useCallback( () => {
 		dispatch( { type: 'UPDATE_API_ERROR_PANEL', payload: null } );
 	}, [ dispatch ] );
 
+	// Normalise the payload into the structured fields the panel renders,
+	// accepting both the camelCase and the raw structured key variants.
+	const fields = useMemo( () => {
+		if ( ! panel ) {
+			return null;
+		}
+		return {
+			title: panel.title || '',
+			userMessage: panel.message || panel.user_message || '',
+			errorCode: panel.code || panel.error_code || '',
+			httpStatus: panel.status || panel.http_status || '',
+			providerStatus: panel.providerStatus || panel.provider_status || '',
+			category: panel.category || '',
+			detail: panel.detail || '',
+		};
+	}, [ panel ] );
+
 	// Build a copyable, formatted block of the error details.
 	const copyText = useMemo( () => {
-		if ( ! panel ) {
+		if ( ! fields ) {
 			return '';
 		}
 		const lines = [
-			`Summary: ${ panel.message || '' }`,
-			`Error code: ${ panel.code || '' }`,
-			`HTTP status: ${ panel.status || '' }`,
-			`Provider status: ${ panel.providerStatus || '' }`,
-			`Detail: ${ panel.detail || '' }`,
+			`Title: ${ fields.title }`,
+			`Summary: ${ fields.userMessage }`,
+			`Error code: ${ fields.errorCode }`,
+			`HTTP status: ${ fields.httpStatus }`,
+			`Provider status: ${ fields.providerStatus }`,
+			`Category: ${ fields.category }`,
+			`Detail: ${ fields.detail }`,
 		];
 		return lines.join( '\n' );
-	}, [ panel ] );
+	}, [ fields ] );
 
 	const handleCopy = useCallback( async () => {
 		const markCopied = () => {
@@ -113,129 +149,144 @@ export default function ApiErrorPanel() {
 		}
 	}, [ copyText ] );
 
+	// Radix Sheet controls open state; closing (overlay click, Esc, close
+	// button) routes back through the Redux dispatch so the store stays in sync.
+	const handleOpenChange = useCallback(
+		( next ) => {
+			if ( ! next ) {
+				close();
+			}
+		},
+		[ close ]
+	);
+
 	return (
-		<Transition show={ isOpen } as={ Fragment }>
-			<Dialog as="div" className="relative z-[1000002]" onClose={ close }>
-				{ /* Backdrop */ }
-				<Transition.Child
-					as={ Fragment }
-					enter="ease-out duration-300"
-					enterFrom="opacity-0"
-					enterTo="opacity-100"
-					leave="ease-in duration-200"
-					leaveFrom="opacity-100"
-					leaveTo="opacity-0"
-				>
-					<div className="fixed inset-0 bg-gray-900/30 backdrop-blur-[1px]" aria-hidden="true" />
-				</Transition.Child>
-
-				{ /* Panel container */ }
-				<div className="fixed inset-0 overflow-hidden">
-					<div className="absolute inset-0 overflow-hidden">
-						<div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-							<Transition.Child
-								as={ Fragment }
-								enter="transform transition ease-out duration-300"
-								enterFrom="translate-x-full"
-								enterTo="translate-x-0"
-								leave="transform transition ease-in duration-200"
-								leaveFrom="translate-x-0"
-								leaveTo="translate-x-full"
-							>
-								<Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-									<div className="flex h-full flex-col bg-white shadow-2xl">
-										{ /* Header */ }
-										<div className="flex items-start justify-between gap-3 border-b border-gray-200 px-5 py-4">
-											<div className="flex items-center gap-2.5">
-												<span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100">
-													<AlertCircle className="h-4 w-4 text-red-500" aria-hidden="true" />
-												</span>
-												<Dialog.Title className="text-[15px] font-semibold text-gray-900">
-													{ __( 'Error details', 'solvex-ai-blogger' ) }
-												</Dialog.Title>
-											</div>
-											<button
-												type="button"
-												onClick={ close }
-												className="rounded-md p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 border-none bg-transparent cursor-pointer"
-												aria-label={ __( 'Close', 'solvex-ai-blogger' ) }
-											>
-												<X className="h-4 w-4" aria-hidden="true" />
-											</button>
-										</div>
-
-										{ /* Body */ }
-										<div className="flex-1 overflow-y-auto px-5 py-4">
-											{ /* Friendly summary */ }
-											{ panel?.message && (
-												<div className="mb-4 rounded-lg border border-red-100 bg-red-50 px-3.5 py-3">
-													<p className="m-0 text-[13px] font-medium text-red-800">
-														{ panel.message }
-													</p>
-												</div>
-											) }
-
-											{ /* Structured detail rows */ }
-											<div className="rounded-lg border border-gray-200 px-3.5">
-												<DetailRow label={ __( 'Error code', 'solvex-ai-blogger' ) } value={ panel?.code } />
-												<DetailRow label={ __( 'HTTP status', 'solvex-ai-blogger' ) } value={ panel?.status } />
-												<DetailRow label={ __( 'Provider status', 'solvex-ai-blogger' ) } value={ panel?.providerStatus } />
-												<DetailRow label={ __( 'Technical detail', 'solvex-ai-blogger' ) } value={ panel?.detail } mono />
-											</div>
-
-											{ /* Copy button */ }
-											<button
-												type="button"
-												onClick={ handleCopy }
-												className="mt-4 inline-flex items-center gap-2 rounded-lg border border-brand-200 bg-brand-50 px-3.5 py-2 text-[13px] font-medium text-brand-700 transition-colors hover:bg-brand-100 cursor-pointer"
-											>
-												{ copied ? (
-													<>
-														<Check className="h-3.5 w-3.5" aria-hidden="true" />
-														{ __( 'Copied', 'solvex-ai-blogger' ) }
-													</>
-												) : (
-													<>
-														<Copy className="h-3.5 w-3.5" aria-hidden="true" />
-														{ __( 'Copy details', 'solvex-ai-blogger' ) }
-													</>
-												) }
-											</button>
-										</div>
-
-										{ /* Footer: support links */ }
-										<div className="border-t border-gray-200 px-5 py-4">
-											<p className="m-0 mb-2.5 text-[12px] text-gray-500">
-												{ __( 'Need help? Reach out to our team.', 'solvex-ai-blogger' ) }
-											</p>
-											<div className="flex items-center justify-between gap-3">
-												<a
-													href={ SUPPORT_TICKET_URL }
-													target="_blank"
-													rel="noopener noreferrer"
-													className="inline-flex items-center gap-1.5 text-[13px] font-medium text-brand-600 hover:text-brand-700 no-underline"
-												>
-													<LifeBuoy className="h-4 w-4 flex-shrink-0 block" aria-hidden="true" />
-													<span className="leading-none">{ __( 'Open a support ticket', 'solvex-ai-blogger' ) }</span>
-												</a>
-												<a
-													href={ HELP_CENTER_URL }
-													target="_blank"
-													rel="noopener noreferrer"
-													className="inline-flex items-center gap-1.5 text-[13px] font-medium text-brand-600 hover:text-brand-700 no-underline"
-												>
-													<BookOpen className="h-4 w-4 flex-shrink-0 block" aria-hidden="true" />
-													<span className="leading-none">{ __( 'Visit the Help Center', 'solvex-ai-blogger' ) }</span>
-												</a>
-											</div>
-										</div>
-									</div>
-								</Dialog.Panel>
-							</Transition.Child>
+		<Sheet open={ isOpen } onOpenChange={ handleOpenChange }>
+			<SheetContent
+				side="right"
+				className="z-[1000002] flex w-screen max-w-md flex-col gap-0 bg-card p-0 sm:max-w-md"
+			>
+				{ /* Header */ }
+				<SheetHeader className="space-y-0 border-b border-border px-5 py-4 text-left">
+					<div className="flex items-center gap-2.5">
+						<span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-destructive/10">
+							<AlertCircle
+								className="h-4 w-4 text-destructive"
+								aria-hidden="true"
+							/>
+						</span>
+						<div className="flex flex-col">
+							<SheetTitle className="text-[15px] font-semibold text-foreground">
+								{ fields?.title || __( 'Error details', 'solvex-ai-blogger' ) }
+							</SheetTitle>
+							<SheetDescription className="sr-only">
+								{ __(
+									'Detailed information about the API error.',
+									'solvex-ai-blogger'
+								) }
+							</SheetDescription>
 						</div>
 					</div>
+				</SheetHeader>
+
+				{ /* Body */ }
+				<div className="flex-1 overflow-y-auto px-5 py-4">
+					{ /* Friendly summary */ }
+					{ fields?.userMessage && (
+						<div className="mb-4 rounded-lg border border-destructive/20 bg-destructive/5 px-3.5 py-3">
+							<p className="m-0 text-[13px] font-medium text-destructive">
+								{ fields.userMessage }
+							</p>
+						</div>
+					) }
+
+					{ /* Structured detail rows */ }
+					<div className="rounded-lg border border-border bg-background px-3.5">
+						<DetailRow
+							label={ __( 'Error code', 'solvex-ai-blogger' ) }
+							value={ fields?.errorCode }
+						/>
+						<DetailRow
+							label={ __( 'HTTP status', 'solvex-ai-blogger' ) }
+							value={ fields?.httpStatus }
+						/>
+						<DetailRow
+							label={ __( 'Provider status', 'solvex-ai-blogger' ) }
+							value={ fields?.providerStatus }
+						/>
+						<DetailRow
+							label={ __( 'Category', 'solvex-ai-blogger' ) }
+							value={ fields?.category }
+						/>
+						<DetailRow
+							label={ __( 'Technical detail', 'solvex-ai-blogger' ) }
+							value={ fields?.detail }
+							mono
+						/>
+					</div>
+
+					{ /* Copy button */ }
+					<Button
+						type="button"
+						variant="outline"
+						size="sm"
+						onClick={ handleCopy }
+						className="mt-4 border-brand/30 bg-brand-soft text-brand hover:bg-brand-soft hover:text-brand hover:brightness-95"
+					>
+						{ copied ? (
+							<>
+								<Check className="h-3.5 w-3.5" aria-hidden="true" />
+								{ __( 'Copied', 'solvex-ai-blogger' ) }
+							</>
+						) : (
+							<>
+								<Copy className="h-3.5 w-3.5" aria-hidden="true" />
+								{ __( 'Copy details', 'solvex-ai-blogger' ) }
+							</>
+						) }
+					</Button>
 				</div>
-			</Dialog>
-		</Transition>
+
+				{ /* Footer: support links */ }
+				<SheetFooter className="flex-col items-stretch space-x-0 border-t border-border px-5 py-4">
+					<p className="m-0 mb-2.5 text-[12px] text-muted-foreground">
+						{ __(
+							'Need help? Reach out to our team.',
+							'solvex-ai-blogger'
+						) }
+					</p>
+					<div className="flex items-center justify-between gap-3">
+						<a
+							href={ SUPPORT_TICKET_URL }
+							target="_blank"
+							rel="noopener noreferrer"
+							className="inline-flex items-center gap-1.5 text-[13px] font-medium text-brand no-underline hover:brightness-110"
+						>
+							<LifeBuoy
+								className="h-4 w-4 flex-shrink-0 block"
+								aria-hidden="true"
+							/>
+							<span className="leading-none">
+								{ __( 'Open a support ticket', 'solvex-ai-blogger' ) }
+							</span>
+						</a>
+						<a
+							href={ HELP_CENTER_URL }
+							target="_blank"
+							rel="noopener noreferrer"
+							className="inline-flex items-center gap-1.5 text-[13px] font-medium text-brand no-underline hover:brightness-110"
+						>
+							<BookOpen
+								className="h-4 w-4 flex-shrink-0 block"
+								aria-hidden="true"
+							/>
+							<span className="leading-none">
+								{ __( 'Visit the Help Center', 'solvex-ai-blogger' ) }
+							</span>
+						</a>
+					</div>
+				</SheetFooter>
+			</SheetContent>
+		</Sheet>
 	);
 }

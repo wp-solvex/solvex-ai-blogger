@@ -25,6 +25,7 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from '@Components/ui/tooltip';
+import TokenExhaustionModal from '@Components/TokenExhaustionModal';
 import { cn } from '@Utils/cn';
 
 const DAYS = [
@@ -194,12 +195,14 @@ export default function ConfigureDrawer( props ) {
 
 	const proAvailable = useSelector( ( s ) => Boolean( s.proAvailable ) );
 	const proPurchaseUrl = useSelector( ( s ) => s.proPurchaseUrl ) || '#';
+	const tokenRemaining = useSelector( ( s ) => s.tokenRemaining );
 
 	const [ activeTab, setActiveTab ] = useState( 'general' );
 	const [ handlingCampaign, setHandlingCampaign ] = useState( false );
 	const [ drawerData, setDrawerData ] = useState( {} );
 	const [ errorMessage, setErrorMessage ] = useState( '' );
 	const [ fieldErrors, setFieldErrors ] = useState( {} );
+	const [ showTokenModal, setShowTokenModal ] = useState( false );
 
 	useEffect( () => {
 		if ( openDrawer ) {
@@ -256,6 +259,14 @@ export default function ConfigureDrawer( props ) {
 	);
 
 	const handleCampaign = useCallback( () => {
+		// Token pre-check (preserved from release-candidate): block new
+		// campaigns when the account lacks enough tokens to schedule /
+		// auto-publish, and surface the upgrade modal instead.
+		if ( drawerData.type === 'new' && tokenRemaining < 3000 ) {
+			setShowTokenModal( true );
+			return;
+		}
+
 		setFieldErrors( {} );
 		setErrorMessage( '' );
 
@@ -352,7 +363,7 @@ export default function ConfigureDrawer( props ) {
 				);
 				setTimeout( () => setErrorMessage( '' ), 5000 );
 			} );
-	}, [ drawerData, showFieldError ] );
+	}, [ drawerData, showFieldError, tokenRemaining ] );
 
 	const completed = isCampaignCompleted( drawerData );
 	const submitDisabled = handlingCampaign || completed;
@@ -384,6 +395,7 @@ export default function ConfigureDrawer( props ) {
 		// the whole app. Nesting providers makes Radix's open-state context
 		// for individual <Tooltip>s ambiguous, which is why hovering the help
 		// icon previously did nothing despite the trigger being correct.
+		<>
 		<Sheet open={ openDrawer } onOpenChange={ ( o ) => ! o && closePopup() }>
 			<SheetContent
 				side="right"
@@ -924,5 +936,11 @@ export default function ConfigureDrawer( props ) {
 				</div>
 			</SheetContent>
 		</Sheet>
+
+		<TokenExhaustionModal
+			isOpen={ showTokenModal }
+			onClose={ () => setShowTokenModal( false ) }
+		/>
+		</>
 	);
 }

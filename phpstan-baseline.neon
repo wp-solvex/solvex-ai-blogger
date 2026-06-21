@@ -216,6 +216,16 @@ parameters:
 			path: admin/ajax.php
 
 		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 2
+			path: admin/api.php
+
+		-
+			message: "#^Cannot cast mixed to string\\.$#"
+			count: 4
+			path: admin/api.php
+
+		-
 			message: "#^Method WPSolvex\\\\AutoAIBlogger\\\\Admin\\\\API\\:\\:sanitize_settings_data\\(\\) never returns WP_Error so it can be removed from the return type\\.$#"
 			count: 1
 			path: admin/api.php

@@ -57,32 +57,45 @@ const sheetVariants = cva(
 	}
 );
 
-const SheetContent = React.forwardRef( ( { side = 'right', className, children, ...props }, ref ) => (
-	<SheetPortal>
-		<SheetOverlay />
-		<SheetPrimitive.Content
-			ref={ ref }
-			className={ cn( sheetVariants( { side } ), className ) }
-			{ ...props }
-		>
-			<SheetPrimitive.Close className="absolute right-4 top-6 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-secondary bg-transparent border-none shadow-none outline-none force-space-0">
-				<X className="h-4 w-4" />
-				<span className="sr-only">{ __( 'Close', 'solvex-ai-blogger' ) }</span>
-			</SheetPrimitive.Close>
-			{ children }
-		</SheetPrimitive.Content>
-	</SheetPortal>
-) );
+const SheetContent = React.forwardRef(
+	( { side = 'right', className, children, ...props }, ref ) => (
+		<SheetPortal>
+			<SheetOverlay />
+			<SheetPrimitive.Content
+				ref={ ref }
+				className={ cn( sheetVariants( { side } ), className ) }
+				{ ...props }
+			>
+				<SheetPrimitive.Close className="absolute right-4 top-6 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-secondary bg-transparent border-none shadow-none outline-none force-space-0">
+					<X className="h-4 w-4" />
+					<span className="sr-only">
+						{ __( 'Close', 'solvex-ai-blogger' ) }
+					</span>
+				</SheetPrimitive.Close>
+				{ children }
+			</SheetPrimitive.Content>
+		</SheetPortal>
+	)
+);
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
 const SheetHeader = ( { className, ...props } ) => (
-	<div className={ cn( 'flex flex-col space-y-2 text-center sm:text-left', className ) } { ...props } />
+	<div
+		className={ cn(
+			'flex flex-col space-y-2 text-center sm:text-left',
+			className
+		) }
+		{ ...props }
+	/>
 );
 SheetHeader.displayName = 'SheetHeader';
 
 const SheetFooter = ( { className, ...props } ) => (
 	<div
-		className={ cn( 'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className ) }
+		className={ cn(
+			'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',
+			className
+		) }
 		{ ...props }
 	/>
 );

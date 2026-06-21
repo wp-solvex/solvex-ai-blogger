@@ -33,10 +33,12 @@ import Heart from 'lucide-react/dist/esm/icons/heart';
 import ShieldCheck from 'lucide-react/dist/esm/icons/shield-check';
 import Loader2 from 'lucide-react/dist/esm/icons/loader-2';
 import FileText from 'lucide-react/dist/esm/icons/file-text';
+import Link2 from 'lucide-react/dist/esm/icons/link-2';
 import { Label } from '@Components/ui/label';
 import { cn } from '@Utils/cn';
 import { toast } from '@Utils/toast';
 import { updateApiData } from '@Utils/ApiData';
+import useStoreConnect from '@DashboardApp/Hooks/useStoreConnect';
 import { personaSchema, licenseSchema } from './Pages/Settings/schemas';
 
 const STEPS = [
@@ -319,6 +321,24 @@ const LicensePane = memo( function LicensePane( { onContinue } ) {
 
 	const [ processing, setProcessing ] = useState( false );
 
+	// One-click connect: opens the wpaiblogger.com popup, creates a free
+	// account and stores tokens automatically. No key to copy/paste.
+	const { isConnecting, connect } = useStoreConnect();
+	const [ connectInitiated, setConnectInitiated ] = useState( false );
+
+	const handleConnect = useCallback( () => {
+		setConnectInitiated( true );
+		connect();
+	}, [ connect ] );
+
+	// When the connect popup completes (Redux flips to 'licensed'), advance.
+	useEffect( () => {
+		if ( connectInitiated && licenseStatus === 'licensed' ) {
+			const timer = setTimeout( () => onContinue(), 1200 );
+			return () => clearTimeout( timer );
+		}
+	}, [ connectInitiated, licenseStatus, onContinue ] );
+
 	const activate = useCallback(
 		async ( { licenseKey } ) => {
 			setProcessing( true );
@@ -372,71 +392,111 @@ const LicensePane = memo( function LicensePane( { onContinue } ) {
 		<>
 			<StepHeader
 				step={ 2 }
-				title={ __( 'Activate your license', 'solvex-ai-blogger' ) }
-				subtitle={ __( 'Connect your site to unlock AI-powered content generation.', 'solvex-ai-blogger' ) }
+				title={ __( 'Connect your account', 'solvex-ai-blogger' ) }
+				subtitle={ __( 'Link your site to unlock AI-powered content generation.', 'solvex-ai-blogger' ) }
 			/>
-			<form
-				onSubmit={ form.handleSubmit( activate ) }
-				className="space-y-5 rounded-xl border border-border bg-card p-8 ring-1 ring-black/[0.02]"
-				noValidate
-			>
-				{ alreadyLicensed ? (
+
+			{ alreadyLicensed ? (
+				<div className="space-y-5 rounded-xl border border-border bg-card p-8 ring-1 ring-black/[0.02]">
 					<div className="flex items-center gap-3 rounded-lg border border-[oklch(0.85_0.08_155)] bg-[oklch(0.97_0.04_155)] p-4 text-sm text-[oklch(0.35_0.12_155)]">
 						<CheckCircle2 className="size-4" aria-hidden="true" />
 						{ __( 'License is already active on this site.', 'solvex-ai-blogger' ) }
 					</div>
-				) : (
-					<FieldRow
-						label={ __( 'License key', 'solvex-ai-blogger' ) }
-						htmlFor="wiz-license-key"
-						error={ form.formState.errors.licenseKey?.message }
-						icon={ KeyRound }
-						required
+					<button
+						type="button"
+						onClick={ onContinue }
+						className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-brand py-2.5 text-sm font-semibold text-white transition-all hover:brightness-110"
 					>
-						<input
-							id="wiz-license-key"
-							type="text"
-							{ ...form.register( 'licenseKey' ) }
-							className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/15"
-							placeholder={ __( 'Paste your license key…', 'solvex-ai-blogger' ) }
-						/>
-					</FieldRow>
-				) }
-
-				{ ! alreadyLicensed && (
-					<a
-						href={ noLicenseKeyUrl }
-						target="_blank"
-						rel="noopener noreferrer"
-						className="group flex w-full items-center justify-between rounded-lg border border-border bg-brand-soft/40 p-4 text-left no-underline transition-colors hover:border-brand/30"
-					>
-						<div className="flex items-start gap-3">
-							<div className="flex size-9 items-center justify-center rounded-lg bg-white text-brand">
-								<Gift className="size-4" aria-hidden="true" />
-							</div>
-							<div>
-								<div className="text-sm font-semibold text-foreground">
-									{ __( 'No license key?', 'solvex-ai-blogger' ) }
-								</div>
-								<div className="text-xs text-muted-foreground">
-									{ __( 'Get started with free credits today.', 'solvex-ai-blogger' ) }
-								</div>
-							</div>
+						{ __( 'Continue', 'solvex-ai-blogger' ) }
+						<ArrowRight className="size-3.5" aria-hidden="true" />
+					</button>
+				</div>
+			) : (
+				<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+					{ /* One-click connect — primary path for new users. */ }
+					<div className="flex flex-col rounded-xl border-2 border-brand/30 bg-brand-soft/40 p-6 ring-1 ring-black/[0.02]">
+						<div className="flex size-12 items-center justify-center rounded-full bg-card text-brand">
+							<Gift className="size-6" aria-hidden="true" />
 						</div>
-						<ArrowRight className="size-4 text-brand transition-transform group-hover:translate-x-1" aria-hidden="true" />
-					</a>
-				) }
+						<h3 className="mt-4 text-base font-semibold text-foreground">
+							{ __( 'New here?', 'solvex-ai-blogger' ) }
+						</h3>
+						<p className="mt-2 flex-1 text-sm text-muted-foreground">
+							{ __( 'Connect in one click — we create your free account and set up your 240,000 monthly free tokens automatically. No key to copy.', 'solvex-ai-blogger' ) }
+						</p>
+						<button
+							type="button"
+							onClick={ handleConnect }
+							disabled={ isConnecting }
+							className="group mt-5 inline-flex w-full items-center justify-center gap-2 rounded-md bg-brand py-2.5 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+							aria-label={ __( 'Connect to wpaiblogger.com', 'solvex-ai-blogger' ) }
+						>
+							{ isConnecting ? (
+								<Loader2 className="size-4 animate-spin" aria-hidden="true" />
+							) : (
+								<>
+									{ __( 'Connect to wpaiblogger.com', 'solvex-ai-blogger' ) }
+									<Link2 className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+								</>
+							) }
+						</button>
+						<p className="mt-3 text-center text-xs text-muted-foreground">
+							{ __( 'Free forever • No credit card •', 'solvex-ai-blogger' ) }{ ' ' }
+							<a
+								href={ noLicenseKeyUrl }
+								target="_blank"
+								rel="noopener noreferrer"
+								className="text-brand hover:underline"
+							>
+								{ __( 'register manually', 'solvex-ai-blogger' ) }
+							</a>
+						</p>
+					</div>
 
-				<button
-					type={ alreadyLicensed ? 'button' : 'submit' }
-					onClick={ alreadyLicensed ? onContinue : undefined }
-					disabled={ ! alreadyLicensed && ( ! form.formState.isValid || processing ) }
-					className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-brand py-2.5 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
-				>
-					{ processing && <Loader2 className="size-4 animate-spin" aria-hidden="true" /> }
-					{ alreadyLicensed ? __( 'Continue', 'solvex-ai-blogger' ) : __( 'Activate & Continue', 'solvex-ai-blogger' ) }
-				</button>
-			</form>
+					{ /* Manual key activation — secondary path for existing users. */ }
+					<form
+						onSubmit={ form.handleSubmit( activate ) }
+						className="flex flex-col rounded-xl border border-border bg-card p-6 ring-1 ring-black/[0.02]"
+						noValidate
+					>
+						<div className="flex items-center gap-2">
+							<KeyRound className="size-5 text-muted-foreground" aria-hidden="true" />
+							<h3 className="text-base font-semibold text-foreground">
+								{ __( 'Already have a key?', 'solvex-ai-blogger' ) }
+							</h3>
+						</div>
+						<p className="mt-2 text-sm text-muted-foreground">
+							{ __( 'Paste your license key below to connect your site.', 'solvex-ai-blogger' ) }
+						</p>
+						<div className="mt-5 flex flex-1 flex-col gap-5">
+							<FieldRow
+								label={ __( 'License key', 'solvex-ai-blogger' ) }
+								htmlFor="wiz-license-key"
+								error={ form.formState.errors.licenseKey?.message }
+								icon={ KeyRound }
+								required
+							>
+								<input
+									id="wiz-license-key"
+									type="text"
+									{ ...form.register( 'licenseKey' ) }
+									className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/15"
+									placeholder={ __( 'Paste your license key…', 'solvex-ai-blogger' ) }
+								/>
+							</FieldRow>
+							<button
+								type="submit"
+								disabled={ ! form.formState.isValid || processing }
+								className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-md bg-brand py-2.5 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+							>
+								{ processing && <Loader2 className="size-4 animate-spin" aria-hidden="true" /> }
+								{ __( 'Activate & Continue', 'solvex-ai-blogger' ) }
+								<ArrowRight className="size-3.5" aria-hidden="true" />
+							</button>
+						</div>
+					</form>
+				</div>
+			) }
 		</>
 	);
 } );

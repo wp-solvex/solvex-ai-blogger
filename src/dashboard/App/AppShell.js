@@ -154,6 +154,7 @@ export function AppShell( { children } ) {
 													: 'text-muted-foreground hover:text-foreground'
 										) }
 										aria-current={ isActive ? 'page' : undefined }
+										data-tour-target={ tab.to === 'campaigns' ? 'campaigns-nav' : undefined }
 									>
 										{ tab.label }
 									</Link>
@@ -162,7 +163,7 @@ export function AppShell( { children } ) {
 						</nav>
 
 						<div className="flex items-center gap-5">
-							<div className="flex flex-col items-end gap-1.5">
+							<div className="flex flex-col items-end gap-1.5" data-tour-target="token-display">
 								<div className="flex items-center gap-2">
 									<span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
 										{ __( 'Tokens', 'solvex-ai-blogger' ) }

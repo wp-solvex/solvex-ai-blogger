@@ -43,6 +43,9 @@ function deriveCampaignState( campaign ) {
 		return 'completed';
 	}
 	if ( campaign?.isPaused ) {
+		if ( campaign?.pauseReason === 'token_exhaustion' ) {
+			return 'paused_tokens';
+		}
 		return 'paused';
 	}
 	return 'active';
@@ -328,6 +331,7 @@ function Campaigns() {
 					<button
 						type="button"
 						onClick={ handleAddNew }
+						data-tour-target="add-campaign"
 						className="inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-sm font-semibold text-white transition-all hover:brightness-110"
 					>
 						<Plus className="size-3.5" aria-hidden="true" />
@@ -415,7 +419,21 @@ function Campaigns() {
 							{ ! showSkeleton && hasResults && rows.map( ( campaign ) => {
 								const state = deriveCampaignState( campaign );
 								const isUpdating = updatingStatus[ campaign.id ];
-								const switchDisabled = state === 'completed' || isUpdating;
+								// Campaigns paused due to token exhaustion cannot be
+								// resumed until the user upgrades, so the toggle stays
+								// disabled (alongside completed/in-flight states).
+								const isTokenPaused = state === 'paused_tokens';
+								const switchDisabled = state === 'completed' || isTokenPaused || isUpdating;
+								let switchTooltip;
+								if ( state === 'completed' ) {
+									switchTooltip = __( 'Completed', 'solvex-ai-blogger' );
+								} else if ( isTokenPaused ) {
+									switchTooltip = __( 'Out of tokens, upgrade to resume', 'solvex-ai-blogger' );
+								} else if ( state === 'paused' ) {
+									switchTooltip = __( 'Paused', 'solvex-ai-blogger' );
+								} else {
+									switchTooltip = __( 'Active', 'solvex-ai-blogger' );
+								}
 								const lastPostTitle = campaign.last_post_title || __( 'Scheduled — No posts yet', 'solvex-ai-blogger' );
 								return (
 									<tr key={ campaign.id } className="transition-colors hover:bg-muted/30">
@@ -425,16 +443,25 @@ function Campaigns() {
 											</span>
 										</td>
 										<td className="px-6 py-5">
-											<Switch
-												checked={ ! campaign.isPaused && state !== 'completed' }
-												disabled={ switchDisabled }
-												onCheckedChange={ () => handleToggle( campaign ) }
-												aria-label={ sprintf(
-													/* translators: %s: campaign name */
-													__( 'Toggle %s', 'solvex-ai-blogger' ),
-													campaign.name
-												) }
-											/>
+											<Tooltip>
+												<TooltipTrigger asChild>
+													{ /* A disabled Radix Switch swallows pointer events, so wrap it in a
+													     non-disabled span to keep the tooltip reachable on hover/focus. */ }
+													<span className="inline-flex">
+														<Switch
+															checked={ ! campaign.isPaused && state !== 'completed' }
+															disabled={ switchDisabled }
+															onCheckedChange={ () => handleToggle( campaign ) }
+															aria-label={ sprintf(
+																/* translators: %s: campaign name */
+																__( 'Toggle %s', 'solvex-ai-blogger' ),
+																campaign.name
+															) }
+														/>
+													</span>
+												</TooltipTrigger>
+												<TooltipContent>{ switchTooltip }</TooltipContent>
+											</Tooltip>
 										</td>
 										<td className="px-6 py-5">
 											<div className="flex flex-wrap gap-1.5">

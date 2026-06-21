@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ArrowUpRight from 'lucide-react/dist/esm/icons/arrow-up-right';
 import BarChart3 from 'lucide-react/dist/esm/icons/bar-chart-3';
+import ExternalLink from 'lucide-react/dist/esm/icons/external-link';
 import List from 'lucide-react/dist/esm/icons/list';
 import Lock from 'lucide-react/dist/esm/icons/lock';
 import Settings2 from 'lucide-react/dist/esm/icons/settings-2';
@@ -137,23 +138,30 @@ const CampaignCard = memo( ( { campaign, onOpenAnalytics, onOpenConfigure, onOpe
 } );
 CampaignCard.displayName = 'CampaignCard';
 
-const LicenseRequiredState = memo( ( { onActivate } ) => (
+// Offline Mode state (preserved from release-candidate): prompts the user to
+// connect a free account. The "connect-account" tour target is consumed by
+// TeachingBubble / TeachingBubbleManager, so the data-tour-target anchor must
+// be preserved. Re-skinned with the redesign's semantic design tokens.
+const LicenseRequiredState = memo( ( { onConnectAccount } ) => (
 	<div className="rounded-xl border border-dashed border-brand/40 bg-brand-soft/40 p-8 text-center">
 		<div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-brand-soft text-brand">
 			<Lock className="size-5" aria-hidden="true" />
 		</div>
 		<h3 className="text-base font-semibold tracking-tight">
-			{ __( 'License required', 'solvex-ai-blogger' ) }
+			{ __( 'Offline Mode', 'solvex-ai-blogger' ) }
 		</h3>
-		<p className="mt-1 max-w-sm text-sm text-muted-foreground" style={{ marginLeft: 'auto', marginRight: 'auto' }} >
-			{ __( 'Activate your license to see campaign insights and analytics.', 'solvex-ai-blogger' ) }
+		<p className="mt-1 max-w-sm text-sm text-muted-foreground" style={ { marginLeft: 'auto', marginRight: 'auto' } } >
+			{ __( 'You are currently in Offline Mode. Connect a free account to unlock 20,000 monthly tokens and start generating posts.', 'solvex-ai-blogger' ) }
 		</p>
 		<button
 			type="button"
-			onClick={ onActivate }
+			onClick={ onConnectAccount }
 			className="mt-5 inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-sm font-semibold text-white transition-all hover:brightness-110"
+			aria-label={ __( 'Navigate to account settings', 'solvex-ai-blogger' ) }
+			data-tour-target="connect-account"
 		>
-			{ __( 'Activate license', 'solvex-ai-blogger' ) }
+			{ __( 'Connect Account', 'solvex-ai-blogger' ) }
+			<ExternalLink className="size-3.5" aria-hidden="true" />
 		</button>
 	</div>
 ) );
@@ -174,7 +182,7 @@ const EmptyState = memo( () => (
 ) );
 EmptyState.displayName = 'CampaignsEmptyState';
 
-function CampaignsInsights() {
+function CampaignsInsights( { onError } ) {
 	const navigate = useNavigate();
 	const licenseStatus = useSelector( ( s ) => s.license_status ) || 'unlicensed';
 	const homeSlug = useSelector( ( s ) => s.homeSlug ) || 'solvex-ai-blogger';
@@ -218,10 +226,16 @@ function CampaignsInsights() {
 		};
 	}, [ licenseStatus ] );
 
-	const handleActivateLicense = useCallback( ( e ) => {
+	// Connect Account / license navigation (preserves RC's onError handling).
+	const handleConnectAccount = useCallback( ( e ) => {
 		e?.preventDefault?.();
-		navigate( `?page=${ homeSlug }&path=settings/license` );
-	}, [ navigate, homeSlug ] );
+		try {
+			navigate( `?page=${ homeSlug }&path=settings/license` );
+		} catch ( error ) {
+			console.error( 'Navigation error:', error );
+			onError?.( error, { component: 'CampaignsInsights', action: 'navigate_to_license' } );
+		}
+	}, [ navigate, homeSlug, onError ] );
 
 	const handleViewAll = useCallback( ( e ) => {
 		e.preventDefault();
@@ -269,7 +283,7 @@ function CampaignsInsights() {
 						{ __( 'Overview of active AI generation cycles.', 'solvex-ai-blogger' ) }
 					</p>
 				</header>
-				<LicenseRequiredState onActivate={ handleActivateLicense } />
+				<LicenseRequiredState onConnectAccount={ handleConnectAccount } />
 			</section>
 		);
 	}

@@ -15,9 +15,13 @@ import { cn } from '@Utils/cn';
 import { toast } from '@Utils/toast';
 import Skeleton from './Skeleton';
 import ProButton from '@Components/ProButton';
+import TokenExhaustionModal from '@Components/TokenExhaustionModal';
 
 const UPDATE_POST_IDEAS = 'UPDATE_POST_IDEAS';
 const ADD_CREATED_POST_IDEA = 'ADD_CREATED_POST_IDEA';
+
+// Minimum tokens required before allowing a generation request.
+const MIN_TOKENS_REQUIRED = 1500;
 
 function ErrorCard( { children } ) {
 	return (
@@ -50,6 +54,7 @@ function PostIdeas() {
 	const adminNonce = useSelector( ( s ) => s.adminNonce );
 	const ajaxUrl = useSelector( ( s ) => s.ajaxUrl );
 	const createdPosts = useSelector( ( s ) => s.createdPostIdeas || {} );
+	const tokenRemaining = useSelector( ( s ) => s.tokenRemaining );
 
 	const [ postIdeas, setPostIdeas ] = useState( postIdeasFromRedux );
 	const [ postIdeasArr, setPostIdeasArr ] = useState( [] );
@@ -57,8 +62,12 @@ function PostIdeas() {
 	const [ error, setError ] = useState( null );
 	const [ isApiError, setIsApiError ] = useState( false );
 	const [ creatingPosts, setCreatingPosts ] = useState( new Set() );
+	const [ showTokenModal, setShowTokenModal ] = useState( false );
 
 	const licenseEnabled = licenseStatus === 'licensed';
+
+	// Token-gate: true when the allowance is exhausted / below the minimum.
+	const tokensExhausted = tokenRemaining !== undefined && tokenRemaining < MIN_TOKENS_REQUIRED;
 
 	const fetchPostIdeas = useCallback( async () => {
 		setLoading( true );
@@ -67,11 +76,13 @@ function PostIdeas() {
 
 		if ( ! siteTitle || ! siteFor || ! siteDescription ) {
 			setError( 'Missing required fields' );
+			setIsApiError( false );
 			setLoading( false );
 			return;
 		}
 		if ( ! license || typeof license !== 'string' || license.trim() === '' ) {
 			setError( 'License key is not available. Please check your license configuration.' );
+			setIsApiError( false );
 			setLoading( false );
 			return;
 		}
@@ -173,6 +184,13 @@ function PostIdeas() {
 		}
 		e.preventDefault();
 		e.stopPropagation();
+
+		// Token-gate: block refresh when the allowance is exhausted.
+		if ( tokensExhausted ) {
+			setShowTokenModal( true );
+			return;
+		}
+
 		dispatch( { type: UPDATE_POST_IDEAS, payload: '' } );
 		setPostIdeas( '' );
 		setLoading( true );
@@ -180,9 +198,15 @@ function PostIdeas() {
 		setIsApiError( false );
 		hasFetchedRef.current = false;
 		fetchPostIdeas();
-	}, [ proAvailable, dispatch, fetchPostIdeas ] );
+	}, [ proAvailable, dispatch, fetchPostIdeas, tokensExhausted ] );
 
 	const createPost = useCallback( ( title ) => {
+		// Token-gate: block generation when the allowance is exhausted.
+		if ( tokensExhausted ) {
+			setShowTokenModal( true );
+			return;
+		}
+
 		if ( creatingPosts.has( title ) || creatingPosts.size > 0 ) {
 			return;
 		}
@@ -222,7 +246,29 @@ function PostIdeas() {
 				}
 				if ( ! response.success ) {
 					const message = response.data?.message || __( 'Failed to create post.', 'solvex-ai-blogger' );
-					toast.error( `${ __( 'Error: ', 'solvex-ai-blogger' ) }${ message }` );
+					const details = response.data?.details || null;
+
+					// Keep token state in sync even when generation fails.
+					if (
+						response.data?.token_data &&
+						typeof response.data.token_data === 'object' &&
+						response.data.token_data.total !== undefined &&
+						response.data.token_data.remaining !== undefined
+					) {
+						dispatch( { type: 'UPDATE_TOKEN_TOTAL', payload: response.data.token_data.total } );
+						dispatch( { type: 'UPDATE_TOKEN_REMAINING', payload: response.data.token_data.remaining } );
+						try {
+							await updateApiData( 'tokenTotal', response.data.token_data.total, dispatch, abortControllerRef );
+							await updateApiData( 'tokenRemaining', response.data.token_data.remaining, dispatch, abortControllerRef );
+						} catch ( tokenPersistError ) {
+							console.warn( 'Failed to persist token data:', tokenPersistError.message );
+						}
+					}
+
+					toast.error(
+						details?.title || __( "Couldn't generate this post", 'solvex-ai-blogger' ),
+						{ description: details?.user_message || message }
+					);
 					return;
 				}
 				if ( ! response.data?.post_id || ! response.data?.edit_link ) {
@@ -255,10 +301,24 @@ function PostIdeas() {
 					}
 				}
 
-				toast.success( __( 'Post created. Click "Edit" to open it.', 'solvex-ai-blogger' ) );
+				toast.success( __( 'Post created successfully!', 'solvex-ai-blogger' ), {
+					action: {
+						label: __( 'View post', 'solvex-ai-blogger' ),
+						onClick: () => window.open( editUrl, '_blank', 'noreferrer' ),
+					},
+				} );
 			} )
 			.catch( ( err ) => {
-				toast.error( `${ __( 'Error: ', 'solvex-ai-blogger' ) }${ err?.message || __( 'Network error.', 'solvex-ai-blogger' ) }` );
+				const details = err?.details || null;
+				toast.error(
+					details?.title || __( 'Service temporarily unavailable', 'solvex-ai-blogger' ),
+					{
+						description:
+							details?.user_message ||
+							err?.message ||
+							__( 'Our service is temporarily unavailable. Please try again after some time.', 'solvex-ai-blogger' ),
+					}
+				);
 			} )
 			.finally( () => {
 				setCreatingPosts( ( prev ) => {
@@ -267,7 +327,7 @@ function PostIdeas() {
 					return next;
 				} );
 			} );
-	}, [ adminNonce, ajaxUrl, license, siteTitle, siteFor, siteDescription, temperature, harassment, hate, sexuallyExplicit, dangerousContent, dispatch, creatingPosts, createdPosts ] );
+	}, [ adminNonce, ajaxUrl, license, siteTitle, siteFor, siteDescription, temperature, harassment, hate, sexuallyExplicit, dangerousContent, dispatch, creatingPosts, createdPosts, tokensExhausted ] );
 
 	const goToSettings = useCallback( ( e ) => {
 		e.preventDefault();
@@ -366,132 +426,139 @@ function PostIdeas() {
 				: `${ __( 'Refresh', 'solvex-ai-blogger' ) } (${ Math.min( postIdeasArr.length, 5 ) }/5)`;
 
 	return (
-		<div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm ring-1 ring-black/2">
-			<header className="flex items-center justify-between border-b border-border px-6 py-5">
-				<div>
-					<h2 className="text-lg font-semibold tracking-tight">
-						{ __( 'Blog Post Suggestions', 'solvex-ai-blogger' ) }
-					</h2>
-					<p className="mt-1 text-sm text-muted-foreground">
-						{ __( 'AI-ranked topics to grow your blog.', 'solvex-ai-blogger' ) }
-					</p>
-				</div>
-				{ proAvailable ? (
-					<button
-						type="button"
-						onClick={ handleRefresh }
-						className="inline-flex items-center gap-1.5 rounded-md border border-border bg-brand px-3 py-1.5 text-xs text-white font-medium transition-colors hover::brightness-110 hover:border-brand/30 disabled:cursor-not-allowed disabled:opacity-60 border-none outline-none shadow-none"
-						title={ __( 'Refresh post ideas', 'solvex-ai-blogger' ) }
-					>
-						<WandSparkles className="size-3" aria-hidden="true" />
-						{ refreshLabel }
-					</button>
-				) : (
-					<ProButton
-						variant="primary"
-						size="default"
-						icon={ <Crown className="h-4 w-4" /> }
-						url={ proPurchaseUrl }
-						tooltip={ __( 'Limited to 5 suggestions — Upgrade to Pro', 'solvex-ai-blogger' ) }
-						tooltipPosition="left"
-						iconPosition="left"
-					>
-						{ refreshLabel }
-					</ProButton>
-				) }
-			</header>
-
-			<div>
-				<div className="grid grid-cols-[1fr_auto] gap-4 border-b border-border bg-muted/40 px-6 py-3 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-					<span>{ __( 'Title', 'solvex-ai-blogger' ) }</span>
-					<span>{ __( 'Write Post', 'solvex-ai-blogger' ) }</span>
-				</div>
-
-				{ loading ? (
-					<Skeleton rows={ 5 } />
-				) : postIdeasFromRedux === '-1' ? (
-					<div className="px-6 py-10 text-center text-sm font-medium text-muted-foreground">
-						{ __( 'Need more ideas? Go Pro for unlimited suggestions.', 'solvex-ai-blogger' ) }
-					</div>
-				) : ! hasIdeas ? (
-					<div className="px-6 py-10 text-center text-sm text-muted-foreground">
-						{ __( 'No post ideas available.', 'solvex-ai-blogger' ) }
-					</div>
-				) : (
-					<ul className="divide-y divide-border">
-						{ displayedIdeas.map( ( postTitle, index ) => {
-							const isCreated = Boolean( createdPosts[ postTitle ] );
-							const isCreating = creatingPosts.has( postTitle );
-							const isDisabled = creatingPosts.size > 0 && ! isCreating;
-							return (
-								<li
-									key={ `idea-${ index }-${ postTitle?.slice( 0, 24 ) }` }
-									className="group grid grid-cols-[1fr_auto] items-center gap-4 px-6 py-4 transition-colors hover:bg-muted/30 m-0"
-								>
-									<span className="text-sm font-normal">
-										<TrimWordsContent content={ postTitle || '' } count={ 120 } />
-									</span>
-									{ isCreated ? (
-										<a
-											href={ createdPosts[ postTitle ] }
-											target="_blank"
-											rel="noreferrer"
-											className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold text-[oklch(0.55_0.16_155)] no-underline"
-										>
-											<Edit className="size-3.5" aria-hidden="true" />
-											{ __( 'Edit', 'solvex-ai-blogger' ) }
-										</a>
-									) : (
-										<button
-											type="button"
-											onClick={ () => createPost( postTitle ) }
-											disabled={ isDisabled }
-											className={ cn(
-												'inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold transition-colors',
-												isCreating
-													? 'text-[oklch(0.55_0.16_155)]'
-													: isDisabled
-														? 'cursor-not-allowed text-muted-foreground/50'
-														: 'text-muted-foreground group-hover:text-brand'
-											) }
-										>
-											{ isCreating ? (
-												<>
-													<RotateCw className="size-3.5 animate-spin" aria-hidden="true" />
-													{ __( 'Creating…', 'solvex-ai-blogger' ) }
-												</>
-											) : (
-												<>
-													<Plus className="size-3.5" aria-hidden="true" />
-													{ __( 'Create', 'solvex-ai-blogger' ) }
-												</>
-											) }
-										</button>
-									) }
-								</li>
-							);
-						} ) }
-					</ul>
-				) }
-
-				{ ! proAvailable && postIdeasArr.length > 5 && (
-					<div className="border-t border-border bg-brand-soft/40 px-6 py-4 text-center">
-						<p className="text-xs font-semibold text-brand">
-							{ `${ postIdeasArr.length - 5 } ${ __( 'more ideas available with Pro.', 'solvex-ai-blogger' ) }` }
+		<>
+			<div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm ring-1 ring-black/2">
+				<header className="flex items-center justify-between border-b border-border px-6 py-5">
+					<div>
+						<h2 className="text-lg font-semibold tracking-tight">
+							{ __( 'Blog Post Suggestions', 'solvex-ai-blogger' ) }
+						</h2>
+						<p className="mt-1 text-sm text-muted-foreground">
+							{ __( 'AI-ranked topics to grow your blog.', 'solvex-ai-blogger' ) }
 						</p>
-						<ProButton
-							url={ proPurchaseUrl }
-							variant="primary"
-							size="small"
-							icon={ <MoveRight className="h-4 w-4" /> }
-							className="mt-3"
-						>
-							{ __( 'Unlock all ideas', 'solvex-ai-blogger' ) }
-						</ProButton>
 					</div>
-				) }
+					{ proAvailable ? (
+						<button
+							type="button"
+							onClick={ handleRefresh }
+							className="inline-flex items-center gap-1.5 rounded-md border border-border bg-brand px-3 py-1.5 text-xs text-white font-medium transition-colors hover::brightness-110 hover:border-brand/30 disabled:cursor-not-allowed disabled:opacity-60 border-none outline-none shadow-none"
+							title={ __( 'Refresh post ideas', 'solvex-ai-blogger' ) }
+						>
+							<WandSparkles className="size-3" aria-hidden="true" />
+							{ refreshLabel }
+						</button>
+					) : (
+						<ProButton
+							variant="primary"
+							size="default"
+							icon={ <Crown className="h-4 w-4" /> }
+							url={ proPurchaseUrl }
+							tooltip={ __( 'Limited to 5 suggestions — Upgrade to Pro', 'solvex-ai-blogger' ) }
+							tooltipPosition="left"
+							iconPosition="left"
+						>
+							{ refreshLabel }
+						</ProButton>
+					) }
+				</header>
+
+				<div>
+					<div className="grid grid-cols-[1fr_auto] gap-4 border-b border-border bg-muted/40 px-6 py-3 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+						<span>{ __( 'Title', 'solvex-ai-blogger' ) }</span>
+						<span>{ __( 'Write Post', 'solvex-ai-blogger' ) }</span>
+					</div>
+
+					{ loading ? (
+						<Skeleton rows={ 5 } />
+					) : postIdeasFromRedux === '-1' ? (
+						<div className="px-6 py-10 text-center text-sm font-medium text-muted-foreground">
+							{ __( 'Need more ideas? Go Pro for unlimited suggestions.', 'solvex-ai-blogger' ) }
+						</div>
+					) : ! hasIdeas ? (
+						<div className="px-6 py-10 text-center text-sm text-muted-foreground">
+							{ __( 'No post ideas available.', 'solvex-ai-blogger' ) }
+						</div>
+					) : (
+						<ul className="divide-y divide-border">
+							{ displayedIdeas.map( ( postTitle, index ) => {
+								const isCreated = Boolean( createdPosts[ postTitle ] );
+								const isCreating = creatingPosts.has( postTitle );
+								const isDisabled = creatingPosts.size > 0 && ! isCreating;
+								return (
+									<li
+										key={ `idea-${ index }-${ postTitle?.slice( 0, 24 ) }` }
+										className="group grid grid-cols-[1fr_auto] items-center gap-4 px-6 py-4 transition-colors hover:bg-muted/30 m-0"
+									>
+										<span className="text-sm font-normal">
+											<TrimWordsContent content={ postTitle || '' } count={ 120 } />
+										</span>
+										{ isCreated ? (
+											<a
+												href={ createdPosts[ postTitle ] }
+												target="_blank"
+												rel="noreferrer"
+												className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold text-[oklch(0.55_0.16_155)] no-underline"
+											>
+												<Edit className="size-3.5" aria-hidden="true" />
+												{ __( 'Edit', 'solvex-ai-blogger' ) }
+											</a>
+										) : (
+											<button
+												type="button"
+												onClick={ () => createPost( postTitle ) }
+												disabled={ isDisabled }
+												className={ cn(
+													'inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold transition-colors',
+													isCreating
+														? 'text-[oklch(0.55_0.16_155)]'
+														: isDisabled
+															? 'cursor-not-allowed text-muted-foreground/50'
+															: 'text-muted-foreground group-hover:text-brand'
+												) }
+											>
+												{ isCreating ? (
+													<>
+														<RotateCw className="size-3.5 animate-spin" aria-hidden="true" />
+														{ __( 'Creating…', 'solvex-ai-blogger' ) }
+													</>
+												) : (
+													<>
+														<Plus className="size-3.5" aria-hidden="true" />
+														{ __( 'Create', 'solvex-ai-blogger' ) }
+													</>
+												) }
+											</button>
+										) }
+									</li>
+								);
+							} ) }
+						</ul>
+					) }
+
+					{ ! proAvailable && postIdeasArr.length > 5 && (
+						<div className="border-t border-border bg-brand-soft/40 px-6 py-4 text-center">
+							<p className="text-xs font-semibold text-brand">
+								{ `${ postIdeasArr.length - 5 } ${ __( 'more ideas available with Pro.', 'solvex-ai-blogger' ) }` }
+							</p>
+							<ProButton
+								url={ proPurchaseUrl }
+								variant="primary"
+								size="small"
+								icon={ <MoveRight className="h-4 w-4" /> }
+								className="mt-3"
+							>
+								{ __( 'Unlock all ideas', 'solvex-ai-blogger' ) }
+							</ProButton>
+						</div>
+					) }
+				</div>
 			</div>
-		</div>
+
+			<TokenExhaustionModal
+				isOpen={ showTokenModal }
+				onClose={ () => setShowTokenModal( false ) }
+			/>
+		</>
 	);
 }
 

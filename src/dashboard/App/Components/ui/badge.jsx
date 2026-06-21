@@ -7,12 +7,16 @@ const badgeVariants = cva(
 	{
 		variants: {
 			variant: {
-				default: 'border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80',
-				secondary: 'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
-				destructive: 'border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80',
+				default:
+					'border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80',
+				secondary:
+					'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
+				destructive:
+					'border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80',
 				outline: 'text-foreground',
 				brand: 'border-transparent bg-brand-soft text-brand',
-				success: 'border-transparent bg-[oklch(0.95_0.05_155)] text-[oklch(0.4_0.16_155)]',
+				success:
+					'border-transparent bg-[oklch(0.95_0.05_155)] text-[oklch(0.4_0.16_155)]',
 			},
 		},
 		defaultVariants: {
@@ -22,7 +26,12 @@ const badgeVariants = cva(
 );
 
 function Badge( { className, variant, ...props } ) {
-	return <div className={ cn( badgeVariants( { variant } ), className ) } { ...props } />;
+	return (
+		<div
+			className={ cn( badgeVariants( { variant } ), className ) }
+			{ ...props }
+		/>
+	);
 }
 
 export { Badge, badgeVariants };

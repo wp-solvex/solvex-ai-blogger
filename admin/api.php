@@ -194,14 +194,15 @@ class API extends \WP_REST_Controller {
 			);
 		}
 
-		$page          = max( 1, (int) $request->get_param( 'page' ) );
-		$per_page_raw  = (int) ( $request->get_param( 'per_page' ) ?: 20 );
-		$max_per_page  = (int) apply_filters( 'wpsolvex_autoaiblogger_campaigns_per_page', 100 );
-		$per_page      = max( 1, min( $per_page_raw, $max_per_page ) );
-		$search        = sanitize_text_field( (string) $request->get_param( 'search' ) );
-		$status_filter = sanitize_text_field( (string) $request->get_param( 'status' ) );
-		$order_by_raw  = sanitize_text_field( (string) $request->get_param( 'order_by' ) );
-		$order_raw     = strtoupper( sanitize_text_field( (string) $request->get_param( 'order' ) ) );
+		$page           = max( 1, (int) $request->get_param( 'page' ) );
+		$per_page_param = $request->get_param( 'per_page' );
+		$per_page_raw   = (int) ( $per_page_param ? $per_page_param : 20 );
+		$max_per_page   = (int) apply_filters( 'wpsolvex_autoaiblogger_campaigns_per_page', 100 );
+		$per_page       = max( 1, min( $per_page_raw, $max_per_page ) );
+		$search         = sanitize_text_field( (string) $request->get_param( 'search' ) );
+		$status_filter  = sanitize_text_field( (string) $request->get_param( 'status' ) );
+		$order_by_raw   = sanitize_text_field( (string) $request->get_param( 'order_by' ) );
+		$order_raw      = strtoupper( sanitize_text_field( (string) $request->get_param( 'order' ) ) );
 
 		$allowed_order_by = [ 'date', 'title', 'modified' ];
 		$order_by         = in_array( $order_by_raw, $allowed_order_by, true ) ? $order_by_raw : 'date';
