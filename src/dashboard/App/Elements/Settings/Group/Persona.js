@@ -6,7 +6,6 @@ import SettingField from '@Components/SettingField';
 import SettingLabel from '@Components/SettingLabel';
 import SettingInput from '@Components/SettingInput';
 import InfoCard from '@Components/InfoCard';
-import AdvancedSettings from './AdvancedSettings';
 
 // Enhanced main component
 const Persona = memo( () => {
@@ -180,7 +179,7 @@ const Persona = memo( () => {
 				</div>
 			</div>
 
-			{ /* Detailed site description - moved before temperature */ }
+			{ /* Detailed site description */ }
 			<div className="space-y-4">
 				<SettingField>
 					<SettingLabel
@@ -224,9 +223,6 @@ const Persona = memo( () => {
 
 				</SettingField>
 			</div>
-
-			{ /* Advanced AI Settings Component */ }
-			<AdvancedSettings />
 
 			{ /* Pro Tips section */ }
 			<InfoCard

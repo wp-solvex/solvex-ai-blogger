@@ -77,26 +77,6 @@ class Settings {
 					'default' => '',
 					'type'    => 'string',
 				],
-				'temperature'              => [
-					'default' => 1,
-					'type'    => 'float',
-				],
-				'harassment'               => [
-					'default' => 2,
-					'type'    => 'float',
-				],
-				'hate'                     => [
-					'default' => 2,
-					'type'    => 'float',
-				],
-				'sexuallyExplicit'         => [
-					'default' => 2,
-					'type'    => 'float',
-				],
-				'dangerousContent'         => [
-					'default' => 2,
-					'type'    => 'float',
-				],
 				'license'                  => [
 					'default' => '',
 					'type'    => 'string',

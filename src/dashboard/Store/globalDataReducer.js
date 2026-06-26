@@ -71,31 +71,6 @@ const globalDataReducer = ( state = {}, action ) => {
 			const settings = action.payload && typeof action.payload === 'object' ? action.payload : {};
 			return { ...state, pluginSettings: { ...state.pluginSettings, ...settings } };
 		},
-		UPDATE_TEMPERATURE: () => {
-			const temp = Number( action.payload );
-			const validTemp = isNaN( temp ) ? 1.0 : Math.max( 0, Math.min( 2, temp ) ); // Clamp between 0 and 2
-			return { ...state, temperature: validTemp };
-		},
-		UPDATE_HARASSMENT: () => {
-			const value = action.payload !== undefined ? Number( action.payload ) : 2;
-			const validValue = isNaN( value ) ? 2 : Math.max( 0, Math.min( 4, Math.floor( value ) ) ); // Clamp between 0 and 4
-			return { ...state, harassment: validValue };
-		},
-		UPDATE_HATE: () => {
-			const value = action.payload !== undefined ? Number( action.payload ) : 2;
-			const validValue = isNaN( value ) ? 2 : Math.max( 0, Math.min( 4, Math.floor( value ) ) ); // Clamp between 0 and 4
-			return { ...state, hate: validValue };
-		},
-		UPDATE_SEXUALLY_EXPLICIT: () => {
-			const value = action.payload !== undefined ? Number( action.payload ) : 2;
-			const validValue = isNaN( value ) ? 2 : Math.max( 0, Math.min( 4, Math.floor( value ) ) ); // Clamp between 0 and 4
-			return { ...state, sexuallyExplicit: validValue };
-		},
-		UPDATE_DANGEROUS_CONTENT: () => {
-			const value = action.payload !== undefined ? Number( action.payload ) : 2;
-			const validValue = isNaN( value ) ? 2 : Math.max( 0, Math.min( 4, Math.floor( value ) ) ); // Clamp between 0 and 4
-			return { ...state, dangerousContent: validValue };
-		},
 		UPDATE_POST_IDEAS: () => {
 			// Convert any input to string format for consistent storage
 			let stringValue = '';

@@ -41,11 +41,6 @@ class Helper {
 		'siteFor',
 		'license',
 		'license_status',
-		'temperature',
-		'harassment',
-		'hate',
-		'sexuallyExplicit',
-		'dangerousContent',
 		'postIdeas',
 		'createdPostIdeas',
 		'tokenTotal',
@@ -376,17 +371,6 @@ class Helper {
 				$allowed_statuses = [ 'licensed', 'unlicensed', 'expired', 'invalid' ];
 				$status           = sanitize_key( $value );
 				return in_array( $status, $allowed_statuses, true ) ? $status : 'unlicensed';
-
-			case 'temperature':
-				$temp = (float) $value;
-				return max( 0, min( 2, $temp ) );
-
-			case 'harassment':
-			case 'hate':
-			case 'sexuallyExplicit':
-			case 'dangerousContent':
-				$level = absint( $value );
-				return max( 0, min( 4, $level ) );
 
 			case 'postIdeas':
 				// Convert to simple string format for easier handling.

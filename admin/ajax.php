@@ -612,12 +612,16 @@ class Ajax {
 
 					// Process images if they exist in the API response.
 					if ( ! empty( $api_result['images'] ) && is_array( $api_result['images'] ) ) {
-						$processed_result = $this->process_images_and_replace_placeholders( $post_content, $api_result['images'] );
+						$processed_result = $this->process_images_and_replace_placeholders( $post_content, $api_result['images'], $seo_keyphrase );
 						if ( ! is_wp_error( $processed_result ) ) {
 							$post_content      = $processed_result['content'];
 							$featured_image_id = $processed_result['featured_image_id'];
 						}
 					}
+
+					// Resolve internal-link placeholders (e.g. __HOMELINK__ -> homepage URL) so
+					// Post Ideas posts ship with a real internal link for Yoast (parity with campaign).
+					$post_content = wpsolvex_autoaiblogger_replace_internal_link_placeholders( $post_content );
 				}
 			}
 
@@ -1390,11 +1394,6 @@ class Ajax {
 							'site_title'        => $site_title,
 							'site_purpose'      => "Generate {$count} unique {$format_label} topics about: {$keywords}. " . $site_purpose,
 							'site_description'  => $site_desc,
-							'temperature'       => floatval( $settings['temperature'] ?? 1 ),
-							'harassment'        => absint( $settings['harassment'] ?? 2 ),
-							'hate'              => absint( $settings['hate'] ?? 2 ),
-							'sexually_explicit' => absint( $settings['sexuallyExplicit'] ?? 2 ),
-							'dangerous_content' => absint( $settings['dangerousContent'] ?? 2 ),
 						]
 					),
 					'timeout' => 30,
@@ -1844,27 +1843,8 @@ class Ajax {
 				$api_data['site_description'] = sanitize_text_field( $post_data['site_description'] );
 			}
 
-			// Temperature with fallback to 0.7.
-			$api_data['temperature'] = isset( $post_data['temperature'] ) ? floatval( $post_data['temperature'] ) : 0.7;
-
 			// Add image count parameter (default to 0 if not specified).
 			$api_data['image_count'] = isset( $post_data['image_count'] ) ? absint( $post_data['image_count'] ) : 0;
-
-			// Safety settings with fallback values.
-			$safety_settings = [
-				'harassment'        => 1,
-				'hate'              => 1,
-				'sexually_explicit' => 2,
-				'dangerous_content' => 1,
-			];
-
-			foreach ( $safety_settings as $setting => $default_value ) {
-				if ( isset( $post_data[ $setting ] ) ) {
-					$api_data[ $setting ] = absint( $post_data[ $setting ] );
-				} else {
-					$api_data[ $setting ] = $default_value;
-				}
-			}
 
 			// Make API request.
 			$api_url = WPSOLVEX_AUTOAIBLOGGER_CONTENT_FROM_TITLE_POST_API;
@@ -2031,9 +2011,10 @@ class Ajax {
 	 *
 	 * @param string $content Content markup with potential {{WP_AIB_IMAGE}} placeholders.
 	 * @param array  $images  Array of image data with 'url' and optional 'alt_text'.
+	 * @param string $keyphrase Optional SEO keyphrase to prefix in-content image alt text (Yoast).
 	 * @return array|\WP_Error Array with 'content' and 'featured_image_id', or WP_Error on failure.
 	 */
-	private function process_images_and_replace_placeholders( $content, $images ) {
+	private function process_images_and_replace_placeholders( $content, $images, $keyphrase = '' ) {
 		try {
 			// Validate input.
 			if ( ! is_string( $content ) ) {
@@ -2106,6 +2087,22 @@ class Ajax {
 			// Case 3: Multiple images - first is featured, remaining go into content.
 			$featured_image_id = $normalized_images[0]['id'];
 			$remaining_images  = array_slice( $normalized_images, 1 );
+
+			// Ensure each in-content image alt includes the SEO keyphrase so Yoast's
+			// "Keyphrase in image alt attributes" check passes (parity with the featured image,
+			// whose alt is set to the keyphrase elsewhere).
+			$keyphrase = sanitize_text_field( (string) $keyphrase );
+			if ( '' !== $keyphrase ) {
+				foreach ( $remaining_images as &$remaining_image ) {
+					$current_alt = isset( $remaining_image['alt'] ) ? (string) $remaining_image['alt'] : '';
+					if ( '' === $current_alt || stripos( $current_alt, $keyphrase ) === false ) {
+						$remaining_image['alt'] = '' !== $current_alt
+							? $keyphrase . ' - ' . $current_alt
+							: $keyphrase;
+					}
+				}
+				unset( $remaining_image );
+			}
 
 			// Check if placeholders exist.
 			$placeholder_count = preg_match_all( '/^\s*\{\{WP_AIB_IMAGE\}\}\s*$/m', $content );

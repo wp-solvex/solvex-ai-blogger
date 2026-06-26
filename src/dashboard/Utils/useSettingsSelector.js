@@ -12,11 +12,6 @@ const selectSettings = ( state ) => ( {
 	siteFor: state.siteFor || '',
 	siteDescription: state.siteDescription || '',
 	license: state.license || '',
-	temperature: typeof state.temperature === 'number' ? state.temperature : 0.7,
-	harassment: typeof state.harassment === 'number' ? state.harassment : 2,
-	hate: typeof state.hate === 'number' ? state.hate : 2,
-	sexuallyExplicit: typeof state.sexuallyExplicit === 'number' ? state.sexuallyExplicit : 2,
-	dangerousContent: typeof state.dangerousContent === 'number' ? state.dangerousContent : 2,
 	emailNotificationEnabled: typeof state.emailNotificationEnabled === 'boolean' ? state.emailNotificationEnabled : false,
 	emailNotificationValue: state.emailNotificationValue || '',
 	isLoading: state.isLoading || false,
@@ -38,11 +33,6 @@ export const useSettingsSelector = () => {
 		settings.siteFor,
 		settings.siteDescription,
 		settings.license,
-		settings.temperature,
-		settings.harassment,
-		settings.hate,
-		settings.sexuallyExplicit,
-		settings.dangerousContent,
 		settings.emailNotificationEnabled,
 		settings.emailNotificationValue,
 		settings.isLoading,
@@ -67,16 +57,6 @@ export const useSettingSelector = ( settingKey ) => {
 				return state.siteDescription || '';
 			case 'license':
 				return state.license || '';
-			case 'temperature':
-				return typeof state.temperature === 'number' ? state.temperature : 0.7;
-			case 'harassment':
-				return typeof state.harassment === 'number' ? state.harassment : 2;
-			case 'hate':
-				return typeof state.hate === 'number' ? state.hate : 2;
-			case 'sexuallyExplicit':
-				return typeof state.sexuallyExplicit === 'number' ? state.sexuallyExplicit : 2;
-			case 'dangerousContent':
-				return typeof state.dangerousContent === 'number' ? state.dangerousContent : 2;
 			case 'emailNotificationEnabled':
 				return typeof state.emailNotificationEnabled === 'boolean' ? state.emailNotificationEnabled : false;
 			case 'emailNotificationValue':

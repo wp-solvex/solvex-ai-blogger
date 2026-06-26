@@ -137,6 +137,10 @@ This update introduces an auth screen to connect the plugin to your account and 
 
 == Changelog ==
 
+= 1.0.5 =
+* New: Post Ideas posts now add an internal link to your homepage and include your focus keyphrase in image alt text, helping you pass more Yoast SEO checks automatically.
+* Improvement: Removed the Advanced AI Settings section for a simpler, more reliable content setup.
+
 = 1.0.4 =
 * New: Yoast SEO compatibility - Generated content will ensure SEO-friendly structure and readability to help you easily achieve "green lights" in Yoast without manual tweaking.
 * Improvement: Hardened the server API usage and error reporting process.

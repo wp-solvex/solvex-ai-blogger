@@ -202,7 +202,21 @@ class Licensing {
 			$get_license = $client->license()->retrieve( $license_key );
 
 			if ( is_wp_error( $get_license ) ) {
-				wp_send_json_error( [ 'message' => $this->error_messages['license_retrieval_failed'] ] );
+				$real_message = $get_license->get_error_message();
+
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( '[Solvex AI Blogger] License retrieve failed: ' . wp_json_encode( [ // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+						'code'    => $get_license->get_error_code(),
+						'message' => $real_message,
+						'data'    => $get_license->get_error_data(),
+					] ) );
+				}
+
+				wp_send_json_error( [
+					'message' => ! empty( $real_message ) ? $real_message : $this->error_messages['license_retrieval_failed'],
+					'code'    => $get_license->get_error_code(),
+					'detail'  => $get_license->get_error_data(),
+				] );
 			}
 
 			// Validate product ID match.
@@ -214,7 +228,21 @@ class Licensing {
 			$response = $client->license()->activate( $license_key );
 
 			if ( is_wp_error( $response ) ) {
-				wp_send_json_error( [ 'message' => $this->error_messages['activation_failed'] ] );
+				$real_message = $response->get_error_message();
+
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( '[Solvex AI Blogger] License activation failed: ' . wp_json_encode( [ // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+						'code'    => $response->get_error_code(),
+						'message' => $real_message,
+						'data'    => $response->get_error_data(),
+					] ) );
+				}
+
+				wp_send_json_error( [
+					'message' => ! empty( $real_message ) ? $real_message : $this->error_messages['activation_failed'],
+					'code'    => $response->get_error_code(),
+					'detail'  => $response->get_error_data(),
+				] );
 			}
 
 			// Securely update license status.
@@ -234,7 +262,15 @@ class Licensing {
 			);
 
 		} catch ( \Exception $e ) {
-			wp_send_json_error( [ 'message' => $this->error_messages['activation_exception'] ] );
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( '[Solvex AI Blogger] License activation exception: ' . $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			}
+
+			$exception_message = $e->getMessage();
+			wp_send_json_error( [
+				'message' => ! empty( $exception_message ) ? $exception_message : $this->error_messages['activation_exception'],
+				'detail'  => $exception_message,
+			] );
 		}
 	}
 
