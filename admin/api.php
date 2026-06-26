@@ -566,23 +566,6 @@ class API extends \WP_REST_Controller {
 				case 'site_description':
 					$sanitized[ $key ] = sanitize_text_field( $value );
 					break;
-				case 'harassment':
-				case 'hate':
-				case 'sexually_explicit':
-				case 'dangerous_content':
-					$sanitized[ $key ] = absint( $value );
-					if ( $sanitized[ $key ] > 4 ) {
-						$sanitized[ $key ] = 4;
-					}
-					break;
-				case 'temperature':
-					$sanitized[ $key ] = floatval( $value );
-					if ( $sanitized[ $key ] < 0 ) {
-						$sanitized[ $key ] = 0;
-					} elseif ( $sanitized[ $key ] > 2 ) {
-						$sanitized[ $key ] = 2;
-					}
-					break;
 				case 'max_words':
 				case 'max_title_words':
 					$sanitized[ $key ] = absint( $value );
@@ -642,11 +625,6 @@ class API extends \WP_REST_Controller {
 			'site_title',
 			'site_purpose',
 			'site_description',
-			'harassment',
-			'hate',
-			'sexually_explicit',
-			'dangerous_content',
-			'temperature',
 			'max_words',
 			'max_title_words',
 			'post_ideas',
@@ -703,13 +681,6 @@ class API extends \WP_REST_Controller {
 				'sanitize_callback' => 'sanitize_textarea_field',
 				'validate_callback' => static function( $param ) {
 					return is_string( $param ) && strlen( $param ) <= 1000;
-				},
-			],
-			'temperature'      => [
-				'description'       => __( 'AI temperature setting (0-2).', 'solvex-ai-blogger' ),
-				'type'              => 'number',
-				'validate_callback' => static function( $param ) {
-					return is_numeric( $param ) && $param >= 0 && $param <= 2;
 				},
 			],
 		];

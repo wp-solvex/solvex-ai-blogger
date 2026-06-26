@@ -26,11 +26,6 @@ const setInitialState = ( store ) => {
 				...( wpAiBloggerSettings.siteTitle && { siteTitle: wpAiBloggerSettings.siteTitle } ),
 				...( wpAiBloggerSettings.siteFor && { siteFor: wpAiBloggerSettings.siteFor } ),
 				...( wpAiBloggerSettings.siteDescription && { siteDescription: wpAiBloggerSettings.siteDescription } ),
-				...( wpAiBloggerSettings.temperature !== undefined && { temperature: wpAiBloggerSettings.temperature } ),
-				...( wpAiBloggerSettings.harassment !== undefined && { harassment: wpAiBloggerSettings.harassment } ),
-				...( wpAiBloggerSettings.hate !== undefined && { hate: wpAiBloggerSettings.hate } ),
-				...( wpAiBloggerSettings.sexually_explicit !== undefined && { sexuallyExplicit: wpAiBloggerSettings.sexually_explicit } ),
-				...( wpAiBloggerSettings.dangerous_content !== undefined && { dangerousContent: wpAiBloggerSettings.dangerous_content } ),
 				...( wpAiBloggerSettings.post_ideas && typeof wpAiBloggerSettings.post_ideas === 'string' && { postIdeas: wpAiBloggerSettings.post_ideas } ),
 				// License handling: Use current state license if it exists, otherwise use API license.
 				license: currentState.license || wpAiBloggerSettings.license || '',

@@ -671,13 +671,6 @@ function wpsolvex_autoaiblogger_get_post_creation_api_response( $keywords, $max_
 			'name'              => sanitize_text_field( $campaign_name ),
 			'license'           => $license,
 
-			// Safety settings - required by server.
-			'temperature'       => floatval( $settings['temperature'] ?? 0.7 ),
-			'harassment'        => absint( $settings['harassment'] ?? 2 ),
-			'hate'              => absint( $settings['hate'] ?? 2 ),
-			'sexually_explicit' => absint( $settings['sexuallyExplicit'] ?? 2 ),
-			'dangerous_content' => absint( $settings['dangerousContent'] ?? 2 ),
-
 			// Site persona - required by server.
 			'site_title'        => $sanitized_persona['site_title'] ?? ( $settings['siteTitle'] ?? '' ),
 			'site_purpose'      => $sanitized_persona['site_purpose'] ?? ( $settings['siteFor'] ?? '' ),

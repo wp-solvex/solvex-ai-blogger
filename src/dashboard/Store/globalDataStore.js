@@ -83,11 +83,6 @@ const getInitialState = () => {
 		siteTitle: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.site_title, 'string', '' ),
 		siteFor: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.site_for, 'string', '' ),
 		siteDescription: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.site_description, 'string', '' ),
-		temperature: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.temperature, 'number', 1.0 ),
-		harassment: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.harassment, 'number', 2 ),
-		hate: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.hate, 'number', 2 ),
-		sexuallyExplicit: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.sexually_explicit, 'number', 2 ),
-		dangerousContent: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.dangerous_content, 'number', 2 ),
 		license: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.license, 'string', '' ),
 		postIdeas: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.postIdeas, 'string', '' ),
 		createdPostIdeas: safeParseLocalizedData( wpsolvex_autoaiblogger_localized_data.createdPostIdeas, 'object', {}, true ),
@@ -206,13 +201,6 @@ const createEnhancedStore = () => {
 			console.log( 'Initial state summary:', {
 				userOnboarded: state.userOnboarded,
 				siteTitle: state.siteTitle || 'Not set',
-				temperature: state.temperature,
-				safetyFilters: {
-					harassment: state.harassment,
-					hate: state.hate,
-					sexuallyExplicit: state.sexuallyExplicit,
-					dangerousContent: state.dangerousContent,
-				},
 				licenseStatus: state.license_status,
 				totalProperties: Object.keys( state ).length,
 			} );

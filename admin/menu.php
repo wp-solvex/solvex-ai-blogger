@@ -169,11 +169,6 @@ class Menu {
 		$site_description   = sanitize_textarea_field( Helper::get_option( 'siteDescription', '' ) );
 		$site_for           = sanitize_text_field( Helper::get_option( 'siteFor', '' ) );
 		$license            = sanitize_text_field( Helper::get_option( 'license', '' ) );
-		$temperature        = (float) Helper::get_option( 'temperature', 1.0 );
-		$harassment         = absint( Helper::get_option( 'harassment', 2 ) );
-		$hate               = absint( Helper::get_option( 'hate', 2 ) );
-		$sexually_explicit  = absint( Helper::get_option( 'sexuallyExplicit', 2 ) );
-		$dangerous_content  = absint( Helper::get_option( 'dangerousContent', 2 ) );
 		$post_ideas         = sanitize_textarea_field( Helper::get_option( 'postIdeas', '' ) );
 		$created_post_ideas = sanitize_textarea_field( Helper::get_option( 'createdPostIdeas', '' ) );
 		$token_total        = absint( Helper::get_option( 'tokenTotal', 0 ) );
@@ -242,11 +237,6 @@ class Menu {
 				'license_status'             => $license_status,
 				'postIdeas'                  => $post_ideas,
 				'createdPostIdeas'           => $created_post_ideas,
-				'temperature'                => $temperature,
-				'harassment'                 => $harassment,
-				'hate'                       => $hate,
-				'sexually_explicit'          => $sexually_explicit,
-				'dangerous_content'          => $dangerous_content,
 
 				// Notification settings.
 				'email_notification_enabled' => $email_notification_enabled,

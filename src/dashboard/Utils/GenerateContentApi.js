@@ -85,18 +85,6 @@ const validateAndNormalizeOptions = ( options = {} ) => {
 		normalized.image_count = Math.max( 0, Math.min( 10, Number( normalized.image_count ) ) );
 	}
 
-	if ( normalized.temperature !== undefined ) {
-		normalized.temperature = Math.max( 0, Math.min( 1, Number( normalized.temperature ) ) );
-	}
-
-	// Validate safety levels (0-4)
-	const safetyFields = [ 'harassment', 'hate', 'sexually_explicit', 'dangerous_content' ];
-	safetyFields.forEach( ( field ) => {
-		if ( normalized[ field ] !== undefined ) {
-			normalized[ field ] = Math.max( 0, Math.min( 4, Math.floor( Number( normalized[ field ] ) ) ) );
-		}
-	} );
-
 	return normalized;
 };
 
@@ -117,11 +105,6 @@ const makeApiRequest = async ( title, options, signal ) => {
 		site_purpose: options.site_purpose || '',
 		site_description: options.site_description || '',
 		image_count: options.image_count || 0,
-		temperature: options.temperature !== undefined ? options.temperature : 0.3,
-		harassment: options.harassment !== undefined ? options.harassment : 2,
-		hate: options.hate !== undefined ? options.hate : 2,
-		sexually_explicit: options.sexually_explicit !== undefined ? options.sexually_explicit : 2,
-		dangerous_content: options.dangerous_content !== undefined ? options.dangerous_content : 2,
 		license: options.license || ( typeof wpsolvex_autoaiblogger_localized_data !== 'undefined' && wpsolvex_autoaiblogger_localized_data?.license_key ) || '',
 	};
 

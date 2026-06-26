@@ -165,10 +165,10 @@ const LicenseStep = memo( () => {
 			const errorMessage = response.data?.message || response.message || '';
 			if ( errorMessage.includes( 'nonce' ) || errorMessage.includes( 'security' ) ) {
 				setError( __( 'Security verification failed. Please refresh the page and try again.', 'solvex-ai-blogger' ) );
-			} else if ( errorMessage.includes( 'license' ) || errorMessage.includes( 'key' ) ) {
-				setError( __( 'Invalid API key. Please check your key and try again.', 'solvex-ai-blogger' ) );
 			} else {
-				setError( errorMessage || __( 'Connection failed. Please check your API key.', 'solvex-ai-blogger' ) );
+				// Surface the real message from the server (SureCart) so the user sees the actual
+				// reason (e.g. activation limit reached, license not found) instead of a generic one.
+				setError( errorMessage || __( 'License activation failed. Please verify your license key and try again.', 'solvex-ai-blogger' ) );
 			}
 			return false;
 		} catch ( failureError ) {

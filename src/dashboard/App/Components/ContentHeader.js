@@ -13,11 +13,6 @@ import { Save, Gift } from 'lucide-react';
  * @param {string}      [props.siteTitle='']                   Site title setting
  * @param {string}      [props.siteFor='']                     Site for setting
  * @param {string}      [props.siteDescription='']             Site description setting
- * @param {number}      [props.temperature=0.7]                Temperature setting for AI responses
- * @param {number}      [props.harassment=2]                   Harassment content filter setting
- * @param {number}      [props.hate=2]                         Hate content filter setting
- * @param {number}      [props.sexuallyExplicit=2]             Sexually explicit content filter
- * @param {number}      [props.dangerousContent=2]             Dangerous content filter setting
  * @param {boolean}     [props.emailNotificationEnabled=false] Email notification enabled state
  * @param {string}      [props.emailNotificationValue='']      Email notification value
  * @param {string}      [props.className='']                   Additional CSS classes
@@ -34,11 +29,6 @@ const ContentHeader = ( {
 	siteFor = '',
 	siteDescription = '',
 	icon: Icon = Gift,
-	temperature = 0.7,
-	harassment = 2,
-	hate = 2,
-	sexuallyExplicit = 2,
-	dangerousContent = 2,
 	emailNotificationEnabled = false,
 	emailNotificationValue = '',
 	className = '', // eslint-disable-line no-unused-vars
@@ -57,11 +47,6 @@ const ContentHeader = ( {
 			siteTitle,
 			siteFor,
 			siteDescription,
-			temperature,
-			harassment,
-			hate,
-			sexuallyExplicit,
-			dangerousContent,
 			emailNotificationEnabled,
 			emailNotificationValue: emailNotificationEnabled ? emailNotificationValue : '',
 		};
@@ -74,11 +59,6 @@ const ContentHeader = ( {
 		siteTitle,
 		siteFor,
 		siteDescription,
-		temperature,
-		harassment,
-		hate,
-		sexuallyExplicit,
-		dangerousContent,
 		emailNotificationEnabled,
 		emailNotificationValue,
 	] );

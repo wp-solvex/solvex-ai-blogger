@@ -73,11 +73,6 @@
  * @property {string} [site_purpose]        - Site purpose for context
  * @property {string} [site_description]    - Site description for context
  * @property {number} [image_count=0]       - Number of images to generate
- * @property {number} [temperature=0.3]     - AI temperature (0-1)
- * @property {number} [harassment=2]        - Harassment safety level (0-4)
- * @property {number} [hate=2]              - Hate speech safety level (0-4)
- * @property {number} [sexually_explicit=2] - Sexually explicit safety level (0-4)
- * @property {number} [dangerous_content=2] - Dangerous content safety level (0-4)
  * @property {string} [license]             - License key for authentication
  */
 

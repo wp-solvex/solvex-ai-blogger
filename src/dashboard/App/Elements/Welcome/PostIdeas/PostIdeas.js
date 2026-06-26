@@ -23,11 +23,6 @@ export default function PostIdeas() {
 	const siteTitle = useSelector( ( state ) => state.siteTitle );
 	const siteFor = useSelector( ( state ) => state.siteFor );
 	const siteDescription = useSelector( ( state ) => state.siteDescription );
-	const temperature = useSelector( ( state ) => state.temperature );
-	const harassment = useSelector( ( state ) => state.harassment );
-	const hate = useSelector( ( state ) => state.hate );
-	const sexuallyExplicit = useSelector( ( state ) => state.sexuallyExplicit );
-	const dangerousContent = useSelector( ( state ) => state.dangerousContent );
 	const license = useSelector( ( state ) => state.license );
 	const postIdeasFromRedux = useSelector( ( state ) => state.postIdeas );
 	const licenseStatus = useSelector( ( state ) => state.license_status );
@@ -75,11 +70,6 @@ export default function PostIdeas() {
 			site_title: siteTitle,
 			site_purpose: siteFor,
 			site_description: siteDescription,
-			temperature,
-			harassment,
-			hate,
-			sexually_explicit: sexuallyExplicit,
-			dangerous_content: dangerousContent,
 			license: license.trim(),
 		};
 
@@ -150,11 +140,6 @@ export default function PostIdeas() {
 		siteTitle,
 		siteFor,
 		siteDescription,
-		temperature,
-		harassment,
-		hate,
-		sexuallyExplicit,
-		dangerousContent,
 		license,
 		dispatch,
 	] );
@@ -351,11 +336,6 @@ export default function PostIdeas() {
 			site_title: siteTitle,
 			site_purpose: siteFor,
 			site_description: siteDescription,
-			temperature,
-			harassment,
-			hate,
-			sexually_explicit: sexuallyExplicit,
-			dangerous_content: dangerousContent,
 			image_count: 2,
 		};
 

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { __, sprintf } from '@wordpress/i18n';
 import { Settings, Trash2, Info, FolderPlus, RotateCw, List, ChartNoAxesColumn, CalendarArrowUp, ScrollText, Search } from 'lucide-react';
 import { Tooltip } from '@wordpress/components';
@@ -13,6 +14,12 @@ export default function Campaigns() {
 	const initialCampaigns = wpsolvex_autoaiblogger_localized_data.all_campaigns;
 	const defaultMetaDefaults = wpsolvex_autoaiblogger_localized_data.postmeta_defaults;
 	const isTestingMode = wpsolvex_autoaiblogger_localized_data.campaign_testing_mode || false;
+
+	// Live token balance (kept in sync by the nav token meter). Used to re-enable the resume
+	// toggle once a token-exhausted campaign has enough tokens again. Matches the 3000-token
+	// minimum the campaign cron uses before it auto-pauses.
+	const tokenRemaining = useSelector( ( state ) => state.tokenRemaining ) || 0;
+	const TOKEN_RESUME_THRESHOLD = 3000;
 
 	const [ campaigns, setCampaigns ] = useState( initialCampaigns ); // Make campaigns stateful
 	const [ configureData, setConfigureData ] = useState( defaultMetaDefaults );
@@ -333,12 +340,14 @@ export default function Campaigns() {
 			} );
 
 			if ( response.success ) {
-				// Update the local campaigns state without page refresh.
+				// Update the local campaigns state without page refresh. When resuming, also clear
+				// the pause reason so it matches the server (which resets it on resume).
 				setCampaigns( ( prevCampaigns ) => ( {
 					...prevCampaigns,
 					[ campaignId ]: {
 						...prevCampaigns[ campaignId ],
 						isPaused: response.data.isPaused,
+						pauseReason: response.data.isPaused ? prevCampaigns[ campaignId ].pauseReason : '',
 					},
 				} ) );
 			} else {
@@ -527,11 +536,17 @@ export default function Campaigns() {
 															const shouldDisableSwitch = isTargetMet || allAttemptsMade || campaignCompleted;
 															const isUpdating = updatingStatus[ campaign.id ] || false;
 
+															// A campaign auto-paused for token exhaustion can be resumed once the
+															// account has enough tokens again. Only keep it locked while the live
+															// balance is still below the cron's minimum threshold.
+															const isTokenPaused = isPaused && campaign.pauseReason === 'token_exhaustion';
+															const tokensTooLowToResume = isTokenPaused && tokenRemaining < TOKEN_RESUME_THRESHOLD;
+
 															// Determine tooltip text
 															let tooltipText = '';
 															if ( shouldDisableSwitch ) {
 																tooltipText = __( 'Completed', 'solvex-ai-blogger' );
-															} else if ( isPaused && campaign.pauseReason === 'token_exhaustion' ) {
+															} else if ( tokensTooLowToResume ) {
 																tooltipText = __( 'Out of tokens, upgrade to resume', 'solvex-ai-blogger' );
 															} else if ( isPaused ) {
 																tooltipText = __( 'Paused', 'solvex-ai-blogger' );
@@ -539,7 +554,7 @@ export default function Campaigns() {
 																tooltipText = __( 'Active', 'solvex-ai-blogger' );
 															}
 
-															const disableForTokens = isPaused && campaign.pauseReason === 'token_exhaustion';
+															const disableForTokens = tokensTooLowToResume;
 
 															return (
 																<div className="flex items-center gap-1.5">
